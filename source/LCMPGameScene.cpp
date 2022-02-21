@@ -11,6 +11,9 @@
 #include <cugl/cugl.h>
 #include <iostream>
 #include <sstream>
+#include <box2d/b2_world.h>
+#include <box2d/b2_contact.h>
+#include <box2d/b2_collision.h>
 
 #include "LCMPGameScene.h"
 
@@ -21,6 +24,35 @@ using namespace std;
 
 /** Regardless of logo, lock the height to this */
 #define SCENE_HEIGHT  720
+
+/** This is the size of the active portion of the screen */
+#define SCENE_WIDTH 1024
+//#define SCENE_HEIGHT 576
+
+/** Width of the game world in Box2d units */
+#define DEFAULT_WIDTH   32.0f
+/** Height of the game world in Box2d units */
+#define DEFAULT_HEIGHT  18.0f
+/** The default value of gravity (going down) */
+#define DEFAULT_GRAVITY 0.0f
+
+/** The initial thief position */
+float THIEF_POS[] = {24,  4};
+
+/** The key for the thief texture in the asset manager */
+#define THIEF_TEXTURE        "thief"
+
+//  MARK: - Physics Constants
+
+// Physics constants for initialization
+/** Density of non-crate objects */
+#define BASIC_DENSITY       0.0f
+/** Friction of non-crate objects */
+#define BASIC_FRICTION      0.1f
+/** Collision restitution for all objects */
+#define BASIC_RESTITUTION   0.1f
+/** Threshold for generating sound on collision */
+#define SOUND_THRESHOLD     3
 
 //  MARK: - Constructors
 
@@ -49,6 +81,30 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     
     // Save the network controller
     _network = network;
+    
+    Rect rect = Rect(0,0,DEFAULT_WIDTH,DEFAULT_HEIGHT);
+    Vec2 gravity = Vec2(0,DEFAULT_GRAVITY);
+    
+    // Create the world and attach the listeners.
+    _world = physics2::ObstacleWorld::alloc(rect,gravity);
+    _world->activateCollisionCallbacks(true);
+    _world->onBeginContact = [this](b2Contact* contact) {
+        beginContact(contact);
+    };
+//    _world->beforeSolve = [this](b2Contact* contact, const b2Manifold* oldManifold) {
+//        beforeSolve(contact,oldManifold);
+//    };
+    
+    // IMPORTANT: SCALING MUST BE UNIFORM
+    // This means that we cannot change the aspect ratio of the physics world
+    // Shift to center if a bad fit
+    _scale = dimen.width == SCENE_WIDTH ? dimen.width/rect.size.width : dimen.height/rect.size.height;
+    Vec2 offset((dimen.width-SCENE_WIDTH)/2.0f,(dimen.height-SCENE_HEIGHT)/2.0f);
+
+    // Create the scene graph
+    _worldnode = scene2::SceneNode::alloc();
+    _worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _worldnode->setPosition(offset);
     
     // Acquire the scene built by the asset loader and resize it the scene
     std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("game");
@@ -103,4 +159,19 @@ void GameScene::setActive(bool value) {
             _quit = false;
         }
     }
+}
+
+//  MARK: - Physics Handling
+/**
+ * Processes the start of a collision
+ *
+ * This method is called when we first get a collision between two objects.  We use
+ * this method to test if it is the "right" kind of collision.  In particular, we
+ * use it to test if we make it to the win door.
+ *
+ * @param  contact  The two bodies that collided
+ */
+void GameScene::beginContact(b2Contact* contact) {
+    b2Body* body1 = contact->GetFixtureA()->GetBody();
+    b2Body* body2 = contact->GetFixtureB()->GetBody();
 }

@@ -37,6 +37,18 @@ protected:
     /** A model to represent all models within the game */
     std::shared_ptr<GameModel> _game;
     
+    // VIEW
+    /** Reference to the physics root of the scene graph */
+    std::shared_ptr<cugl::scene2::SceneNode> _worldnode;
+
+    /** The Box2D world */
+    std::shared_ptr<cugl::physics2::ObstacleWorld> _world;
+    /** The scale between the physics world and the screen (MUST BE UNIFORM) */
+    float _scale;
+    
+    // Physics objects for the game
+    std::shared_ptr<cugl::physics2::CapsuleObstacle> _thief;
+    
     /** The asset manager for this game mode. */
     std::shared_ptr<cugl::AssetManager> _assets;
     /** Whether this player is the thief */
@@ -45,6 +57,11 @@ protected:
     bool _ishost;
     /** Whether we quit the game */
     bool _quit;
+    
+    //  MARK: - Internal Object Management
+    void addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj,
+                     const std::shared_ptr<cugl::scene2::SceneNode>& node);
+    
     
 public:
 //  MARK: - Constructors
@@ -143,6 +160,12 @@ public:
      */
     void disconnect() { _network = nullptr; }
 
+    //  MARK: - Physics Handling
+
+    void beginContact(b2Contact* contact);
+    
 };
+
+
 
 #endif /* __NL_GAME_SCENE_H__ */
