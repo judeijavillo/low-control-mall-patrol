@@ -1,0 +1,483 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{49E5BFF5-8B80-45DD-9809-8DE362665D8F}</ProjectGuid>
+    <RootNamespace>slikenet</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)x86\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectDir)obj\x86\$(Configuration)\slikenet\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">slikenet</TargetName>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)obj\$(Platform)\$(Configuration)\slikenet\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">slikenet</TargetName>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)x86\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(ProjectDir)obj\x86\$(Configuration)\slikenet\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">slikenet</TargetName>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)obj\$(Platform)\$(Configuration)\slikenet\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">slikenet</TargetName>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(PROJECT_DIR)..\..\external\slikenet;$(PROJECT_DIR)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)slikenet.pdb</ProgramDataBaseFileName>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>$(OutDir)slikenet.lib</OutputFile>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(PROJECT_DIR)..\..\external\slikenet;$(PROJECT_DIR)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)slikenet.pdb</ProgramDataBaseFileName>
+      <BrowseInformation>false</BrowseInformation>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>$(OutDir)slikenet.lib</OutputFile>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>$(PROJECT_DIR)..\..\external\slikenet;$(PROJECT_DIR)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ProgramDataBaseFileName>$(OutDir)slikenet.pdb</ProgramDataBaseFileName>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>$(OutDir)slikenet.lib</OutputFile>
+      <TargetMachine>MachineX86</TargetMachine>
+    </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <Optimization>Full</Optimization>
+      <AdditionalIncludeDirectories>$(PROJECT_DIR)..\..\external\slikenet;$(PROJECT_DIR)..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ProgramDataBaseFileName>$(OutDir)slikenet.pdb</ProgramDataBaseFileName>
+      <TreatWarningAsError>true</TreatWarningAsError>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Lib>
+      <OutputFile>$(OutDir)slikenet.lib</OutputFile>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Lib>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\slikenet\alloca.h" />
+    <ClInclude Include="..\..\include\slikenet\assert.h" />
+    <ClInclude Include="..\..\include\slikenet\AutopatcherPatchContext.h" />
+    <ClInclude Include="..\..\include\slikenet\AutopatcherRepositoryInterface.h" />
+    <ClInclude Include="..\..\include\slikenet\Base64Encoder.h" />
+    <ClInclude Include="..\..\include\slikenet\BitStream.h" />
+    <ClInclude Include="..\..\include\slikenet\CCRakNetSlidingWindow.h" />
+    <ClInclude Include="..\..\include\slikenet\CCRakNetUDT.h" />
+    <ClInclude Include="..\..\include\slikenet\CheckSum.h" />
+    <ClInclude Include="..\..\include\slikenet\CloudClient.h" />
+    <ClInclude Include="..\..\include\slikenet\CloudCommon.h" />
+    <ClInclude Include="..\..\include\slikenet\CloudServer.h" />
+    <ClInclude Include="..\..\include\slikenet\commandparser.h" />
+    <ClInclude Include="..\..\include\slikenet\CommandParserInterface.h" />
+    <ClInclude Include="..\..\include\slikenet\ConnectionGraph2.h" />
+    <ClInclude Include="..\..\include\slikenet\ConsoleServer.h" />
+    <ClInclude Include="..\..\include\slikenet\DataCompressor.h" />
+    <ClInclude Include="..\..\include\slikenet\defineoverrides.h" />
+    <ClInclude Include="..\..\include\slikenet\defines.h" />
+    <ClInclude Include="..\..\include\slikenet\DirectoryDeltaTransfer.h" />
+    <ClInclude Include="..\..\include\slikenet\DR_SHA1.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_BinarySearchTree.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_BPlusTree.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_BytePool.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_ByteQueue.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_Hash.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_Heap.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_HuffmanEncodingTree.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_HuffmanEncodingTreeFactory.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_HuffmanEncodingTreeNode.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_LinkedList.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_List.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_Map.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_MemoryPool.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_Multilist.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_OrderedChannelHeap.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_OrderedList.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_Queue.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_QueueLinkedList.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_RangeList.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_Table.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_ThreadsafeAllocatingQueue.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_Tree.h" />
+    <ClInclude Include="..\..\include\slikenet\DS_WeightedGraph.h" />
+    <ClInclude Include="..\..\include\slikenet\DynDNS.h" />
+    <ClInclude Include="..\..\include\slikenet\EmailSender.h" />
+    <ClInclude Include="..\..\include\slikenet\EmptyHeader.h" />
+    <ClInclude Include="..\..\include\slikenet\EpochTimeToString.h" />
+    <ClInclude Include="..\..\include\slikenet\Export.h" />
+    <ClInclude Include="..\..\include\slikenet\FileList.h" />
+    <ClInclude Include="..\..\include\slikenet\FileListNodeContext.h" />
+    <ClInclude Include="..\..\include\slikenet\FileListTransfer.h" />
+    <ClInclude Include="..\..\include\slikenet\FileListTransferCBInterface.h" />
+    <ClInclude Include="..\..\include\slikenet\FileOperations.h" />
+    <ClInclude Include="..\..\include\slikenet\FormatString.h" />
+    <ClInclude Include="..\..\include\slikenet\FullyConnectedMesh2.h" />
+    <ClInclude Include="..\..\include\slikenet\Getche.h" />
+    <ClInclude Include="..\..\include\slikenet\Gets.h" />
+    <ClInclude Include="..\..\include\slikenet\GetTime.h" />
+    <ClInclude Include="..\..\include\slikenet\gettimeofday.h" />
+    <ClInclude Include="..\..\include\slikenet\GridSectorizer.h" />
+    <ClInclude Include="..\..\include\slikenet\HTTPConnection.h" />
+    <ClInclude Include="..\..\include\slikenet\HTTPConnection2.h" />
+    <ClInclude Include="..\..\include\slikenet\IncrementalReadInterface.h" />
+    <ClInclude Include="..\..\include\slikenet\InternalPacket.h" />
+    <ClInclude Include="..\..\include\slikenet\Itoa.h" />
+    <ClInclude Include="..\..\include\slikenet\Kbhit.h" />
+    <ClInclude Include="..\..\include\slikenet\LinuxStrings.h" />
+    <ClInclude Include="..\..\include\slikenet\linux_adapter.h" />
+    <ClInclude Include="..\..\include\slikenet\LocklessTypes.h" />
+    <ClInclude Include="..\..\include\slikenet\LogCommandParser.h" />
+    <ClInclude Include="..\..\include\slikenet\memoryoverride.h" />
+    <ClInclude Include="..\..\include\slikenet\MessageFilter.h" />
+    <ClInclude Include="..\..\include\slikenet\MessageIdentifiers.h" />
+    <ClInclude Include="..\..\include\slikenet\MTUSize.h" />
+    <ClInclude Include="..\..\include\slikenet\NativeFeatureIncludes.h" />
+    <ClInclude Include="..\..\include\slikenet\NativeFeatureIncludesOverrides.h" />
+    <ClInclude Include="..\..\include\slikenet\NativeTypes.h" />
+    <ClInclude Include="..\..\include\slikenet\NatPunchthroughClient.h" />
+    <ClInclude Include="..\..\include\slikenet\NatPunchthroughServer.h" />
+    <ClInclude Include="..\..\include\slikenet\NatTypeDetectionClient.h" />
+    <ClInclude Include="..\..\include\slikenet\NatTypeDetectionCommon.h" />
+    <ClInclude Include="..\..\include\slikenet\NatTypeDetectionServer.h" />
+    <ClInclude Include="..\..\include\slikenet\NetworkIDManager.h" />
+    <ClInclude Include="..\..\include\slikenet\NetworkIDObject.h" />
+    <ClInclude Include="..\..\include\slikenet\osx_adapter.h" />
+    <ClInclude Include="..\..\include\slikenet\PacketConsoleLogger.h" />
+    <ClInclude Include="..\..\include\slikenet\PacketFileLogger.h" />
+    <ClInclude Include="..\..\include\slikenet\PacketizedTCP.h" />
+    <ClInclude Include="..\..\include\slikenet\PacketLogger.h" />
+    <ClInclude Include="..\..\include\slikenet\PacketOutputWindowLogger.h" />
+    <ClInclude Include="..\..\include\slikenet\PacketPool.h" />
+    <ClInclude Include="..\..\include\slikenet\PacketPriority.h" />
+    <ClInclude Include="..\..\include\slikenet\peer.h" />
+    <ClInclude Include="..\..\include\slikenet\peerinterface.h" />
+    <ClInclude Include="..\..\include\slikenet\PluginInterface2.h" />
+    <ClInclude Include="..\..\include\slikenet\PS3Includes.h" />
+    <ClInclude Include="..\..\include\slikenet\PS4Includes.h" />
+    <ClInclude Include="..\..\include\slikenet\Rackspace.h" />
+    <ClInclude Include="..\..\include\slikenet\Rand.h" />
+    <ClInclude Include="..\..\include\slikenet\RandSync.h" />
+    <ClInclude Include="..\..\include\slikenet\ReadyEvent.h" />
+    <ClInclude Include="..\..\include\slikenet\RefCountedObj.h" />
+    <ClInclude Include="..\..\include\slikenet\RelayPlugin.h" />
+    <ClInclude Include="..\..\include\slikenet\ReliabilityLayer.h" />
+    <ClInclude Include="..\..\include\slikenet\ReplicaEnums.h" />
+    <ClInclude Include="..\..\include\slikenet\ReplicaManager3.h" />
+    <ClInclude Include="..\..\include\slikenet\Router2.h" />
+    <ClInclude Include="..\..\include\slikenet\RPC4Plugin.h" />
+    <ClInclude Include="..\..\include\slikenet\SecureHandshake.h" />
+    <ClInclude Include="..\..\include\slikenet\SendToThread.h" />
+    <ClInclude Include="..\..\include\slikenet\SignaledEvent.h" />
+    <ClInclude Include="..\..\include\slikenet\SimpleMutex.h" />
+    <ClInclude Include="..\..\include\slikenet\SimpleTCPServer.h" />
+    <ClInclude Include="..\..\include\slikenet\SingleProducerConsumer.h" />
+    <ClInclude Include="..\..\include\slikenet\sleep.h" />
+    <ClInclude Include="..\..\include\slikenet\slikenet.h" />
+    <ClInclude Include="..\..\include\slikenet\smartptr.h" />
+    <ClInclude Include="..\..\include\slikenet\socket.h" />
+    <ClInclude Include="..\..\include\slikenet\socket2.h" />
+    <ClInclude Include="..\..\include\slikenet\SocketDefines.h" />
+    <ClInclude Include="..\..\include\slikenet\SocketIncludes.h" />
+    <ClInclude Include="..\..\include\slikenet\SocketLayer.h" />
+    <ClInclude Include="..\..\include\slikenet\statistics.h" />
+    <ClInclude Include="..\..\include\slikenet\StatisticsHistory.h" />
+    <ClInclude Include="..\..\include\slikenet\string.h" />
+    <ClInclude Include="..\..\include\slikenet\StringCompressor.h" />
+    <ClInclude Include="..\..\include\slikenet\StringTable.h" />
+    <ClInclude Include="..\..\include\slikenet\SuperFastHash.h" />
+    <ClInclude Include="..\..\include\slikenet\TableSerializer.h" />
+    <ClInclude Include="..\..\include\slikenet\TCPInterface.h" />
+    <ClInclude Include="..\..\include\slikenet\TeamBalancer.h" />
+    <ClInclude Include="..\..\include\slikenet\TeamManager.h" />
+    <ClInclude Include="..\..\include\slikenet\TelnetTransport.h" />
+    <ClInclude Include="..\..\include\slikenet\thread.h" />
+    <ClInclude Include="..\..\include\slikenet\ThreadPool.h" />
+    <ClInclude Include="..\..\include\slikenet\ThreadsafePacketLogger.h" />
+    <ClInclude Include="..\..\include\slikenet\time.h" />
+    <ClInclude Include="..\..\include\slikenet\transport2.h" />
+    <ClInclude Include="..\..\include\slikenet\TransportInterface.h" />
+    <ClInclude Include="..\..\include\slikenet\TwoWayAuthentication.h" />
+    <ClInclude Include="..\..\include\slikenet\types.h" />
+    <ClInclude Include="..\..\include\slikenet\UDPForwarder.h" />
+    <ClInclude Include="..\..\include\slikenet\UDPProxyClient.h" />
+    <ClInclude Include="..\..\include\slikenet\UDPProxyCommon.h" />
+    <ClInclude Include="..\..\include\slikenet\UDPProxyCoordinator.h" />
+    <ClInclude Include="..\..\include\slikenet\UDPProxyServer.h" />
+    <ClInclude Include="..\..\include\slikenet\VariableDeltaSerializer.h" />
+    <ClInclude Include="..\..\include\slikenet\VariableListDeltaTracker.h" />
+    <ClInclude Include="..\..\include\slikenet\VariadicSQLParser.h" />
+    <ClInclude Include="..\..\include\slikenet\version.h" />
+    <ClInclude Include="..\..\include\slikenet\VitaIncludes.h" />
+    <ClInclude Include="..\..\include\slikenet\WindowsIncludes.h" />
+    <ClInclude Include="..\..\include\slikenet\WSAStartupSingleton.h" />
+    <ClInclude Include="..\..\include\slikenet\wstring.h" />
+    <ClInclude Include="..\..\include\slikenet\XBox360Includes.h" />
+    <ClInclude Include="..\..\include\slikenet\_FindFirst.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\external\slikenet\Source\src\Base64Encoder.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\BitStream.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\CCRakNetSlidingWindow.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\CCRakNetUDT.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\CheckSum.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\CloudClient.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\CloudCommon.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\CloudServer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\CommandParserInterface.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\ConnectionGraph2.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\ConsoleServer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\DataCompressor.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\DirectoryDeltaTransfer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\DR_SHA1.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\DS_BytePool.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\DS_ByteQueue.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\DS_HuffmanEncodingTree.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\DS_Table.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\DynDNS.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\EmailSender.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\EpochTimeToString.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\FileList.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\FileListTransfer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\FileOperations.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\FormatString.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\FullyConnectedMesh2.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\Getche.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\Gets.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\GetTime.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\gettimeofday.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\GridSectorizer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\HTTPConnection.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\HTTPConnection2.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\IncrementalReadInterface.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\Itoa.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\LinuxStrings.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\linux_adapter.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\LocklessTypes.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\LogCommandParser.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\MessageFilter.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\NatPunchthroughClient.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\NatPunchthroughServer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\NatTypeDetectionClient.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\NatTypeDetectionCommon.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\NatTypeDetectionServer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\NetworkIDManager.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\NetworkIDObject.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\osx_adapter.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\PacketConsoleLogger.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\PacketFileLogger.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\PacketizedTCP.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\PacketLogger.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\PacketOutputWindowLogger.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\PluginInterface2.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\PS4Includes.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\Rackspace.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakMemoryOverride.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetCommandParser.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetSocket.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetSocket2.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetSocket2_360_720.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetSocket2_Berkley.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetSocket2_Berkley_NativeClient.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetSocket2_NativeClient.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetSocket2_PS3_PS4.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetSocket2_PS4.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetSocket2_Vita.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetSocket2_WindowsStore8.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetSocket2_Windows_Linux.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetSocket2_Windows_Linux_360.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetStatistics.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetTransport2.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakNetTypes.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakPeer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakSleep.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakString.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakThread.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RakWString.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\Rand.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RandSync.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\ReadyEvent.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RelayPlugin.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\ReliabilityLayer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\ReplicaManager3.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\Router2.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\RPC4Plugin.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\SecureHandshake.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\SendToThread.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\SignaledEvent.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\SimpleMutex.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\SocketLayer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\StatisticsHistory.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\StringCompressor.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\StringTable.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\SuperFastHash.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\TableSerializer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\TCPInterface.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\TeamBalancer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\TeamManager.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\TelnetTransport.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\ThreadsafePacketLogger.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\TwoWayAuthentication.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\UDPForwarder.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\UDPProxyClient.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\UDPProxyCoordinator.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\UDPProxyServer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\VariableDeltaSerializer.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\VariableListDeltaTracker.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\VariadicSQLParser.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\VitaIncludes.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\WSAStartupSingleton.cpp" />
+    <ClCompile Include="..\..\external\slikenet\Source\src\_FindFirst.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

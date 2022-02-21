@@ -1,0 +1,66 @@
+{
+    "variables" : {
+        "size"   : ["data", "size"],
+        "anchor" : ["data", "anchor"],
+        "text"   : ["children","up","children","label","data","text"],
+        "font"   : ["children","up","children","label","data","font"],
+        "color"  : ["children","up","children","patch","data","color"]
+    },
+    "contents": {
+        "type"   : "Button",
+        "format" : {
+            "type" : "Anchored"
+        },
+        "data"   : {
+            "upnode"  : "up",
+            "anchor"  : [0.5,0.5],
+            "size"    : [300, 75]
+        },
+        "children": {
+            "up" : {
+                "type" : "Node",
+                "format" : {
+                    "type" : "Anchored"
+                },
+                "children": {
+                    "patch" : {
+                        "type" : "NinePatch",
+                        "data": {
+                            "texture":  "button",
+                            "anchor"   : [0.5, 0.5],
+                            "interior" : [33,40,62,55],
+                            "color"    : "#ffffff"
+                        },
+                        "layout" : {
+                            "x_anchor" : "fill",
+                            "y_anchor" : "fill"
+                        }
+                    },
+                    "label" : {
+                        "type" : "Label",
+                        "data": {
+                            "font"       : "gyparody",
+                            "text"       : "Option 1",
+                            "foreground" : [255,255,255,255],
+                            "anchor"     : [0.5, 0.5],
+                            "halign"     : "center",
+                            "valign"     : "middle"
+                        },
+                        "layout" : {
+                            "x_anchor" : "fill",
+                            "y_anchor" : "fill"
+                        }
+                    }
+                },
+                "layout" : {
+                    "x_anchor" : "fill",
+                    "y_anchor" : "fill"
+                }
+            }
+        },
+        "layout" : {
+            "x_anchor" : "center",
+            "y_anchor" : "middle"
+        }
+    }
+}

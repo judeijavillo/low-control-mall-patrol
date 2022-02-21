@@ -1,0 +1,37 @@
+{
+    "variables" : {
+        "size"   : ["data", "size"],
+        "anchor" : ["data", "anchor"],
+        "color"  : ["children","up","data","color"]
+    },
+    "contents": {
+        "type"   : "Button",
+        "format" : {
+            "type" : "Anchored"
+        },
+        "data"   : {
+            "upnode"  : "up",
+            "anchor"  : [0.5,0.5],
+            "size"    : [60, 60]
+        },
+        "children": {
+            "up" : {
+				"type" : "NinePatch",
+				"data": {
+					"texture":  "button",
+					"anchor"   : [0.5, 0.5],
+					"interior" : [33,40,62,55],
+					"color"    : "#ffffff"
+				},
+				"layout" : {
+					"x_anchor" : "fill",
+					"y_anchor" : "fill"
+				}
+			}
+        },
+        "layout" : {
+            "x_anchor" : "center",
+            "y_anchor" : "middle"
+        }
+    }
+}

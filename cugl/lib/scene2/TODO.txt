@@ -1,0 +1,21 @@
+Replace earclipping triangulator with mono triangulator
+Replace simple extrusion with NanoVG version
+Explore a Canvas node with NanoVG style drawing commands.
+(Note that it supports blends but not stencils)
+Slider generalized to a slider constraint
+Add HSL features to color
+Better name gradient alllocators
+Corners feature on extruder
+Kivy/JSON style drawing commands (list of JSON objects)
+Add stencil support to path node to make alpha friendly (like NVG)
+
+Ability to assign low-level UI actions (button, slider, text)
+to high level events
+
+UITheme
++ Loads multiple assets to single texture
++ Factory for creating UI widgets
++ Lighter weight than regular UI
+MultilineLabel (nvgTextBreakLines support in Font; no hyphenation)
+ParticleNode
+Transitions
