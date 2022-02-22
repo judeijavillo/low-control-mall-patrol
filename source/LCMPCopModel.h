@@ -9,6 +9,7 @@
 #ifndef __LCMP_COP_MODEL_H__
 #define __LCMP_COP_MODEL_H__
 #include "LCMPPlayerModel.h"
+#include <cugl/cugl.h>
 
 //  MARK: - Drawing Constants
 /** The texture for the character avatar */
@@ -29,6 +30,9 @@ protected:
 public:
 //  MARK: - Constructors
     
+    virtual void update(float delta);
+        
+    virtual void applyForce();
 };
 
 #endif /* __LCMP_COP_MODEL_H__ */

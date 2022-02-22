@@ -41,8 +41,7 @@ bool PlayerModel::init(const Vec2 pos, const Size size) {
     setFixedRotation(true);
     
     // Gameplay attributes
-    _isGrounded = false;
-    _faceRight  = true;
+    setAngle(0.0f);
 
     return true;
 }
@@ -53,31 +52,6 @@ bool PlayerModel::init(const Vec2 pos, const Size size) {
  */
 void PlayerModel::dispose() {
     _playerNode = nullptr;
-    _sensorNode = nullptr;
-}
-
-//  MARK: - Attribute Properties
-
-/**
- * Sets left/right movement of this character.
- *
- * This is the result of input times dude force.
- *
- * @param value left/right movement of this character.
- */
-void PlayerModel::setMovement(float value) {
-    _movement = value;
-    bool face = _movement > 0;
-    if (_movement == 0 || _faceRight == face) {
-        return;
-    }
-    
-    // Change facing
-    scene2::TexturedNode* image = dynamic_cast<scene2::TexturedNode*>(_playerNode.get());
-    if (image != nullptr) {
-        image->flipHorizontal(!image->isFlipHorizontal());
-    }
-    _faceRight = face;
 }
 
 //  MARK: - Physics
@@ -91,27 +65,7 @@ void PlayerModel::applyForce() {
         return;
     }
     
-    // Don't want to be moving. Damp out player motion
-    if (getMovement() == 0.0f) {
-        if (isGrounded()) {
-            // Instant friction on the ground
-            b2Vec2 vel = _body->GetLinearVelocity();
-            vel.x = 0; // If you set y, you will stop a jump in place
-            _body->SetLinearVelocity(vel);
-        } else {
-            // Damping factor in the air
-            b2Vec2 force(-getDamping()*getVX(),0);
-            _body->ApplyForce(force,_body->GetPosition(),true);
-        }
-    }
-    
-    // Velocity too high, clamp it
-    if (fabs(getVX()) >= getMaxSpeed()) {
-        setVX(SIGNUM(getVX())*getMaxSpeed());
-    } else {
-        b2Vec2 force(getMovement(),0);
-        _body->ApplyForce(force,_body->GetPosition(),true);
-    }
+    // OVERRIDE
 }
 
 /**

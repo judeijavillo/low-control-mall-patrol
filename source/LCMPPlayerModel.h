@@ -11,8 +11,6 @@
 #include <cugl/cugl.h>
 
 //  MARK: - Physics Constants
-/** The factor to multiply by the input */
-#define PLAYER_FORCE      20.0f
 /** The amount to slow the character down */
 #define PLAYER_DAMPING    10.0f
 /** The maximum character speed */
@@ -20,24 +18,15 @@
 
 class PlayerModel : public cugl::physics2::CapsuleObstacle {
     
-protected:    
+protected:
+    cugl::Vec2 _force;
+    
     float _maxSpeed;
     
     float _acceleration;
     
-    /** The current horizontal movement of the character */
-    float _movement;
     /** Which direction is the character facing */
-    bool _faceRight;
-    /** Whether our feet are on the ground */
-    bool _isGrounded;
-    
-    /** Ground sensor to represent our feet */
-    b2Fixture*  _sensorFixture;
-    /** Reference to the sensor name (since a constant cannot have a pointer) */
-    std::string _sensorName;
-    /** The node for debugging the sensor */
-    std::shared_ptr<cugl::scene2::WireNode> _sensorNode;
+    float _angle;
     
     /** The scene graph node for a player */
     std::shared_ptr<cugl::scene2::SceneNode> _playerNode;
@@ -103,47 +92,23 @@ public:
     }
     
     //  MARK: - Accessors
-    /**
-     * Returns left/right movement of this character.
-     *
-     * This is the result of input times player force.
-     *
-     * @return left/right movement of this character.
-     */
-    float getMovement() const { return _movement; }
     
     /**
-     * Sets left/right movement of this character.
-     *
-     * This is the result of input times player force.
-     *
-     * @param value left/right movement of this character.
+     * Returns angle player is facing
      */
-    void setMovement(float value);
+    float getAngle() const { return _angle; }
     
     /**
-     * Returns true if the dude is on the ground.
-     *
-     * @return true if the dude is on the ground.
+     * Sets angle player is facing
      */
-    bool isGrounded() const { return _isGrounded; }
+    void setAngle(const float angle) { _angle = angle; }
     
     /**
-     * Returns ow hard the brakes are applied to get a dude to stop moving
+     * Returns how hard the brakes are applied to get a dude to stop moving
      *
-     * @return ow hard the brakes are applied to get a dude to stop moving
+     * @return how hard the brakes are applied to get a dude to stop moving
      */
     float getDamping() const { return PLAYER_DAMPING; }
-    
-    /**
-     * Returns the force applied to this player.
-     *
-     * Remember to modify the input values by the thrust amount before assigning
-     * the value to force.
-     *
-     * @return the force applied to this rocket.
-     */
-    float getForce() const { return PLAYER_FORCE; }
     
     /**
      * Returns the max speed applied to this player.
