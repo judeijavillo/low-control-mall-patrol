@@ -68,6 +68,13 @@ void PlayerModel::applyForce() {
     // OVERRIDE
 }
 
+void PlayerModel::setMovement(Vec2 value) {
+    if (!isEnabled()) {
+        return;
+    }
+    //OVERRIDE
+}
+
 /**
  * Updates the object's physics state (NOT GAME LOGIC).
  *
@@ -89,5 +96,40 @@ void PlayerModel::update(float delta) {
     }
 }
 
+/**
+ * Sets the scene graph node representing this player.
+ *
+ * By storing a reference to the scene graph node, the model can update
+ * the node to be in sync with the physics info. It does this via the
+ * {@link Obstacle#update(float)} method.
+ *
+ * If the animation nodes are not null, this method will remove them from
+ * the previous scene and add them to the new one.
+ *
+ * @param node  The scene graph node representing this player.
+ */
+void PlayerModel::setPlayerNode(const std::shared_ptr<scene2::SceneNode>&node) {
+    _playerNode = node;
+}
+
+
 //  MARK: - Animation
 
+/**
+ * Sets the ratio of the ship sprite to the physics body
+ *
+ * The rocket needs this value to convert correctly between the physics
+ * coordinates and the drawing screen coordinates.  Otherwise it will
+ * interpret one Box2D unit as one pixel.
+ *
+ * All physics scaling must be uniform.  Rotation does weird things when
+ * attempting to scale physics by a non-uniform factor.
+ *
+ * @param scale The ratio of the ship sprite to the physics body
+ */
+void PlayerModel::setDrawScale(float scale) {
+    _drawscale = scale;
+    if (_playerNode != nullptr) {
+        _playerNode->setPosition(getPosition() * _drawscale);
+    }
+}

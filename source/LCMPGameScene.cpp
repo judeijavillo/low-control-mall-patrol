@@ -38,9 +38,12 @@ using namespace std;
 
 /** The initial thief position */
 float THIEF_POS[] = {24,  4};
+float COP_POS[] = {30, 4};
 
 /** The key for the thief texture in the asset manager */
 #define THIEF_TEXTURE        "thief"
+
+#define COP_TEXTURE         "cop_left"
 
 //  MARK: - Physics Constants
 
@@ -105,7 +108,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     _worldnode = scene2::SceneNode::alloc();
     _worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _worldnode->setPosition(offset);
-    
+
     // Acquire the scene built by the asset loader and resize it the scene
     std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("game");
     scene->setContentSize(dimen);
@@ -113,6 +116,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     
     _quit = false;
 
+    populate();
     addChild(scene);
     setActive(false);
     return true;
@@ -126,6 +130,30 @@ void GameScene::dispose() {
         removeAllChildren();
         _active = false;
     }
+}
+
+//  MARK: - Gameplay Handling
+void GameScene::reset() {
+    _world->clear();
+    _worldnode->removeAllChildren();
+    
+    populate();
+}
+
+void GameScene::populate() {
+    std::shared_ptr<Texture> image = _assets->get<Texture>(COP_TEXTURE);
+    // Create obstacle
+    Vec2 copPos = ((Vec2)COP_POS);
+    Size copSize = image->getSize()/_scale;
+    
+    _cop = CopModel::alloc(copPos,copSize);
+    _cop->setDrawScale(_scale);
+    
+    auto copNode = scene2::PolygonNode::allocWithTexture(image);
+    copNode->setAnchor(Vec2::ANCHOR_CENTER);
+    _cop->setCopNode(copNode);
+    
+    _worldnode->addChild(copNode);
 }
 
 //  MARK: - Methods
