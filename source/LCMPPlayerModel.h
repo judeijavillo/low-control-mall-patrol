@@ -19,8 +19,10 @@
 class PlayerModel : public cugl::physics2::CapsuleObstacle {
     
 protected:
-    cugl::Vec2 _force;
-    
+
+    //should fit within a unit circle
+    cugl::Vec2 _movement;
+
     float _maxSpeed;
     
     float _acceleration;
@@ -33,6 +35,7 @@ protected:
     
     /** Cache object for transforming the force according the object angle */
     cugl::Mat4 _affine;
+
     float _drawscale;
     
 public:
@@ -150,13 +153,31 @@ public:
      */
     void setAcceleration(const float value) { _acceleration = value; }
 
+    /**
+     * Returns left/right movement of this character.
+     *
+     * This is the result of input times dude force.
+     *
+     * @return left/right movement of this character.
+     */
+    Vec2 getMovement() const { return _movement; }
+
+    /**
+     * Sets left/right movement of this character.
+     *
+     * This is the result of input times dude force.
+     *
+     * @param value left/right movement of this character.
+     */
+    virtual void setMovement(Vec2 value);
+    
     //  MARK: - Physics
     /**
      * Applies the force to the body of this player
      *
      * This method should be called after the force attribute is set.
      */
-    void applyForce();
+    virtual void applyForce();
 
     /**
      * Updates the object's physics state (NOT GAME LOGIC).
@@ -173,6 +194,58 @@ public:
      */
     virtual void update(float delta) override;
     
+    /**
+ * Returns the scene graph node representing this rocket.
+ *
+ * By storing a reference to the scene graph node, the model can update
+ * the node to be in sync with the physics info. It does this via the
+ * {@link Obstacle#update(float)} method.
+ *
+ * @return the scene graph node representing this rocket.
+ */
+    const std::shared_ptr<cugl::scene2::SceneNode>& getPlayerNode() const { return _playerNode; }
+
+    /**
+     * Sets the scene graph node representing this rocket.
+     *
+     * By storing a reference to the scene graph node, the model can update
+     * the node to be in sync with the physics info. It does this via the
+     * {@link Obstacle#update(float)} method.
+     *
+     * If the animation nodes are not null, this method will remove them from
+     * the previous scene and add them to the new one.
+     *
+     * @param node  The scene graph node representing this rocket.
+     */
+    void setPlayerNode(const std::shared_ptr<cugl::scene2::SceneNode>& node);
+
+    /**
+     * Sets the ratio of the ship sprite to the physics body
+     *
+     * The rocket needs this value to convert correctly between the physics
+     * coordinates and the drawing screen coordinates.  Otherwise it will
+     * interpret one Box2D unit as one pixel.
+     *
+     * All physics scaling must be uniform.  Rotation does weird things when
+     * attempting to scale physics by a non-uniform factor.
+     *
+     * @param scale The ratio of the ship sprite to the physics body
+     */
+    void setDrawScale(float scale);
+
+    /**
+     * Returns the ratio of the ship sprite to the physics body
+     *
+     * The rocket needs this value to convert correctly between the physics
+     * coordinates and the drawing screen coordinates.  Otherwise it will
+     * interpret one Box2D unit as one pixel.
+     *
+     * All physics scaling must be uniform.  Rotation does weird things when
+     * attempting to scale physics by a non-uniform factor.
+     *
+     * @return the ratio of the ship sprite to the physics body
+     */
+    float getDrawScale() const { return _drawscale; }
 };
 
 #endif /* __LCMP_PLAYER_MODEL_H__ */

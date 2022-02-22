@@ -47,7 +47,11 @@ protected:
     float _scale;
     
     // Physics objects for the game
-    std::shared_ptr<cugl::physics2::CapsuleObstacle> _thief;
+    /** Reference to the player */
+    //TODO: Make more than one player, specify cops and thieves
+    std::shared_ptr<PlayerModel> _player;
+    /**Reference to the thief. */
+    std::shared_ptr<ThiefModel> _thief;
     
     /** The asset manager for this game mode. */
     std::shared_ptr<cugl::AssetManager> _assets;
