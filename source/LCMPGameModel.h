@@ -18,6 +18,8 @@
 #include <cugl/assets/CUAsset.h>
 #include <cugl/io/CUJsonReader.h>
 
+using namespace cugl;
+
 class GameModel : public Asset {
 protected:
 //  MARK: - Properties
@@ -35,8 +37,12 @@ protected:
 
     /** The root node of this level */
     std::shared_ptr<scene2::SceneNode> _root;
+    /** The global gravity for this level */
+    Vec2 _gravity;
     /** The bounds of this level in physics coordinates */
     Rect _bounds;
+    /** The level drawing scale (difference between physics and drawing coordinates) */
+    Vec2 _scale;
 
     /** Reference to the physics root of the scene graph */
     std::shared_ptr<scene2::SceneNode> _worldnode;
@@ -57,7 +63,7 @@ protected:
      *
      * @return true if the objects were loaded successfully.
      */
-    bool loadObjects(const std::shared_ptr<JsonValue>& json);
+    bool loadObstacle(const std::shared_ptr<JsonValue>& json);
 
     /**
      * Converts the string to a color
@@ -120,14 +126,14 @@ public:
      *
      * @return the cops in this game level
      */
-    const std::shared_ptr<CopModel>& getCop() { return cops; }
+    const std::vector<std::shared_ptr<CopModel>>& getCop() { return _cops; }
 
     /**
      * Returns the thief in this game level
      *
      * @return the thief in this game level
      */
-    const std::shared_ptr<ThiefModel>& getThief() { return thief; }
+    const std::shared_ptr<ThiefModel>& getThief() { return _thief; }
 
     /**
      * Returns the Obstacle world in this game level 
@@ -143,6 +149,13 @@ public:
      */
     const Rect& getBounds() const   { return _bounds; }
     
+     /**
+     * Returns the global gravity for this level
+     *
+     * @return the global gravity for this level
+     */
+    const Vec2& getGravity() const { return _gravity; }
+
     /**
      * Returns the drawing scale for this game level
      *

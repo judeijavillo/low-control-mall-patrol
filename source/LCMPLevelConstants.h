@@ -12,9 +12,18 @@
 #define __LCMP_LEVEL_CONSTANTS_H__
 
 /** The global fields of the level model */
+#define LAYERS_FIELD         "layers"
 #define WIDTH_FIELD         "width"
 #define HEIGHT_FIELD        "height"
-#define GRAVITY_FIELD       "gravity"
+#define TILES_FIELD        "Tile Layer 1"
+#define OBJECTS_FIELD        "Object Layer 1"
+
+#define WALLS_FIELD        "data"
+#define OBSTACLES_FIELD        "objects"
+
+#define ELLIPSE_FIELD        "ellipse"
+#define POLYGON_FIELD        "polygon"
+
 
 /** The physics fields for each object */
 #define POSITION_FIELD      "pos"

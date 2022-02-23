@@ -11,7 +11,6 @@
 #include "LCMPCopModel.h"
 #include "LCMPTrapModel.h"
 #include <cugl/assets/CUJsonLoader.h>
-#include "LCMPLevelModel.h"
 #include "LCMPLevelConstants.h"
 
 
@@ -22,9 +21,7 @@ GameModel::GameModel(void) : Asset(),
 _root(nullptr),
 _world(nullptr),
 _worldnode(nullptr),
-_debugnode(nullptr),
-_rocket(nullptr),
-_goalDoor(nullptr)
+_debugnode(nullptr)
 {
 	_bounds.size.set(1.0f, 1.0f);
 }
@@ -181,21 +178,44 @@ bool GameModel::preload(const std::string& file) {
  *
  * @return true if successfully loaded the asset from a file
  */
-bool LevelModel:: preload(const std::shared_ptr<cugl::JsonValue>& json) {
+bool GameModel:: preload(const std::shared_ptr<cugl::JsonValue>& json) {
 	if (json == nullptr) {
 		CUAssertLog(false, "Failed to load level file");
 		return false;
 	}
 	// Initial geometry
-	float w = json->get(WIDTH_FIELD)->asFloat();
-	float h = json->get(HEIGHT_FIELD)->asFloat();
+
+	auto layers = json->get(LAYERS_FIELD);
+
+	auto tile_layer = layers->get(TILES_FIELD);
+	auto object_layer = layers->get(OBJECTS_FIELD);
+
+	float w = tile_layer->get(WIDTH_FIELD)->asFloat();
+	float h = tile_layer->get(HEIGHT_FIELD)->asFloat();
+
+	
+	auto walls = tile_layer->get(WALLS_FIELD);
+	auto obstacles = object_layer->get(OBSTACLES_FIELD);
 
 	_bounds.size.set(w, h);
 	_gravity.set(0, 0);
 
 	/** Create the physics world */
-	_world = physics2::ObstacleWorld::alloc(getBounds(),getGravity());
-    
+	_world = physics2::ObstacleWorld::alloc(getBounds(), getGravity());
+
+	// Load Wall.
+
+	if (obstacles != nullptr) {
+		// Convert the object to an array so we can see keys and values
+		int osize = (int)obstacles->size();
+		for(int ii = 0; ii < osize; ii++) {
+			loadObstacle(obstacles->get(ii));
+		}
+	} else {
+	 	CUAssertLog(false, "Failed to load walls");
+	 	return false;
+	}
+
     // TODO Load shit.
 
 	// // Parse the rocket
@@ -242,37 +262,37 @@ bool LevelModel:: preload(const std::shared_ptr<cugl::JsonValue>& json) {
 * unloaded in parallel, not in sequence.  If an asset (like a game level) has
 * references to other assets, then these should be disconnected earlier.
 */
-void LevelModel::unload() {
-	if (_rocket != nullptr) {
-		if (_world != nullptr) {
-			_world->removeObstacle(_rocket.get());
-		}
-		_rocket = nullptr;
-	}
-	if (_goalDoor != nullptr) {
-		if (_world != nullptr) {
-			_world->removeObstacle(_goalDoor.get());
-		}
-		_goalDoor = nullptr;
-	}
-	for(auto it = _crates.begin(); it != _crates.end(); ++it) {
-		if (_world != nullptr) {
-			_world->removeObstacle((*it).get());
-		}
-    (*it) = nullptr;
-	}
-	_crates.clear();
-	for(auto it = _walls.begin(); it != _walls.end(); ++it) {
-		if (_world != nullptr) {
-			_world->removeObstacle((*it).get());
-		}
-    (*it) = nullptr;
-	}
-	_walls.clear();
-	if (_world != nullptr) {
-		_world->clear();
-		_world = nullptr;
-	}
+void GameModel::unload() {
+	//if (_rocket != nullptr) {
+	//	if (_world != nullptr) {
+	//		_world->removeObstacle(_rocket.get());
+	//	}
+	//	_rocket = nullptr;
+	//}
+	//if (_goalDoor != nullptr) {
+	//	if (_world != nullptr) {
+	//		_world->removeObstacle(_goalDoor.get());
+	//	}
+	//	_goalDoor = nullptr;
+	//}
+	//for(auto it = _crates.begin(); it != _crates.end(); ++it) {
+	//	if (_world != nullptr) {
+	//		_world->removeObstacle((*it).get());
+	//	}
+ //   (*it) = nullptr;
+	//}
+	//_crates.clear();
+	//for(auto it = _walls.begin(); it != _walls.end(); ++it) {
+	//	if (_world != nullptr) {
+	//		_world->removeObstacle((*it).get());
+	//	}
+ //   (*it) = nullptr;
+	//}
+	//_walls.clear();
+	//if (_world != nullptr) {
+	//	_world->clear();
+	//	_world = nullptr;
+	//}
 }
 
 
@@ -285,8 +305,22 @@ void LevelModel::unload() {
  *
  * @return true if the objects were loaded successfully.
  */
-bool loadObjects(const std::shared_ptr<JsonValue>& json) { // NOT DONE AT ALL. 
+bool loadObstacle(const std::shared_ptr<JsonValue>& json) {
     bool success = true;
+	
+	bool ellipse = json->get(ELLIPSE_FIELD)->asBool();
+	auto polygon = json->get(POLYGON_FIELD);
+	if (ellipse) {
+
+	}
+	else if (polygon != nullptr) {
+
+	}
+	else {
+
+	}
+
+
 
 	int polysize = json->getInt(VERTICES_FIELD);
 	success = success && polysize > 0;
@@ -354,7 +388,7 @@ bool loadObjects(const std::shared_ptr<JsonValue>& json) { // NOT DONE AT ALL.
 *
 * @return the color for the string
 */
-Color4 LevelModel::parseColor(std::string name) {
+Color4 GameModel::parseColor(std::string name) {
 	if (name == "yellow") {
 		return Color4::YELLOW;
 	} else if (name == "red") {
@@ -383,7 +417,7 @@ Color4 LevelModel::parseColor(std::string name) {
  * param obj    The physics object to add
  * param node   The scene graph node to attach it to
  */
-void LevelModel::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj,
+void GameModel::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj,
                              const std::shared_ptr<cugl::scene2::SceneNode>& node) {
 	_world->addObstacle(obj);
 	obj->setDebugScene(_debugnode);
