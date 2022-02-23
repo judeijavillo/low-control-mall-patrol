@@ -12,10 +12,7 @@
 #include <cugl/cugl.h>
 
 //  MARK: - Drawing Constants
-/** The texture for the character avatar */
-#define COP_TEXTURE    "cop"
 /** Identifier to allow us to track the sensor in ContactListener */
-#define SENSOR_NAME     "copsensor"
 
 //  MARK: - Cop Model
 class CopModel : public PlayerModel {
@@ -29,6 +26,8 @@ protected:
 
 public:
 //  MARK: - Constructors
+    
+    virtual bool init(const cugl::Vec2 pos, const cugl::Size size);
     
     virtual void update(float delta);
         

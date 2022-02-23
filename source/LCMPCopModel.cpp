@@ -10,14 +10,18 @@
 
 using namespace cugl;
 
+bool CopModel::init(const cugl::Vec2 pos, const cugl::Size size) {
+    return true;
+}
+
 void CopModel::applyForce() {
     return;
 }
 
 void CopModel::update(float delta) {
     CapsuleObstacle::update(delta);
-    if (_playerNode != nullptr) {
-        _playerNode->setPosition(getPosition()*_drawscale);
-        _playerNode->setAngle(getAngle());
+    if (_copNode != nullptr) {
+        _copNode->setPosition(getPosition()*_drawscale);
+        _copNode->setAngle(getAngle());
     }
 }

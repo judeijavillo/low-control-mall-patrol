@@ -62,7 +62,9 @@ protected:
     /** Whether we quit the game */
     bool _quit;
     
-    //  MARK: - Internal Object Management
+//  MARK: - Internal Object Management
+    void populate();
+    
     void addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj,
                      const std::shared_ptr<cugl::scene2::SceneNode>& node);
     
@@ -106,18 +108,24 @@ public:
      * @return true if the controller is initialized properly, false otherwise.
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<NetworkController>& network);
+    
 
-//  MARK: - Methods
+//  MARK: - Gameplay Handling
     
     /**
-     * The method called to update the scene.
-     *
-     * We need to update this method to constantly talk to the server
+     * The method called to update the game mode.
      *
      * @param timestep  The amount of time (in seconds) since the last frame
      */
-    void update(float timestep) override;
+    void update(float timestep);
     
+    /**
+     * Resets the status of the game so that we can play again.
+     */
+    void reset();
+    
+
+//  MARK: - Methods
     /**
      * Sets whether the scene is currently active
      *
