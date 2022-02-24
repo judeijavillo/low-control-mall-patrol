@@ -14,6 +14,10 @@ bool CopModel::init(const cugl::Vec2 pos, const cugl::Size size) {
     return true;
 }
 
+void CopModel::setCopNode(const std::shared_ptr<scene2::SceneNode>& node) {
+    _copNode = node;
+}
+
 void CopModel::applyForce() {
     return;
 }

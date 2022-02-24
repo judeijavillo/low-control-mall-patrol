@@ -10,6 +10,10 @@
 
 using namespace cugl;
 
+void ThiefModel::setThiefNode(const std::shared_ptr<scene2::SceneNode>& node) {
+    _thiefNode = node;
+}
+
 /**
  * Sets left/right movement of this character.
  *
@@ -25,7 +29,7 @@ void ThiefModel::setMovement(Vec2 value) {
 }
 
 void ThiefModel::applyForce() {
-    if (!isEnabled) {
+    if (!isEnabled()) {
         return;
     }
 
@@ -37,8 +41,8 @@ void ThiefModel::applyForce() {
 
 void ThiefModel::update(float delta) {
     CapsuleObstacle::update(delta);
-    if (_playerNode != nullptr) {
-        _playerNode->setPosition(getPosition() * _drawscale);
-        _playerNode->setAngle(getAngle());
+    if (_thiefNode != nullptr) {
+        _thiefNode->setPosition(getPosition() * _drawscale);
+        _thiefNode->setAngle(getAngle());
     }
 }

@@ -52,6 +52,8 @@ protected:
     std::shared_ptr<PlayerModel> _player;
     /**Reference to the thief. */
     std::shared_ptr<ThiefModel> _thief;
+    /**Reference to the cop. */
+    std::shared_ptr<CopModel> _cop;
     
     /** The asset manager for this game mode. */
     std::shared_ptr<cugl::AssetManager> _assets;

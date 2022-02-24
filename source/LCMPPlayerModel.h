@@ -160,7 +160,7 @@ public:
      *
      * @return left/right movement of this character.
      */
-    Vec2 getMovement() const { return _movement; }
+    cugl::Vec2 getMovement() const { return _movement; }
 
     /**
      * Sets left/right movement of this character.
@@ -169,7 +169,7 @@ public:
      *
      * @param value left/right movement of this character.
      */
-    virtual void setMovement(Vec2 value);
+    virtual void setMovement(cugl::Vec2 value);
     
     //  MARK: - Physics
     /**

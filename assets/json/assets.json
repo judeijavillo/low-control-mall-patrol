@@ -8,7 +8,13 @@
         },
         "left": {
             "file":  "textures/left_arrow.png"
-        }
+        },
+	"thief":{
+	    "file":  "textures/thief.png"
+	},
+	"cop_left":{
+	    "file":  "textures/cop_left.png"
+	}
     },
     "fonts": {
         "gyparody": {

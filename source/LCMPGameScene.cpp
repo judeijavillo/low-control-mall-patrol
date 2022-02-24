@@ -29,6 +29,9 @@ using namespace std;
 #define SCENE_WIDTH 1024
 //#define SCENE_HEIGHT 576
 
+/** Scalar to change cop size.*/
+#define TEXTURE_SCALAR 0.1f
+
 /** Width of the game world in Box2d units */
 #define DEFAULT_WIDTH   32.0f
 /** Height of the game world in Box2d units */
@@ -37,7 +40,7 @@ using namespace std;
 #define DEFAULT_GRAVITY 0.0f
 
 /** The initial thief position */
-float THIEF_POS[] = {24,  4};
+float THIEF_POS[] = {0,  0};
 float COP_POS[] = {30, 4};
 
 /** The key for the thief texture in the asset manager */
@@ -102,6 +105,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     // This means that we cannot change the aspect ratio of the physics world
     // Shift to center if a bad fit
     _scale = dimen.width == SCENE_WIDTH ? dimen.width/rect.size.width : dimen.height/rect.size.height;
+    _scale *= TEXTURE_SCALAR;
     Vec2 offset((dimen.width-SCENE_WIDTH)/2.0f,(dimen.height-SCENE_HEIGHT)/2.0f);
 
     // Create the scene graph
@@ -114,6 +118,8 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     scene->setContentSize(dimen);
     scene->doLayout(); // Repositions the HUD
     
+    addChild(_worldnode);
+
     _quit = false;
 
     populate();
@@ -142,18 +148,35 @@ void GameScene::reset() {
 
 void GameScene::populate() {
     std::shared_ptr<Texture> image = _assets->get<Texture>(COP_TEXTURE);
-    // Create obstacle
+    // Create cop
     Vec2 copPos = ((Vec2)COP_POS);
-    Size copSize = image->getSize()/_scale;
+    Size copSize(image->getSize().width / _scale,
+        image->getSize().height / _scale);
     
     _cop = CopModel::alloc(copPos,copSize);
     _cop->setDrawScale(_scale);
     
     auto copNode = scene2::PolygonNode::allocWithTexture(image);
     copNode->setAnchor(Vec2::ANCHOR_CENTER);
+    copNode->setScale(Vec2(TEXTURE_SCALAR, TEXTURE_SCALAR));
     _cop->setCopNode(copNode);
-    
+
     _worldnode->addChild(copNode);
+    
+    // Create thief
+    image = _assets->get<Texture>(THIEF_TEXTURE);
+    Vec2 thiefPos = ((Vec2)COP_POS);
+    Size thiefSize = image->getSize() / _scale;
+
+    _thief = ThiefModel::alloc(thiefPos, thiefSize);
+    _thief->setDrawScale(_scale);
+
+    auto thiefNode = scene2::PolygonNode::allocWithTexture(image);
+    thiefNode->setAnchor(Vec2::ANCHOR_CENTER);
+    thiefNode->setScale(Vec2(TEXTURE_SCALAR, TEXTURE_SCALAR));
+    _thief->setThiefNode(thiefNode);
+    
+    _worldnode->addChild(thiefNode);
 }
 
 //  MARK: - Methods

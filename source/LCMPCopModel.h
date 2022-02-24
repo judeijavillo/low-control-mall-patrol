@@ -25,12 +25,35 @@ protected:
     std::shared_ptr<cugl::scene2::SceneNode> _copNode;
 
 public:
+    //  MARK: - Static Constructors
+    /**
+     * Returns a newly allocated thief with the given position and size
+     *
+     * The player size is specified in world coordinates.
+     *
+     * The scene graph is completely decoupled from the physics system.
+     * The node does not have to be the same size as the physics body. We
+     * only guarantee that the scene graph node is positioned correctly
+     * according to the drawing scale.
+     *
+     * @param pos   Initial position in world coordinates
+     * @param size  The dimensions of the box.
+     *
+     * @return a newly allocated thief with the given position
+     */
+    static std::shared_ptr<CopModel> alloc(const cugl::Vec2& pos, const cugl::Size& size) {
+        std::shared_ptr<CopModel> result = std::make_shared<CopModel>();
+        return (result->init(pos, size) ? result : nullptr);
+    }
+
 //  MARK: - Constructors
     
     virtual bool init(const cugl::Vec2 pos, const cugl::Size size);
     
     virtual void update(float delta);
-        
+    
+    void setCopNode(const std::shared_ptr<cugl::scene2::SceneNode>& node);
+
     virtual void applyForce();
 };
 
