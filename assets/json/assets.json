@@ -8,6 +8,9 @@
         },
         "left": {
             "file":  "textures/left_arrow.png"
+        },
+        "wall": {
+            "file":  "textures/map/wall.png"
         }
     },
     "fonts": {

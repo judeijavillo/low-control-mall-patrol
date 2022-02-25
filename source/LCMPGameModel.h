@@ -51,12 +51,23 @@ protected:
 
 
     /** Reference to the obstacles */
-    std::vector<physics2::Obstacle> _obstacles = std::vector<physics2::Obstacle>();
+    std::vector<std::shared_ptr<physics2::Obstacle>> _obstacles;
     /** Reference to the walls */
-    std::vector<physics2::Obstacle> _walls = std::vector<physics2::Obstacle>();
+    std::vector<std::shared_ptr<physics2::Obstacle>> _walls;
 
     /** The AssetManager for the game mode */
     std::shared_ptr<cugl::AssetManager> _assets;
+
+    /**
+     * Loads an wall from the JSON
+     *
+     * These are only walls.
+     *
+     * @param  json   a JSON Value with the json for related objects.
+     *
+     * @return true if the objects were loaded successfully.
+     */
+    bool loadWall(const std::vector<int> walls, int width, int height, int t_width, int t_height);
     
     /**
      * Loads an object from the JSON

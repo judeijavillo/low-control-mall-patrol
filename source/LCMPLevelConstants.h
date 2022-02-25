@@ -15,6 +15,8 @@
 #define LAYERS_FIELD         "layers"
 #define WIDTH_FIELD         "width"
 #define HEIGHT_FIELD        "height"
+#define T_WIDTH_FIELD         "tilewidth"
+#define T_HEIGHT_FIELD        "tileheight"
 #define X_FIELD         "x"
 #define Y_FIELD        "y"
 #define ROTATION_FIELD        "rotation"
@@ -49,6 +51,8 @@
 #define LEVEL_ONE_FILE      "json/testmall.json"
 /** The key for our loaded level */
 #define LEVEL_ONE_KEY       "testmall"
+
+#define WALL_TEXTURE_KEY       "wall"
 
 
 #endif /* defined(__LCMP_LEVEL_CONSTANTS_H__) */
