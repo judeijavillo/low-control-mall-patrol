@@ -50,6 +50,10 @@ protected:
     std::shared_ptr<scene2::SceneNode> _debugnode;
 
 
+    /** Reference to the obstacles */
+    std::vector<physics2::Obstacle> _obstacles = std::vector<physics2::Obstacle>();
+    /** Reference to the walls */
+    std::vector<physics2::Obstacle> _walls = std::vector<physics2::Obstacle>();
 
     /** The AssetManager for the game mode */
     std::shared_ptr<cugl::AssetManager> _assets;

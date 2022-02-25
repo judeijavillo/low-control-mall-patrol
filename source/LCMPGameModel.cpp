@@ -333,6 +333,7 @@ bool loadObstacle(const std::shared_ptr<JsonValue>& json) {
 		triangulator.set(Poly2(reinterpret_cast<Vec2*>(&verts[0]), (int)verts.size() / 2));
 		triangulator.calculate();
 		obstacle = triangulator.getPolygon();
+		obstacle->setAngle((rotation * M_PI) / (180));
 	}
 	else { // rectangle
 		auto rect = physics2::BoxObstacle::alloc(Vec2(x, y), Vec2(width, height));
@@ -340,8 +341,9 @@ bool loadObstacle(const std::shared_ptr<JsonValue>& json) {
 		obstacle->setAngle((rotation * M_PI) / (180));
 	}
 
+	_obstacles.push_back(obstacle);
 
-
+	/*
 	int polysize = json->getInt(VERTICES_FIELD);
 	success = success && polysize > 0;
 
@@ -350,7 +352,7 @@ bool loadObstacle(const std::shared_ptr<JsonValue>& json) {
 
     Vec2* verts = reinterpret_cast<Vec2*>(&vertices[0]);
 	Poly2 wall(verts,(int)vertices.size()/2);
-	//EarclipTriangulator triangulator;
+	EarclipTriangulator triangulator;
 	triangulator.set(wall.vertices);
 	triangulator.calculate();
 	wall.setIndices(triangulator.getTriangulation());
@@ -381,6 +383,9 @@ bool loadObstacle(const std::shared_ptr<JsonValue>& json) {
 	}
 
 	vertices.clear();
+	*/
+
+	
 	return success;
 }
 
