@@ -12,7 +12,7 @@
 #include "LCMPTrapModel.h"
 #include <cugl/assets/CUJsonLoader.h>
 #include "LCMPLevelConstants.h"
-
+#include <cmath>
 
 /**
 * Creates a new, empty level.
@@ -324,14 +324,20 @@ bool loadObstacle(const std::shared_ptr<JsonValue>& json) {
         } else { // ellipse case, uses extruded path2
             auto poly = PolyFactory().makeEllipse(Vec2(x,y), Vec2(width,height));
             obstacle = physics2::PolygonObstacle::alloc(poly);
-            obstacle->setAngle(rotation);
+            obstacle->setAngle((rotation*M_PI)/(180));
         }
 	}
 	else if (polygon != nullptr) { // polygon
-        
+		std::vector<float> verts = json->get(VERTICES)->asFloatArray();
+		EarclipTriangulator triangulator;
+		triangulator.set(Poly2(reinterpret_cast<Vec2*>(&verts[0]), (int)verts.size() / 2));
+		triangulator.calculate();
+		obstacle = triangulator.getPolygon();
 	}
 	else { // rectangle
-
+		auto rect = physics2::BoxObstacle::alloc(Vec2(x, y), Vec2(width, height));
+		obstacle = physics2::PolygonObstacle::alloc(poly);
+		obstacle->setAngle((rotation * M_PI) / (180));
 	}
 
 
@@ -344,7 +350,7 @@ bool loadObstacle(const std::shared_ptr<JsonValue>& json) {
 
     Vec2* verts = reinterpret_cast<Vec2*>(&vertices[0]);
 	Poly2 wall(verts,(int)vertices.size()/2);
-	EarclipTriangulator triangulator;
+	//EarclipTriangulator triangulator;
 	triangulator.set(wall.vertices);
 	triangulator.calculate();
 	wall.setIndices(triangulator.getTriangulation());
