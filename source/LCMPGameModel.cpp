@@ -310,13 +310,27 @@ bool loadObstacle(const std::shared_ptr<JsonValue>& json) {
 	
 	bool ellipse = json->get(ELLIPSE_FIELD)->asBool();
 	auto polygon = json->get(POLYGON_FIELD);
-	if (ellipse) {
-
+    
+    auto height = json->get(HEIGHT_FIELD)->asInt();
+    auto width = json->get(WIDTH_FIELD)->asInt();
+    auto rotation = json->get(ROTATION_FIELD)->asFloat();
+    auto x = json->get(X_FIELD)->asFloat();
+    auto y = json->get(Y_FIELD)->asFloat();
+    
+    std::shared_ptr<physics2::SimpleObstacle> obstacle;
+	if (ellipse) { // circle or ellipse
+        if (height == width) { // circle case, uses wheelobstacle
+            obstacle = physics2::WheelObstacle::alloc(Vec2(x,y), height/2);
+        } else { // ellipse case, uses extruded path2
+            auto poly = PolyFactory().makeEllipse(Vec2(x,y), Vec2(width,height));
+            obstacle = physics2::PolygonObstacle::alloc(poly);
+            obstacle->setAngle(rotation);
+        }
 	}
-	else if (polygon != nullptr) {
-
+	else if (polygon != nullptr) { // polygon
+        
 	}
-	else {
+	else { // rectangle
 
 	}
 

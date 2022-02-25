@@ -15,6 +15,9 @@
 #define LAYERS_FIELD         "layers"
 #define WIDTH_FIELD         "width"
 #define HEIGHT_FIELD        "height"
+#define X_FIELD         "x"
+#define Y_FIELD        "y"
+#define ROTATION_FIELD        "rotation"
 #define TILES_FIELD        "Tile Layer 1"
 #define OBJECTS_FIELD        "Object Layer 1"
 
