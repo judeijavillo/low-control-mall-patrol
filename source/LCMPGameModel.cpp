@@ -112,11 +112,20 @@ void GameModel::setRootNode(const std::shared_ptr<scene2::SceneNode>& node) {
     // TODO: Add shit.
 
 	for (auto it = _walls.begin(); it != _walls.end(); ++it) {
-		std::shared_ptr<physics2::Obstacle> wall = *it;
-		auto sprite = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(WALL_TEXTURE_KEY),
-		                                                        PolyFactory::makeRect(wall->getX(), wall->get, wall->) * _scale);
+		shared_ptr<physics2::BoxObstacle> wall = *it;
+		auto sprite = scene2::PolygonNode::allocWithTexture(
+                _assets->get<Texture>(WALL_TEXTURE_KEY),
+                PolyFactory().makeRect(wall->getX(), wall->getY(), wall->getWidth(), wall->getHeight()) * _scale);
 		addObstacle(wall,sprite);  // All walls share the same texture
 	}
+    
+    for (auto it = _obstacles.begin(); it != _obstacles.end(); ++it) {
+        shared_ptr<physics2::PolygonObstacle> obstacle = *it;
+        auto sprite = scene2::PolygonNode::allocWithTexture(
+                _assets->get<Texture>(OBSTACLE_TEXTURE_KEY),
+                obstacle->getPolygon());
+        addObstacle(obstacle,sprite);  // All obstacles share the same texture
+    }
 
 // 	if (_goalDoor != nullptr) {
 //         auto sprite = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(_goalDoor->getTextureKey()));
@@ -214,7 +223,7 @@ bool GameModel:: preload(const std::shared_ptr<cugl::JsonValue>& json) {
 
 	// Load Wall.
 
-	loadWall(walls, w, h, t_width, t_height);
+	loadWalls(walls, w, h, t_width, t_height);
 
 	if (obstacles != nullptr) {
 		// Convert the object to an array so we can see keys and values
@@ -314,11 +323,11 @@ void GameModel::unload() {
  *
  * @return true if the objects were loaded successfully.
  */
-bool GameModel::loadWall(const std::vector<int> walls, int width, int height, int t_width, int t_height) {
+bool GameModel::loadWalls(const std::vector<int> walls, int width, int height, int t_width, int t_height) {
 	int x = 0;
 	int y = 0;
 	std::shared_ptr<physics2::SimpleObstacle> obstacle;
-	_walls = std::vector<std::shared_ptr<physics2::Obstacle>>();
+	_walls = std::vector<std::shared_ptr<physics2::BoxObstacle>>();
 
 	for (auto it = walls.begin(); it != walls.end(); ++it) {
 		if ((*it) != 0) {
@@ -356,16 +365,19 @@ bool GameModel::loadObstacle(const std::shared_ptr<JsonValue>& json) {
     auto x = json->get(X_FIELD)->asFloat();
     auto y = json->get(Y_FIELD)->asFloat();
     
-	_obstacles = std::vector<std::shared_ptr<physics2::Obstacle>>();
-    std::shared_ptr<physics2::SimpleObstacle> obstacle;
+	_obstacles = vector<shared_ptr<physics2::PolygonObstacle>>();
+    std::shared_ptr<physics2::PolygonObstacle> obstacle;
 	if (ellipse) { // circle or ellipse
-        if (height == width) { // circle case, uses wheelobstacle
-            obstacle = physics2::WheelObstacle::alloc(Vec2(x,y), height/2);
-        } else { // ellipse case, uses extruded path2
-            auto poly = PolyFactory().makeEllipse(Vec2(x,y), Vec2(width,height));
-            obstacle = physics2::PolygonObstacle::alloc(poly);
-            obstacle->setAngle((rotation*M_PI)/(180));
-        }
+        auto poly = PolyFactory().makeEllipse(Vec2(x,y), Vec2(width,height));
+        obstacle = physics2::PolygonObstacle::alloc(poly);
+        obstacle->setAngle((rotation*M_PI)/(180));
+//        if (height == width) { // circle case, uses wheelobstacle
+//            obstacle = physics2::WheelObstacle::alloc(Vec2(x,y), height/2);
+//        } else { // ellipse case, uses extruded path2
+//            auto poly = PolyFactory().makeEllipse(Vec2(x,y), Vec2(width,height));
+//            obstacle = physics2::PolygonObstacle::alloc(poly);
+//            obstacle->setAngle((rotation*M_PI)/(180));
+//        }
 	}
 	else if (polygon != nullptr) { // polygon
 		std::vector<float> verts = json->get(VERTICES)->asFloatArray();
@@ -376,7 +388,8 @@ bool GameModel::loadObstacle(const std::shared_ptr<JsonValue>& json) {
 		obstacle->setAngle((rotation * M_PI) / (180));
 	}
 	else { // rectangle
-		obstacle = physics2::BoxObstacle::alloc(Vec2(x, y), Vec2(width, height));
+        obstacle = physics2::PolygonObstacle::alloc(
+                                                    PolyFactory().makeRect(Vec2(x, y), Vec2(width, height)));
 		obstacle->setAngle((rotation * M_PI) / (180));
 	}
 	

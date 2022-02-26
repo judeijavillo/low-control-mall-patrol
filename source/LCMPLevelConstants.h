@@ -53,6 +53,7 @@
 #define LEVEL_ONE_KEY       "testmall"
 
 #define WALL_TEXTURE_KEY       "wall"
+#define OBSTACLE_TEXTURE_KEY    "obstacle"
 
 
 #endif /* defined(__LCMP_LEVEL_CONSTANTS_H__) */
