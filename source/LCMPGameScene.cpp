@@ -13,6 +13,8 @@
 #include <sstream>
 
 #include "LCMPGameScene.h"
+#include "LCMPGameModel.h"
+#include "LCMPLevelConstants.h"
 
 using namespace cugl;
 using namespace std;
@@ -21,6 +23,7 @@ using namespace std;
 
 /** Regardless of logo, lock the height to this */
 #define SCENE_HEIGHT  720
+
 
 //  MARK: - Constructors
 
@@ -50,8 +53,13 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     // Save the network controller
     _network = network;
     
+//    _game = assets->get<GameModel>(LEVEL_ONE_KEY);
+    _game = GameModel::alloc(LEVEL_ONE_FILE);
+
+    
     // Acquire the scene built by the asset loader and resize it the scene
-    std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("game");
+//    std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("game");
+    std::shared_ptr<scene2::SceneNode> scene = _game->getRootNode();
     scene->setContentSize(dimen);
     scene->doLayout(); // Repositions the HUD
     

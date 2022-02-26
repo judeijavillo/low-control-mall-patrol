@@ -281,14 +281,14 @@ bool GameModel::loadWalls(const std::vector<int> walls, int width, int height, i
 bool GameModel::loadObstacle(const std::shared_ptr<JsonValue>& json) {
     bool success = true;
 	
-	bool ellipse = json->get(ELLIPSE_FIELD)->asBool();
-	auto polygon = json->get(POLYGON_FIELD);
+	bool ellipse = json->getBool(ELLIPSE_FIELD);
+	auto polygon = json->getBool(POLYGON_FIELD);
     
-    auto height = json->get(HEIGHT_FIELD)->asInt();
-    auto width = json->get(WIDTH_FIELD)->asInt();
-    auto rotation = json->get(ROTATION_FIELD)->asFloat();
-    auto x = json->get(X_FIELD)->asFloat();
-    auto y = json->get(Y_FIELD)->asFloat();
+    auto height = json->getInt(HEIGHT_FIELD);
+    auto width = json->getInt(WIDTH_FIELD);
+    auto rotation = json->getFloat(ROTATION_FIELD);
+    auto x = json->getFloat(X_FIELD);
+    auto y = json->getFloat(Y_FIELD);
     
 	_obstacles = vector<shared_ptr<physics2::PolygonObstacle>>();
     std::shared_ptr<physics2::PolygonObstacle> obstacle;
@@ -304,7 +304,7 @@ bool GameModel::loadObstacle(const std::shared_ptr<JsonValue>& json) {
 //            obstacle->setAngle((rotation*M_PI)/(180));
 //        }
 	}
-	else if (polygon != nullptr) { // polygon
+	else if (polygon) { // polygon
 		std::vector<float> verts = json->get(VERTICES)->asFloatArray();
 		EarclipTriangulator triangulator;
 		triangulator.set(Path2(reinterpret_cast<Vec2*>(&verts[0]), (int)verts.size() / 2));

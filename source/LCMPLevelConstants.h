@@ -21,8 +21,8 @@
 #define Y_FIELD        "y"
 #define ROTATION_FIELD        "rotation"
 #define VERTICES	"polygon"
-#define TILES_FIELD        "Tile Layer 1"
-#define OBJECTS_FIELD        "Object Layer 1"
+#define TILES_FIELD        0
+#define OBJECTS_FIELD        1
 
 #define WALLS_FIELD        "data"
 #define OBSTACLES_FIELD        "objects"

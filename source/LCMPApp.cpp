@@ -10,6 +10,8 @@
 //
 
 #include "LCMPApp.h"
+#include "LCMPLevelConstants.h"
+#include "LCMPGameModel.h"
 
 using namespace cugl;
 
@@ -50,6 +52,7 @@ void LCMPApp::onStartup() {
     _assets->attach<JsonValue>(JsonLoader::alloc()->getHook());
     _assets->attach<WidgetValue>(WidgetLoader::alloc()->getHook());
     _assets->attach<scene2::SceneNode>(Scene2Loader::alloc()->getHook());
+//    _assets->attach<GameModel>(GenericLoader<GameModel>::alloc()->getHook());
 
     // Create a "loading" screen
     _scene = State::LOAD;
@@ -57,6 +60,7 @@ void LCMPApp::onStartup() {
     
     // Queue up the other assets
     _assets->loadDirectoryAsync("json/assets.json",nullptr);
+//    _assets->loadAsync<GameModel>(LEVEL_ONE_KEY, LEVEL_ONE_FILE,nullptr);
     
     // Call the parent's onStartup
     Application::onStartup();
