@@ -40,8 +40,8 @@ using namespace std;
 #define DEFAULT_GRAVITY 0.0f
 
 /** The initial thief position */
-float THIEF_POS[] = {0,  0};
-float COP_POS[] = {30, 4};
+float THIEF_POS[] = {0, DEFAULT_HEIGHT/2};
+float COP_POS[] = { DEFAULT_WIDTH / 4, DEFAULT_HEIGHT / 4 };
 
 /** The key for the thief texture in the asset manager */
 #define THIEF_TEXTURE        "thief"
@@ -84,7 +84,8 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     
     // Save the asset manager
     _assets = assets;
-    
+    _input.init(getBounds());
+
     // Save the network controller
     _network = network;
     
@@ -105,7 +106,6 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     // This means that we cannot change the aspect ratio of the physics world
     // Shift to center if a bad fit
     _scale = dimen.width == SCENE_WIDTH ? dimen.width/rect.size.width : dimen.height/rect.size.height;
-    _scale *= TEXTURE_SCALAR;
     Vec2 offset((dimen.width-SCENE_WIDTH)/2.0f,(dimen.height-SCENE_HEIGHT)/2.0f);
 
     // Create the scene graph
@@ -136,44 +136,51 @@ void GameScene::dispose() {
         removeAllChildren();
         _active = false;
     }
+    _input.dispose();
 }
 
 //  MARK: - Gameplay Handling
 void GameScene::reset() {
     _world->clear();
     _worldnode->removeAllChildren();
-    
+    _input.clear();
     populate();
 }
 
 void GameScene::populate() {
     std::shared_ptr<Texture> image = _assets->get<Texture>(COP_TEXTURE);
-    // Create cop
-    Vec2 copPos = ((Vec2)COP_POS);
-    Size copSize(image->getSize().width / _scale,
-        image->getSize().height / _scale);
-    
-    _cop = CopModel::alloc(copPos,copSize);
-    _cop->setDrawScale(_scale);
-    
-    auto copNode = scene2::PolygonNode::allocWithTexture(image);
-    copNode->setAnchor(Vec2::ANCHOR_CENTER);
-    copNode->setScale(Vec2(TEXTURE_SCALAR, TEXTURE_SCALAR));
-    _cop->setCopNode(copNode);
+    //// Create cop
+    //Vec2 copPos = ((Vec2)COP_POS);
+    //Size copSize(image->getSize().width / _scale,
+    //    image->getSize().height / _scale);
+    //
+    //_cop = CopModel::alloc(copPos,copSize);
+    //_cop->setDrawScale(_scale * TEXTURE_SCALAR);
+    //_world->addObstacle(_cop);
 
-    _worldnode->addChild(copNode);
+    //auto copNode = scene2::PolygonNode::allocWithTexture(image);
+    //copNode->setAnchor(Vec2::ANCHOR_CENTER);
+    //copNode->setPosition(_cop->getPosition() * _scale);
+    //copNode->setScale(Vec2(TEXTURE_SCALAR, TEXTURE_SCALAR));
+
+    //_cop->setCopNode(copNode);
+
+    //_worldnode->addChild(copNode);
     
     // Create thief
     image = _assets->get<Texture>(THIEF_TEXTURE);
-    Vec2 thiefPos = ((Vec2)COP_POS);
-    Size thiefSize = image->getSize() / _scale;
+    Vec2 thiefPos = ((Vec2)THIEF_POS);
+    Size thiefSize = image->getSize() / (_scale * TEXTURE_SCALAR);
 
     _thief = ThiefModel::alloc(thiefPos, thiefSize);
     _thief->setDrawScale(_scale);
+    _world->addObstacle(_thief);
 
     auto thiefNode = scene2::PolygonNode::allocWithTexture(image);
     thiefNode->setAnchor(Vec2::ANCHOR_CENTER);
     thiefNode->setScale(Vec2(TEXTURE_SCALAR, TEXTURE_SCALAR));
+    thiefNode->setPosition(_thief->getPosition() * _scale );
+
     _thief->setThiefNode(thiefNode);
     
     _worldnode->addChild(thiefNode);
@@ -192,6 +199,17 @@ void GameScene::update(float timestep) {
     if (_network->isConnected()) {
         _network->update(_game);
     }
+    
+    //Get input from joystick
+    _input.update(timestep);
+
+    //Thief movement
+    Vec2 movement = _input.getMovement();
+    _thief->setMovement(movement);
+    _thief->applyForce();
+
+    CULog("Thief Position: (%f, %f)", _thief->getPosition().x, _thief->getPosition().y);
+    _world->update(timestep);
 }
 
 /**

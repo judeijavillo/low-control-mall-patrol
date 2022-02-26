@@ -14,6 +14,8 @@
 /** The texture for the character avatar */
 #define THIEF_TEXTURE    "thief"
 
+
+
 class ThiefModel : public PlayerModel {
 protected:
 	/** The scene graph node for the cop. */

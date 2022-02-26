@@ -30,13 +30,13 @@ protected:
     // Controllers
     /** A reference to the Network Controller singleton instance */
     std::shared_ptr<NetworkController> _network;
-    /** A reference to the Input Controller singleton instance */
-    std::shared_ptr<InputController> _input;
+    /** The input controller placed on the stack */
+    InputController _input;
     
     // Models
     /** A model to represent all models within the game */
     std::shared_ptr<GameModel> _game;
-    
+
     // VIEW
     /** Reference to the physics root of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _worldnode;
