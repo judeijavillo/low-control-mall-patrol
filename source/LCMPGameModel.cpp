@@ -122,39 +122,10 @@ void GameModel::setRootNode(const std::shared_ptr<scene2::SceneNode>& node) {
     for (auto it = _obstacles.begin(); it != _obstacles.end(); ++it) {
         shared_ptr<physics2::PolygonObstacle> obstacle = *it;
         auto sprite = scene2::PolygonNode::allocWithTexture(
-                _assets->get<Texture>(OBSTACLE_TEXTURE_KEY),
+                _assets->get<Texture>(WALL_TEXTURE_KEY),
                 obstacle->getPolygon());
         addObstacle(obstacle,sprite);  // All obstacles share the same texture
     }
-
-// 	if (_goalDoor != nullptr) {
-//         auto sprite = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(_goalDoor->getTextureKey()));
-// 		addObstacle(_goalDoor,sprite); // Put this at the very back
-// 	}
-
-// 	for(auto it = _crates.begin(); it != _crates.end(); ++it) {
-// 		std::shared_ptr<CrateModel> crate = *it;
-// 		auto sprite = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(crate->getTextureKey()));
-// 		int indx = (std::rand() % 2 == 0 ? 2 : 1);
-// 		addObstacle(crate,sprite);   // PUT SAME TEXTURES IN SAME LAYER!!!
-// 	}
-
-// 	for(auto it = _walls.begin(); it != _walls.end(); ++it) {
-// 		std::shared_ptr<WallModel> wall = *it;
-// 		auto sprite = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(wall->getTextureKey()),
-//                                                             wall->getPolygon() * _scale);
-// 		addObstacle(wall,sprite);  // All walls share the same texture
-// 	}
-  
-//   if (_rocket != nullptr) {
-// 		auto rocketNode = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>(_rocket->getTextureKey()));
-// 		_rocket->setShipNode(rocketNode, _assets);
-//         _rocket->setDrawScale(_scale.x);
-
-// 		// Create the polygon node (empty, as the model will initialize)
-// 		_worldnode->addChild(rocketNode);
-// 		_rocket->setDebugScene(_debugnode);
-// 	}
 }
 
 /**
@@ -236,42 +207,6 @@ bool GameModel:: preload(const std::shared_ptr<cugl::JsonValue>& json) {
 	 	return false;
 	}
 
-    // TODO Load shit.
-
-	// // Parse the rocket
-	// if (!loadRocket(json)) {
-	// 	CUAssertLog(false, "Failed to load rocket");
-	// 	return false;
-	// }
-
-	// if (!loadGoalDoor(json)) {
-	// 	CUAssertLog(false, "Failed to load goal door");
-	// 	return false;
-	// }
-
-	// auto walls = json->get(WALLS_FIELD);
-	// if (walls != nullptr) {
-	// 	// Convert the object to an array so we can see keys and values
-	// 	int wsize = (int)walls->size();
-	// 	for(int ii = 0; ii < wsize; ii++) {
-	// 		loadWall(walls->get(ii));
-	// 	}
-	// } else {
-	// 	CUAssertLog(false, "Failed to load walls");
-	// 	return false;
-	// }
-	// auto crates = json->get(CRATES_FIELD);
-	// if (crates != nullptr) {
-	// 	// Convert the object to an array so we can see keys and values
-	// 	int csize = (int)crates->size();
-	// 	for(int ii = 0; ii < csize; ii++) {
-	// 		loadCrate(crates->get(ii));
-	// 	}
-	// } else {
-	// 	CUAssertLog(false, "Failed to load crates");
-	// 	return false;
-	// }
-
 	return true;
 }
 
@@ -283,36 +218,28 @@ bool GameModel:: preload(const std::shared_ptr<cugl::JsonValue>& json) {
 * references to other assets, then these should be disconnected earlier.
 */
 void GameModel::unload() {
-	//if (_rocket != nullptr) {
-	//	if (_world != nullptr) {
-	//		_world->removeObstacle(_rocket.get());
-	//	}
-	//	_rocket = nullptr;
-	//}
-	//if (_goalDoor != nullptr) {
-	//	if (_world != nullptr) {
-	//		_world->removeObstacle(_goalDoor.get());
-	//	}
-	//	_goalDoor = nullptr;
-	//}
-	//for(auto it = _crates.begin(); it != _crates.end(); ++it) {
-	//	if (_world != nullptr) {
-	//		_world->removeObstacle((*it).get());
-	//	}
- //   (*it) = nullptr;
-	//}
-	//_crates.clear();
-	//for(auto it = _walls.begin(); it != _walls.end(); ++it) {
-	//	if (_world != nullptr) {
-	//		_world->removeObstacle((*it).get());
-	//	}
- //   (*it) = nullptr;
-	//}
-	//_walls.clear();
-	//if (_world != nullptr) {
-	//	_world->clear();
-	//	_world = nullptr;
-	//}
+    //TODO: do this
+    
+    for(auto it = _walls.begin(); it != _walls.end(); ++it) {
+        if (_world != nullptr) {
+            _world->removeObstacle((*it).get());
+        }
+    (*it) = nullptr;
+    }
+    _walls.clear();
+    
+    for(auto it = _obstacles.begin(); it != _obstacles.end(); ++it) {
+        if (_world != nullptr) {
+            _world->removeObstacle((*it).get());
+        }
+    (*it) = nullptr;
+    }
+    _obstacles.clear();
+    
+    if (_world != nullptr) {
+        _world->clear();
+        _world = nullptr;
+    }
 }
 /**
  * Loads an object from the JSON
@@ -335,9 +262,7 @@ bool GameModel::loadWalls(const std::vector<int> walls, int width, int height, i
 			y = (i / width) * t_height;
 			x = (i % width) * t_width;
 			obstacle = physics2::BoxObstacle::alloc(Vec2(x, y), Vec2(t_width, t_height));
-			
 		}
-
 	}
 
 	return true;
