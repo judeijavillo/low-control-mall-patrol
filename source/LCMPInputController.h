@@ -14,6 +14,7 @@
  * The controller that handles all inputs to the device
  */
 class InputController {
+
 private:
     /** Whether or not this input is active */
     bool _active;
@@ -175,7 +176,13 @@ public:
      * @return the scene graph position of the virtual joystick
      */
     cugl::Vec2 getJoystick() const { return _joycenter; }
-    
+
+    float getJstickDeadzone();
+
+    float getJstickRadius();
+
+#pragma mark -
+#pragma mark Touch Callbacks
     /**
      * Returns the amount of sideways movement.
      *
@@ -207,6 +214,8 @@ public:
          * @param focus	Whether the listener currently has focus
          */
     void touchesMovedCB(const cugl::TouchEvent& event, const cugl::Vec2& previous, bool focus);
+
+
 
 };
 

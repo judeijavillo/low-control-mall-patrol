@@ -59,6 +59,7 @@ float COP_POS[] = { DEFAULT_WIDTH / 4, DEFAULT_HEIGHT / 4 };
 /** Threshold for generating sound on collision */
 #define SOUND_THRESHOLD     3
 
+
 //  MARK: - Constructors
 
 /**
@@ -117,7 +118,20 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     scene->setContentSize(dimen);
     scene->doLayout(); // Repositions the HUD
     
+    // Create the nodes responsible for displaying the joystick.
+    _jstickDeadzoneNode = scene2::PolygonNode::alloc();
+    _jstickDeadzoneNode->SceneNode::setAnchor(cugl::Vec2::ANCHOR_CENTER);
+    _jstickDeadzoneNode->setScale(1.0f);
+    _jstickDeadzoneNode->setVisible(false);
+
+    _jstickRadiusNode = scene2::PolygonNode::alloc();
+    _jstickRadiusNode->SceneNode::setAnchor(cugl::Vec2::ANCHOR_CENTER);
+    _jstickRadiusNode->setScale(1.0f);
+    _jstickRadiusNode->setVisible(false);
+
     addChild(_worldnode);
+    addChild(_jstickDeadzoneNode);
+    addChild(_jstickRadiusNode);
 
     _quit = false;
 
@@ -201,6 +215,13 @@ void GameScene::update(float timestep) {
 
     // Get input from joystick
     _input.update(timestep);
+    if (_input.withJoystick()) {
+        displayJoystick(); 
+    }
+    else {
+        _jstickDeadzoneNode->setVisible(false);
+        _jstickRadiusNode->setVisible(false);
+    }
 
     Vec2 movement = _input.getMovement();
     
@@ -256,4 +277,17 @@ void GameScene::setActive(bool value) {
 void GameScene::beginContact(b2Contact* contact) {
     b2Body* body1 = contact->GetFixtureA()->GetBody();
     b2Body* body2 = contact->GetFixtureB()->GetBody();
+}
+
+void GameScene::displayJoystick() {
+    PolyFactory pf = PolyFactory();
+    Vec2 center = _input.getJoystick();
+    Poly2 joystickCenter = pf.makeCircle(center, _input.getJstickDeadzone());
+    Poly2 joystickRadius = pf.makeCircle(center, _input.getJstickRadius());
+    _jstickDeadzoneNode->setPolygon(joystickCenter);
+    _jstickDeadzoneNode->setColor(Color4::RED);
+    _jstickDeadzoneNode->setVisible(true);
+    _jstickRadiusNode->setPolygon(joystickRadius);
+    _jstickRadiusNode->setColor(Color4(1.0f, 0.0f, 0.0f, 0.3f));
+    _jstickRadiusNode->setVisible(true);
 }

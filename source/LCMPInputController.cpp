@@ -19,11 +19,18 @@ using namespace cugl;
 #define KEYBOARD_FORCE_INCREMENT  1.0f
 
 /** This defines the joystick "deadzone" (how far we must move) */
-#define JSTICK_DEADZONE  15
+#define JSTICK_DEADZONE  15.0f
 /** This defines the joystick radial size (for reseting the anchor) */
-#define JSTICK_RADIUS    50
+#define JSTICK_RADIUS    50.0f
 /** How far to display the virtual joystick above the finger */
-#define JSTICK_OFFSET    80
+#define JSTICK_OFFSET    80.0f
+
+/** The key for the event handlers */
+#define LISTENER_KEY  1
+
+float InputController::getJstickDeadzone() { return JSTICK_DEADZONE; }
+
+float InputController::getJstickRadius() { return JSTICK_RADIUS; }
 
 /** How far we must swipe left or right for a gesture */
 #define EVENT_SWIPE_LENGTH  100
@@ -31,8 +38,7 @@ using namespace cugl;
 #define EVENT_SWIPE_TIME   1000
 /** How far we must turn the tablet for the accelerometer to register */
 #define EVENT_ACCEL_THRESH  M_PI/10.0f
-/** The key for the event handlers */
-#define LISTENER_KEY        1
+
 
 // MARK: -Input Controller
 
@@ -95,9 +101,7 @@ bool InputController::init(const Rect bounds) {
 #ifndef CU_TOUCH_SCREEN
     success = Input::activate<Keyboard>();
 #else
-    if (USE_ACCELEROMETER) {
-        success = Input::activate<Accelerometer>();
-    }
+
     Touchscreen* touch = Input::get<Touchscreen>();
 
     touch->addBeginListener(LISTENER_KEY, [=](const cugl::TouchEvent& event, bool focus) {
@@ -227,7 +231,7 @@ void InputController::update(float dt) {
  */
 void InputController::clear() {
     _inputMovement = Vec2::ZERO;
-    _keybdThrust = Vec2::ZERO;
+        _keybdThrust = Vec2::ZERO;
 
     _forceLeft = 0.0f;
     _forceRight = 0.0f;

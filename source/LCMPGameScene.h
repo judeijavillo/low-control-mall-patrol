@@ -55,6 +55,11 @@ protected:
     /**Reference to the cop. */
     std::shared_ptr<CopModel> _cop;
     
+    /** Reference to the joystick deadzone image */
+    std::shared_ptr<cugl::scene2::PolygonNode> _jstickDeadzoneNode;
+    /** Reference to the joystick radial image */
+    std::shared_ptr<cugl::scene2::PolygonNode> _jstickRadiusNode;
+
     /** The asset manager for this game mode. */
     std::shared_ptr<cugl::AssetManager> _assets;
     /** Whether this player is the thief */
@@ -155,7 +160,7 @@ public:
      *
      * @param host  Whether the player is host.
      */
-    void setHost(bool host)  { _ishost = host; _isThief = not host; }
+    void setHost(bool host)  { _ishost = host; _isThief = host; }
     // TODO: The host should not always be the thief
 
     /**
@@ -177,6 +182,11 @@ public:
     //  MARK: - Physics Handling
 
     void beginContact(b2Contact* contact);
+
+    /**
+    * Displays joystick when it is in use.
+    */
+    void displayJoystick();
     
 };
 
