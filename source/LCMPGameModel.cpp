@@ -160,7 +160,10 @@ bool GameModel::preload(const std::string& file) {
  * Loads this game level from the source file
  *
  * This load method should NEVER access the AssetManager.  Assets are loaded in
- * parallel, not in sequence.  If an asset (like a game level) has references to
+ * parallel, not in sequence.  If an 
+
+
+ (like a game level) has references to
  * other assets, then these should be connected later, during scene initialization.
  *
  * @return true if successfully loaded the asset from a file
