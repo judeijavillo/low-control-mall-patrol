@@ -36,6 +36,11 @@ protected:
     // Models
     /** A model to represent all models within the game */
     std::shared_ptr<GameModel> _game;
+
+    /** Reference to the physics root of the scene graph */
+    std::shared_ptr<cugl::scene2::SceneNode> _rootnode;
+    /** The scale between the physics world and the screen (MUST BE UNIFORM) */
+    float _scale;
     
     /** The asset manager for this game mode. */
     std::shared_ptr<cugl::AssetManager> _assets;
@@ -45,7 +50,16 @@ protected:
     bool _ishost;
     /** Whether we quit the game */
     bool _quit;
+
+
+    /**
+     * Activates world collision callbacks on the given physics world and sets the onBeginContact and beforeSolve callbacks
+     *
+     * @param world the physics world to activate world collision callbacks on
+     */
+    void activateWorldCollisions(const std::shared_ptr<physics2::ObstacleWorld>& world);
     
+
 public:
 //  MARK: - Constructors
     
@@ -142,6 +156,30 @@ public:
      * when ALL scenes have been disconnected.
      */
     void disconnect() { _network = nullptr; }
+
+#pragma mark Collision Handling
+    /**
+     * Processes the start of a collision
+     *
+     * This method is called when we first get a collision between two objects.
+     * We use this method to test if it is the "right" kind of collision.  In
+     * particular, we use it to test if we make it to the win door.
+     *
+     * @param  contact  The two bodies that collided
+     */
+    void beginContact(b2Contact* contact);
+
+    /**
+     * Handles any modifications necessary before collision resolution
+     *
+     * This method is called just before Box2D resolves a collision.  We use
+     * this method to implement sound on contact, using the algorithms outlined
+     * in Ian Parberry's "Introduction to Game Physics with Box2D".
+     *
+     * @param  contact  The two bodies that collided
+     * @param  contact  The collision manifold before contact
+     */
+    void beforeSolve(b2Contact* contact, const b2Manifold* oldManifold);
 
 };
 
