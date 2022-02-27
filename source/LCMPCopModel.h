@@ -12,7 +12,7 @@
 #include <cugl/cugl.h>
 
 /** The thrust factor to convert player input into thrust */
-#define DEFAULT_THRUST 30.0f
+#define DEFAULT_THRUST 100000.0f
 
 //  MARK: - Drawing Constants
 /** Identifier to allow us to track the sensor in ContactListener */

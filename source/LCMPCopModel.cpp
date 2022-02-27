@@ -8,7 +8,7 @@
 
 #include "LCMPCopModel.h"
 
-#define MAX_SPEED       20000.0f
+#define MAX_SPEED       100000.0f
 #define ACCELERATION    20.0f
 
 using namespace cugl;
@@ -23,10 +23,13 @@ void CopModel::applyForce() {
     }
     
     Vec4 netforce(_force.x,_force.y,0.0f,1.0f);
-    CULog("x y z f: (%f, %f, %f, %f)", netforce.x, netforce.y, netforce.z, netforce.w);
     
     Mat4::createRotationZ(getAngle(),&_affine);
     netforce *= _affine;
+    
+    if (_body->GetLinearVelocity().Length() > MAX_SPEED) {
+        netforce.set(0.0f, 0.0f, 0.0f, 1.0f);
+    }
     CULog("x y z f: (%f, %f, %f, %f)", netforce.x, netforce.y, netforce.z, netforce.w);
 
     

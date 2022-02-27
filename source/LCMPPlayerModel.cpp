@@ -36,7 +36,6 @@ bool PlayerModel::init(const Vec2 pos, const Size size) {
 
     _playerNode = nullptr;
     setBodyType(b2_dynamicBody);
-    setMass(20.0f);
     setDensity(DEFAULT_DENSITY);
     setFriction(DEFAULT_FRICTION);
     setRestitution(DEFAULT_RESTITUTION);

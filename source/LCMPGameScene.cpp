@@ -203,7 +203,6 @@ void GameScene::update(float timestep) {
     _input.update(timestep);
 
     Vec2 movement = _input.getMovement();
-    CULog("mvmt: (%f, %f)", movement.x, movement.y);
     
     // Thief movement
     if (_isThief) {
@@ -214,14 +213,12 @@ void GameScene::update(float timestep) {
     }
     // Cop movement
     else {
-        _cop->setMovement(movement);
-        
         _cop->setFX(_input.getHorizontal() * _cop->getThrust());
         _cop->setFY(_input.getVertical() * _cop->getThrust());
         _cop->applyForce();
         
+        CULog("accel: (%f)", _cop->getAcceleration());
         CULog("hor,vert: (%f, %f)", _input.getHorizontal(), _input.getVertical());
-        CULog("fx,fy: (%f, %f)", _cop->getFX(), _cop->getFY());
         CULog("Cop Position: (%f, %f)", _cop->getPosition().x, _cop->getPosition().y);
     }
 

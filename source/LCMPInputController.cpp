@@ -193,8 +193,8 @@ void InputController::update(float dt) {
         // Check if we turned left or right
         left |= (pitch > EVENT_ACCEL_THRESH);
         rght |= (pitch < -EVENT_ACCEL_THRESH);
-        up   |= (vert > EVENT_ACCEL_THRESH);
-        down |= (vert < -EVENT_ACCEL_THRESH);
+        up   |= (vert > EVENT_ACCEL_THRESH/2);
+        down |= (vert < -EVENT_ACCEL_THRESH/2);
 
     // Directional controls
     _horizontal = 0.0f;
