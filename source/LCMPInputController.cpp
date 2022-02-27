@@ -13,7 +13,7 @@ using namespace cugl;
 //  MARK: - Input Factors
 
 /** Whether to active the accelerometer (this is TRICKY!) */
-#define USE_ACCELEROMETER           false
+#define USE_ACCELEROMETER           true
 
 /** How much the keyboard adds to the input. */
 #define KEYBOARD_FORCE_INCREMENT  1.0f
@@ -25,13 +25,32 @@ using namespace cugl;
 /** How far to display the virtual joystick above the finger */
 #define JSTICK_OFFSET    80
 
+/** How far we must swipe left or right for a gesture */
+#define EVENT_SWIPE_LENGTH  100
+/** How fast we must swipe left or right for a gesture */
+#define EVENT_SWIPE_TIME   1000
+/** How far we must turn the tablet for the accelerometer to register */
+#define EVENT_ACCEL_THRESH  M_PI/10.0f
+/** The key for the event handlers */
+#define LISTENER_KEY        1
+
+// MARK: -Input Controller
+
+/**
+ * Creates a new input controller.
+ *
+ * This constructor does NOT do any initialzation.  It simply allocates the
+ * object. This makes it safe to use this class without a pointer.
+ */
 InputController::InputController() :
 	_active(false),
 	_forceLeft(0.0f),
 	_forceRight(0.0f),
 	_forceUp(0.0f),
 	_forceDown(0.0f),
-	_joystick(false)
+	_joystick(false),
+    _horizontal(0.0f),
+    _vertical(0.0f)
 {
 }
 
@@ -71,7 +90,7 @@ bool InputController::init(const Rect bounds) {
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
     clearTouchInstance(_mtouch);
-
+    
     // Only process keyboard on desktop
 #ifndef CU_TOUCH_SCREEN
     success = Input::activate<Keyboard>();
@@ -91,9 +110,6 @@ bool InputController::init(const Rect bounds) {
         this->touchesMovedCB(event, previous, focus);
         });
 #endif
-
-
-
     _active = success;
     return success;
 }
@@ -117,6 +133,10 @@ void InputController::clearTouchInstance(TouchInstance& touchInstance) {
  * frame, so we need to accumulate all of the data together.
  */
 void InputController::update(float dt) {
+    int left = false;
+    int rght = false;
+    int up   = false;
+    int down = false;
 
     // Only process keyboard on desktop
 #ifndef CU_TOUCH_SCREEN
@@ -165,18 +185,41 @@ void InputController::update(float dt) {
     // MOBILE CONTROLS
     if (USE_ACCELEROMETER) {
         Vec3 acc = Input::get<Accelerometer>()->getAcceleration();
+        
+        // Measure the "steering wheel" tilt of the device
+        float pitch = atan2(-acc.x, sqrt(acc.y*acc.y + acc.z*acc.z));
+        float vert = atan2(-acc.y, sqrt(acc.x*acc.x + acc.z*acc.z));
+                
+        // Check if we turned left or right
+        left |= (pitch > EVENT_ACCEL_THRESH);
+        rght |= (pitch < -EVENT_ACCEL_THRESH);
+        up   |= (vert > EVENT_ACCEL_THRESH);
+        down |= (vert < -EVENT_ACCEL_THRESH);
 
-        // Apply to thrust directly.
-        _inputMovement.x = acc.x * ACCELEROM_X_FACTOR;
-        _inputMovement.y = acc.y * ACCELEROM_Y_FACTOR;
+    // Directional controls
+    _horizontal = 0.0f;
+    if (rght) {
+        _horizontal += 1.0f;
     }
-    // Otherwise, uses touch
+    if (left) {
+        _horizontal -= 1.0f;
+    }
+
+    _vertical = 0.0f;
+    if (up) {
+        _vertical += 1.0f;
+    }
+    if (down) {
+        _vertical -= 1.0f;
+    }
+            
+    }
 #endif
 
-#ifdef CU_TOUCH_SCREEN
-    _keyReset = false;
-
-#endif
+// If it does not support keyboard, we must reset "virtual" keyboard
+//#ifdef CU_TOUCH_SCREEN
+//    _keyExit = false;
+//#endif
 }
 
 /**
@@ -191,6 +234,8 @@ void InputController::clear() {
     _forceUp = 0.0f;
     _forceDown = 0.0f;
 
+    _horizontal = 0.0f;
+    _vertical   = 0.0f;
 }
 
 //  MARK: - Touch Callbacks
@@ -276,5 +321,4 @@ void InputController::touchEndedCB(const cugl::TouchEvent& event, bool focus) {
 
     // Zero the movement.
     _inputMovement = Vec2::ZERO;
-
 }

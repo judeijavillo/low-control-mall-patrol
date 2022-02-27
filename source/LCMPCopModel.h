@@ -11,12 +11,17 @@
 #include "LCMPPlayerModel.h"
 #include <cugl/cugl.h>
 
+/** The thrust factor to convert player input into thrust */
+#define DEFAULT_THRUST 30.0f
+
 //  MARK: - Drawing Constants
 /** Identifier to allow us to track the sensor in ContactListener */
 
 //  MARK: - Cop Model
 class CopModel : public PlayerModel {
 protected:
+    /** The force to apply to this rocket */
+    cugl::Vec2 _force;
     /** How long until we can tackle again */
     int  _tackleCooldown;
     /** Whether we are actively tackling */
@@ -47,12 +52,62 @@ public:
     }
 
 //  MARK: - Constructors
-    
-    virtual bool init(const cugl::Vec2 pos, const cugl::Size size);
-    
+        
     virtual void update(float delta);
     
     void setCopNode(const std::shared_ptr<cugl::scene2::SceneNode>& node);
+    
+//  MARK: - Accessors
+    
+    /**
+     * Returns the x-component of the force applied to the cop.
+     *
+     * Remember to modify the input values by the thrust amount before assigning
+     * the value to force.
+     *
+     * @return the x-component of the force applied to the cop.
+     */
+    float getFX() const { return _force.x; }
+    
+    /**
+     * Sets the x-component of the force applied to the cop.
+     *
+     * Remember to modify the input values by the thrust amount before assigning
+     * the value to force.
+     *
+     * @param value the x-component of the force applied to the cop.
+     */
+    void setFX(float value) { _force.x = value; }
+    
+    /**
+     * Returns the y-component of the force applied to the cop.
+     *
+     * Remember to modify the input values by the thrust amount before assigning
+     * the value to force.
+     *
+     * @return the y-component of the force applied to the cop.
+     */
+    float getFY() const { return _force.y; }
+    
+    /**
+     * Sets the x-component of the force applied to the cop.
+     *
+     * Remember to modify the input values by the thrust amount before assigning
+     * the value to force.
+     *
+     * @param value the x-component of the force applied to the cop.
+     */
+    void setFY(float value) { _force.y = value; }
+    
+    /**
+     * Returns the amount of thrust that the cop has.
+     *
+     * Multiply this value times the horizontal and vertical values in the
+     * input controller to get the force.
+     *
+     * @return the amount of thrust that this cop has.
+     */
+    float getThrust() const { return DEFAULT_THRUST; }
 
     virtual void applyForce();
 };

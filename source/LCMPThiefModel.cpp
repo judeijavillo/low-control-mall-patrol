@@ -47,7 +47,7 @@ void ThiefModel::applyForce() {
         netforce.set(0.0f, 0.0f, 0.0f, 1.0f);
     }
 
-    // Apply force to the rocket BODY, not the rocket
+    // Apply force to the thief
     _body->ApplyForceToCenter(b2Vec2(netforce.x, netforce.y), true);
 }
 

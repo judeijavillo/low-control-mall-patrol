@@ -99,12 +99,12 @@ public:
     /**
      * Returns angle player is facing
      */
-    float getAngle() const { return _angle; }
+    float getAngle() const override { return _angle; }
     
     /**
      * Sets angle player is facing
      */
-    void setAngle(const float angle) { _angle = angle; }
+    void setAngle(const float angle) override { _angle = angle; }
     
     /**
      * Returns how hard the brakes are applied to get a dude to stop moving

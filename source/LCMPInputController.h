@@ -37,6 +37,11 @@ private:
     cugl::Vec2 _joycenter;
 
 protected:
+    /** How much did we move horizontally? */
+    float _horizontal;
+    /** How much did we move vertically? */
+    float _vertical;
+    
     // Input results
     /** The thrust produced by the player input */
     cugl::Vec2 _inputMovement;
@@ -57,8 +62,7 @@ protected:
     cugl::Rect _sbounds;
 
 public:
-#pragma mark -
-#pragma mark Constructors
+    //  MARK: - Constructors
 
     // Each zone can have only one touch
     /** The current touch location for the main zone */
@@ -123,8 +127,7 @@ public:
      */
     bool init(const cugl::Rect bounds);
 
-#pragma mark -
-#pragma mark Input Detection
+//  MARK: - Input Detection
     /**
      * Returns true if the input handler is currently active
      *
@@ -148,9 +151,8 @@ public:
      * Clears any buffered inputs so that we may start fresh.
      */
     void clear();
-#pragma mark -
-
-#pragma mark Input Results
+    
+//  MARK: - Input Results
     /**
      * Returns the current input thrust.
      *
@@ -173,25 +175,30 @@ public:
      * @return the scene graph position of the virtual joystick
      */
     cugl::Vec2 getJoystick() const { return _joycenter; }
-
-#pragma mark -
-#pragma mark Touch Callbacks
+    
     /**
-     * Callback for the beginning of a touch event
+     * Returns the amount of sideways movement.
      *
-     * @param t     The touch information
-     * @param event The associated event
+     * -1 = left, 1 = right, 0 = still
+     *
+     * @return the amount of sideways movement.
      */
+    float getHorizontal() const { return _horizontal; }
+
+    /**
+     * Returns the amount of vertical movement.
+     *
+     * -1 = down, 1 = up, 0 = still
+     *
+     * @return the amount of vertical movement.
+     */
+    float getVertical() const { return _vertical; }
+
+//  MARK: - Touch Callbacks
     void touchBeganCB(const cugl::TouchEvent& event, bool focus);
-
-    /**
-     * Callback for the end of a touch event
-     *
-     * @param t     The touch information
-     * @param event The associated event
-     */
+    
     void touchEndedCB(const cugl::TouchEvent& event, bool focus);
-
+    
     /**
          * Callback for a mouse release event.
          *
@@ -200,7 +207,6 @@ public:
          * @param focus	Whether the listener currently has focus
          */
     void touchesMovedCB(const cugl::TouchEvent& event, const cugl::Vec2& previous, bool focus);
-
 
 };
 

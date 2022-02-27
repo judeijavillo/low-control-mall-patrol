@@ -27,7 +27,6 @@ using namespace std;
 
 /** This is the size of the active portion of the screen */
 #define SCENE_WIDTH 1024
-//#define SCENE_HEIGHT 576
 
 /** Scalar to change cop size.*/
 #define TEXTURE_SCALAR 0.1f
@@ -149,41 +148,41 @@ void GameScene::reset() {
 
 void GameScene::populate() {
     std::shared_ptr<Texture> image = _assets->get<Texture>(COP_TEXTURE);
-    //// Create cop
-    //Vec2 copPos = ((Vec2)COP_POS);
-    //Size copSize(image->getSize().width / _scale,
-    //    image->getSize().height / _scale);
-    //
-    //_cop = CopModel::alloc(copPos,copSize);
-    //_cop->setDrawScale(_scale * TEXTURE_SCALAR);
-    //_world->addObstacle(_cop);
+    // Create cop
+        Vec2 copPos = ((Vec2)COP_POS);
+        Size copSize(image->getSize().width / _scale,
+            image->getSize().height / _scale);
+        
+        _cop = CopModel::alloc(copPos,copSize);
+        _cop->setDrawScale(_scale * TEXTURE_SCALAR);
+        _world->addObstacle(_cop);
 
-    //auto copNode = scene2::PolygonNode::allocWithTexture(image);
-    //copNode->setAnchor(Vec2::ANCHOR_CENTER);
-    //copNode->setPosition(_cop->getPosition() * _scale);
-    //copNode->setScale(Vec2(TEXTURE_SCALAR, TEXTURE_SCALAR));
+        auto copNode = scene2::PolygonNode::allocWithTexture(image);
+        copNode->setAnchor(Vec2::ANCHOR_CENTER);
+        copNode->setPosition(_cop->getPosition() * _scale);
+        copNode->setScale(Vec2(TEXTURE_SCALAR, TEXTURE_SCALAR));
 
-    //_cop->setCopNode(copNode);
+        _cop->setCopNode(copNode);
 
-    //_worldnode->addChild(copNode);
-    
-    // Create thief
-    image = _assets->get<Texture>(THIEF_TEXTURE);
-    Vec2 thiefPos = ((Vec2)THIEF_POS);
-    Size thiefSize = image->getSize() / (_scale * TEXTURE_SCALAR);
+        _worldnode->addChild(copNode);
 
-    _thief = ThiefModel::alloc(thiefPos, thiefSize);
-    _thief->setDrawScale(_scale);
-    _world->addObstacle(_thief);
+        // Create thief
+        image = _assets->get<Texture>(THIEF_TEXTURE);
+        Vec2 thiefPos = ((Vec2)THIEF_POS);
+        Size thiefSize = image->getSize() / (_scale * TEXTURE_SCALAR);
 
-    auto thiefNode = scene2::PolygonNode::allocWithTexture(image);
-    thiefNode->setAnchor(Vec2::ANCHOR_CENTER);
-    thiefNode->setScale(Vec2(TEXTURE_SCALAR, TEXTURE_SCALAR));
-    thiefNode->setPosition(_thief->getPosition() * _scale );
+        _thief = ThiefModel::alloc(thiefPos, thiefSize);
+        _thief->setDrawScale(_scale);
+        _world->addObstacle(_thief);
 
-    _thief->setThiefNode(thiefNode);
-    
-    _worldnode->addChild(thiefNode);
+        auto thiefNode = scene2::PolygonNode::allocWithTexture(image);
+        thiefNode->setAnchor(Vec2::ANCHOR_CENTER);
+        thiefNode->setScale(Vec2(TEXTURE_SCALAR, TEXTURE_SCALAR));
+        thiefNode->setPosition(_thief->getPosition() * _scale );
+
+        _thief->setThiefNode(thiefNode);
+
+        _worldnode->addChild(thiefNode);
 }
 
 //  MARK: - Methods
@@ -199,16 +198,33 @@ void GameScene::update(float timestep) {
     if (_network->isConnected()) {
         _network->update(_game);
     }
-    
-    //Get input from joystick
+
+    // Get input from joystick
     _input.update(timestep);
 
-    //Thief movement
     Vec2 movement = _input.getMovement();
-    _thief->setMovement(movement);
-    _thief->applyForce();
+    CULog("mvmt: (%f, %f)", movement.x, movement.y);
+    
+    // Thief movement
+    if (_isThief) {
+        _thief->setMovement(movement);
+        _thief->applyForce();
 
-    CULog("Thief Position: (%f, %f)", _thief->getPosition().x, _thief->getPosition().y);
+        CULog("Thief Position: (%f, %f)", _thief->getPosition().x, _thief->getPosition().y);
+    }
+    // Cop movement
+    else {
+        _cop->setMovement(movement);
+        
+        _cop->setFX(_input.getHorizontal() * _cop->getThrust());
+        _cop->setFY(_input.getVertical() * _cop->getThrust());
+        _cop->applyForce();
+        
+        CULog("hor,vert: (%f, %f)", _input.getHorizontal(), _input.getVertical());
+        CULog("fx,fy: (%f, %f)", _cop->getFX(), _cop->getFY());
+        CULog("Cop Position: (%f, %f)", _cop->getPosition().x, _cop->getPosition().y);
+    }
+
     _world->update(timestep);
 }
 

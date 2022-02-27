@@ -119,12 +119,12 @@ public:
      *
      * @param timestep  The amount of time (in seconds) since the last frame
      */
-    void update(float timestep);
+    void update(float timestep) override;
     
     /**
      * Resets the status of the game so that we can play again.
      */
-    void reset();
+    void reset() override;
     
 
 //  MARK: - Methods
@@ -155,7 +155,7 @@ public:
      *
      * @param host  Whether the player is host.
      */
-    void setHost(bool host)  { _ishost = host; _isThief = host; }
+    void setHost(bool host)  { _ishost = host; _isThief = not host; }
     // TODO: The host should not always be the thief
 
     /**
