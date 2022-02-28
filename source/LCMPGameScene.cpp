@@ -83,6 +83,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
 
     addChild(_rootnode);
 
+    _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
     _game->setAssets(_assets);
     _game->setRootNode(_rootnode);
 

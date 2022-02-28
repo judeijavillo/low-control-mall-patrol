@@ -113,6 +113,7 @@ void GameModel::setRootNode(const std::shared_ptr<scene2::SceneNode>& node) {
 
 	for (auto it = _walls.begin(); it != _walls.end(); ++it) {
 		shared_ptr<physics2::BoxObstacle> wall = *it;
+
 		auto sprite = scene2::PolygonNode::allocWithTexture(
                 _assets->get<Texture>(WALL_TEXTURE_KEY),
                 PolyFactory().makeRect(wall->getX(), wall->getY(), wall->getWidth(), wall->getHeight()) * _scale);
@@ -122,8 +123,8 @@ void GameModel::setRootNode(const std::shared_ptr<scene2::SceneNode>& node) {
     for (auto it = _obstacles.begin(); it != _obstacles.end(); ++it) {
         shared_ptr<physics2::PolygonObstacle> obstacle = *it;
         auto sprite = scene2::PolygonNode::allocWithTexture(
-                _assets->get<Texture>(WALL_TEXTURE_KEY),
-                obstacle->getPolygon());
+                _assets->get<Texture>(OBSTACLE_TEXTURE_KEY),
+                obstacle->getPolygon() * _scale);
         addObstacle(obstacle,sprite);  // All obstacles share the same texture
     }
 }
@@ -189,26 +190,37 @@ bool GameModel:: preload(const std::shared_ptr<cugl::JsonValue>& json) {
 	auto walls = tile_layer->get(WALLS_FIELD)->asIntArray();
 	auto obstacles = object_layer->get(OBSTACLES_FIELD);
 
-	_bounds.size.set(w, h);
+	_bounds.size.set(w*t_width, h*t_height); // Scale???
 	_gravity.set(0, 0);
 
 	/** Create the physics world */
 	_world = physics2::ObstacleWorld::alloc(getBounds(), getGravity());
+
+	//CULog("World Bounds: x: %f, y: %f", _world->getBounds(), _world->getBounds().y);
 
 	// Load Wall.
 
 	loadWalls(walls, w, h, t_width, t_height);
 
 	if (obstacles != nullptr) {
-		// Convert the object to an array so we can see keys and values
-		int osize = (int)obstacles->size();
-		for(int ii = 0; ii < osize; ii++) {
+
+		_obstacles = vector<shared_ptr<physics2::PolygonObstacle>>();
+		for(int ii = 0; ii < obstacles->size(); ii++) {
 			loadObstacle(obstacles->get(ii));
-		}
+		}	
+		//int i = 0;
+		//std::shared_ptr<JsonValue> obstacle = obstacles->get(0);
+		//while (obstacle != nullptr) {
+		//	loadObstacle(obstacle);
+		//	++i;
+		//	obstacle = obstacles->get(i);
+		//}
 	} else {
 	 	CUAssertLog(false, "Failed to load walls");
 	 	return false;
 	}
+
+	CULog("Length of obstacle list: %d", _obstacles.size());
 
 	return true;
 }
@@ -256,7 +268,7 @@ void GameModel::unload() {
 bool GameModel::loadWalls(const std::vector<int> walls, int width, int height, int t_width, int t_height) {
 	int x = 0;
 	int y = 0;
-	std::shared_ptr<physics2::SimpleObstacle> obstacle;
+	std::shared_ptr<physics2::BoxObstacle> obstacle;
 	_walls = std::vector<std::shared_ptr<physics2::BoxObstacle>>();
 
 	for (auto it = walls.begin(); it != walls.end(); ++it) {
@@ -265,6 +277,8 @@ bool GameModel::loadWalls(const std::vector<int> walls, int width, int height, i
 			y = (i / width) * t_height;
 			x = (i % width) * t_width;
 			obstacle = physics2::BoxObstacle::alloc(Vec2(x, y), Vec2(t_width, t_height));
+
+			_walls.push_back(obstacle);
 		}
 	}
 
@@ -285,15 +299,16 @@ bool GameModel::loadObstacle(const std::shared_ptr<JsonValue>& json) {
     bool success = true;
 	
 	bool ellipse = json->getBool(ELLIPSE_FIELD);
-	auto polygon = json->getBool(POLYGON_FIELD);
+	auto polygon = json->get(POLYGON_FIELD);
     
     auto height = json->getInt(HEIGHT_FIELD);
     auto width = json->getInt(WIDTH_FIELD);
     auto rotation = json->getFloat(ROTATION_FIELD);
     auto x = json->getFloat(X_FIELD);
     auto y = json->getFloat(Y_FIELD);
+
+
     
-	_obstacles = vector<shared_ptr<physics2::PolygonObstacle>>();
     std::shared_ptr<physics2::PolygonObstacle> obstacle;
 	if (ellipse) { // circle or ellipse
         auto poly = PolyFactory().makeEllipse(Vec2(x,y), Vec2(width,height));
@@ -307,11 +322,33 @@ bool GameModel::loadObstacle(const std::shared_ptr<JsonValue>& json) {
 //            obstacle->setAngle((rotation*M_PI)/(180));
 //        }
 	}
-	else if (polygon) { // polygon
-		std::vector<float> verts = json->get(VERTICES)->asFloatArray();
+	else if (polygon != nullptr) { // polygon
+		std::shared_ptr <JsonValue> verts = json->get(POLYGON_FIELD);
+
+		std::vector<Vec2> vertices;
+
+		for (int ii = 0; ii < verts->size(); ii++) {
+			
+			Vec2 vert = Vec2(verts->get(ii)->get("x")->asFloat(), verts->get(ii)->get("y")->asFloat());
+			vertices.push_back(vert);
+		}
+
 		EarclipTriangulator triangulator;
-		triangulator.set(Path2(reinterpret_cast<Vec2*>(&verts[0]), (int)verts.size() / 2));
+
+		/*for (auto it = verts.begin(); it != verts.end(); ++it) {
+			CULog("Vertice: ", (*it));
+		}*/
+
+		//Path2 polyPath = Path2(reinterpret_cast<Vec2*>(verts), (int)verts.size() / 2);
+		Path2 polyPath = Path2(vertices);
+		//polyPath = polyPath.reverse();
+
+		triangulator.set(polyPath);
 		triangulator.calculate();
+		Poly2 poly = triangulator.getPolygon();
+		
+		/*std::vector<Vec2> vertices = poly.getVertices();*/
+
 		obstacle = physics2::PolygonObstacle::alloc(triangulator.getPolygon());
 		obstacle->setAngle((rotation * M_PI) / (180));
 	}
@@ -320,7 +357,13 @@ bool GameModel::loadObstacle(const std::shared_ptr<JsonValue>& json) {
                                                     PolyFactory().makeRect(Vec2(x, y), Vec2(width, height)));
 		obstacle->setAngle((rotation * M_PI) / (180));
 	}
-	
+
+	//obstacle->setAnchor(.5, .5);
+
+	obstacle->setX(x + obstacle->getWidth() / 2);
+	obstacle->setY(y + obstacle->getHeight() / 2);
+	/*CULog("Obstacles X: %f, Y: %f", obstacle->getX(), obstacle->getY());*/
+
 	_obstacles.push_back(obstacle);
 
 	/*
@@ -414,10 +457,12 @@ void GameModel::addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj
 	_world->addObstacle(obj);
 	obj->setDebugScene(_debugnode);
 
+
 	// Position the scene graph node (enough for static objects)
 	node->setPosition(obj->getPosition()*_scale);
 	_worldnode->addChild(node);
-
+	//CULog("Obstacle position: x: %f, y: %f", obj->getPosition().x, obj->getPosition().y);
+	//CULog("Node position: x: %f, y: %f", node->getPosition().x, node->getPosition().y);
 
     // Currently no dynamo bodies so no can do.
 

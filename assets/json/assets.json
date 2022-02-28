@@ -11,6 +11,9 @@
         },
         "wall": {
             "file":  "textures/map/wall.png"
+        },
+        "obstacle": {
+            "file":  "textures/map/obstacle.png"
         }
     },
     "fonts": {

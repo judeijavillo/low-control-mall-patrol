@@ -20,7 +20,6 @@
 #define X_FIELD         "x"
 #define Y_FIELD        "y"
 #define ROTATION_FIELD        "rotation"
-#define VERTICES	"polygon"
 #define TILES_FIELD        0
 #define OBJECTS_FIELD        1
 
