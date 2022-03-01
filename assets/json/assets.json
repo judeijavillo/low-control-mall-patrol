@@ -426,7 +426,7 @@
             }
         },
         "game": {
-            "type"      : "Node",
+            "type"      : "Scroll",
             "format"    : {
                 "type" : "anchored"
             },

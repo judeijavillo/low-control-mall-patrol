@@ -38,7 +38,7 @@ protected:
     std::shared_ptr<GameModel> _game;
 
     /** Reference to the physics root of the scene graph */
-    std::shared_ptr<cugl::scene2::SceneNode> _rootnode;
+    std::shared_ptr<cugl::scene2::ScrollPane> _rootnode;
     /** The scale between the physics world and the screen (MUST BE UNIFORM) */
     float _scale;
     
@@ -50,6 +50,15 @@ protected:
     bool _ishost;
     /** Whether we quit the game */
     bool _quit;
+
+    bool _isPanning;
+
+    Vec2 anchor;
+    Vec2 currPos;
+    Vec2 prevPos;
+
+    Vec2 gamePosition; // This is where I am right now.
+    cugl::Affine2 _transform;
 
 
     /**
@@ -110,6 +119,8 @@ public:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void update(float timestep) override;
+
+    void moveScreen();
     
     /**
      * Sets whether the scene is currently active
@@ -180,6 +191,13 @@ public:
      * @param  contact  The collision manifold before contact
      */
     void beforeSolve(b2Contact* contact, const b2Manifold* oldManifold);
+
+    /**
+     * Pans the screen by the amount given by the input
+     *
+     * @param delta The pan offset
+     */
+    void panScreen(const cugl::Vec2& delta);
 
 };
 

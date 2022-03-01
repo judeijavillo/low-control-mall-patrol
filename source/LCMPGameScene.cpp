@@ -75,18 +75,25 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     Vec2 offset((dimen.width - SCENE_WIDTH) / 2.0f, (dimen.height - SCENE_HEIGHT) / 2.0f);
 
     // Create the scene graph
-    _rootnode = scene2::SceneNode::alloc();
-    _rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    _rootnode->setPosition(offset);
     
     _quit = false;
+    _isPanning = false;
+    anchor.setZero();
+    currPos.setZero();
+    prevPos.setZero();
+    gamePosition.setZero();
 
-    addChild(_rootnode);
+    _rootnode = std::dynamic_pointer_cast<scene2::ScrollPane>(_assets->get<scene2::SceneNode>("game"));
 
-    _rootnode->setContentSize(Size(SCENE_WIDTH, SCENE_HEIGHT));
+    //_rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _rootnode->setPosition(offset);
+
     _game->setAssets(_assets);
     _game->setRootNode(_rootnode);
 
+    _rootnode->setContentSize(dimen);
+
+    addChild(_rootnode);
 
     setActive(false);
     return true;
@@ -138,8 +145,76 @@ void GameScene::update(float timestep) {
         
         _game->getWorld()->update(timestep);
 
+        moveScreen();
+
         activateWorldCollisions(_game->getWorld());
 
+
+    }
+}
+
+void GameScene::moveScreen() { // For testing ONLY. Don't use this in game.
+    Keyboard* keys = Input::get<Keyboard>();
+    Vec2 delta;
+    float change = 0.005;
+
+    if (keys->keyDown(KeyCode::W)) {
+        delta = Vec2(0, change);
+        if (!_isPanning) {
+            _isPanning = true;
+            anchor = gamePosition;
+            anchor.subtract(delta);
+        }
+        else {
+            anchor.subtract(delta);
+        }
+
+    } else if (keys->keyDown(KeyCode::A)) {
+        delta = Vec2(-change, 0);
+        if (!_isPanning) {
+            _isPanning = true;
+            
+            anchor.subtract(delta);
+        }
+        else {
+            anchor.subtract(delta);
+        }
+    }
+    else if (keys->keyDown(KeyCode::S)) {
+        delta = Vec2(0, -change);
+        if (!_isPanning) {
+            _isPanning = true;
+            anchor.subtract(delta);
+        }
+        else {
+            anchor.subtract(delta);
+        }
+    }
+    else if (keys->keyDown(KeyCode::D)) {
+        delta = Vec2(change, 0);
+        if (!_isPanning) {
+            _isPanning = true;
+            
+            anchor.subtract(delta);
+        }
+        else {
+            anchor.subtract(delta);
+        }
+    }
+    else {
+        _isPanning = false;
+        anchor.setZero();
+        delta.setZero();
+    }
+
+    if (_isPanning) {
+        Vec2 transformedAnchor = anchor;
+        transformedAnchor = _rootnode->worldToNodeCoords(transformedAnchor);
+        transformedAnchor /= _rootnode->getContentSize();
+        _rootnode->setAnchor(transformedAnchor);
+
+        gamePosition.add(delta);
+        _rootnode->applyPan(delta);
 
     }
 }
@@ -237,4 +312,22 @@ void GameScene::setActive(bool value) {
             _quit = false;
         }
     }
+}
+
+/**
+ * This class is the primary gameplay constroller for the demo.
+ *
+ * A world has its own objects, assets, and input controller.  Thus this is
+ * really a mini-GameEngine in its own right.  As in 3152, we separate it out
+ * so that we can have a separate mode for the loading screen.
+ */
+void GameScene::panScreen(const cugl::Vec2& delta) {
+    if (delta.lengthSquared() == 0) {
+        return;
+    }
+
+    _transform.translate(delta);
+    _rootnode->chooseAlternateTransform(true);
+    _rootnode->setAlternateTransform(_transform);
+
 }
