@@ -84,7 +84,8 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     gamePosition.setZero();
 
     _rootnode = std::dynamic_pointer_cast<scene2::ScrollPane>(_assets->get<scene2::SceneNode>("game"));
-
+    _rootnode->setConstrained(false);
+    _rootnode->applyZoom(4);
     //_rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _rootnode->setPosition(offset);
 
@@ -156,66 +157,65 @@ void GameScene::update(float timestep) {
 void GameScene::moveScreen() { // For testing ONLY. Don't use this in game.
     Keyboard* keys = Input::get<Keyboard>();
     Vec2 delta;
-    float change = 0.005;
+    float change = 16;
 
+    CULog("anchor %f %f", anchor.x, anchor.y);
+    
+//    anchor.add(0,1e-10);
+//    _rootnode->setConstrained(false);
+//    _rootnode->applyPan(Vec2(1,0));
+    
+//    _rootnode->
+    
+//    if(1==1)return;
+    
     if (keys->keyDown(KeyCode::W)) {
-        delta = Vec2(0, change);
-        if (!_isPanning) {
-            _isPanning = true;
-            anchor = gamePosition;
-            anchor.subtract(delta);
-        }
-        else {
-            anchor.subtract(delta);
-        }
-
-    } else if (keys->keyDown(KeyCode::A)) {
-        delta = Vec2(-change, 0);
-        if (!_isPanning) {
-            _isPanning = true;
-            
-            anchor.subtract(delta);
-        }
-        else {
-            anchor.subtract(delta);
-        }
-    }
-    else if (keys->keyDown(KeyCode::S)) {
         delta = Vec2(0, -change);
         if (!_isPanning) {
             _isPanning = true;
-            anchor.subtract(delta);
         }
-        else {
-            anchor.subtract(delta);
-        }
-    }
-    else if (keys->keyDown(KeyCode::D)) {
+        anchor.subtract(delta);
+
+    } else if (keys->keyDown(KeyCode::A)) {
         delta = Vec2(change, 0);
         if (!_isPanning) {
             _isPanning = true;
-            
-            anchor.subtract(delta);
         }
-        else {
-            anchor.subtract(delta);
+        anchor.subtract(delta);
+    }
+    else if (keys->keyDown(KeyCode::S)) {
+        delta = Vec2(0, change);
+        if (!_isPanning) {
+            _isPanning = true;
         }
+        anchor.subtract(delta);
+    }
+    else if (keys->keyDown(KeyCode::D)) {
+        delta = Vec2(-change, 0);
+        if (!_isPanning) {
+            _isPanning = true;
+        }
+        anchor.subtract(delta);
     }
     else {
         _isPanning = false;
-        anchor.setZero();
-        delta.setZero();
+//        anchor.setZero();
     }
 
     if (_isPanning) {
         Vec2 transformedAnchor = anchor;
+        CULog("untransformed anchor %f %f", anchor.x, anchor.y);
         transformedAnchor = _rootnode->worldToNodeCoords(transformedAnchor);
+        CULog("transformed anchor %f %f", anchor.x, anchor.y);
         transformedAnchor /= _rootnode->getContentSize();
-        _rootnode->setAnchor(transformedAnchor);
+        CULog("normalized anchor %f %f", anchor.x, anchor.y);
+//        _rootnode->setAnchor(transformedAnchor);
+        
 
         gamePosition.add(delta);
         _rootnode->applyPan(delta);
 
+        delta.setZero();
     }
 }
 
