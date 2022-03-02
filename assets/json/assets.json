@@ -8,6 +8,18 @@
         },
         "left": {
             "file":  "textures/left_arrow.png"
+        },
+        "wall": {
+            "file":  "textures/map/wall.png"
+        },
+        "obstacle": {
+            "file":  "textures/map/obstacle.png"
+        },
+        "thief":{
+            "file":  "textures/thief.png"
+        },
+        "cop_left":{
+            "file":  "textures/cop_left.png"
         }
     },
     "fonts": {
@@ -420,7 +432,7 @@
             }
         },
         "game": {
-            "type"      : "Node",
+            "type"      : "Scroll",
             "format"    : {
                 "type" : "anchored"
             },

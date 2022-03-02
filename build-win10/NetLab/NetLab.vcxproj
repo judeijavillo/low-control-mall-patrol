@@ -191,24 +191,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\source\NLApp.h" />
-    <ClInclude Include="..\..\source\NLClientScene.h" />
-    <ClInclude Include="..\..\source\NLGameScene.h" />
-    <ClInclude Include="..\..\source\NLHostScene.h" />
-    <ClInclude Include="..\..\source\NLLoadingScene.h" />
-    <ClInclude Include="..\..\source\NLMenuScene.h" />
-    <ClInclude Include="resource.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\source\main.cpp" />
-    <ClCompile Include="..\..\source\NLApp.cpp" />
-    <ClCompile Include="..\..\source\NLClientScene.cpp" />
-    <ClCompile Include="..\..\source\NLGameScene.cpp" />
-    <ClCompile Include="..\..\source\NLHostScene.cpp" />
-    <ClCompile Include="..\..\source\NLLoadingScene.cpp" />
-    <ClCompile Include="..\..\source\NLMenuScene.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <ResourceCompile Include="NetLab.rc" />
   </ItemGroup>
   <ItemGroup>
@@ -219,6 +201,59 @@
       <Project>{60c028a4-977f-44e9-a709-d79a153d6f69}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="..\..\source\LCMPApp.h" />
+    <ClInclude Include="..\..\source\LCMPClientScene.h" />
+    <ClInclude Include="..\..\source\LCMPCopModel.h" />
+    <ClInclude Include="..\..\source\LCMPGameModel.h" />
+    <ClInclude Include="..\..\source\LCMPGameScene.h" />
+    <ClInclude Include="..\..\source\LCMPHostScene.h" />
+    <ClInclude Include="..\..\source\LCMPInputController.h" />
+    <ClInclude Include="..\..\source\LCMPLoadingScene.h" />
+    <ClInclude Include="..\..\source\LCMPMenuScene.h" />
+    <ClInclude Include="..\..\source\LCMPNetworkController.h" />
+    <ClInclude Include="..\..\source\LCMPPlayerModel.h" />
+    <ClInclude Include="..\..\source\LCMPThiefModel.h" />
+    <ClInclude Include="..\..\source\LCMPTrapModel.h" />
+  </ItemGroup>
+  <ItemGroup>
+>>>>>>> origin/movement
+    <ClCompile Include="..\..\source\LCMPApp.cpp" />
+    <ClCompile Include="..\..\source\LCMPClientScene.cpp" />
+    <ClCompile Include="..\..\source\LCMPCopModel.cpp" />
+    <ClCompile Include="..\..\source\LCMPGameModel.cpp" />
+    <ClCompile Include="..\..\source\LCMPGameScene.cpp" />
+    <ClCompile Include="..\..\source\LCMPHostScene.cpp" />
+    <ClCompile Include="..\..\source\LCMPInputController.cpp" />
+    <ClCompile Include="..\..\source\LCMPLoadingScene.cpp" />
+    <ClCompile Include="..\..\source\LCMPMenuScene.cpp" />
+    <ClCompile Include="..\..\source\LCMPNetworkController.cpp" />
+    <ClCompile Include="..\..\source\LCMPPlayerModel.cpp" />
+    <ClCompile Include="..\..\source\LCMPThiefModel.cpp" />
+    <ClCompile Include="..\..\source\LCMPTrapModel.cpp" />
+    <ClCompile Include="..\..\source\main.cpp" />
+  </ItemGroup>
+<<<<<<< HEAD
+  <ItemGroup>
+    <ClInclude Include="..\..\source\LCMPApp.h" />
+    <ClInclude Include="..\..\source\LCMPClientScene.h" />
+    <ClInclude Include="..\..\source\LCMPCopModel.h" />
+    <ClInclude Include="..\..\source\LCMPGameModel.h" />
+    <ClInclude Include="..\..\source\LCMPGameScene.h" />
+    <ClInclude Include="..\..\source\LCMPHostScene.h" />
+    <ClInclude Include="..\..\source\LCMPInputController.h" />
+    <ClInclude Include="..\..\source\LCMPLevelConstants.h" />
+    <ClInclude Include="..\..\source\LCMPLoadingScene.h" />
+    <ClInclude Include="..\..\source\LCMPMenuScene.h" />
+    <ClInclude Include="..\..\source\LCMPNetworkController.h" />
+    <ClInclude Include="..\..\source\LCMPPlayerModel.h" />
+    <ClInclude Include="..\..\source\LCMPThiefModel.h" />
+    <ClInclude Include="..\..\source\LCMPTrapModel.h" />
+  </ItemGroup>
+=======
+>>>>>>> origin/movement
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
