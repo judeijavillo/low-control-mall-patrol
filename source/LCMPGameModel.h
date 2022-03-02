@@ -21,6 +21,15 @@
 using namespace cugl;
 
 class GameModel : public Asset {
+    
+public:
+    //TODO: delete later when things aren't fucky and we aren't instantiating characters in gamescene
+    cugl::Vec2 _thiefpos;
+    cugl::Vec2 _coppos;
+    
+    cugl::Vec2 getThiefPos(){return _thiefpos;};
+    cugl::Vec2 getCopPos(){return _coppos;};
+    
 protected:
 //  MARK: - Properties
     
@@ -33,7 +42,6 @@ protected:
     std::vector<std::shared_ptr<TrapModel>> _traps;
     /** The physics word; part of the model (though listeners elsewhere) */
     std::shared_ptr<physics2::ObstacleWorld> _world;
-
 
     /** The root node of this level */
     std::shared_ptr<scene2::SceneNode> _root;

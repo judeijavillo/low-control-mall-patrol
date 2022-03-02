@@ -179,7 +179,9 @@ bool GameModel:: preload(const std::shared_ptr<cugl::JsonValue>& json) {
 	auto layers = json->get(LAYERS_FIELD);
 
 	auto tile_layer = layers->get(TILES_FIELD);
-	auto object_layer = layers->get(OBJECTS_FIELD);
+    auto object_layer = layers->get(OBJECTS_FIELD);
+    auto thiefspawn_layer = layers->get(THIEFSPAWN_FIELD);
+    auto copspawn_layer = layers->get(COPSPAWN_FIELD);
 
 	int w = tile_layer->get(WIDTH_FIELD)->asInt();
 	int h = tile_layer->get(HEIGHT_FIELD)->asInt();
@@ -188,7 +190,13 @@ bool GameModel:: preload(const std::shared_ptr<cugl::JsonValue>& json) {
 	int t_width = json->get(T_WIDTH_FIELD)->asInt();
 
 	auto walls = tile_layer->get(WALLS_FIELD)->asIntArray();
-	auto obstacles = object_layer->get(OBSTACLES_FIELD);
+    auto obstacles = object_layer->get(OBSTACLES_FIELD);
+    auto thiefspawn_pt = thiefspawn_layer->get(OBSTACLES_FIELD)->get(0);
+    _thiefpos = Vec2(thiefspawn_pt->getFloat("x"), thiefspawn_pt->getFloat("y"));
+    auto copspawns_pt = copspawn_layer->get(OBSTACLES_FIELD)->get(0); // TODO: only gets 1 cop spawn
+    _coppos = Vec2(copspawns_pt->getFloat("x"), copspawns_pt->getFloat("y"));
+
+    
 
 	_bounds.size.set(w*t_width, h*t_height); // Scale???
 	_gravity.set(0, 0);
@@ -220,7 +228,7 @@ bool GameModel:: preload(const std::shared_ptr<cugl::JsonValue>& json) {
 	 	return false;
 	}
 
-	CULog("Length of obstacle list: %d", _obstacles.size());
+//	CULog("Length of obstacle list: %d", _obstacles.size());
 
 	return true;
 }

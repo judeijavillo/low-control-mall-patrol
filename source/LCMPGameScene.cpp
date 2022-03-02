@@ -198,7 +198,7 @@ void GameScene::reset() {
 void GameScene::populate() {
     std::shared_ptr<Texture> image = _assets->get<Texture>(COP_TEXTURE);
     // Create cop
-        Vec2 copPos = ((Vec2)COP_POS);
+    Vec2 copPos = _game->getCopPos();
         Size copSize(image->getSize().width / _scale,
             image->getSize().height / _scale);
         
@@ -207,7 +207,7 @@ void GameScene::populate() {
 
         auto copNode = scene2::PolygonNode::allocWithTexture(image);
         copNode->setAnchor(Vec2::ANCHOR_CENTER);
-        copNode->setPosition(_cop->getPosition() * _scale);
+        copNode->setPosition(_cop->getPosition() * _scale * _game->getDrawScale());
         copNode->setScale(Vec2(TEXTURE_SCALAR, TEXTURE_SCALAR));
 
         _cop->setCopNode(copNode);
@@ -216,16 +216,17 @@ void GameScene::populate() {
 
         // Create thief
         image = _assets->get<Texture>(THIEF_TEXTURE);
-        Vec2 thiefPos = ((Vec2)THIEF_POS);
-        Size thiefSize = image->getSize() / (_scale * TEXTURE_SCALAR);
-
+        Vec2 thiefPos = _game->getThiefPos();
+        Size thiefSize(image->getSize().width / _scale,
+            image->getSize().height / _scale);
+    
         _thief = ThiefModel::alloc(thiefPos, thiefSize);
-        _thief->setDrawScale(_scale);
+        _thief->setDrawScale(_scale * TEXTURE_SCALAR);
 
         auto thiefNode = scene2::PolygonNode::allocWithTexture(image);
         thiefNode->setAnchor(Vec2::ANCHOR_CENTER);
         thiefNode->setScale(Vec2(TEXTURE_SCALAR, TEXTURE_SCALAR));
-        thiefNode->setPosition(_thief->getPosition() * _scale );
+        thiefNode->setPosition(_thief->getPosition() * _scale * _game->getDrawScale());
 
         _thief->setThiefNode(thiefNode);
 
@@ -293,7 +294,7 @@ void GameScene::moveScreen() { // For testing ONLY. Don't use this in game.
     Vec2 delta;
     float change = 64;
 
-    CULog("anchor %f %f", anchor.x, anchor.y);
+//    CULog("anchor %f %f", anchor.x, anchor.y);
     
 //    anchor.add(0,1e-10);
 //    _rootnode->setConstrained(false);
@@ -338,11 +339,11 @@ void GameScene::moveScreen() { // For testing ONLY. Don't use this in game.
 
     if (_isPanning) {
         Vec2 transformedAnchor = anchor;
-        CULog("untransformed anchor %f %f", anchor.x, anchor.y);
+//        CULog("untransformed anchor %f %f", anchor.x, anchor.y);
         transformedAnchor = _rootnode->worldToNodeCoords(transformedAnchor);
-        CULog("transformed anchor %f %f", anchor.x, anchor.y);
+//        CULog("transformed anchor %f %f", anchor.x, anchor.y);
         transformedAnchor /= _rootnode->getContentSize();
-        CULog("normalized anchor %f %f", anchor.x, anchor.y);
+//        CULog("normalized anchor %f %f", anchor.x, anchor.y);
 //        _rootnode->setAnchor(transformedAnchor);
         
 
