@@ -63,10 +63,11 @@ void ThiefModel::applyForce() {
 }
 
 void ThiefModel::update(float delta) {
+    CULog("thief pos: %f, %f", _body->GetPosition().x, _body->GetPosition().y);
     CapsuleObstacle::update(delta);
     if (_thiefNode != nullptr) {
         _thiefNode->setPosition(getPosition() * _drawscale);
         _thiefNode->setAngle(getAngle());
-//        CULog("thief velocity: %f, %f", _body->GetLinearVelocity().x, _body->GetLinearVelocity().y);
+//        CULog("thief pos: %f, %f", _body->GetPosition().x, _body->GetPosition().y);
     }
 }

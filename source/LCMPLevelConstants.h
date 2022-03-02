@@ -22,6 +22,8 @@
 #define ROTATION_FIELD        "rotation"
 #define TILES_FIELD        0
 #define OBJECTS_FIELD        1
+#define THIEFSPAWN_FIELD        2
+#define COPSPAWN_FIELD        3
 
 #define WALLS_FIELD        "data"
 #define OBSTACLES_FIELD        "objects"
