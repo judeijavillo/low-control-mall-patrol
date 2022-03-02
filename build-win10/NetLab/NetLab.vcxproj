@@ -202,6 +202,24 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="..\..\source\LCMPApp.h" />
+    <ClInclude Include="..\..\source\LCMPClientScene.h" />
+    <ClInclude Include="..\..\source\LCMPCopModel.h" />
+    <ClInclude Include="..\..\source\LCMPGameModel.h" />
+    <ClInclude Include="..\..\source\LCMPGameScene.h" />
+    <ClInclude Include="..\..\source\LCMPHostScene.h" />
+    <ClInclude Include="..\..\source\LCMPInputController.h" />
+    <ClInclude Include="..\..\source\LCMPLoadingScene.h" />
+    <ClInclude Include="..\..\source\LCMPMenuScene.h" />
+    <ClInclude Include="..\..\source\LCMPNetworkController.h" />
+    <ClInclude Include="..\..\source\LCMPPlayerModel.h" />
+    <ClInclude Include="..\..\source\LCMPThiefModel.h" />
+    <ClInclude Include="..\..\source\LCMPTrapModel.h" />
+  </ItemGroup>
+  <ItemGroup>
+>>>>>>> origin/movement
     <ClCompile Include="..\..\source\LCMPApp.cpp" />
     <ClCompile Include="..\..\source\LCMPClientScene.cpp" />
     <ClCompile Include="..\..\source\LCMPCopModel.cpp" />
@@ -217,6 +235,7 @@
     <ClCompile Include="..\..\source\LCMPTrapModel.cpp" />
     <ClCompile Include="..\..\source\main.cpp" />
   </ItemGroup>
+<<<<<<< HEAD
   <ItemGroup>
     <ClInclude Include="..\..\source\LCMPApp.h" />
     <ClInclude Include="..\..\source\LCMPClientScene.h" />
@@ -233,6 +252,8 @@
     <ClInclude Include="..\..\source\LCMPThiefModel.h" />
     <ClInclude Include="..\..\source\LCMPTrapModel.h" />
   </ItemGroup>
+=======
+>>>>>>> origin/movement
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -14,6 +14,12 @@
         },
         "obstacle": {
             "file":  "textures/map/obstacle.png"
+        },
+        "thief":{
+            "file":  "textures/thief.png"
+        },
+        "cop_left":{
+            "file":  "textures/cop_left.png"
         }
     },
     "fonts": {

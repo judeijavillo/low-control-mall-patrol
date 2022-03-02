@@ -97,17 +97,6 @@ protected:
      */
     void clearRootNode();
 
-    /**
-     * Adds the physics object to the physics world and loosely couples it to the scene graph
-     *
-     *
-     * param obj    The physics object to add
-     * param node   The scene graph node to attach it to
-     */
-    void addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj,
-                     const std::shared_ptr<cugl::scene2::SceneNode>& node);
-
-
 public:
 #pragma mark Static Constructors
     /**
@@ -135,6 +124,16 @@ public:
         std::shared_ptr<GameModel> result = std::make_shared<GameModel>();
         return (result->init(file) ? result : nullptr);
     }
+    
+    /**
+     * Adds the physics object to the physics world and loosely couples it to the scene graph
+     *
+     *
+     * param obj    The physics object to add
+     * param node   The scene graph node to attach it to
+     */
+    void addObstacle(const std::shared_ptr<cugl::physics2::Obstacle>& obj,
+                     const std::shared_ptr<cugl::scene2::SceneNode>& node);
 
     /**
      * Returns the cops in this game level

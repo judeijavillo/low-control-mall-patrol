@@ -11,6 +11,9 @@
 #include <cugl/cugl.h>
 #include <iostream>
 #include <sstream>
+#include <box2d/b2_world.h>
+#include <box2d/b2_contact.h>
+#include <box2d/b2_collision.h>
 
 #include "LCMPGameScene.h"
 #include "LCMPGameModel.h"
@@ -24,6 +27,38 @@ using namespace std;
 /** Regardless of logo, lock the height to this */
 #define SCENE_WIDTH 1280
 #define SCENE_HEIGHT  720
+
+/** Scalar to change cop size.*/
+#define TEXTURE_SCALAR 0.1f
+
+/** Width of the game world in Box2d units */
+#define DEFAULT_WIDTH   32.0f
+/** Height of the game world in Box2d units */
+#define DEFAULT_HEIGHT  18.0f
+/** The default value of gravity (going down) */
+#define DEFAULT_GRAVITY 0.0f
+
+/** The initial thief position */
+//float THIEF_POS[] = {0, DEFAULT_HEIGHT/2};
+float THIEF_POS[] = { DEFAULT_WIDTH / 4, DEFAULT_HEIGHT / 4 };
+float COP_POS[] = { DEFAULT_WIDTH / 4, DEFAULT_HEIGHT / 4 };
+
+/** The key for the thief texture in the asset manager */
+#define THIEF_TEXTURE        "thief"
+
+#define COP_TEXTURE         "cop_left"
+
+//  MARK: - Physics Constants
+
+// Physics constants for initialization
+/** Density of non-crate objects */
+#define BASIC_DENSITY       0.0f
+/** Friction of non-crate objects */
+#define BASIC_FRICTION      0.1f
+/** Collision restitution for all objects */
+#define BASIC_RESTITUTION   0.1f
+/** Threshold for generating sound on collision */
+#define SOUND_THRESHOLD     3
 
 
 //  MARK: - Constructors
@@ -50,7 +85,8 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     
     // Save the asset manager
     _assets = assets;
-    
+    _input.init(getBounds());
+
     // Save the network controller
     _network = network;
     
@@ -61,6 +97,12 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
         return false;
     }
     
+
+    // IMPORTANT: SCALING MUST BE UNIFORM
+    // This means that we cannot change the aspect ratio of the physics world
+    // Shift to center if a bad fit
+    _scale = dimen.width == SCENE_WIDTH ? dimen.width/DEFAULT_WIDTH : dimen.height/DEFAULT_HEIGHT;
+
     // Acquire the scene built by the asset loader and resize it the scene
 //    std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("game");
     //std::shared_ptr<scene2::SceneNode> scene = _game->getRootNode();
@@ -76,6 +118,21 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
 
     // Create the scene graph
     
+    // Create the nodes responsible for displaying the joystick.
+    _jstickDeadzoneNode = scene2::PolygonNode::alloc();
+    _jstickDeadzoneNode->SceneNode::setAnchor(cugl::Vec2::ANCHOR_CENTER);
+    _jstickDeadzoneNode->setScale(1.0f);
+    _jstickDeadzoneNode->setVisible(false);
+
+    _jstickRadiusNode = scene2::PolygonNode::alloc();
+    _jstickRadiusNode->SceneNode::setAnchor(cugl::Vec2::ANCHOR_CENTER);
+    _jstickRadiusNode->setScale(1.0f);
+    _jstickRadiusNode->setVisible(false);
+
+//    addChild(_rootnode);
+    addChild(_jstickDeadzoneNode);
+    addChild(_jstickRadiusNode);
+
     _quit = false;
     _isPanning = false;
     anchor.setZero();
@@ -85,8 +142,8 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
 
     _rootnode = std::dynamic_pointer_cast<scene2::ScrollPane>(_assets->get<scene2::SceneNode>("game"));
     _rootnode->setConstrained(false);
-    _rootnode->applyZoom(4);
-    //_rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _rootnode->applyZoom(2);
+    _rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _rootnode->setPosition(offset);
 
     _game->setAssets(_assets);
@@ -95,6 +152,9 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
     _rootnode->setContentSize(dimen);
 
     addChild(_rootnode);
+
+    populate();
+//    addChild(scene); POTENTIAL MERGE ISSUE
 
     setActive(false);
     return true;
@@ -126,6 +186,50 @@ void GameScene::dispose() {
         _rootnode = nullptr;
 
     }
+    _input.dispose();
+}
+
+//  MARK: - Gameplay Handling
+void GameScene::reset() {
+    removeAllChildren();
+    populate();
+}
+
+void GameScene::populate() {
+    std::shared_ptr<Texture> image = _assets->get<Texture>(COP_TEXTURE);
+    // Create cop
+        Vec2 copPos = ((Vec2)COP_POS);
+        Size copSize(image->getSize().width / _scale,
+            image->getSize().height / _scale);
+        
+        _cop = CopModel::alloc(copPos,copSize);
+        _cop->setDrawScale(_scale * TEXTURE_SCALAR);
+
+        auto copNode = scene2::PolygonNode::allocWithTexture(image);
+        copNode->setAnchor(Vec2::ANCHOR_CENTER);
+        copNode->setPosition(_cop->getPosition() * _scale);
+        copNode->setScale(Vec2(TEXTURE_SCALAR, TEXTURE_SCALAR));
+
+        _cop->setCopNode(copNode);
+
+        _game->addObstacle(_cop, copNode);
+
+        // Create thief
+        image = _assets->get<Texture>(THIEF_TEXTURE);
+        Vec2 thiefPos = ((Vec2)THIEF_POS);
+        Size thiefSize = image->getSize() / (_scale * TEXTURE_SCALAR);
+
+        _thief = ThiefModel::alloc(thiefPos, thiefSize);
+        _thief->setDrawScale(_scale);
+
+        auto thiefNode = scene2::PolygonNode::allocWithTexture(image);
+        thiefNode->setAnchor(Vec2::ANCHOR_CENTER);
+        thiefNode->setScale(Vec2(TEXTURE_SCALAR, TEXTURE_SCALAR));
+        thiefNode->setPosition(_thief->getPosition() * _scale );
+
+        _thief->setThiefNode(thiefNode);
+
+        _game->addObstacle(_thief, thiefNode);
 }
 
 //  MARK: - Methods
@@ -149,15 +253,45 @@ void GameScene::update(float timestep) {
         moveScreen();
 
         activateWorldCollisions(_game->getWorld());
-
-
     }
+    
+        // Get input from joystick
+        _input.update(timestep);
+        if (_input.withJoystick()) {
+            displayJoystick();
+        }
+        else {
+            _jstickDeadzoneNode->setVisible(false);
+            _jstickRadiusNode->setVisible(false);
+        }
+
+        Vec2 movement = _input.getMovement();
+        
+        // Thief movement
+        if (_isThief) {
+            _thief->setMovement(movement);
+            _thief->applyForce();
+
+    //        CULog("Thief Position: (%f, %f)", _thief->getPosition().x, _thief->getPosition().y);
+        }
+        // Cop movement
+        else {
+            _cop->setFX(_input.getHorizontal() * _cop->getThrust());
+            _cop->setFY(_input.getVertical() * _cop->getThrust());
+            _cop->applyForce();
+            
+    //        CULog("accel: (%f)", _cop->getAcceleration());
+    //        CULog("hor,vert: (%f, %f)", _input.getHorizontal(), _input.getVertical());
+    //        CULog("Cop Position: (%f, %f)", _cop->getPosition().x, _cop->getPosition().y);
+        }
+
+        _game->getWorld()->update(timestep);
 }
 
 void GameScene::moveScreen() { // For testing ONLY. Don't use this in game.
     Keyboard* keys = Input::get<Keyboard>();
     Vec2 delta;
-    float change = 16;
+    float change = 64;
 
     CULog("anchor %f %f", anchor.x, anchor.y);
     
@@ -220,31 +354,6 @@ void GameScene::moveScreen() { // For testing ONLY. Don't use this in game.
 }
 
 
-/**
- * Processes the start of a collision
- *
- * This method is called when we first get a collision between two objects.  We use
- * this method to test if it is the "right" kind of collision.  In particular, we
- * use it to test if we make it to the win door.
- *
- * @param  contact  The two bodies that collided
- */
-void GameScene::beginContact(b2Contact* contact) {
-
-    // TODO: Collisions with movement team.
-
-    //b2Body* body1 = contact->GetFixtureA()->GetBody();
-    //b2Body* body2 = contact->GetFixtureB()->GetBody();
-
-    //// If we hit the "win" door, we are done
-    //intptr_t rptr = reinterpret_cast<intptr_t>(_level->getRocket().get());
-    //intptr_t dptr = reinterpret_cast<intptr_t>(_level->getExit().get());
-
-    //if ((body1->GetUserData().pointer == rptr && body2->GetUserData().pointer == dptr) ||
-    //    (body1->GetUserData().pointer == dptr && body2->GetUserData().pointer == rptr)) {
-    //    setComplete(true);
-    //}
-}
 
 /**
  * Handles any modifications necessary before collision resolution
@@ -293,6 +402,7 @@ void GameScene::beforeSolve(b2Contact* contact, const b2Manifold* oldManifold) {
     //        }
     //    }
     //}
+
 }
 
 
@@ -329,5 +439,31 @@ void GameScene::panScreen(const cugl::Vec2& delta) {
     _transform.translate(delta);
     _rootnode->chooseAlternateTransform(true);
     _rootnode->setAlternateTransform(_transform);
+}
+//  MARK: - Physics Handling
+/**
+ * Processes the start of a collision
+ *
+ * This method is called when we first get a collision between two objects.  We use
+ * this method to test if it is the "right" kind of collision.  In particular, we
+ * use it to test if we make it to the win door.
+ *
+ * @param  contact  The two bodies that collided
+ */
+void GameScene::beginContact(b2Contact* contact) {
+    b2Body* body1 = contact->GetFixtureA()->GetBody();
+    b2Body* body2 = contact->GetFixtureB()->GetBody();
+}
 
+void GameScene::displayJoystick() {
+    PolyFactory pf = PolyFactory();
+    Vec2 center = _input.getJoystick();
+    Poly2 joystickCenter = pf.makeCircle(center, _input.getJstickDeadzone());
+    Poly2 joystickRadius = pf.makeCircle(center, _input.getJstickRadius());
+    _jstickDeadzoneNode->setPolygon(joystickCenter);
+    _jstickDeadzoneNode->setColor(Color4::RED);
+    _jstickDeadzoneNode->setVisible(true);
+    _jstickRadiusNode->setPolygon(joystickRadius);
+    _jstickRadiusNode->setColor(Color4(1.0f, 0.0f, 0.0f, 0.3f));
+    _jstickRadiusNode->setVisible(true);
 }
