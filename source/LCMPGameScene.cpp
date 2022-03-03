@@ -142,7 +142,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
 
     _rootnode = std::dynamic_pointer_cast<scene2::ScrollPane>(_assets->get<scene2::SceneNode>("game"));
     _rootnode->setConstrained(false);
-    _rootnode->applyZoom(2);
+    _rootnode->applyZoom(0.5);
     _rootnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _rootnode->setPosition(offset);
 
@@ -151,10 +151,10 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::sha
 
     _rootnode->setContentSize(dimen);
     
-    _debugnode = scene2::SceneNode::alloc();
-    _debugnode->setScale(_scale); // Debug node draws in PHYSICS coordinates
-    _debugnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    _debugnode->setPosition(offset);
+//    _debugnode = scene2::SceneNode::alloc();
+//    _debugnode->setScale(_scale); // Debug node draws in PHYSICS coordinates
+//    _debugnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+//    _debugnode->setPosition(offset);
     
     addChild(_rootnode);
 

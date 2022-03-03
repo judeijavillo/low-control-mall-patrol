@@ -256,7 +256,10 @@ bool ObstacleWorld::init(const Rect bounds, const Vec2 gravity) {
  * param obj The obstacle to add
  */
 void ObstacleWorld::addObstacle(const std::shared_ptr<Obstacle>& obj) {
-    CUAssertLog(inBounds(obj.get()), "Obstacle is not in bounds");
+    if(!inBounds(obj.get())){
+        CULog("Object at %f %f", obj->getX(), obj->getY());
+        CUAssertLog(false, "Obstacle is not in bounds");
+    }
     _objects.push_back(obj);
     obj->activatePhysics(*_world);
 }

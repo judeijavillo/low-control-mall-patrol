@@ -61,7 +61,7 @@ protected:
     /** Reference to the obstacles */
     std::vector<std::shared_ptr<physics2::PolygonObstacle>> _obstacles;
     /** Reference to the walls */
-    std::vector<std::shared_ptr<physics2::BoxObstacle>> _walls;
+    std::vector<std::shared_ptr<physics2::PolygonObstacle>> _walls;
 
     /** The AssetManager for the game mode */
     std::shared_ptr<cugl::AssetManager> _assets;
@@ -87,6 +87,17 @@ protected:
      * @return true if the objects were loaded successfully.
      */
     bool loadObstacle(const std::shared_ptr<JsonValue>& json);
+    
+    /**
+     * Loads an object from the JSON
+     *
+     * These are only obstacles.
+     *
+     * @param  json   a JSON Value with the json for related objects.
+     *
+     * @return true if the objects were loaded successfully.
+     */
+    bool loadWall(const std::shared_ptr<JsonValue>& json);
 
     /**
      * Converts the string to a color

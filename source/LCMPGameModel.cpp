@@ -111,14 +111,14 @@ void GameModel::setRootNode(const std::shared_ptr<scene2::SceneNode>& node) {
 
     // TODO: Add shit.
 
-	for (auto it = _walls.begin(); it != _walls.end(); ++it) {
-		shared_ptr<physics2::BoxObstacle> wall = *it;
-
-		auto sprite = scene2::PolygonNode::allocWithTexture(
+    
+    for (auto it = _walls.begin(); it != _walls.end(); ++it) {
+        shared_ptr<physics2::PolygonObstacle> wall = *it;
+        auto sprite = scene2::PolygonNode::allocWithTexture(
                 _assets->get<Texture>(WALL_TEXTURE_KEY),
-                PolyFactory().makeRect(wall->getX(), wall->getY(), wall->getWidth(), wall->getHeight()) * _scale);
-		addObstacle(wall,sprite);  // All walls share the same texture
-	}
+                wall->getPolygon() * _scale);
+        addObstacle(wall,sprite);  // All obstacles share the same texture
+    }
     
     for (auto it = _obstacles.begin(); it != _obstacles.end(); ++it) {
         shared_ptr<physics2::PolygonObstacle> obstacle = *it;
@@ -183,13 +183,13 @@ bool GameModel:: preload(const std::shared_ptr<cugl::JsonValue>& json) {
     auto thiefspawn_layer = layers->get(THIEFSPAWN_FIELD);
     auto copspawn_layer = layers->get(COPSPAWN_FIELD);
 
-	int w = tile_layer->get(WIDTH_FIELD)->asInt();
-	int h = tile_layer->get(HEIGHT_FIELD)->asInt();
+	int w = json->get(WIDTH_FIELD)->asInt();
+	int h = json->get(HEIGHT_FIELD)->asInt();
 
 	int t_height = json->get(T_HEIGHT_FIELD)->asInt();
 	int t_width = json->get(T_WIDTH_FIELD)->asInt();
 
-	auto walls = tile_layer->get(WALLS_FIELD)->asIntArray();
+	auto walls = tile_layer->get(OBSTACLES_FIELD);
     auto obstacles = object_layer->get(OBSTACLES_FIELD);
     auto thiefspawn_pt = thiefspawn_layer->get(OBSTACLES_FIELD)->get(0);
     _thiefpos = Vec2(thiefspawn_pt->getFloat("x"), thiefspawn_pt->getFloat("y"));
@@ -208,27 +208,32 @@ bool GameModel:: preload(const std::shared_ptr<cugl::JsonValue>& json) {
 
 	// Load Wall.
 
-	loadWalls(walls, w, h, t_width, t_height);
+//	loadWalls(walls, w, h, t_width, t_height);
 
+    if (walls != nullptr) {
+
+        _walls = vector<shared_ptr<physics2::PolygonObstacle>>();
+        for(int ii = 0; ii < walls->size(); ii++) {
+            loadWall(walls->get(ii));
+        }
+    } else {
+         CUAssertLog(false, "Failed to load walls");
+         return false;
+    }
+    
 	if (obstacles != nullptr) {
 
 		_obstacles = vector<shared_ptr<physics2::PolygonObstacle>>();
 		for(int ii = 0; ii < obstacles->size(); ii++) {
 			loadObstacle(obstacles->get(ii));
-		}	
-		//int i = 0;
-		//std::shared_ptr<JsonValue> obstacle = obstacles->get(0);
-		//while (obstacle != nullptr) {
-		//	loadObstacle(obstacle);
-		//	++i;
-		//	obstacle = obstacles->get(i);
-		//}
+		}
 	} else {
-	 	CUAssertLog(false, "Failed to load walls");
+	 	CUAssertLog(false, "Failed to load obstacles");
 	 	return false;
 	}
 
-//	CULog("Length of obstacle list: %d", _obstacles.size());
+    CULog("Length of wall list: %d", _walls.size());
+    CULog("Length of obstacle list: %d", _obstacles.size());
 
 	return true;
 }
@@ -264,35 +269,36 @@ void GameModel::unload() {
         _world = nullptr;
     }
 }
-/**
- * Loads an object from the JSON
- *
- * These are only obstacles.
- *
- * @param  json   a JSON Value with the json for related objects.
- *
- * @return true if the objects were loaded successfully.
- */
-bool GameModel::loadWalls(const std::vector<int> walls, int width, int height, int t_width, int t_height) {
-	int x = 0;
-	int y = 0;
-	std::shared_ptr<physics2::BoxObstacle> obstacle;
-	_walls = std::vector<std::shared_ptr<physics2::BoxObstacle>>();
 
-	for (auto it = walls.begin(); it != walls.end(); ++it) {
-		if ((*it) != 0) {
-			int i = distance(walls.begin(), it);
-			y = (i / width) * t_height;
-			x = (i % width) * t_width;
-			obstacle = physics2::BoxObstacle::alloc(Vec2(x, y), Vec2(t_width, t_height));
-
-			_walls.push_back(obstacle);
-		}
-	}
-
-	return true;
-
-}
+///**
+// * Loads an object from the JSON
+// *
+// * These are only obstacles.
+// *
+// * @param  json   a JSON Value with the json for related objects.
+// *
+// * @return true if the objects were loaded successfully.
+// */
+//bool GameModel::loadWalls(const std::vector<int> walls, int width, int height, int t_width, int t_height) {
+//	int x = 0;
+//	int y = 0;
+//	std::shared_ptr<physics2::BoxObstacle> obstacle;
+//	_walls = std::vector<std::shared_ptr<physics2::BoxObstacle>>();
+//
+//	for (auto it = walls.begin(); it != walls.end(); ++it) {
+//		if ((*it) != 0) {
+//			int i = distance(walls.begin(), it);
+//			y = (i / width) * t_height;
+//			x = (i % width) * t_width;
+//			obstacle = physics2::BoxObstacle::alloc(Vec2(x, y), Vec2(t_width, t_height));
+//
+//			_walls.push_back(obstacle);
+//		}
+//	}
+//
+//	return true;
+//
+//}
 
 /**
  * Loads an object from the JSON
@@ -305,9 +311,9 @@ bool GameModel::loadWalls(const std::vector<int> walls, int width, int height, i
  */
 bool GameModel::loadObstacle(const std::shared_ptr<JsonValue>& json) {
     bool success = true;
-	
-	bool ellipse = json->getBool(ELLIPSE_FIELD);
-	auto polygon = json->get(POLYGON_FIELD);
+    
+    bool ellipse = json->getBool(ELLIPSE_FIELD);
+    auto polygon = json->get(POLYGON_FIELD);
     
     auto height = json->getInt(HEIGHT_FIELD);
     auto width = json->getInt(WIDTH_FIELD);
@@ -315,109 +321,125 @@ bool GameModel::loadObstacle(const std::shared_ptr<JsonValue>& json) {
     auto x = json->getFloat(X_FIELD);
     auto y = json->getFloat(Y_FIELD);
 
-
-    
     std::shared_ptr<physics2::PolygonObstacle> obstacle;
-	if (ellipse) { // circle or ellipse
+    if (ellipse) { // circle or ellipse
         auto poly = PolyFactory().makeEllipse(Vec2(x,y), Vec2(width,height));
         obstacle = physics2::PolygonObstacle::alloc(poly);
         obstacle->setAngle((rotation*M_PI)/(180));
-//        if (height == width) { // circle case, uses wheelobstacle
-//            obstacle = physics2::WheelObstacle::alloc(Vec2(x,y), height/2);
-//        } else { // ellipse case, uses extruded path2
-//            auto poly = PolyFactory().makeEllipse(Vec2(x,y), Vec2(width,height));
-//            obstacle = physics2::PolygonObstacle::alloc(poly);
-//            obstacle->setAngle((rotation*M_PI)/(180));
-//        }
-	}
-	else if (polygon != nullptr) { // polygon
-		std::shared_ptr <JsonValue> verts = json->get(POLYGON_FIELD);
+    }
+    else if (polygon != nullptr) { // polygon
+        shared_ptr <JsonValue> verts = json->get(POLYGON_FIELD);
+        
+        vector<Vec2> vertices;
+        
+        Vec2 mins = Vec2(100,100);
+        for (int ii = 0; ii < verts->size(); ii++) {
+            auto vert = verts->get(ii);
+            auto localx = vert->getFloat("x");
+            auto localy = vert->getFloat("y");
+            mins.set(min(mins.x,localx),min(mins.y,localy));
+            vertices.push_back(Vec2(localx,localy));
+        }
+        x += mins.x;
+        y += mins.y;
+        
+        EarclipTriangulator triangulator;
+        
+        Path2 polyPath = Path2(vertices);
+        if(polyPath.orientation() != -1) {
+            polyPath = polyPath.reverse();
+        }
 
-		std::vector<Vec2> vertices;
+        triangulator.set(polyPath);
+        triangulator.calculate();
+        Poly2 poly = triangulator.getPolygon();
 
-		for (int ii = 0; ii < verts->size(); ii++) {
-			
-			Vec2 vert = Vec2(verts->get(ii)->get("x")->asFloat(), verts->get(ii)->get("y")->asFloat());
-			vertices.push_back(vert);
-		}
-
-		EarclipTriangulator triangulator;
-
-		/*for (auto it = verts.begin(); it != verts.end(); ++it) {
-			CULog("Vertice: ", (*it));
-		}*/
-
-		//Path2 polyPath = Path2(reinterpret_cast<Vec2*>(verts), (int)verts.size() / 2);
-		Path2 polyPath = Path2(vertices);
-		//polyPath = polyPath.reverse();
-
-		triangulator.set(polyPath);
-		triangulator.calculate();
-		Poly2 poly = triangulator.getPolygon();
-		
-		/*std::vector<Vec2> vertices = poly.getVertices();*/
-
-		obstacle = physics2::PolygonObstacle::alloc(triangulator.getPolygon());
-		obstacle->setAngle((rotation * M_PI) / (180));
-	}
-	else { // rectangle
+        obstacle = physics2::PolygonObstacle::alloc(triangulator.getPolygon());
+        obstacle->setAngle(-(rotation * M_PI) / (180));
+    }
+    else { // rectangle
         obstacle = physics2::PolygonObstacle::alloc(
                                                     PolyFactory().makeRect(Vec2(x, y), Vec2(width, height)));
-		obstacle->setAngle((rotation * M_PI) / (180));
-	}
+        obstacle->setAngle((rotation * M_PI) / (180));
+    }
 
-	//obstacle->setAnchor(.5, .5);
+    obstacle->setX(x + obstacle->getWidth() / 2);
+    obstacle->setY(y + obstacle->getHeight() / 2);
 
-	obstacle->setX(x + obstacle->getWidth() / 2);
-	obstacle->setY(y + obstacle->getHeight() / 2);
-	/*CULog("Obstacles X: %f, Y: %f", obstacle->getX(), obstacle->getY());*/
+    _obstacles.push_back(obstacle);
 
-	_obstacles.push_back(obstacle);
+    return success;
+}
 
-	/*
-	int polysize = json->getInt(VERTICES_FIELD);
-	success = success && polysize > 0;
+/**
+ * Loads an object from the JSON
+ *
+ * These are only obstacles.
+ *
+ * @param  json   a JSON Value with the json for related objects.
+ *
+ * @return true if the objects were loaded successfully.
+ */
+bool GameModel::loadWall(const std::shared_ptr<JsonValue>& json) {
+    bool success = true;
+    
+    bool ellipse = json->getBool(ELLIPSE_FIELD);
+    auto polygon = json->get(POLYGON_FIELD);
+    
+    auto height = json->getInt(HEIGHT_FIELD);
+    auto width = json->getInt(WIDTH_FIELD);
+    auto rotation = json->getFloat(ROTATION_FIELD);
+    auto x = json->getFloat(X_FIELD);
+    auto y = json->getFloat(Y_FIELD);
 
-	std::vector<float> vertices = json->get(BOUNDARY_FIELD)->asFloatArray();
-	success = success && 2*polysize == vertices.size();
+    std::shared_ptr<physics2::PolygonObstacle> obstacle;
+    if (ellipse) { // circle or ellipse
+        auto poly = PolyFactory().makeEllipse(Vec2(x,y), Vec2(width,height));
+        obstacle = physics2::PolygonObstacle::alloc(poly);
+        obstacle->setAngle((rotation*M_PI)/(180));
+    }
+    else if (polygon != nullptr) { // polygon
+        shared_ptr <JsonValue> verts = json->get(POLYGON_FIELD);
+        
+        vector<Vec2> vertices;
+        
+        Vec2 mins = Vec2(100,100);
+        for (int ii = 0; ii < verts->size(); ii++) {
+            auto vert = verts->get(ii);
+            auto localx = vert->getFloat("x");
+            auto localy = vert->getFloat("y");
+            mins.set(min(mins.x,localx),min(mins.y,localy));
+            vertices.push_back(Vec2(localx,localy));
+        }
+        x += mins.x;
+        y += mins.y;
+        
+        EarclipTriangulator triangulator;
+        
+        Path2 polyPath = Path2(vertices);
+        if(polyPath.orientation() != -1) {
+            polyPath = polyPath.reverse();
+        }
 
-    Vec2* verts = reinterpret_cast<Vec2*>(&vertices[0]);
-	Poly2 wall(verts,(int)vertices.size()/2);
-	EarclipTriangulator triangulator;
-	triangulator.set(wall.vertices);
-	triangulator.calculate();
-	wall.setIndices(triangulator.getTriangulation());
-    triangulator.clear();
-	
-	// Get the object, which is automatically retained
-	std::shared_ptr<WallModel> wallobj = WallModel::alloc(wall);
-	wallobj->setName(json->key());
+        triangulator.set(polyPath);
+        triangulator.calculate();
+        Poly2 poly = triangulator.getPolygon();
 
-	std::string btype = json->getString(BODYTYPE_FIELD);
-	if (btype == STATIC_VALUE) {
-		wallobj->setBodyType(b2_staticBody);
-	}
+        obstacle = physics2::PolygonObstacle::alloc(triangulator.getPolygon(), Vec2(1,1));
+        obstacle->setAngle(-(rotation * M_PI) / (180));
+    }
+    else { // rectangle
+        obstacle = physics2::PolygonObstacle::alloc(
+                                                    PolyFactory().makeRect(Vec2(x, y), Vec2(width, height)));
+        obstacle->setAngle((rotation * M_PI) / (180));
+    }
 
-	wallobj->setDensity(json->getDouble(DENSITY_FIELD));
-	wallobj->setFriction(json->getDouble(FRICTION_FIELD));
-	wallobj->setRestitution(json->getDouble(RESTITUTION_FIELD));
+    obstacle->setX(x + obstacle->getWidth() / 2);
+    obstacle->setY(y + obstacle->getHeight() / 2);
 
-	// Set the texture value
-	success = success && json->get(TEXTURE_FIELD)->isString();
-	wallobj->setTextureKey(json->getString(TEXTURE_FIELD));
-	wallobj->setDebugColor(parseColor(json->getString(DEBUG_COLOR_FIELD)));
+    _walls.push_back(obstacle);
 
-	if (success) {
-		_walls.push_back(wallobj);
-	} else {
-		wallobj = nullptr;
-	}
-
-	vertices.clear();
-	*/
-
-	
-	return success;
+    return success;
 }
 
 
