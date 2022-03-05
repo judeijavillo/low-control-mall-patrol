@@ -639,7 +639,7 @@ Path2* PathFactory::makeCapsule(Path2* path, poly2::Capsule shape, float x, floa
         float iw = w-h;
         Vec2 vert;
         
-        // Start at the top left of the interior rectangle
+        // Start at the bottom left of the interior rectangle
         if (shape == poly2::Capsule::HALF_REVERSE) {
             vert.x = ix;
             vert.y = cy + radius;
@@ -652,8 +652,8 @@ Path2* PathFactory::makeCapsule(Path2* path, poly2::Capsule shape, float x, floa
             for (int ii = 0; ii <= segments; ii++) {
                 // Try to handle round off gracefully
                 float rads = (ii == segments ? M_PI : ii * coef);
-                vert.x = ix - radius * cosf( rads );
-                vert.y = cy + radius * sinf( rads );
+                vert.x = ix - radius * sinf( rads );
+                vert.y = cy - radius * cosf( rads );
                 path->push(vert,false);
             }
             vcount += segments+1;
@@ -672,8 +672,8 @@ Path2* PathFactory::makeCapsule(Path2* path, poly2::Capsule shape, float x, floa
             for (int ii = 0; ii <= segments; ii++) {
                 // Try to handle round off gracefully
                 float rads = (ii == segments ? M_PI : ii * coef);
-                vert.x = ix + iw + radius * cosf( rads );
-                vert.y = cy - radius * sinf( rads );
+                vert.x = ix + iw + radius * sinf( rads );
+                vert.y = cy + radius * cosf( rads );
                 path->push(vert,false);
             }
             vcount += segments+1;

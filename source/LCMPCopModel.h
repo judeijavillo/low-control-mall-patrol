@@ -9,107 +9,51 @@
 #ifndef __LCMP_COP_MODEL_H__
 #define __LCMP_COP_MODEL_H__
 #include "LCMPPlayerModel.h"
-#include <cugl/cugl.h>
 
-/** The thrust factor to convert player input into thrust */
-#define DEFAULT_THRUST 100000.0f
+/** The cop's damping coefficient */
+#define COP_DAMPING 5.0f
+/** The cop's maximum speed of this player */
+#define COP_MAX_SPEED 10.0f
+/** The cops's acceleration of this player */
+#define COP_ACCELERATION 15.0f
 
-//  MARK: - Drawing Constants
-/** Identifier to allow us to track the sensor in ContactListener */
-
-//  MARK: - Cop Model
 class CopModel : public PlayerModel {
-protected:
-    /** The force to apply to this rocket */
-    cugl::Vec2 _force;
-    /** How long until we can tackle again */
-    int  _tackleCooldown;
-    /** Whether we are actively tackling */
-    bool _isTackling;
-    /** The scene graph node for the cop. */
-    std::shared_ptr<cugl::scene2::SceneNode> _copNode;
-
 public:
-    //  MARK: - Static Constructors
-    /**
-     * Returns a newly allocated thief with the given position and size
-     *
-     * The player size is specified in world coordinates.
-     *
-     * The scene graph is completely decoupled from the physics system.
-     * The node does not have to be the same size as the physics body. We
-     * only guarantee that the scene graph node is positioned correctly
-     * according to the drawing scale.
-     *
-     * @param pos   Initial position in world coordinates
-     * @param size  The dimensions of the box.
-     *
-     * @return a newly allocated thief with the given position
-     */
-    static std::shared_ptr<CopModel> alloc(const cugl::Vec2& pos, const cugl::Size& size) {
-        std::shared_ptr<CopModel> result = std::make_shared<CopModel>();
-        return (result->init(pos, size) ? result : nullptr);
-    }
-
 //  MARK: - Constructors
-        
-    virtual void update(float delta);
-    
-    void setCopNode(const std::shared_ptr<cugl::scene2::SceneNode>& node);
-    
-//  MARK: - Accessors
     
     /**
-     * Returns the x-component of the force applied to the cop.
-     *
-     * Remember to modify the input values by the thrust amount before assigning
-     * the value to force.
-     *
-     * @return the x-component of the force applied to the cop.
+     * Constructs a Cop Model
      */
-    float getFX() const { return _force.x; }
+    CopModel() {};
     
     /**
-     * Sets the x-component of the force applied to the cop.
-     *
-     * Remember to modify the input values by the thrust amount before assigning
-     * the value to force.
-     *
-     * @param value the x-component of the force applied to the cop.
+     * Destructs a Cop Model
      */
-    void setFX(float value) { _force.x = value; }
+    ~CopModel() { dispose(); }
     
     /**
-     * Returns the y-component of the force applied to the cop.
-     *
-     * Remember to modify the input values by the thrust amount before assigning
-     * the value to force.
-     *
-     * @return the y-component of the force applied to the cop.
+     * Initializes a Cop Model
      */
-    float getFY() const { return _force.y; }
+    bool init(const cugl::Vec2 pos, const cugl::Size size, float scale,
+              const std::shared_ptr<cugl::scene2::SceneNode>& node,
+              const std::shared_ptr<cugl::AssetManager>& assets);
+    
+//  MARK: - Methods
     
     /**
-     * Sets the x-component of the force applied to the cop.
-     *
-     * Remember to modify the input values by the thrust amount before assigning
-     * the value to force.
-     *
-     * @param value the x-component of the force applied to the cop.
+     * Returns the damping constant
      */
-    void setFY(float value) { _force.y = value; }
+    float getDamping() override { return COP_DAMPING; }
     
     /**
-     * Returns the amount of thrust that the cop has.
-     *
-     * Multiply this value times the horizontal and vertical values in the
-     * input controller to get the force.
-     *
-     * @return the amount of thrust that this cop has.
+     * Returns the max speed of a cop
      */
-    float getThrust() const { return DEFAULT_THRUST; }
-
-    virtual void applyForce();
+    float getMaxSpeed() override { return COP_MAX_SPEED; }
+    
+    /**
+     * Returns the acceleration of a cop
+     */
+    float getAcceleration() override { return COP_ACCELERATION; }
 };
 
 #endif /* __LCMP_COP_MODEL_H__ */

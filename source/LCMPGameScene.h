@@ -28,66 +28,48 @@ protected:
 //  MARK: - Properties
     
     // Controllers
-    /** A reference to the Network Controller singleton instance */
+    /** A reference to the Network Controller instance */
     std::shared_ptr<NetworkController> _network;
-    /** The input controller placed on the stack */
+    /** The Input Controller instance */
     InputController _input;
     
     // Models
     /** A model to represent all models within the game */
     std::shared_ptr<GameModel> _game;
-
-    /** Reference to the physics root of the scene graph */
-    std::shared_ptr<cugl::scene2::ScrollPane> _rootnode;
-
-//    /** The Box2D world */
-//    std::shared_ptr<cugl::physics2::ObstacleWorld> _world;
     
-    /** The scale between the physics world and the screen (MUST BE UNIFORM) */
+    // Views
+    /** Reference to the floor node of the scene graph */
+    std::shared_ptr<cugl::scene2::SceneNode> _floornode;
+    /** Reference to the physics node of the scene graph */
+    std::shared_ptr<cugl::scene2::SceneNode> _worldnode;
+    /** Reference to the debug node of the scene graph */
+    std::shared_ptr<cugl::scene2::SceneNode> _debugnode;
+    /** Reference to the debug node of the scene graph */
+    std::shared_ptr<cugl::scene2::SceneNode> _uinode;
+    
+    /** A view of the part of the joystick indicating what the player is controlling */
+    std::shared_ptr<cugl::scene2::PolygonNode> _innerJoystick;
+    /** A view of the part of the joystick indicating how far the josyick can reach */
+    std::shared_ptr<cugl::scene2::PolygonNode> _outerJoystick;
+    
+    /** The Box2D world */
+    std::shared_ptr<cugl::physics2::ObstacleWorld> _world;
+    
+    /** The amount to move the world node by to center it in the scene */
+    cugl::Vec2 _offset;
+    /** The scale between the physics world and the screen (SCREEN UNITS / WORLD UNITS) */
     float _scale;
     
-    // Physics objects for the game
-    /** Reference to the player */
-    //TODO: Make more than one player, specify cops and thieves
-    std::shared_ptr<PlayerModel> _player;
-    /**Reference to the thief. */
-    std::shared_ptr<ThiefModel> _thief;
-    /**Reference to the cop. */
-    std::shared_ptr<CopModel> _cop;
-    
-    /** Reference to the joystick deadzone image */
-    std::shared_ptr<cugl::scene2::PolygonNode> _jstickDeadzoneNode;
-    /** Reference to the joystick radial image */
-    std::shared_ptr<cugl::scene2::PolygonNode> _jstickRadiusNode;
-
-    /** The asset manager for this game mode. */
+    /** The asset manager for this game mode */
     std::shared_ptr<cugl::AssetManager> _assets;
+    /** Whether the game is over or not  */
+    bool _gameover;
     /** Whether this player is the thief */
     bool _isThief;
     /** Whether this player is the host */
     bool _ishost;
     /** Whether we quit the game */
     bool _quit;
-
-    bool _isPanning;
-
-    Vec2 anchor;
-    Vec2 currPos;
-    Vec2 prevPos;
-
-    Vec2 gamePosition; // This is where I am right now.
-    cugl::Affine2 _transform;
-
-
-    /**
-     * Activates world collision callbacks on the given physics world and sets the onBeginContact and beforeSolve callbacks
-     *
-     * @param world the physics world to activate world collision callbacks on
-     */
-    void activateWorldCollisions(const std::shared_ptr<physics2::ObstacleWorld>& world);
-    
-//  MARK: - Internal Object Management
-    void populate();
     
 public:
 //  MARK: - Constructors
@@ -127,27 +109,29 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<NetworkController>& network);
-    
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets,
+              std::shared_ptr<NetworkController>& network);
 
-//  MARK: - Gameplay Handling
+//  MARK: - Methods
+
+    /**
+     * Sets whether the player is host.
+     *
+     * We may need to have gameplay specific code for host.
+     *
+     * @param host  Whether the player is host.
+     */
+    void start(bool host);
     
     /**
-     * The method called to update the game mode.
+     * The method called to update the scene.
+     *
+     * We need to update this method to constantly talk to the server
      *
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void update(float timestep) override;
-
-    void moveScreen();
     
-    /**
-     * Resets the status of the game so that we can play again.
-     */
-    void reset() override;
-    
-
-//  MARK: - Methods
     /**
      * Sets whether the scene is currently active
      *
@@ -169,16 +153,6 @@ public:
     bool isHost() const { return _ishost; }
 
     /**
-     * Sets whether the player is host.
-     *
-     * We may need to have gameplay specific code for host.
-     *
-     * @param host  Whether the player is host.
-     */
-    void setHost(bool host)  { _ishost = host; _isThief = host; }
-    // TODO: The host should not always be the thief
-
-    /**
      * Returns true if the player quits the game.
      *
      * @return true if the player quits the game.
@@ -194,44 +168,31 @@ public:
      */
     void disconnect() { _network = nullptr; }
 
-#pragma mark Collision Handling
+private:
+//  MARK: - Helpers
+    
     /**
-     * Processes the start of a collision
-     *
-     * This method is called when we first get a collision between two objects.
-     * We use this method to test if it is the "right" kind of collision.  In
-     * particular, we use it to test if we make it to the win door.
-     *
-     * @param  contact  The two bodies that collided
+     * Creates the necessary nodes for showing the joystick and adds them to the UI node
+     */
+    void initJoystick();
+    
+    /**
+     * Creates the player and trap models and adds them to the world node
+     */
+    void initModels();
+  
+//  MARK: - Callbacks
+    
+    /**
+     * Callback for when two obstacles in the world begin colliding
      */
     void beginContact(b2Contact* contact);
-
+    
     /**
-     * Handles any modifications necessary before collision resolution
-     *
-     * This method is called just before Box2D resolves a collision.  We use
-     * this method to implement sound on contact, using the algorithms outlined
-     * in Ian Parberry's "Introduction to Game Physics with Box2D".
-     *
-     * @param  contact  The two bodies that collided
-     * @param  contact  The collision manifold before contact
+     * Callback for when two obstacles in the world end colliding
      */
     void beforeSolve(b2Contact* contact, const b2Manifold* oldManifold);
-
-    /**
-     * Pans the screen by the amount given by the input
-     *
-     * @param delta The pan offset
-     */
-    void panScreen(const cugl::Vec2& delta);
-
-    /**
-    * Displays joystick when it is in use.
-    */
-    void displayJoystick();
     
 };
-
-
 
 #endif /* __NL_GAME_SCENE_H__ */

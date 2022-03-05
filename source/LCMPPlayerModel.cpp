@@ -8,129 +8,121 @@
 
 #include "LCMPPlayerModel.h"
 
-using namespace cugl;
-
-//  MARK: - Animation and Physics Constants
-
-/** This is adjusted by screen aspect ratio to get the height */
-#define GAME_WIDTH 1024
-
-#define SIGNUM(x)  ((x > 0) - (x < 0))
-
-// Default physics values
 /** The density of this player */
 #define DEFAULT_DENSITY 1.0f
 /** The friction of this player */
-#define DEFAULT_FRICTION 0.1f
+#define DEFAULT_FRICTION 0.4f
 /** The restitution of this player */
 #define DEFAULT_RESTITUTION 0.4f
-/** Height of the sensor attached to the player's feet */
-#define SENSOR_HEIGHT   0.1f
 
-//  MARK: - Constructors
+using namespace cugl;
 
-bool PlayerModel::init(const Vec2 pos, const Size size) {
-    physics2::CapsuleObstacle::init(pos,size);
-    std::string name("player");
-    setName(name);
-
-    _playerNode = nullptr;
+/**
+ * initializes a Player Model
+ */
+bool PlayerModel::init(const Vec2 pos, const Size size, float scale,
+                       const std::shared_ptr<cugl::scene2::SceneNode>& node) {
+    // Call the parent's initializer
+    physics2::CapsuleObstacle::init(pos, size);
+    
+    // Set physics properties for the body
+    setName("player");
     setBodyType(b2_dynamicBody);
     setDensity(DEFAULT_DENSITY);
     setFriction(DEFAULT_FRICTION);
     setRestitution(DEFAULT_RESTITUTION);
     setFixedRotation(true);
+    setDebugColor(Color4::RED);
     
-    // Gameplay attributes
-    setAngle(0.0f);
-
+    // Save the scale (SCREEN UNITS / WORLD UNITS)
+    _scale = scale;
+    
+    // Save player's top-level node
+    _node = node;
+    
+    // Add a dropshadow node
+    PolyFactory pf;
+    Poly2 shadow = pf.makeCapsule(pos * scale, size * scale);
+    _dropshadow = scene2::PolygonNode::allocWithPoly(shadow);
+    _dropshadow->setAnchor(Vec2::ANCHOR_CENTER);
+    _dropshadow->setPosition(Vec2::ZERO);
+    _dropshadow->setColor(Color4(Vec4(0,0,0,0.25f)));
+    _node->addChild(_dropshadow);
+    
+    // We're gonna assume this always works appropriately
     return true;
 }
 
-
 /**
- * Disposes all resources and assets of this player
+ * Disposes of all resources in this instance of Player Model
  */
 void PlayerModel::dispose() {
-    _playerNode = nullptr;
+    _node = nullptr;
+    _character = nullptr;
+    _dropshadow = nullptr;
+    
+    _runBackTexture = nullptr;
+    _runFrontTexture = nullptr;
+    _runLeftTexture = nullptr;
+    _runRightTexture = nullptr;
 }
 
-//  MARK: - Physics
 /**
- * Applies the force to the player
- *
- * This method should be called after the force attribute is set.
+ * Applies an acceleration to the player (most likely for local updates)
  */
-void PlayerModel::applyForce() {
-    if (!isEnabled()) {
-        return;
+void PlayerModel::applyForce(cugl::Vec2 force) {
+    b2Vec2 b2force(force.x * getAcceleration(), force.y * getAcceleration());
+    _body->ApplyForceToCenter(b2force, true);
+    
+    // If there is no input
+    if (force == Vec2::ZERO) {
+        // Dampen the movement
+        b2Vec2 b2velocity = _body->GetLinearVelocity();
+        b2Vec2 b2damping(b2velocity.x * -getDamping(), b2velocity.y * -getDamping());
+        _body->ApplyForceToCenter(b2damping, true);
     }
     
-    // OVERRIDE
-}
-
-void PlayerModel::setMovement(Vec2 value) {
-    if (!isEnabled()) {
-        return;
+    // If there is a non-negligible input
+    else {
+        // Update the texture
+        if (abs(force.x) >= abs(force.y)) {
+            _character->setTexture(force.x > 0 ? _runRightTexture : _runLeftTexture);
+        } else {
+            _character->setTexture(force.y > 0 ? _runBackTexture : _runFrontTexture);
+        }
     }
-    //OVERRIDE
-}
-
-/**
- * Updates the object's physics state (NOT GAME LOGIC).
- *
- * This method is called AFTER the collision resolution state. Therefore, it
- * should not be used to process actions or any other gameplay information.
- * Its primary purpose is to adjust changes to the fixture, which have to
- * take place after collision.
- *
- * In other words, this is the method that updates the scene graph.  If you
- * forget to call it, it will not draw your changes.
- *
- * @param delta Timing values from parent loop
- */
-void PlayerModel::update(float delta) {
-    CapsuleObstacle::update(delta);
-    if (_playerNode != nullptr) {
-        _playerNode->setPosition(getPosition()*_drawscale);
-        _playerNode->setAngle(getAngle());
+    
+    // If the player has reached max speed
+    b2Vec2 b2velocity = _body->GetLinearVelocity();
+    if (b2velocity.Length() >= getMaxSpeed()) {
+        b2velocity.Normalize();
+        b2velocity *= getMaxSpeed();
+        _body->SetLinearVelocity(b2velocity);
     }
 }
 
 /**
- * Sets the scene graph node representing this player.
- *
- * By storing a reference to the scene graph node, the model can update
- * the node to be in sync with the physics info. It does this via the
- * {@link Obstacle#update(float)} method.
- *
- * If the animation nodes are not null, this method will remove them from
- * the previous scene and add them to the new one.
- *
- * @param node  The scene graph node representing this player.
+ * Updates the position and velocity of the player (most likely for network updates)
  */
-void PlayerModel::setPlayerNode(const std::shared_ptr<scene2::SceneNode>&node) {
-    _playerNode = node;
+void PlayerModel::applyNetwork(cugl::Vec2 position, cugl::Vec2 velocity, cugl::Vec2 force) {
+    setPosition(position);
+    
+    // Update the texture
+    if (abs(force.x) >= abs(force.y)) {
+        _character->setTexture(force.x > 0 ? _runRightTexture : _runLeftTexture);
+    } else {
+        _character->setTexture(force.y > 0 ? _runBackTexture : _runFrontTexture);
+    }
 }
 
-
-//  MARK: - Animation
-
 /**
- * Sets the ratio of the ship sprite to the physics body
- *
- * The rocket needs this value to convert correctly between the physics
- * coordinates and the drawing screen coordinates.  Otherwise it will
- * interpret one Box2D unit as one pixel.
- *
- * All physics scaling must be uniform.  Rotation does weird things when
- * attempting to scale physics by a non-uniform factor.
- *
- * @param scale The ratio of the ship sprite to the physics body
+ * Updates the player node based on this player's body
  */
-void PlayerModel::setDrawScale(float scale) {
-    _drawscale = scale;
-    if (_playerNode != nullptr) {
-        _playerNode->setPosition(getPosition() * _drawscale);
+void PlayerModel::update(float timestep) {
+    cugl::physics2::SimpleObstacle::update(timestep);
+    
+    if (_node != nullptr) {
+        Vec2 position(_body->GetPosition().x, _body->GetPosition().y);
+        _node->setPosition(position * _scale);
     }
 }

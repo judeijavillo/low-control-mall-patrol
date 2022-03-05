@@ -8,66 +8,44 @@
 
 #include "LCMPThiefModel.h"
 
-
-#define MAX_SPEED       7.0f
-#define ACCELERATION    4000000.0f
-
 using namespace cugl;
+using namespace std;
 
+//  MARK: - Constants
 
+/** Keys for thief run textures */
+#define THIEF_RUN_BACK      "thief_run_back"
+#define THIEF_RUN_FRONT     "thief_run_front"
+#define THIEF_RUN_LEFT      "thief_run_left"
+#define THIEF_RUN_RIGHT     "thief_run_right"
 
-void ThiefModel::setThiefNode(const std::shared_ptr<scene2::SceneNode>& node) {
-    _thiefNode = node;
-}
+//  MARK: - Constructors
 
 /**
- * Sets left/right movement of this character.
- *
- * This is the result of input times dude force.
- *
- * @param value left/right movement of this character.
+ * Initializes a Thief Model
  */
-void ThiefModel::setMovement(Vec2 value) {
-    if (value.lengthSquared() > 1) {
-        value.normalize();
-    }
-    _movement = value;
+bool ThiefModel::init(const cugl::Vec2 pos, const cugl::Size size, float scale,
+                      const std::shared_ptr<cugl::scene2::SceneNode>& node,
+                      const std::shared_ptr<cugl::AssetManager>& assets) {
+    // Call the parent's initializer
+    PlayerModel::init(pos, size, scale, node);
+    
+    // Set up the textures for all directions
+    _runBackTexture = assets->get<Texture>(THIEF_RUN_BACK);
+    _runFrontTexture = assets->get<Texture>(THIEF_RUN_FRONT);
+    _runLeftTexture = assets->get<Texture>(THIEF_RUN_LEFT);
+    _runRightTexture = assets->get<Texture>(THIEF_RUN_RIGHT);
+    
+    // Initialize the first texture. Note: width is in screen coordinates
+    float width = size.width * scale * 1.5f;
+    _character = scene2::PolygonNode::allocWithTexture(_runLeftTexture);
+    _character->setScale(width / _runLeftTexture->getSize().width);
+    _character->setAnchor(Vec2::ANCHOR_CENTER);
+    _character->setPosition(Vec2(0, width / 2.5f));
+    _node->addChild(_character);
+    // TODO: Get rid of the magic numbers in the lines above.
+    
+    return true;
 }
 
-void ThiefModel::applyForce() {
-    if (!isEnabled()) {
-        return;
-    }
 
-    Vec4 netforce((_movement.x * ACCELERATION), (_movement.y * ACCELERATION), 0.0f, 1.0f);
-    Mat4::createRotationZ(getAngle(), &_affine);
-    netforce *= _affine;
-    // Don't want to be moving. Damp out player motion
-    if (getMovement() == Vec2::ZERO) {
-        netforce.set(0.0f, 0.0f, 0.0f, 1.0f);
-    }
-
-    // Apply force to the thief
-    _body->ApplyForceToCenter(b2Vec2(netforce.x, netforce.y), true);
-     
-    // Apply damping force to the thief.
-    _body->ApplyForceToCenter(b2Vec2(_body-> GetLinearVelocity().x * (-ACCELERATION / MAX_SPEED), _body-> GetLinearVelocity().y * (-ACCELERATION / MAX_SPEED)), true);
-
-    //Ensure thief does not travel faster than max speed.
-    //if (_body->GetLinearVelocity().LengthSquared() > MAX_SPEED * MAX_SPEED) {
-    //    Vec2 normalizedVelocity(_body->GetLinearVelocity().x, _body->GetLinearVelocity().y);
-    //    normalizedVelocity.normalize();
-    //    normalizedVelocity *= MAX_SPEED;
-    //    _body->SetLinearVelocity(b2Vec2(normalizedVelocity.x, normalizedVelocity.y));
-    //}
-}
-
-void ThiefModel::update(float delta) {
-//    CULog("thief pos: %f, %f", _body->GetPosition().x, _body->GetPosition().y);
-    CapsuleObstacle::update(delta);
-    if (_thiefNode != nullptr) {
-        _thiefNode->setPosition(getPosition() * _drawscale);
-        _thiefNode->setAngle(getAngle());
-//        CULog("thief pos: %f, %f", _body->GetPosition().x, _body->GetPosition().y);
-    }
-}

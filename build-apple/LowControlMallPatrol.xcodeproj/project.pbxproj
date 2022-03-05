@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4298946B27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */; };
+		4298946C27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */; };
+		4298946D27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */; };
 		42B26D6827C1DC580019E6FB /* LCMPNetworkController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42B26D6727C1DC580019E6FB /* LCMPNetworkController.cpp */; };
 		42B26D6927C1DC580019E6FB /* LCMPNetworkController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42B26D6727C1DC580019E6FB /* LCMPNetworkController.cpp */; };
 		42B26D6A27C1DC580019E6FB /* LCMPNetworkController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42B26D6727C1DC580019E6FB /* LCMPNetworkController.cpp */; };
@@ -144,6 +147,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4298946627D426A800142B25 /* LCMPObstacleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPObstacleModel.h; sourceTree = "<group>"; };
+		4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPObstacleModel.cpp; sourceTree = "<group>"; };
 		42B26D6627C1DA830019E6FB /* LCMPNetworkController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LCMPNetworkController.h; sourceTree = "<group>"; };
 		42B26D6727C1DC580019E6FB /* LCMPNetworkController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPNetworkController.cpp; sourceTree = "<group>"; };
 		42B26D6B27C23F1D0019E6FB /* LCMPGameModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LCMPGameModel.h; sourceTree = "<group>"; };
@@ -330,6 +335,8 @@
 				42B26D7927C2BC840019E6FB /* LCMPCopModel.cpp */,
 				42B26D6F27C2BB480019E6FB /* LCMPTrapModel.h */,
 				42B26D7D27C2BC950019E6FB /* LCMPTrapModel.cpp */,
+				4298946627D426A800142B25 /* LCMPObstacleModel.h */,
+				4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -528,11 +535,11 @@
 					};
 					EB74548B1D74D75C002FBAE6 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = P2RQL34LD9;
+						DevelopmentTeam = 8C78ZZ3P8X;
 					};
 					EBBF18901D74904A008E2001 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = P2RQL34LD9;
+						DevelopmentTeam = 8C78ZZ3P8X;
 					};
 				};
 			};
@@ -642,6 +649,7 @@
 				EB13B3C527B2C0DF0032BF19 /* LCMPApp.cpp in Sources */,
 				EB13B3BC27B2C0DF0032BF19 /* LCMPGameScene.cpp in Sources */,
 				42B26D7C27C2BC840019E6FB /* LCMPCopModel.cpp in Sources */,
+				4298946D27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */,
 				42B26D8027C2BC950019E6FB /* LCMPTrapModel.cpp in Sources */,
 				42B26D6A27C1DC580019E6FB /* LCMPNetworkController.cpp in Sources */,
 				42B26D8427C2BD360019E6FB /* LCMPInputController.cpp in Sources */,
@@ -663,6 +671,7 @@
 				EB13B3C427B2C0DF0032BF19 /* LCMPApp.cpp in Sources */,
 				EB13B3BB27B2C0DF0032BF19 /* LCMPGameScene.cpp in Sources */,
 				42B26D7B27C2BC840019E6FB /* LCMPCopModel.cpp in Sources */,
+				4298946C27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */,
 				42B26D7F27C2BC950019E6FB /* LCMPTrapModel.cpp in Sources */,
 				42B26D6927C1DC580019E6FB /* LCMPNetworkController.cpp in Sources */,
 				42B26D8327C2BD360019E6FB /* LCMPInputController.cpp in Sources */,
@@ -684,6 +693,7 @@
 				EB13B3C327B2C0DF0032BF19 /* LCMPApp.cpp in Sources */,
 				EB13B3BA27B2C0DF0032BF19 /* LCMPGameScene.cpp in Sources */,
 				42B26D7A27C2BC840019E6FB /* LCMPCopModel.cpp in Sources */,
+				4298946B27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */,
 				42B26D7E27C2BC950019E6FB /* LCMPTrapModel.cpp in Sources */,
 				42B26D6827C1DC580019E6FB /* LCMPNetworkController.cpp in Sources */,
 				42B26D8227C2BD360019E6FB /* LCMPInputController.cpp in Sources */,
@@ -755,7 +765,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = P2RQL34LD9;
+				DEVELOPMENT_TEAM = 8C78ZZ3P8X;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";
@@ -775,7 +785,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = P2RQL34LD9;
+				DEVELOPMENT_TEAM = 8C78ZZ3P8X;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";
@@ -912,7 +922,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = P2RQL34LD9;
+				DEVELOPMENT_TEAM = 8C78ZZ3P8X;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Mac-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.mac.LCMP;
@@ -927,7 +937,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = P2RQL34LD9;
+				DEVELOPMENT_TEAM = 8C78ZZ3P8X;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Mac-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.mac.LCMP;

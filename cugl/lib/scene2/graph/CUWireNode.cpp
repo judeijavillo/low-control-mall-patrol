@@ -104,6 +104,7 @@ bool WireNode::initWithPoly(const Rect rect) {
 bool WireNode::initWithPath(const Path2& path) {
     if (TexturedNode::initWithTexture(nullptr)) {
         setPath(path);
+        setContentSize(path.getBounds().size);
         return true;
     }
     return false;
@@ -169,6 +170,7 @@ bool WireNode::initWithTraversal(const Poly2& poly, poly2::Traversal traversal) 
         _traversal = traversal;
         _polygon = poly;
         makeTraversal(poly, _traversal);
+        setContentSize(poly.getBounds().size);
         return true;
     }
     return false;

@@ -209,8 +209,6 @@ void HostScene::configureStartButton() {
 void HostScene::startGame() {
     if (_network->isConnected()) {
         _status = Status::START;
-        vector<uint8_t> data;
-        data.push_back(255);
-        _network->send(data);
+        _network->sendStartGame();
     }
 }

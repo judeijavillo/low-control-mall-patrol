@@ -82,10 +82,14 @@ void NetworkController::update() {
         break;
     }
     
-    _connection->receive([this](const std::vector<uint8_t> data) {
+    _connection->receive([this](const std::vector<uint8_t> msg) {
         // TODO: Add more functionality for getting client info, like names
         if (_isHost) return;
-        _status = (data.at(0) == 255) ? START : _status;
+        _deserializer.receive(msg);
+        vector<float> data = _deserializer.readFloatVector();
+        _deserializer.reset();
+        
+        _status = ((int) data.at(0) == START_GAME) ? START : _status;
         
     });
 }
@@ -93,6 +97,91 @@ void NetworkController::update() {
 /**
  * Checks the connection, updates the status accordingly, and updates the game (during game)
  */
-void NetworkController::update(std::shared_ptr<GameModel> game) {
-    // TODO: Implement network updates
+void NetworkController::update(std::shared_ptr<GameModel>& game) {
+    if (_connection->getStatus() != NetworkConnection::NetStatus::Connected) {
+        // TODO: Handle other network statuses
+        return;
+    }
+    
+    _connection->receive([this, game](const std::vector<uint8_t> msg) {
+        _deserializer.receive(msg);
+        vector<float> data = _deserializer.readFloatVector();
+        _deserializer.reset();
+        
+        switch ((int) data.at(0)) {
+        case COP_MOVEMENT:
+            game->updateCop(Vec2(data.at(1), data.at(2)),
+                            Vec2(data.at(3), data.at(4)),
+                            Vec2(data.at(5), data.at(6)),
+                            (int) data.at(7));
+            break;
+        case THIEF_MOVEMENT:
+            game->updateThief(Vec2(data.at(1), data.at(2)),
+                              Vec2(data.at(3), data.at(4)),
+                              Vec2(data.at(5), data.at(6)));
+            break;
+        default:
+            break;
+        }
+    });
+}
+
+/**
+ * Sends a byte vector to start the game
+ */
+void NetworkController::sendStartGame() {
+    vector<float> data;
+    data.push_back(START_GAME);
+    
+    _serializer.writeFloatVector(data);
+    _connection->send(_serializer.serialize());
+    _serializer.reset();
+}
+
+/**
+ * Sends a byte vector to update thief movement
+ */
+void NetworkController::sendThiefMovement(std::shared_ptr<GameModel>& game, Vec2 force) {
+    if (_connection == nullptr) return;
+    std::shared_ptr<ThiefModel> thief = game->getThief();
+    Vec2 position = thief->getPosition();
+    Vec2 velocity = thief->getVelocity();
+    vector<float> data;
+    
+    data.push_back(THIEF_MOVEMENT);
+    data.push_back(position.x);
+    data.push_back(position.y);
+    data.push_back(velocity.x);
+    data.push_back(velocity.y);
+    data.push_back(force.x);
+    data.push_back(force.y);
+    
+    _serializer.writeFloatVector(data);
+    _connection->send(_serializer.serialize());
+    _serializer.reset();
+}
+
+/**
+ * Sends a byte vector to update thief movement
+ */
+void NetworkController::sendCopMovement(std::shared_ptr<GameModel>& game, Vec2 force, int copID) {
+    if (_connection == nullptr) return;
+    std::shared_ptr<CopModel> cop = game->getCop(copID);
+    Vec2 position = cop->getPosition();
+    Vec2 velocity = cop->getVelocity();
+    vector<float> data;
+    
+    data.push_back(COP_MOVEMENT);
+    data.push_back(position.x);
+    data.push_back(position.y);
+    data.push_back(velocity.x);
+    data.push_back(velocity.y);
+    data.push_back(force.x);
+    data.push_back(force.y);
+    data.push_back(copID);
+    
+    _serializer.writeFloatVector(data);
+    _connection->send(_serializer.serialize());
+    _serializer.reset();
+    
 }

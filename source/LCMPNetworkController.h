@@ -31,14 +31,29 @@ public:
         /** The game was abortted  */
         ABORT
     };
+    
+    /** The different signals that the Network Controller can send */
+    enum Signal {
+        /** It's time to start the game */
+        START_GAME = 0,
+        /** What follows is which cop to update, its x and y position, and its x and y velocity */
+        COP_MOVEMENT = 1,
+        /** What follows is the thief's x and y position, and its x and y velocity */
+        THIEF_MOVEMENT = 2
+    };
 
 protected:
 //  MARK: - Properties
     
+    /** The serializer for sending byte vectors */
+    cugl::NetworkSerializer _serializer;
+    /** The deserializer for receiving byte vectors */
+    cugl::NetworkDeserializer _deserializer;
     /** The configuration settings for establishing the network connection */
     cugl::NetworkConnection::ConnectionConfig _config;
     /** The network connection (as made by this scene) */
     std::shared_ptr<cugl::NetworkConnection> _connection;
+    
     
     /** Whether the connection being made is for a host or not */
     bool _isHost;
@@ -118,12 +133,22 @@ public:
     /**
      * Checks the connection, updates the status accordingly, and updates the game (during game)
      */
-    void update(std::shared_ptr<GameModel> game);
+    void update(std::shared_ptr<GameModel>& game);
     
     /**
-     * Sends a byte vector over the Network Connection
+     * Sends a byte vector to start the game
      */
-    void send(const std::vector<uint8_t>& data) { _connection->send(data); }
+    void sendStartGame();
+    
+    /**
+     * Sends a byte vector to update thief movement
+     */
+    void sendThiefMovement(std::shared_ptr<GameModel>& game, cugl::Vec2 force);
+    
+    /**
+     * Sends a byte vector to update thief movement
+     */
+    void sendCopMovement(std::shared_ptr<GameModel>& game, cugl::Vec2 force, int copID);
     
 };
 

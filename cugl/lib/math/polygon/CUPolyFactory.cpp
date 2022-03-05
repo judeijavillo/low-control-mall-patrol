@@ -679,8 +679,8 @@ Poly2* PolyFactory::makeCapsule(Poly2* poly, poly2::Capsule shape, float x, floa
             for (int ii = 0; ii <= segments; ii++) {
                 // Try to handle round off gracefully
                 float rads = (ii == segments ? M_PI : ii * coef);
-                vert.x = ix - radius * cosf( rads );
-                vert.y = cy + radius * sinf( rads );
+                vert.x = ix - radius * sinf( rads );
+                vert.y = cy - radius * cosf( rads );
                 poly->vertices.push_back(vert);
             }
             vcount += segments+1;
@@ -699,8 +699,8 @@ Poly2* PolyFactory::makeCapsule(Poly2* poly, poly2::Capsule shape, float x, floa
             for (int ii = 0; ii <= segments; ii++) {
                 // Try to handle round off gracefully
                 float rads = (ii == segments ? M_PI : ii * coef);
-                vert.x = ix + iw + radius * cosf( rads );
-                vert.y = cy - radius * sinf( rads );
+                vert.x = ix + iw + radius * sinf( rads );
+                vert.y = cy + radius * cosf( rads );
                 poly->vertices.push_back(vert);
             }
             vcount += segments+1;

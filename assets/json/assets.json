@@ -9,17 +9,44 @@
         "left": {
             "file":  "textures/left_arrow.png"
         },
-        "wall": {
-            "file":  "textures/map/wall.png"
+        "tree": {
+            "file": "textures/environment/tree.png"
         },
-        "obstacle": {
-            "file":  "textures/map/obstacle.png"
+        "bucket": {
+            "file": "textures/environment/bucket.png"
         },
-        "thief":{
-            "file":  "textures/thief.png"
+        "bush": {
+            "file": "textures/environment/bush.png"
         },
-        "cop_left":{
-            "file":  "textures/cop_left.png"
+        "faris": {
+            "file": "textures/environment/faris.png"
+        },
+        "floor": {
+            "file": "textures/environment/floor.png"
+        },
+        "cop_run_back": {
+            "file": "textures/characters/lcmp_cop_run_back.png"
+        },
+        "cop_run_front": {
+            "file": "textures/characters/lcmp_cop_run_front.png"
+        },
+        "cop_run_left": {
+            "file": "textures/characters/lcmp_cop_run_left.png"
+        },
+        "cop_run_right": {
+            "file": "textures/characters/lcmp_cop_run_right.png"
+        },
+        "thief_run_back": {
+            "file": "textures/characters/lcmp_thief_run_back.png"
+        },
+        "thief_run_front": {
+            "file": "textures/characters/lcmp_thief_run_front.png"
+        },
+        "thief_run_left": {
+            "file": "textures/characters/lcmp_thief_run_left.png"
+        },
+        "thief_run_right": {
+            "file": "textures/characters/lcmp_thief_run_right.png"
         }
     },
     "fonts": {
@@ -432,7 +459,7 @@
             }
         },
         "game": {
-            "type"      : "Scroll",
+            "type"      : "Node",
             "format"    : {
                 "type" : "anchored"
             },
