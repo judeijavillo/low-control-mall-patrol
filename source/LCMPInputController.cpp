@@ -15,6 +15,12 @@ using namespace cugl;
 /** The key for the event handlers */
 #define LISTENER_KEY      1
 
+/** The max range of the accelerometer input. */
+#define ACCEL_MAX 0.4f
+/** The deadzone of the accelerometer. */
+#define ACCEL_DEADZONE 0.05f
+
+
 //  MARK: - Constructors
 
 /**
@@ -22,11 +28,14 @@ using namespace cugl;
  */
 InputController::InputController() :
 _isActive(false),
+_didSwitch(false),
+_didSwipe(false),
 _joystickPressed(false),
 _spacebarPressed(false),
 _joystickOrigin(0,0),
 _joystickPosition(0,0),
-_acceleration(0,0) {}
+_acceleration(0,0),
+_swipe(0,0) {}
 
 /**
  * Disposes of all resources in this instance of Input Controller
@@ -51,6 +60,7 @@ void InputController::dispose() {
  * Initializes an Input Controller
  */
 bool InputController::init(const cugl::Rect bounds) {
+    clearTouchInstance(_mtouch);
 #ifdef CU_TOUCH_SCREEN
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
@@ -73,6 +83,14 @@ bool InputController::init(const cugl::Rect bounds) {
     _isActive = true;
     return true;
 }
+
+/**
+ * Populates the initial values of the input TouchInstance
+ */
+void InputController::clearTouchInstance(TouchInstance& touchInstance) {
+    touchInstance.touchids.clear();
+    touchInstance.position = Vec2::ZERO;
+}
     
 //  MARK: - Detection
 
@@ -82,8 +100,7 @@ bool InputController::init(const cugl::Rect bounds) {
 void InputController::update(float timestep) {
 #ifdef CU_TOUCH_SCREEN
     _acceleration = Input::get<Accelerometer>()->getAcceleration();
-    // TODO: Get rid of the magic number for sensitivity
-    if (_acceleration.length() < 0.1) {
+    if (_acceleration.length() < ACCEL_DEADZONE) {
         _acceleration = Vec2::ZERO;
     }
 #else
@@ -96,6 +113,15 @@ void InputController::update(float timestep) {
     _spacebarPressed = keys->keyDown(KeyCode::SPACE);
 
 #endif
+}
+
+/**
+ * Clears any buffered inputs so that we may start fresh.
+*/
+void InputController::clear() {
+    _didSwipe = false;
+    _didSwitch = false;
+    _acceleration = Vec2::ZERO;
 }
     
 //  MARK: - Results
@@ -116,12 +142,21 @@ cugl::Vec2 const InputController::touch2Screen(const cugl::Vec2 pos) const {
  * Returns the appropriate vector that determines where
  */
 cugl::Vec2 const InputController::getMovementVector(bool isThief) const {
-    // TODO: Only normalize if the length is greater than 1
 #ifdef CU_TOUCH_SCREEN
-    if (isThief) return (_joystickPosition - _joystickOrigin).getNormalization();
-    else return _acceleration.getNormalization();
+    if (isThief) {
+        Vec2 dpos = Vec2(_joystickPosition - _joystickOrigin);
+        dpos.lengthSquared() >= (JOYSTICK_RADIUS * JOYSTICK_RADIUS) ? dpos.normalize()
+            : dpos = dpos / JOYSTICK_RADIUS;
+        return dpos;
+    }
+    else {
+        Vec2 accel;
+        _acceleration.lengthSquared() >= (ACCEL_MAX * ACCEL_MAX) ? accel = _acceleration.getNormalization()
+            : accel = (_acceleration / ACCEL_MAX);
+        return accel;
+    }
 #else
-    return _acceleration.getNormalization();
+    return _acceleration;
 #endif
 }
 
@@ -132,23 +167,34 @@ cugl::Vec2 const InputController::getMovementVector(bool isThief) const {
  * Callback for detecting that the player has pressed the touchscreen
  */
 void InputController::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
-    if (!_joystickPressed) {
-        _joystickPressed = true;
-        _joystickID = event.touch;
-        _joystickOrigin = event.position;
-        _joystickPosition = event.position;
+    if (_mtouch.touchids.empty()) {
+        // Left is the floating joystick
+        _mtouch.position = event.position;
+        if ((int)event.timestamp.ellapsedMillis(_mtouch.timestamp) < TAP_THRESHOLD) {
+            _didSwitch = !_didSwitch;
+        }
+        _mtouch.timestamp.mark();
+        _mtouch.touchids.insert(event.touch);
     }
+    _joystickPressed = true;
+    _joystickID = event.touch;
+    _joystickOrigin = event.position;
+    _joystickPosition = event.position;
+    _didSwipe = false;
 }
 
 /**
  * Callback for detecting that the player has released the touchscreen
  */
 void InputController::touchEndedCB(const cugl::TouchEvent& event, bool focus) {
-    if (_joystickPressed && event.touch == _joystickID) {
-        _joystickPressed = false;
-        _joystickOrigin = Vec2::ZERO;
-        _joystickPosition = Vec2::ZERO;
+    // Remove joystick touch
+    if (!_mtouch.touchids.empty()) {
+        _mtouch.touchids.clear();
     }
+    _joystickPressed = false;
+    _joystickOrigin = Vec2::ZERO;
+    _joystickPosition = Vec2::ZERO;
+    _didSwipe = false;
 }
 
 /**
@@ -156,4 +202,13 @@ void InputController::touchEndedCB(const cugl::TouchEvent& event, bool focus) {
  */
 void InputController::touchMovedCB(const cugl::TouchEvent& event, const cugl::Vec2& previous, bool focus) {
     _joystickPosition = event.position;
+    
+    Vec2 pos = event.position;
+    // Only check for swipes in the main zone if there is more than one finger.
+    if (!_mtouch.touchids.empty()) {
+        if ((_mtouch.position - pos).lengthSquared() > EVENT_SWIPE_LENGTH * EVENT_SWIPE_LENGTH) {
+            _swipe = (pos - _mtouch.position);
+            _didSwipe = true;
+        } else _didSwipe = false;
+    }
 }

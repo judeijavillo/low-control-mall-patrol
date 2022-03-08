@@ -11,11 +11,11 @@
 #include "LCMPPlayerModel.h"
 
 /** The cop's damping coefficient */
-#define COP_DAMPING 5.0f
+#define COP_DAMPING 7.5f
 /** The cop's maximum speed of this player */
 #define COP_MAX_SPEED 10.0f
 /** The cops's acceleration of this player */
-#define COP_ACCELERATION 15.0f
+#define COP_ACCELERATION 75.0f
 
 /** Defining the filter bits for the cop model*/
 #define COP_FILTER_BITS 0b01001

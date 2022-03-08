@@ -11,11 +11,11 @@
 #include "LCMPPlayerModel.h"
 
 /** The thief's damping coefficient */
-#define THIEF_DAMPING 100.0f
+#define THIEF_DAMPING 30.0f
 /** The thief's maximum speed of this player */
 #define THIEF_MAX_SPEED 10.0f
 /** The thief's acceleration of this player */
-#define THIEF_ACCELERATION 100.0f
+#define THIEF_ACCELERATION 300.0f
 
 /** Defining the filter bits for the thief model*/
 #define THIEF_FILTER_BITS 0b10101

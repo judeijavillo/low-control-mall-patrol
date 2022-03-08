@@ -33,6 +33,8 @@ protected:
     std::shared_ptr<cugl::Texture> _runRightTexture;
     /** The ratio to scale the textures. (SCENE UNITS / WORLD UNITS) */
     float _scale;
+    /** The key for the collision sound */
+    std::string _collisionSound;
     
 public:
 //  MARK: - Constructors
@@ -59,6 +61,16 @@ public:
               const std::shared_ptr<cugl::scene2::SceneNode>& node);
     
 //  MARK: - Methods
+    
+    /**
+     * Gets the appropriate key for the sound for collision
+     */
+    const std::string& getCollisionSound() const { return _collisionSound; }
+
+    /**
+     * Sets the key for a collision sound
+     */
+    void setCollisionSound(const std::string& key) { _collisionSound = key; }
     
     /**
      * Returns the velocity of the player's body
