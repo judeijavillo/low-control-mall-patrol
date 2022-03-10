@@ -26,6 +26,20 @@ protected:
     std::vector<std::shared_ptr<TrapModel>> _traps;
     /** A vector of references to obstacles */
     std::vector<std::shared_ptr<ObstacleModel>> _obstacles;
+        
+    /** Reference to the physics node of the scene graph */
+    std::shared_ptr<cugl::scene2::SceneNode> _worldnode;
+    /** Reference to the debug node of the scene graph */
+    std::shared_ptr<cugl::scene2::SceneNode> _debugnode;
+    /** Reference to the Box2D world */
+    std::shared_ptr<cugl::physics2::ObstacleWorld> _world;
+    
+    /** The width of the map in Box2D coordinates */
+    float _mapWidth;
+    /** The height of the map in Box2D coordinates */
+    float _mapHeight;
+    /** The size of a tile in Tiled coordinates */
+    float _tileSize;
     
 public:
 //  MARK: - Constructors
@@ -48,9 +62,11 @@ public:
     /**
      * initializes a Game Model
      */
-    bool init(std::shared_ptr<ThiefModel>& thief,
-              std::unordered_map<int, std::shared_ptr<CopModel>> cops,
-              std::vector<std::shared_ptr<TrapModel>> traps);
+    bool init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
+              std::shared_ptr<cugl::scene2::SceneNode>& worldnode,
+              std::shared_ptr<cugl::scene2::SceneNode>& debugnode,
+              const std::shared_ptr<cugl::AssetManager>& asssets,
+              float scale, const std::string& file);
     
 //  MARK: - Methods
     
@@ -88,6 +104,33 @@ public:
      * Updates the position and velocity of a cop (most likely for network updates)
      */
     void updateCop(cugl::Vec2 position, cugl::Vec2 velocity, cugl::Vec2 force, int copID);
+    
+private:
+//  MARK: - Helpers
+    
+    /**
+     * Initializes a thief
+     */
+    void initThief(float scale,
+                   const std::shared_ptr<cugl::JsonValue>& spawn,
+                   const std::shared_ptr<cugl::AssetManager>& assets);
+    
+    /**
+     * Initializes a single cop
+     */
+    void initCop(int copID, float scale,
+                 const std::shared_ptr<cugl::JsonValue>& spawns,
+                 const std::shared_ptr<cugl::AssetManager>& assets);
+    
+    /**
+     * Initializes a single wall
+     */
+    void initWall(const std::shared_ptr<cugl::JsonValue>& json, float scale);
+    
+    /**
+     * Initializes the border for the game
+     */
+    void initBorder(float scale);
     
 };
 

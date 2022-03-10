@@ -13,6 +13,11 @@ using namespace std;
 
 //  MARK: - Constants
 
+/** The width of a cop in world units */
+#define COP_WIDTH       2.0f
+/** The height of a cop body (its dropshadow) in world units */
+#define COP_HEIGHT      1.0f
+
 /** Keys for cop run textures */
 #define COP_RUN_BACK        "cop_run_back"
 #define COP_RUN_FRONT       "cop_run_front"
@@ -24,11 +29,14 @@ using namespace std;
 /**
  * Initializes a Cop Model
  */
-bool CopModel::init(const cugl::Vec2 pos, const cugl::Size size, float scale,
+bool CopModel::init(float scale,
                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
                       const std::shared_ptr<cugl::AssetManager>& assets) {
+    // The cop has constant size
+    Size size(COP_WIDTH, COP_HEIGHT);
+    
     // Call the parent's initializer
-    PlayerModel::init(pos, size, scale, node);
+    PlayerModel::init(Vec2::ZERO, size, scale, node);
     
     // Set up the textures for all directions
     _runBackTexture = assets->get<Texture>(COP_RUN_BACK);
