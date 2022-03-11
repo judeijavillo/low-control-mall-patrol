@@ -34,7 +34,7 @@ public:
     /**
      * Initializes a Cop Model
      */
-    bool init(const cugl::Vec2 pos, const cugl::Size size, float scale,
+    bool init(float scale,
               const std::shared_ptr<cugl::scene2::SceneNode>& node,
               const std::shared_ptr<cugl::AssetManager>& assets);
     

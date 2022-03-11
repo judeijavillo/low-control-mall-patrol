@@ -16,6 +16,7 @@
 #include <box2d/b2_collision.h>
 
 #include "LCMPGameScene.h"
+#include "LCMPConstants.h"
 
 using namespace cugl;
 using namespace std;
@@ -37,16 +38,6 @@ using namespace std;
 /** The default value of gravity (going down) */
 #define DEFAULT_GRAVITY 0.0f
 
-/** The width of a cop in world units */
-#define COP_WIDTH       2.0f
-/** The height of a cop body (its dropshadow) in world units */
-#define COP_HEIGHT      1.0f
-
-/** The width of the thief body (its dropshadow) in world units */
-#define THIEF_WIDTH     2.0f
-/** The height of the thief body (its dropshadow) in world units */
-#define THIEF_HEIGHT    1.0f
-
 /** The key for the floor tile */
 #define TILE_TEXTURE    "floor"
 /** The size for the floor tile */
@@ -63,10 +54,6 @@ float JOYSTICK_RADIUS = 100;
 float JOYSTICK_HOME[]   {200, 200};
 
 // TODO: Factor out hard-coded starting positions
-/** The starting position of the thief in Box2D coordinates */
-float THIEF_START[2] =  {10, 9};
-/** The starting position of the cop in Box2D coordinates */
-float COP_START[4][2] = {{-17, 6}, {-17, 12}, {-11, 6}, {-11, 12}};
 /** The positions of different trees */
 float TREE_POSITIONS[2][2] = {{-10, 10}, {10, 10}};
 /** The positions of different bushes */
@@ -213,8 +200,11 @@ void GameScene::start(bool host) {
     _isThief = host;
     // TODO: The host should not always be the thief
     
+    // Initialize the game
+    _game = make_shared<GameModel>();
+    _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE);
+    
     // Call helpers
-    initModels();
     initJoystick();
 }
 
@@ -338,111 +328,69 @@ void GameScene::initJoystick() {
  * Creates the player and trap models and adds them to the world node
  */
 void GameScene::initModels() {
-    // Create thief node
-    std::shared_ptr<scene2::SceneNode> thiefNode = scene2::SceneNode::alloc();
-    thiefNode->setAnchor(Vec2::ANCHOR_CENTER);
-    _worldnode->addChild(thiefNode);
-    
-    // Create thief
-    Size thiefSize(THIEF_WIDTH, THIEF_HEIGHT);
-    std::shared_ptr<ThiefModel> thief = std::make_shared<ThiefModel>();
-    thief->init(Vec2::ZERO, thiefSize, _scale, thiefNode, _assets);
-    thief->setDebugScene(_debugnode);
-    _world->addObstacle(thief);
-    
-    // Position thief afterwards to not have to deal with changing world size
-    thief->setPosition(Vec2(THIEF_START));
-    
-    // Create cops
-    Size copSize(COP_WIDTH, COP_HEIGHT);
-    std::unordered_map<int, std::shared_ptr<CopModel>> cops;
-    for (int i = 0; i < 4; i++) {
-        // Create cop node
-        std::shared_ptr<scene2::SceneNode> copNode = scene2::SceneNode::alloc();
-        copNode->setAnchor(Vec2::ANCHOR_CENTER);
-        _worldnode->addChild(copNode);
-        
-        // Create cop
-        std::shared_ptr<CopModel> cop = std::make_shared<CopModel>();
-        cop->init(Vec2::ZERO, copSize, _scale, copNode, _assets);
-        cop->setDebugScene(_debugnode);
-        _world->addObstacle(cop);
-        
-        // Position cop afterwards to not have to deal with changing world size
-        cop->setPosition(Vec2(COP_START[i]));
-        
-        // Add the cop to the mapping of cops
-        cops[i] = cop;
-    }
     
     // TODO: Begin Remove
     
-    // Create trees
-    for (int i = 0; i < 2; i++) {
-        // Create tree node
-        shared_ptr<Texture> treeTexture = _assets->get<Texture>("tree");
-        shared_ptr<scene2::PolygonNode> treeNode = scene2::PolygonNode::allocWithTexture(treeTexture);
-        treeNode->setAnchor(Vec2::ANCHOR_CENTER);
-        treeNode->setScale(0.75f);
-        _worldnode->addChild(treeNode);
-        
-        // Create tree
-        std::shared_ptr<ObstacleModel> tree = std::make_shared<ObstacleModel>();
-        tree->init(_scale, treeTexture, ObstacleModel::TREE);
-        tree->setDebugScene(_debugnode);
-        _world->addObstacle(tree);
-        
-        // Position tree afterwards to not have to deal with changing world size
-        tree->setPosition(Vec2(TREE_POSITIONS[i]));
-        treeNode->setPosition((Vec2(TREE_POSITIONS[i]) + Vec2(5, 5.5f)) * _scale);
-    }
+//    // Create trees
+//    for (int i = 0; i < 2; i++) {
+//        // Create tree node
+//        shared_ptr<Texture> treeTexture = _assets->get<Texture>("tree");
+//        shared_ptr<scene2::PolygonNode> treeNode = scene2::PolygonNode::allocWithTexture(treeTexture);
+//        treeNode->setAnchor(Vec2::ANCHOR_CENTER);
+//        treeNode->setScale(0.75f);
+//        _worldnode->addChild(treeNode);
+//
+//        // Create tree
+//        std::shared_ptr<ObstacleModel> tree = std::make_shared<ObstacleModel>();
+//        tree->init(_scale, treeTexture, ObstacleModel::TREE);
+//        tree->setDebugScene(_debugnode);
+//        _world->addObstacle(tree);
+//
+//        // Position tree afterwards to not have to deal with changing world size
+//        tree->setPosition(Vec2(TREE_POSITIONS[i]));
+//        treeNode->setPosition((Vec2(TREE_POSITIONS[i]) + Vec2(5, 5.5f)) * _scale);
+//    }
     
     
-    // Create bushes
-    for (int i = 0; i < 2; i++) {
-        // Create bush node
-        shared_ptr<Texture> bushTexture = _assets->get<Texture>("bush");
-        shared_ptr<scene2::PolygonNode> bushNode = scene2::PolygonNode::allocWithTexture(bushTexture);
-        bushNode->setAnchor(Vec2::ANCHOR_CENTER);
-        bushNode->setScale(0.75f);
-        _worldnode->addChild(bushNode);
-        
-        // Create bush
-        std::shared_ptr<ObstacleModel> bush = std::make_shared<ObstacleModel>();
-        bush->init(_scale, bushTexture, ObstacleModel::BUSH);
-        bush->setDebugScene(_debugnode);
-        _world->addObstacle(bush);
-        
-        // Position bush afterwards to not have to deal with changing world size
-        bush->setPosition(Vec2(BUSH_POSITIONS[i]));
-        bushNode->setPosition((Vec2(BUSH_POSITIONS[i]) + Vec2(5, 2.5f)) * _scale);
-    }
+//    // Create bushes
+//    for (int i = 0; i < 2; i++) {
+//        // Create bush node
+//        shared_ptr<Texture> bushTexture = _assets->get<Texture>("bush");
+//        shared_ptr<scene2::PolygonNode> bushNode = scene2::PolygonNode::allocWithTexture(bushTexture);
+//        bushNode->setAnchor(Vec2::ANCHOR_CENTER);
+//        bushNode->setScale(0.75f);
+//        _worldnode->addChild(bushNode);
+//
+//        // Create bush
+//        std::shared_ptr<ObstacleModel> bush = std::make_shared<ObstacleModel>();
+//        bush->init(_scale, bushTexture, ObstacleModel::BUSH);
+//        bush->setDebugScene(_debugnode);
+//        _world->addObstacle(bush);
+//
+//        // Position bush afterwards to not have to deal with changing world size
+//        bush->setPosition(Vec2(BUSH_POSITIONS[i]));
+//        bushNode->setPosition((Vec2(BUSH_POSITIONS[i]) + Vec2(5, 2.5f)) * _scale);
+//    }
     
-    // Create faris node
-    shared_ptr<Texture> farisTexture = _assets->get<Texture>("faris");
-    shared_ptr<scene2::PolygonNode> farisNode = scene2::PolygonNode::allocWithTexture(farisTexture);
-    farisNode->setAnchor(Vec2::ANCHOR_CENTER);
-    farisNode->setScale(0.75f);
-    _worldnode->addChild(farisNode);
-    
-    // Create faris
-    std::shared_ptr<ObstacleModel> faris = std::make_shared<ObstacleModel>();
-    faris->init(_scale, farisTexture, ObstacleModel::FARIS);
-    faris->setDebugScene(_debugnode);
-    _world->addObstacle(faris);
-    
-    // Position faris afterwards to not have to deal with changing world size
-    faris->setPosition(Vec2(FARIS_POSITION));
-    farisNode->setPosition((Vec2(FARIS_POSITION) + Vec2(5, 7)) * _scale);
+//    // Create faris node
+//    shared_ptr<Texture> farisTexture = _assets->get<Texture>("faris");
+//    shared_ptr<scene2::PolygonNode> farisNode = scene2::PolygonNode::allocWithTexture(farisTexture);
+//    farisNode->setAnchor(Vec2::ANCHOR_CENTER);
+//    farisNode->setScale(0.75f);
+//    _worldnode->addChild(farisNode);
+//
+//    // Create faris
+//    std::shared_ptr<ObstacleModel> faris = std::make_shared<ObstacleModel>();
+//    faris->init(_scale, farisTexture, ObstacleModel::FARIS);
+//    faris->setDebugScene(_debugnode);
+//    _world->addObstacle(faris);
+//
+//    // Position faris afterwards to not have to deal with changing world size
+//    faris->setPosition(Vec2(FARIS_POSITION));
+//    farisNode->setPosition((Vec2(FARIS_POSITION) + Vec2(5, 7)) * _scale);
     
     // TODO: End Remove
     
-    // Create traps
-    std::vector<std::shared_ptr<TrapModel>> traps;
-    
-    // Initialize the game
-    _game = make_shared<GameModel>();
-    _game->init(thief, cops, traps);
 }
 
 

@@ -13,6 +13,11 @@ using namespace std;
 
 //  MARK: - Constants
 
+/** The width of the thief body (its dropshadow) in world units */
+#define THIEF_WIDTH     2.0f
+/** The height of the thief body (its dropshadow) in world units */
+#define THIEF_HEIGHT    1.0f
+
 /** Keys for thief run textures */
 #define THIEF_RUN_BACK      "thief_run_back"
 #define THIEF_RUN_FRONT     "thief_run_front"
@@ -24,11 +29,14 @@ using namespace std;
 /**
  * Initializes a Thief Model
  */
-bool ThiefModel::init(const cugl::Vec2 pos, const cugl::Size size, float scale,
+bool ThiefModel::init(float scale,
                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
                       const std::shared_ptr<cugl::AssetManager>& assets) {
+    // The thief has constant size
+    Size size(THIEF_WIDTH, THIEF_HEIGHT);
+    
     // Call the parent's initializer
-    PlayerModel::init(pos, size, scale, node);
+    PlayerModel::init(Vec2::ZERO, size, scale, node);
     
     // Set up the textures for all directions
     _runBackTexture = assets->get<Texture>(THIEF_RUN_BACK);
