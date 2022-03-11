@@ -6,7 +6,7 @@
 //  Version: 2/20/22
 //
 
-#ifndef __LCMP_THIEF_MODEL_H__
+#ifndef __LCMP_THIEF_MODEL_H__ 
 #define __LCMP_THIEF_MODEL_H__
 #include "LCMPPlayerModel.h"
 
@@ -17,8 +17,17 @@
 /** The thief's acceleration of this player */
 #define THIEF_ACCELERATION 100.0f
 
+/** Defining the filter bits for the thief model*/
+#define THIEF_FILTER_BITS 0b10101
+
 class ThiefModel : public PlayerModel {
 public:
+//  MARK: - Properties
+
+    /** Flag for whether thief is in range to activate a trap. -1 indicates out of range, otherwise it indicates the id of the trap the thief will activate */
+    int trapActivationFlag = -1;
+
+
 //  MARK: - Constructors
     
     /**

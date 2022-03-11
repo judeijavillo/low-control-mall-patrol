@@ -17,6 +17,9 @@
 /** The cops's acceleration of this player */
 #define COP_ACCELERATION 15.0f
 
+/** Defining the filter bits for the cop model*/
+#define COP_FILTER_BITS 0b01001
+
 class CopModel : public PlayerModel {
 public:
 //  MARK: - Constructors

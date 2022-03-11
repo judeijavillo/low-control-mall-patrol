@@ -57,7 +57,7 @@ protected:
     
     /** The amount to move the world node by to center it in the scene */
     cugl::Vec2 _offset;
-    /** The scale between the physics world and the screen (SCREEN UNITS / WORLD UNITS) */
+    /** The scale between the physics world and the screen (SCREEN UNITS / BOX2D WORLD UNITS) */
     float _scale;
     
     /** The asset manager for this game mode */
@@ -70,6 +70,9 @@ protected:
     bool _ishost;
     /** Whether we quit the game */
     bool _quit;
+
+    /** An example trap */
+    std::shared_ptr<TrapModel> _trap;
     
 public:
 //  MARK: - Constructors
@@ -191,7 +194,12 @@ private:
     /**
      * Callback for when two obstacles in the world end colliding
      */
-    void beforeSolve(b2Contact* contact, const b2Manifold* oldManifold);
+    void endContact(b2Contact* contact);
+
+    /**
+     * Callback for determining if two obstacles in the world should collide.
+     */
+    bool shouldCollide(b2Fixture* f1, b2Fixture* f2);
     
 };
 

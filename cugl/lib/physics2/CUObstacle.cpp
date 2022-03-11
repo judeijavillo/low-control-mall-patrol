@@ -63,7 +63,8 @@ using namespace cugl::physics2;
 Obstacle::Obstacle() :
 _scene(nullptr),
 _debug(nullptr),
-_listener(nullptr)
+_listener(nullptr),
+_dcolor(Color4::RED)
 { }
 
 /**

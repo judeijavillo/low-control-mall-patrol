@@ -212,6 +212,7 @@
     <ClInclude Include="..\..\source\LCMPLoadingScene.h" />
     <ClInclude Include="..\..\source\LCMPMenuScene.h" />
     <ClInclude Include="..\..\source\LCMPNetworkController.h" />
+    <ClInclude Include="..\..\source\LCMPObstacleModel.h" />
     <ClInclude Include="..\..\source\LCMPPlayerModel.h" />
     <ClInclude Include="..\..\source\LCMPThiefModel.h" />
     <ClInclude Include="..\..\source\LCMPTrapModel.h" />
@@ -227,6 +228,7 @@
     <ClCompile Include="..\..\source\LCMPLoadingScene.cpp" />
     <ClCompile Include="..\..\source\LCMPMenuScene.cpp" />
     <ClCompile Include="..\..\source\LCMPNetworkController.cpp" />
+    <ClCompile Include="..\..\source\LCMPObstacleModel.cpp" />
     <ClCompile Include="..\..\source\LCMPPlayerModel.cpp" />
     <ClCompile Include="..\..\source\LCMPThiefModel.cpp" />
     <ClCompile Include="..\..\source\LCMPTrapModel.cpp" />

@@ -72,7 +72,7 @@ public:
     
     /**
      * Returns a reference to the thief
-     */
+     */ 
     std::shared_ptr<ThiefModel> getThief() { return _thief; }
     
     /**

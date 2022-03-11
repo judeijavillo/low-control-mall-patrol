@@ -36,6 +36,10 @@ protected:
     cugl::Vec2 _acceleration;
     
 public:
+    /** PURELY FOR TESTING PURPOSES FOR TRAPS, DO NOT KEEP THIS! */
+    bool _spacebarPressed;
+
+public:
 //  MARK: - Constructors
     
     /**

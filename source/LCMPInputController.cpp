@@ -23,6 +23,7 @@ using namespace cugl;
 InputController::InputController() :
 _isActive(false),
 _joystickPressed(false),
+_spacebarPressed(false),
 _joystickOrigin(0,0),
 _joystickPosition(0,0),
 _acceleration(0,0) {}
@@ -92,6 +93,8 @@ void InputController::update(float timestep) {
     if (keys->keyDown(KeyCode::ARROW_RIGHT)) _acceleration.x += 1.0f;
     if (keys->keyDown(KeyCode::ARROW_DOWN)) _acceleration.y += 1.0f;
     if (keys->keyDown(KeyCode::ARROW_UP)) _acceleration.y -= 1.0f;
+    _spacebarPressed = keys->keyDown(KeyCode::SPACE);
+
 #endif
 }
     
