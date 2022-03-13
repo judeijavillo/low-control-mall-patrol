@@ -17,7 +17,8 @@ using namespace cugl;
 /**
  * Initializes a Trap Model
  */
-bool TrapModel::init(const std::shared_ptr<cugl::physics2::SimpleObstacle> area,
+bool TrapModel::init(int trapID,
+                     const std::shared_ptr<cugl::physics2::SimpleObstacle> area,
                      const std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea_,
                      const std::shared_ptr<cugl::Vec2> triggerPosition,
                      bool copSolid, bool thiefSolid,
@@ -26,6 +27,7 @@ bool TrapModel::init(const std::shared_ptr<cugl::physics2::SimpleObstacle> area,
                      const std::shared_ptr<cugl::Affine2> thiefVelMod,
                      const std::shared_ptr<cugl::Affine2> copVelMod,
                      bool startsTriggered) {
+    _trapID = trapID;
     effectArea = area;
     triggerArea = triggerArea_;
     triggerPos = triggerPosition;

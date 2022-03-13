@@ -51,7 +51,10 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     // Initialize walls
     for (int i = 0; i < walls->size(); i++) initWall(walls->get(i), scale);
     
-    _traps = vector<shared_ptr<TrapModel>>();
+    // Initialize traps
+    // TODO: Make this JSON Reading
+    Vec2 traps[] = { Vec2(20, 30), Vec2(50, 30), Vec2(80, 30) };
+    for (int i = 0; i < 3; i++) initTrap(i, traps[i], scale, assets);
     
     // Initialize borders
     initBorder(scale);
@@ -99,6 +102,13 @@ void GameModel::updateThief(cugl::Vec2 position, cugl::Vec2 velocity, cugl::Vec2
  */
 void GameModel::updateCop(cugl::Vec2 position, cugl::Vec2 velocity, cugl::Vec2 force, int copID) {
     _cops[copID]->applyNetwork(position, velocity, force);
+}
+
+/**
+ * Activates a trap
+ */
+void GameModel::activateTrap(int trapID) {
+    _traps[trapID]->activate();
 }
 
 //  MARK: - Helpers
@@ -243,6 +253,52 @@ void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
     node->setColor(Color4::GRAY);
     _worldnode->addChild(node);
 
+}
+
+/**
+ * Initializes a single trap
+ */
+void GameModel::initTrap(int trapID, Vec2 center, float scale,
+                         const std::shared_ptr<cugl::AssetManager>& assets) {
+    // TODO: Change this to be JSON loading
+    
+    // Create hard-coded example trap
+    shared_ptr<TrapModel> trap = std::make_shared<TrapModel>();
+    
+    // Create the parameters to create a trap
+    std::shared_ptr<cugl::physics2::SimpleObstacle> area = physics2::WheelObstacle::alloc(Vec2::ZERO, 5);
+    std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 3);
+    std::shared_ptr<cugl::Vec2> triggerPosition = make_shared<cugl::Vec2>(center);
+    bool copSolid = false;
+    bool thiefSolid = false;
+    int numUses = 1;
+    float lingerDur = 0.3;
+    std::shared_ptr<cugl::Affine2> thiefVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
+    std::shared_ptr<cugl::Affine2> copVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
+
+    // Initialize a trap
+    trap->init(trapID,
+                area,
+                triggerArea,
+                triggerPosition,
+                copSolid, thiefSolid,
+                numUses,
+                lingerDur,
+                thiefVelMod, copVelMod);
+    
+    // Configure physics
+    _world->addObstacle(area);
+    _world->addObstacle(triggerArea);
+    area->setPosition(center);
+    triggerArea->setPosition(center);
+    triggerArea->setSensor(true);
+    
+    // Set the appropriate visual elements
+    trap->setAssets(scale, _worldnode, assets, TrapModel::MopBucket);
+    trap->setDebugScene(_debugnode);
+    
+    // Add the trap to the vector of traps
+    _traps.push_back(trap);
 }
 
 /**

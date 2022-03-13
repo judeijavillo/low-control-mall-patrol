@@ -39,7 +39,9 @@ public:
         /** What follows is which cop to update, its x and y position, and its x and y velocity */
         COP_MOVEMENT = 1,
         /** What follows is the thief's x and y position, and its x and y velocity */
-        THIEF_MOVEMENT = 2
+        THIEF_MOVEMENT = 2,
+        /** What follows is which trap to activate */
+        TRAP_ACTIVATION = 3
     };
 
 protected:
@@ -165,6 +167,11 @@ public:
      * Sends a byte vector to update thief movement
      */
     void sendCopMovement(std::shared_ptr<GameModel>& game, cugl::Vec2 force, int copID);
+    
+    /**
+     * Sends a byte vector to activate a trap
+     */
+    void sendTrapActivation(int trapID);
     
 };
 

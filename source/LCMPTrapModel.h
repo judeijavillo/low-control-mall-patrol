@@ -15,6 +15,8 @@ class TrapModel {
 protected:
 //  MARK: - Properties
     
+    /** Unique id of this trap*/
+    int _trapID;
     /** Area affected by trap */
     std::shared_ptr<cugl::physics2::SimpleObstacle> effectArea;
     /** Area within which thief can activate trap*/
@@ -60,10 +62,6 @@ protected:
 public:
     /** Whether the trap is activated */
     bool activated;
-
-    //TODO: make this not hard coded
-    /** Unique id of this trap*/
-    int trapId = 1;
     
 public:
 //  MARK: - Enumerations
@@ -96,7 +94,8 @@ public:
     /**
      * Initializes a Trap Model that doesn't start triggered
      */
-    bool init(const std::shared_ptr<cugl::physics2::SimpleObstacle> area,
+    bool init(int trapID,
+              const std::shared_ptr<cugl::physics2::SimpleObstacle> area,
               const std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea,
               const std::shared_ptr<cugl::Vec2> triggerPosition,
               bool copSolid, bool thiefSolid,
@@ -104,7 +103,8 @@ public:
               float lingerDur,
               const std::shared_ptr<cugl::Affine2> thiefVelMod,
               const std::shared_ptr<cugl::Affine2> copVelMod) {
-        return init(area,
+        return init(trapID,
+                    area,
                     triggerArea,
                     triggerPosition,
                     copSolid, thiefSolid,
@@ -117,7 +117,8 @@ public:
     /**
      * Initializes a Trap Model with components of the thief and cop effects
      */
-    bool init(const std::shared_ptr<cugl::physics2::SimpleObstacle> area,
+    bool init(int trapID,
+              const std::shared_ptr<cugl::physics2::SimpleObstacle> area,
               const std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea,
               const std::shared_ptr<cugl::Vec2> triggerPosition,
               bool copSolid, bool thiefSolid,
@@ -131,7 +132,8 @@ public:
         std::shared_ptr<cugl::Affine2> thiefy = std::make_shared<cugl::Affine2>(thiefXScale, 0, 0, thiefYScale, thiefXTrans, thiefYTrans);
         std::shared_ptr<cugl::Affine2> coppy = std::make_shared<cugl::Affine2>(copXScale, 0, 0, copYScale, copXTrans, copYTrans);
 
-        return init(area,
+        return init(trapID,
+                    area,
                     triggerArea,
                     triggerPosition,
                     copSolid, thiefSolid,
@@ -144,7 +146,8 @@ public:
     /**
      * Initializes a Trap Model
      */
-    bool init(const std::shared_ptr<cugl::physics2::SimpleObstacle> area,
+    bool init(int trapID,
+              const std::shared_ptr<cugl::physics2::SimpleObstacle> area,
               const std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea,
               const std::shared_ptr<cugl::Vec2> triggerPosition,
               bool copSolid, bool thiefSolid,
@@ -168,6 +171,11 @@ public:
             return "asdf";
         }
     };
+    
+    /**
+     * Returns the ID for this trap
+     */
+    int getTrapID() { return _trapID; }
     
     /**
      * Returns true if the thief can collide with this obstacle (this obstacle is solid for thief).

@@ -99,9 +99,6 @@ protected:
     bool _quit;
     /** Whether the cop has hit a successful tackle. */
     bool _hitTackle;
-
-    /** An example trap */
-    std::shared_ptr<TrapModel> _trap;
     
     /** The directional indicators for the thief that point to the cops */
     std::unordered_map<int, std::shared_ptr<cugl::scene2::PolygonNode>> _direcIndicators;

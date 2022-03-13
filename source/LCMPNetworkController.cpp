@@ -160,6 +160,8 @@ void NetworkController::update(std::shared_ptr<GameModel>& game) {
                               Vec2(data.at(3), data.at(4)),
                               Vec2(data.at(5), data.at(6)));
             break;
+        case TRAP_ACTIVATION:
+            game->activateTrap((int) data.at(1));
         default:
             break;
         }
@@ -190,7 +192,7 @@ void NetworkController::sendThiefMovement(std::shared_ptr<GameModel>& game, Vec2
 }
 
 /**
- * Sends a byte vector to update thief movement
+ * Sends a byte vector to update cop movement
  */
 void NetworkController::sendCopMovement(std::shared_ptr<GameModel>& game, Vec2 force, int copID) {
     if (_connection == nullptr) return;
@@ -207,6 +209,21 @@ void NetworkController::sendCopMovement(std::shared_ptr<GameModel>& game, Vec2 f
     data.push_back(force.x);
     data.push_back(force.y);
     data.push_back(copID);
+    
+    _serializer.writeFloatVector(data);
+    _connection->send(_serializer.serialize());
+    _serializer.reset();
+    
+}
+
+/**
+ * Sends a byte vector to activate a trap
+ */
+void NetworkController::sendTrapActivation(int trapID) {
+    if (_connection == nullptr) return;
+    vector<float> data;
+    data.push_back(TRAP_ACTIVATION);
+    data.push_back(trapID);
     
     _serializer.writeFloatVector(data);
     _connection->send(_serializer.serialize());
