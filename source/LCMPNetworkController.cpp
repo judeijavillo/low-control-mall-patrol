@@ -62,6 +62,8 @@ bool NetworkController::connect(const std::string room) {
     return _status != IDLE;
 }
 
+//  MARK: - Matchmaking
+
 /**
  * Checks the connection and updates the status accordingly (pre-game)
  */
@@ -95,6 +97,20 @@ void NetworkController::update() {
 }
 
 /**
+ * Sends a byte vector to start the game
+ */
+void NetworkController::sendStartGame() {
+    vector<float> data;
+    data.push_back(START_GAME);
+    
+    _serializer.writeFloatVector(data);
+    _connection->send(_serializer.serialize());
+    _serializer.reset();
+}
+
+//  MARK: - Gameplay
+
+/**
  * Checks the connection, updates the status accordingly, and updates the game (during game)
  */
 void NetworkController::update(std::shared_ptr<GameModel>& game) {
@@ -124,18 +140,6 @@ void NetworkController::update(std::shared_ptr<GameModel>& game) {
             break;
         }
     });
-}
-
-/**
- * Sends a byte vector to start the game
- */
-void NetworkController::sendStartGame() {
-    vector<float> data;
-    data.push_back(START_GAME);
-    
-    _serializer.writeFloatVector(data);
-    _connection->send(_serializer.serialize());
-    _serializer.reset();
 }
 
 /**

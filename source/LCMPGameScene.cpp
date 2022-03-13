@@ -258,6 +258,11 @@ void GameScene::start(bool host) {
     // Initialize the game
     _game = make_shared<GameModel>();
     _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE);
+    if (auto pID = _network->getPlayerID(); pID) {
+        _playerID = (int)(*pID) - 1;
+    } else {
+        CULog("Failed to receive player ID");
+    }
     
     // Call helpers
     initModels();
@@ -350,9 +355,9 @@ void GameScene::update(float timestep) {
         _network->sendThiefMovement(_game, flippedMovement);
         player = _game->getThief();
     } else {
-        _game->updateCop(flippedMovement, 0, onTackleCooldown);
-        _network->sendCopMovement(_game, flippedMovement, 0);
-        player = _game->getCop(0);
+        _game->updateCop(flippedMovement, _playerID, onTackleCooldown);
+        _network->sendCopMovement(_game, flippedMovement, _playerID);
+        player = _game->getCop(_playerID);
     }
     
     shared_ptr<Font> font = _assets->get<Font>("gyparody");

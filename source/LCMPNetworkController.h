@@ -125,21 +125,29 @@ public:
      */
     void disconnect() { _connection = nullptr; }
     
+//  MARK: - Matchmaking
+    
     /**
      * Checks the connection and updates the status accordingly (pre-game)
      */
     void update();
     
     /**
-     * Checks the connection, updates the status accordingly, and updates the game (during game)
+     * Sends a message intended for the host a unique player 
      */
-    void update(std::shared_ptr<GameModel>& game);
     
     /**
      * Sends a byte vector to start the game
      */
     void sendStartGame();
+
     
+//  MARK: - Gameplay
+
+    /**
+     * Checks the connection, updates the status accordingly, and updates the game (during game)
+     */
+    void update(std::shared_ptr<GameModel>& game);
     /**
      * Sends a byte vector to update thief movement
      */
