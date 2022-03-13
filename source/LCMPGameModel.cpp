@@ -108,12 +108,13 @@ void GameModel::initThief(float scale,
     // Create thief node
     std::shared_ptr<scene2::SceneNode> thiefNode = scene2::SceneNode::alloc();
     thiefNode->setAnchor(Vec2::ANCHOR_CENTER);
-    _worldnode->addChild(thiefNode);
+    _worldnode->addChildWithName(thiefNode, "thief");
     
     // Create thief
     _thief = std::make_shared<ThiefModel>();
     _thief->init(scale, thiefNode, assets);
     _thief->setDebugScene(_debugnode);
+    _thief->setCollisionSound("fuck");
     _world->addObstacle(_thief);
     
     // Position thief afterwards to not have to deal with changing world size
@@ -127,12 +128,13 @@ void GameModel::initCop(int copID, float scale,
     // Create cop node
     std::shared_ptr<scene2::SceneNode> copNode = scene2::SceneNode::alloc();
     copNode->setAnchor(Vec2::ANCHOR_CENTER);
-    _worldnode->addChild(copNode);
+    _worldnode->addChildWithName(copNode, "cop" + to_string(copID));
     
     // Create cop
     std::shared_ptr<CopModel> cop = std::make_shared<CopModel>();
     cop->init(scale, copNode, assets);
     cop->setDebugScene(_debugnode);
+    cop->setCollisionSound("dude");
     _world->addObstacle(cop);
     
     // Position cop afterwards to not have to deal with changing world size

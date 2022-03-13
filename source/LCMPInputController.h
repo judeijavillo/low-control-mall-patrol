@@ -10,6 +10,15 @@
 #define __LCMP_INPUT_CONTROLLER_H__
 #include <cugl/cugl.h>
 
+/** The event swipe length */
+#define EVENT_SWIPE_LENGTH  100
+/** Double tap threshold */
+#define TAP_THRESHOLD 200
+/** The radius of the joystick*/
+#define JOYSTICK_RADIUS     100
+/** This defines the joystick "deadzone" (how far we must move) */
+#define JOYSTICK_DEADZONE   15
+
 /**
  * The controller that handles all inputs to the device
  */
@@ -22,6 +31,10 @@ protected:
     /** The bounds of the entire game screen (in scene coordinates) */
     cugl::Rect _sbounds;
     
+    /** Whether the player has swiped */
+    bool _didSwipe;
+    /** Whether the player has double tapped to switch characters */
+    bool _didSwitch;
     /** Whether this input controller is active */
     bool _isActive;
     /** Whether the player has pressed the screen to use the joystick */
@@ -34,6 +47,21 @@ protected:
     cugl::Vec2 _joystickPosition;
     /** The vector that represents the direction that the player is trying to move */
     cugl::Vec2 _acceleration;
+    /** The direction vector of the swipe */
+    cugl::Vec2 _swipe;
+    
+    /** Information representing a single "touch" (possibly multi-finger) */
+    struct TouchInstance {
+        /** The anchor touch position (on start) */
+        cugl::Vec2 position;
+        /** The current touch time */
+        cugl::Timestamp timestamp;
+        /** The touch id(s) for future reference */
+        std::unordered_set<Uint64> touchids;
+    };
+    
+    /** The current touch location for the main zone */
+    TouchInstance _mtouch;
     
 public:
     /** PURELY FOR TESTING PURPOSES FOR TRAPS, DO NOT KEEP THIS! */
@@ -41,7 +69,11 @@ public:
 
 public:
 //  MARK: - Constructors
-    
+    /**
+     * Populates the initial values of the input TouchInstance
+     */
+    void clearTouchInstance(TouchInstance& touchInstance);
+
     /**
      * Constructs an Input Controller
      */
@@ -69,7 +101,22 @@ public:
      */
     void update(float timestep);
     
+    /**
+     * Clears any buffered inputs so that we may start fresh.
+    */
+    void clear();
+    
 //  MARK: - Results
+    
+    /**
+     Returns true iff the player switched characters
+     */
+    bool didSwitch() const { return _didSwitch; }
+    
+    /**
+     Returns true iff the player swiped
+     */
+    bool didSwipe() const { return _didSwipe; }
     
     /**
      * Returns true iff the player is using the joystick
@@ -85,6 +132,11 @@ public:
      * Returns the position of the inner portion of the joystick
      */
     cugl::Vec2 const getJoystickPosition() { return _joystickPosition; }
+    
+    /**
+     * Returns the direction of the swipe
+     */
+    cugl::Vec2 const getSwipe() { return _swipe; }
     
     /**
      * Converts from touch screen coordinates to screen coordinates

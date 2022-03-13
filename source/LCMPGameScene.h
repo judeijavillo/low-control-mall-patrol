@@ -15,9 +15,10 @@
 #include "LCMPNetworkController.h"
 #include "LCMPInputController.h"
 #include "LCMPGameModel.h"
+#include "LCMPAudioController.h"
 
 /**
- * This class is the primary gameplay constroller for the demo.
+ * This class is the primary gameplay controller for the demo.
  *
  * A world has its own objects, assets, and input controller. Thus this is
  * really a mini-GameEngine in its own right.  As in 3152, we separate it out
@@ -30,8 +31,12 @@ protected:
     // Controllers
     /** A reference to the Network Controller instance */
     std::shared_ptr<NetworkController> _network;
+    /** A reference to the Audio Controller instance */
+    std::shared_ptr<AudioController> _audio;
     /** The Input Controller instance */
     InputController _input;
+    /** The PolyFactory instance */
+    cugl::PolyFactory _pf;
     
     // Models
     /** A model to represent all models within the game */
@@ -51,10 +56,30 @@ protected:
     std::shared_ptr<cugl::scene2::PolygonNode> _innerJoystick;
     /** A view of the part of the joystick indicating how far the josyick can reach */
     std::shared_ptr<cugl::scene2::PolygonNode> _outerJoystick;
-    
+    /** Color for the joystick */
+    cugl::Color4 _joystickColor = cugl::Color4(cugl::Vec4(0, 0, 0, 0.25));
+
+    /** 
+     * A view of the part of the accelerometer visualization indicating how far
+     * the player can tilt the phone
+    */
+    std::shared_ptr<cugl::scene2::PolygonNode> _outerAccelVis;
+    /**
+     * A view of the part of the accelerometer visualization indicating the
+     * current tilt of the phone.
+    */
+    std::shared_ptr<cugl::scene2::PolygonNode> _innerAccelVis;
+    /** Colors for accelerometer visualization */
+    cugl::Color4 _outerAccelVisColor = cugl::Color4(cugl::Vec4(0, 0, 0, 0.25));
+    cugl::Color4 _innerAccelVisColor = cugl::Color4::RED;
+
     /** The Box2D world */
     std::shared_ptr<cugl::physics2::ObstacleWorld> _world;
     
+    /** The actual size of the display. */
+    cugl::Size _screenSize;
+    /** The locked size of the display. */
+    cugl::Size _dimen;
     /** The amount to move the world node by to center it in the scene */
     cugl::Vec2 _offset;
     /** The scale between the physics world and the screen (SCREEN UNITS / BOX2D WORLD UNITS) */
@@ -73,6 +98,16 @@ protected:
 
     /** An example trap */
     std::shared_ptr<TrapModel> _trap;
+    
+    /** The directional indicators for the thief that point to the cops */
+    std::unordered_map<int, std::shared_ptr<cugl::scene2::PolygonNode>> _direcIndicators;
+    /** The Scene Nodes for displaying cop indicators for thief */
+    std::unordered_map<int, std::shared_ptr<cugl::scene2::Label>> _copDistances;
+    /** Scene Node for displaying thief distance for cop */
+    std::shared_ptr<cugl::scene2::Label> _thiefDistance;
+    
+    /** Font for Scene Nodes */
+    shared_ptr<cugl::Font> _font;
     
 public:
 //  MARK: - Constructors
@@ -113,7 +148,8 @@ public:
      * @return true if the controller is initialized properly, false otherwise.
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets,
-              std::shared_ptr<NetworkController>& network);
+              std::shared_ptr<NetworkController>& network,
+              std::shared_ptr<AudioController>& audio);
 
 //  MARK: - Methods
 
@@ -170,6 +206,11 @@ public:
      * when ALL scenes have been disconnected.
      */
     void disconnect() { _network = nullptr; }
+    
+    /**
+     * Resets the status of the game so that we can play again.
+    */
+   void reset() override;
 
 private:
 //  MARK: - Helpers
@@ -180,10 +221,33 @@ private:
     void initJoystick();
     
     /**
+     *  Creates the necessary nodes for the accelerometer visualization and
+     *  adds them to the UI node.
+    */
+    void initAccelVis();
+    
+    /**
      * Creates the player and trap models and adds them to the world node
      */
     void initModels();
+
+    /**
+     *  Creates directional indicators for the thief that point towards the cops.
+     *  These indicators are added to the UI node.
+    */
+    void initDirecIndicators();
+    
+    /**
+     *  Updates directional indicators for the thief that point towards the cops.
+    */
+    void updateDirecIndicators(bool isThief);
   
+    /**
+     *  Updates the accelerometer visualization to match the current tilt of the phone.
+     *  Requires movement vector length to be 1 or less.
+    */
+    void updateAccelVis(bool isThief, cugl::Vec2 movement);
+
 //  MARK: - Callbacks
     
     /**

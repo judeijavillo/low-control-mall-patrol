@@ -14,6 +14,7 @@
 #include <box2d/b2_world.h>
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>
+#include <math.h>
 
 #include "LCMPGameScene.h"
 #include "LCMPConstants.h"
@@ -30,6 +31,8 @@ using namespace std;
 #define SCENE_WIDTH     1024
 /** Regardless of logo, lock the height to this */
 #define SCENE_HEIGHT    576
+/** Amount UI elements should be shifted down to remain on screen */
+#define SCENE_HEIGHT_ADJUST 80
 
 /** Width of the game world in Box2d units */
 #define DEFAULT_WIDTH   32.0f
@@ -38,20 +41,45 @@ using namespace std;
 /** The default value of gravity (going down) */
 #define DEFAULT_GRAVITY 0.0f
 
+#define TACKLE_BOOST      5.0f
+#define TACKLE_STOP_SPEED 0.1f
+#define TACKLE_DAMPING    0.2f
+#define TACKLE_LENGTH   50
+
 /** The key for the floor tile */
 #define TILE_TEXTURE    "floor"
 /** The size for the floor tile */
 #define TILE_SIZE       64
 
 /** A coefficient for how much the camera tracks ahead of the player */
-#define LEAD_FACTOR     2.0f
+#define COP_LEAD_FACTOR     1.75f
+/** A coefficient for how much the camera tracks ahead of the player */
+#define THIEF_LEAD_FACTOR     1.75f
 /** A coefficient for how much the camera interpolates between translations */
 #define LERP_FACTOR     1.0f
 
-/** The radius of the joystick*/
-float JOYSTICK_RADIUS = 100;
+/** How far from the thief the directional indicators appear. */
+#define DIREC_INDICATOR_DIST_SCALAR     250.0f
+/** How long one side of the directional indicator is. */
+#define DIREC_INDICATOR_SIZE            60.0f
+
+/** The radius of the outer accelerometer visualization. */
+#define OUTER_ACCEL_VIS_RADIUS    75.0f
+/** The radius of the inner accelerometer visualization. */
+#define INNER_ACCEL_VIS_RADIUS    7.0f
+
+/** A coefficient for how much smaller the text font should be */
+#define TEXT_SCALAR         0.3f
+
 /** The resting position of the joystick */
 float JOYSTICK_HOME[]   {200, 200};
+
+/**
+ *  The position on the screen of the accelerometer visualization.
+ *  The floats represent what fraction of the screen the x and y coordinates are at.
+*/
+float OUTER_ACCEL_VIS_POS[2]{ 0.1f, 0.1f };
+
 
 // TODO: Factor out hard-coded starting positions
 /** The positions of different trees */
@@ -63,6 +91,13 @@ float FARIS_POSITION[2] = {0, 20};
 
 /** The color for debugging */
 Color4 DEBUG_COLOR =    Color4::YELLOW;
+
+/** Counter for reset */
+int resetTime = 0;
+/** Counter for tackle */
+int tackleCooldown = TACKLE_LENGTH;
+/** Whether the cop has swiped recently */
+bool hasSwiped = false;
 
 /**
  * Returns true iff o1 should appear behind o2.
@@ -85,14 +120,16 @@ bool compareNodes(std::shared_ptr<scene2::SceneNode> o1, std::shared_ptr<scene2:
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
-                     std::shared_ptr<NetworkController>& network) {
+                     std::shared_ptr<NetworkController>& network,
+                     std::shared_ptr<AudioController>& audio) {
     // Initialize the scene to a locked width
-    Size dimen = Application::get()->getDisplaySize();
-    dimen *= SCENE_HEIGHT/dimen.height;
+    _dimen = Application::get()->getDisplaySize();
+    _screenSize = _dimen;
+    _dimen *= SCENE_HEIGHT/ _dimen.height;
     
     // Give up if initialization fails early
     if (assets == nullptr) return false;
-    else if (!Scene2::init(dimen)) return false;
+    else if (!Scene2::init(_dimen)) return false;
     
     // Save the asset manager
     _assets = assets;
@@ -100,16 +137,19 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // Save the network controller
     _network = network;
     
+    // Save the audio controller
+    _audio = audio;
+    
     // Initialize the input controller
     _input.init(getBounds());
     
     // Calculate the scale
     Rect rect(0,0,DEFAULT_WIDTH,DEFAULT_HEIGHT);
     Vec2 gravity(0,DEFAULT_GRAVITY);
-    _offset = Vec2((dimen.width-SCENE_WIDTH)/2.0f,(dimen.height-SCENE_HEIGHT)/2.0f);
-    _scale = dimen.width == SCENE_WIDTH
-        ? dimen.width/rect.size.width
-        : dimen.height/rect.size.height;
+    _offset = Vec2((_dimen.width-SCENE_WIDTH)/2.0f,(_dimen.height-SCENE_HEIGHT)/2.0f);
+    _scale = _dimen.width == SCENE_WIDTH
+        ? _dimen.width/rect.size.width
+        : _dimen.height/rect.size.height;
     
     // Initialize the world
     _world = physics2::ObstacleWorld::alloc(rect,gravity);
@@ -159,9 +199,11 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _uinode->setPosition(_offset);
     
+    // Create the font
+    _font = _assets->get<Font>("gyparody");
+    
     // Add text to the center of the UI node
-    shared_ptr<Font> font = _assets->get<Font>("gyparody");
-    shared_ptr<scene2::SceneNode> message = scene2::Label::allocWithText("Cops Win!", font);
+    shared_ptr<scene2::SceneNode> message = scene2::Label::allocWithText("Cops Win!", _font);
     message->setAnchor(Vec2::ANCHOR_CENTER);
     message->setPosition(Vec2(SCENE_WIDTH/2,SCENE_HEIGHT/2) + _offset);
     message->setName("message");
@@ -211,8 +253,10 @@ void GameScene::start(bool host) {
     _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE);
     
     // Call helpers
-    initJoystick();
     initModels();
+    initJoystick();
+    initAccelVis();
+    initDirecIndicators();
 }
 
 /**
@@ -224,7 +268,14 @@ void GameScene::start(bool host) {
  */
 void GameScene::update(float timestep) {
     if (!_active) return;
-    if (_gameover) return;
+    if (_gameover) {
+        resetTime++;
+        if (resetTime > 120) {
+            resetTime = 0;
+            reset();
+        }
+        return;
+    }
     
     // Input updates
     _input.update(timestep);
@@ -234,11 +285,61 @@ void GameScene::update(float timestep) {
     Vec2 difference = position - origin;
     bool spacebar = _input._spacebarPressed;
     
-    // Joystick updates
-    if (difference.length() > JOYSTICK_RADIUS)
-        position = origin + difference.getNormalization() * JOYSTICK_RADIUS;
-    _innerJoystick->setPosition(_input.didPressJoystick() ? position : JOYSTICK_HOME);
-    _outerJoystick->setPosition(_input.didPressJoystick() ? origin : JOYSTICK_HOME);
+    // Swipe updates
+    if (!_isThief) {
+        if (_input.didSwipe() || (hasSwiped && tackleCooldown > 0)) {
+            hasSwiped = true;
+            Vec2 dir = _input.getSwipe();
+            dir.normalize();
+            Vec2 velocity = (COP_MAX_SPEED * TACKLE_BOOST * dir);
+            movement = Vec2(velocity.x * (TACKLE_DAMPING * COP_ACCELERATION / COP_MAX_SPEED), velocity.y * (TACKLE_DAMPING * COP_ACCELERATION / COP_MAX_SPEED));
+            tackleCooldown--;
+        }
+        else if (hasSwiped && tackleCooldown > -TACKLE_LENGTH) {
+            movement = Vec2::ZERO;
+            tackleCooldown--;
+        }
+        else {
+            hasSwiped = false;
+            tackleCooldown = TACKLE_LENGTH;
+        }
+    }
+    else {
+        // Joystick updates
+        if (_input.didPressJoystick()) {
+            if (difference.length() > JOYSTICK_RADIUS)
+                position = origin + difference.getNormalization() * JOYSTICK_RADIUS;
+            _innerJoystick->setPosition(_input.didPressJoystick() ? position : JOYSTICK_HOME);
+            _outerJoystick->setPosition(_input.didPressJoystick() ? origin : JOYSTICK_HOME);
+            _outerJoystick->setVisible(true);
+            _innerJoystick->setVisible(true);
+        }
+        else {
+            _outerJoystick->setVisible(false);
+            _innerJoystick->setVisible(false);
+        }
+    }
+    
+    // Switch updates
+    if (_input.didSwitch()) {
+        // Stop movement
+        movement = Vec2::ZERO;
+        _outerJoystick->setVisible(false);
+        _innerJoystick->setVisible(false);
+        
+        // Remove indicator UI elements
+        if (_isThief) {
+            for (int i = 0; i < _game->numberOfCops(); i++) {
+        //        _uinode->removeChild(_copDistances[i]);
+                _uinode->removeChild(_direcIndicators[i]);
+            }
+        }
+        else {
+            _uinode->removeChild(_thiefDistance);
+            initDirecIndicators();
+        }
+        _isThief = !_isThief;
+    }
     
     // Local updates
     shared_ptr<PlayerModel> player;
@@ -256,15 +357,30 @@ void GameScene::update(float timestep) {
         player = _game->getCop(0);
     }
     
+    shared_ptr<Font> font = _assets->get<Font>("gyparody");
+    if (! _isThief) {
+        // Calculate distance of thief from cop
+        float distance = _game->getThief()->getPosition().distance(_game->getCop(0)->getPosition());
+        // Create and show distance on screen
+        _uinode->removeChildByName("thiefDistance");
+        _thiefDistance = scene2::Label::allocWithText("Thief Distance: " + to_string(int(distance)), font);
+        _thiefDistance->setAnchor(Vec2::ANCHOR_CENTER);
+        _thiefDistance->setPosition(Vec2(SCENE_WIDTH/2,SCENE_HEIGHT-SCENE_HEIGHT_ADJUST) + _offset);
+        _thiefDistance->setName("thiefDistance");
+        _thiefDistance->setVisible(!_isThief);
+        _uinode->addChild(_thiefDistance);
+    }
+
     // Floor updates
     Vec2 chunk = Vec2(floor(player->getPosition().x * _scale / SCENE_WIDTH),
                       floor(player->getPosition().y * _scale / SCENE_HEIGHT));
     _floornode->setPosition(chunk * Vec2(SCENE_WIDTH, SCENE_HEIGHT));
     
     // Camera updates
+    float lead = _isThief ? THIEF_LEAD_FACTOR : COP_LEAD_FACTOR;
     Vec2 curr = _camera->getPosition();
     Vec2 next = _offset + player->getPosition() * _scale
-        + (player->getVelocity() * _scale * LEAD_FACTOR);
+        + (player->getVelocity() * _scale * lead);
     _camera->translate((next - curr) * timestep * LERP_FACTOR);
     _camera->update();
     _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2 - _offset);
@@ -274,6 +390,12 @@ void GameScene::update(float timestep) {
         _network->update(_game);
     }
     
+    // Directional indicator updates
+    updateDirecIndicators(_isThief);
+
+    //Update accelerometer visualization for the cop.
+    updateAccelVis(_isThief, flippedMovement);
+
     // Sort world node children
     std::vector<std::shared_ptr<scene2::SceneNode>> children = _worldnode->getChildren();
     sort(children.begin(), children.end(), compareNodes);
@@ -281,9 +403,10 @@ void GameScene::update(float timestep) {
     for (std::shared_ptr<scene2::SceneNode> child : children) _worldnode->addChild(child);
     // TODO: Figure out how to do this using OrderedNode, this is __very__ bad
     
+    
     _world->update(timestep);
     _game->update(timestep);
-    
+    _input.clear();
 }
 
 /**
@@ -304,35 +427,71 @@ void GameScene::setActive(bool value) {
     }
 }
 
+/** Resets the game once complete */
+void GameScene::reset() {
+    _world->clear();
+    _worldnode->removeAllChildren();
+    _input.clear();
+    _game = make_shared<GameModel>();
+    _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE);
+    initModels();
+    _uinode->getChildByName("message")->setVisible(false);
+    _gameover = false;
+}
+
 //  MARK: - Helpers
 
 /**
  * Creates the necessary nodes for showing the joystick and adds them to the UI node
  */
 void GameScene::initJoystick() {
-    // Create polyfactory and translucent gray
-    PolyFactory pf;
-    Color4 color(Vec4(0, 0, 0, 0.25));
-    
     // Create outer part of joystick
-    _outerJoystick = scene2::PolygonNode::allocWithPoly(pf.makeCircle(Vec2(0,0), JOYSTICK_RADIUS));
+    _outerJoystick = scene2::PolygonNode::allocWithPoly(_pf.makeCircle(Vec2(0,0), JOYSTICK_RADIUS));
     _outerJoystick->setAnchor(cugl::Vec2::ANCHOR_CENTER);
     _outerJoystick->setScale(1.0f);
-    _outerJoystick->setColor(color);
+    _outerJoystick->setColor(_joystickColor);
     _outerJoystick->setVisible(_isThief);
     _uinode->addChild(_outerJoystick);
     
     // Create inner part of joystick view
-    _innerJoystick = scene2::PolygonNode::allocWithPoly(pf.makeCircle(Vec2(0,0), JOYSTICK_RADIUS / 2));
+    _innerJoystick = scene2::PolygonNode::allocWithPoly(_pf.makeCircle(Vec2(0,0), JOYSTICK_RADIUS / 2));
     _innerJoystick->setAnchor(cugl::Vec2::ANCHOR_CENTER);
     _innerJoystick->setScale(1.0f);
-    _innerJoystick->setColor(color);
+    _innerJoystick->setColor(_joystickColor);
     _innerJoystick->setVisible(_isThief);
     _uinode->addChild(_innerJoystick);
     
     // Reposition the joystick components
     _outerJoystick->setPosition(JOYSTICK_HOME);
     _innerJoystick->setPosition(JOYSTICK_HOME);
+    
+    // Hide joystick
+    _outerJoystick->setVisible(false);
+    _innerJoystick->setVisible(false);
+}
+
+/**
+ *  Creates the necessary nodes for the accelerometer visualization and
+ *  adds them to the UI node.
+*/
+void GameScene::initAccelVis() {
+    // Create outer part of accelerometer visualization
+    Poly2 outerCircle = _pf.makeCircle(Vec2(OUTER_ACCEL_VIS_POS) * Vec2(SCENE_WIDTH, SCENE_HEIGHT), OUTER_ACCEL_VIS_RADIUS);
+    _outerAccelVis = scene2::PolygonNode::allocWithPoly(outerCircle);
+    _outerAccelVis->setAnchor(cugl::Vec2::ANCHOR_CENTER);
+    _outerAccelVis->setScale(1.0f);
+    _outerAccelVis->setColor(_outerAccelVisColor);
+    _outerAccelVis->setVisible(!_isThief);
+    _uinode->addChild(_outerAccelVis);
+
+    // Create inner part of accelerometer visualization
+    Poly2 innerCircle = _pf.makeCircle(Vec2(OUTER_ACCEL_VIS_POS), INNER_ACCEL_VIS_RADIUS);
+    _innerAccelVis = scene2::PolygonNode::allocWithPoly(innerCircle);
+    _innerAccelVis->setAnchor(cugl::Vec2::ANCHOR_CENTER);
+    _innerAccelVis->setScale(1.0f);
+    _innerAccelVis->setColor(_innerAccelVisColor);
+    _innerAccelVis->setVisible(_isThief);
+    _uinode->addChild(_innerAccelVis);
 }
 
 /**
@@ -361,8 +520,7 @@ void GameScene::initModels() {
 //        tree->setPosition(Vec2(TREE_POSITIONS[i]));
 //        treeNode->setPosition((Vec2(TREE_POSITIONS[i]) + Vec2(5, 5.5f)) * _scale);
 //    }
-    
-    
+
 //    // Create bushes
 //    for (int i = 0; i < 2; i++) {
 //        // Create bush node
@@ -440,6 +598,110 @@ void GameScene::initModels() {
 }
 
 
+/**
+ *  Creates and displays directional indicators for the thief that point towards the cops.
+ *  These indicators are added to the UI node.
+*/
+void GameScene::initDirecIndicators() {
+    // Calculate distances of cops from thief
+    for (int i = 0; i < _game->numberOfCops(); i++) {
+        Vec2 distance = _game->getThief()->getPosition() - _game->getCop(i)->getPosition();
+        float displayDistance = distance.length();
+        distance = distance.getNormalization() * DIREC_INDICATOR_DIST_SCALAR;
+        
+        // Create and display directional indicators
+        Poly2 triangle = _pf.makeTriangle(Vec2::ZERO, Vec2(DIREC_INDICATOR_SIZE,0.0f), Vec2(DIREC_INDICATOR_SIZE /2, DIREC_INDICATOR_SIZE * 1.5));
+        _direcIndicators[i] = scene2::PolygonNode::allocWithPoly(triangle);
+        _direcIndicators[i]->setAnchor(cugl::Vec2::ANCHOR_CENTER);
+        _direcIndicators[i]->setScale(1.0f);
+        _direcIndicators[i]->setColor(Color4::RED);
+        _direcIndicators[i]->setVisible(_isThief);
+        _uinode->addChild(_direcIndicators[i]);
+        
+        // Create and show cop distances on screen
+        //_copDistances[i] = scene2::Label::allocWithText(to_string(int(displayDistance)), _font);
+        //_copDistances[i]->setAnchor(Vec2::ANCHOR_CENTER);
+        //_copDistances[i]->setPosition(_direcIndicators[i]->getPosition());
+        //_copDistances[i]->setScale(TEXT_SCALAR);
+        //_copDistances[i]->setVisible(_isThief);
+        //_uinode->addChild(_copDistances[i]);
+    }
+}
+
+/**
+ *
+ * Updates directional indicators
+ */
+void GameScene::updateDirecIndicators(bool isThief) {
+    if (!_isThief) return;
+
+    //Constants and variables used throughout the code
+    const float size_scalar_min = 0.25;
+    const float size_scalar_max_dist = 90;
+    const int color_opacity = 200;
+    float size_scalar;
+    Vec2 thiefPos = _worldnode->nodeToScreenCoords(_worldnode->getChildByName("thief")->getPosition());
+    Color4 color = Color4::RED;
+
+    //Run calculations for each directonal indicator
+    for (int i = 0; i < _game->numberOfCops(); i++) {
+        //Set if directional indicators are visible or not based off if cop is on the screen
+        _direcIndicators[i]->setVisible(isThief);
+        Vec2 copPos = _worldnode->nodeToScreenCoords(_worldnode->getChildByName("cop" + to_string(i))->getPosition());
+        if ((0 < copPos.x) && (copPos.x <= _screenSize.getIWidth()) && (0 < copPos.y) && (copPos.y <= _screenSize.getIHeight())) {
+            _direcIndicators[i]->setVisible(false);
+        }
+
+        //Calculate distance and angle from thief to cop
+        Vec2 distance = _game->getCop(i)->getPosition() - _game->getThief()->getPosition();
+        float angle = distance.getAngle();
+        float displayDistance = distance.length();
+
+        //Set size and color of directional indicators based on distance
+        size_scalar = (size_scalar_max_dist - displayDistance) / size_scalar_max_dist;
+        if (size_scalar < size_scalar_min) size_scalar = size_scalar_min;
+        color.set((int)(255 * size_scalar), (int)(255 * (1 - size_scalar)), 0, color_opacity);
+
+        //Make the vector's origin at the thief 
+        distance = distance.getNormalization() * (copPos - thiefPos).length();
+        distance.x += thiefPos.x;
+        distance.y += _screenSize.getIHeight() - thiefPos.y;
+
+        //Make sure all directional indicators are displaying on the screen
+        if (distance.x >= _screenSize.getIWidth() - DIREC_INDICATOR_SIZE * size_scalar)
+            distance.x = _screenSize.getIWidth() - DIREC_INDICATOR_SIZE * size_scalar;
+        if (distance.x <= DIREC_INDICATOR_SIZE * size_scalar)
+            distance.x = DIREC_INDICATOR_SIZE * size_scalar;
+        if (distance.y >= _screenSize.getIHeight() - DIREC_INDICATOR_SIZE * size_scalar)
+            distance.y = _screenSize.getIHeight() - DIREC_INDICATOR_SIZE * size_scalar;
+        if (distance.y <= DIREC_INDICATOR_SIZE * size_scalar)
+            distance.y = DIREC_INDICATOR_SIZE * size_scalar;
+
+        /*
+        magic line to make things work on mobile
+        (I think it converts screen coords to... node coords or something)
+        (We do it in init() to make things adjust to variable screens, idk)
+        */
+        distance *= SCENE_HEIGHT / _screenSize.height;
+
+        //Set up directional indicators
+        _direcIndicators[i]->setPosition(distance);
+        _direcIndicators[i]->setAngle(angle + M_PI_2 + M_PI);
+        _direcIndicators[i]->setScale(size_scalar);
+        _direcIndicators[i]->setColor(color);
+    }
+    _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT) / 2 - _offset);
+}
+
+/** Updates the accelerometer visualization */
+void GameScene::updateAccelVis(bool isThief, Vec2 movement) {
+    _outerAccelVis->setVisible(!isThief);
+    _innerAccelVis->setVisible(!isThief);
+    _innerAccelVis->setPosition(_outerAccelVis->getPosition() + (movement * OUTER_ACCEL_VIS_RADIUS));
+    _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT) / 2 - _offset);
+}
+
+
 //  MARK: - Callbacks
 
 /**
@@ -455,6 +717,10 @@ void GameScene::beginContact(b2Contact* contact) {
         b2Body* copBody = _game->getCop(i)->getBody();
         if ((thiefBody == body1 && copBody == body2) ||
             (thiefBody == body2 && copBody == body1)) {
+            // Play collision sound
+            std::string sound = _isThief ? _game->getThief()->getCollisionSound() : _game->getCop(0)->getCollisionSound();
+            _audio->playSound(_assets, sound);
+            // Display UI win elements
             _gameover = true;
             _uinode->getChildByName("message")->setVisible(true);
         }

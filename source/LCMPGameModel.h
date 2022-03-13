@@ -79,6 +79,11 @@ public:
      * Returns a reference to a given cop
      */
     std::shared_ptr<CopModel> getCop(int copID) { return _cops[copID]; }
+
+    /**
+     * Returns the number of cops in the game.
+    */
+    int numberOfCops() { return (int)_cops.size(); }
     
     /**
      * Updates all game objects

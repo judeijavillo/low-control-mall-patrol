@@ -47,6 +47,8 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     /** A reference to the Network Controller instance */
     std::shared_ptr<NetworkController> _network;
+    /** A reference to the Audio Controller instance */
+    std::shared_ptr<AudioController> _audio;
 
     /** The controller for the loading screen */
     LoadingScene _loading;

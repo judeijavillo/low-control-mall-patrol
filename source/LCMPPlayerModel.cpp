@@ -34,6 +34,9 @@ bool PlayerModel::init(const Vec2 pos, const Size size, float scale,
     setFixedRotation(true);
     setDebugColor(Color4::RED);
     
+    // Set collision sound
+    _collisionSound  = "";
+    
     // Save the scale (SCREEN UNITS / WORLD UNITS)
     _scale = scale;
     
@@ -74,16 +77,16 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
     b2Vec2 b2force(force.x * getAcceleration(), force.y * getAcceleration());
     _body->ApplyForceToCenter(b2force, true);
     
+    // Dampen the movement
+    b2Vec2 b2velocity = _body->GetLinearVelocity();
+    b2Vec2 b2damping(b2velocity.x * -getDamping(), b2velocity.y * -getDamping());
+    _body->ApplyForceToCenter(b2damping, true);
+
     // If there is no input
-    if (force == Vec2::ZERO) {
-        // Dampen the movement
-        b2Vec2 b2velocity = _body->GetLinearVelocity();
-        b2Vec2 b2damping(b2velocity.x * -getDamping(), b2velocity.y * -getDamping());
-        _body->ApplyForceToCenter(b2damping, true);
-    }
+    
     
     // If there is a non-negligible input
-    else {
+    if (force != Vec2::ZERO) {
         // Update the texture
         if (abs(force.x) >= abs(force.y)) {
             _character->setTexture(force.x > 0 ? _runRightTexture : _runLeftTexture);
@@ -93,8 +96,8 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
     }
     
     // If the player has reached max speed
-    b2Vec2 b2velocity = _body->GetLinearVelocity();
-    if (b2velocity.Length() >= getMaxSpeed()) {
+    //b2Vec2 b2velocity = _body->GetLinearVelocity();
+    if (b2velocity.LengthSquared() >= getMaxSpeed() * getMaxSpeed()) {
         b2velocity.Normalize();
         b2velocity *= getMaxSpeed();
         _body->SetLinearVelocity(b2velocity);

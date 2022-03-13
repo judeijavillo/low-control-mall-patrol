@@ -20,7 +20,7 @@ public:
         TREE,
         /** A long bush */
         BUSH,
-        /** A "Faris" Wheel... get it? */
+        /** A ferris wheel */
         FARIS
     };
 

@@ -203,7 +203,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\LCMPApp.h" />
+    <ClInclude Include="..\..\source\LCMPAudioController.h" />
     <ClInclude Include="..\..\source\LCMPClientScene.h" />
+    <ClInclude Include="..\..\source\LCMPCollisionController.h" />
     <ClInclude Include="..\..\source\LCMPCopModel.h" />
     <ClInclude Include="..\..\source\LCMPGameModel.h" />
     <ClInclude Include="..\..\source\LCMPGameScene.h" />
@@ -219,7 +221,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\LCMPApp.cpp" />
+    <ClCompile Include="..\..\source\LCMPAudioController.cpp" />
     <ClCompile Include="..\..\source\LCMPClientScene.cpp" />
+    <ClCompile Include="..\..\source\LCMPCollisionController.cpp" />
     <ClCompile Include="..\..\source\LCMPCopModel.cpp" />
     <ClCompile Include="..\..\source\LCMPGameModel.cpp" />
     <ClCompile Include="..\..\source\LCMPGameScene.cpp" />

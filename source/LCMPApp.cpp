@@ -50,10 +50,14 @@ void LCMPApp::onStartup() {
     _assets->attach<JsonValue>(JsonLoader::alloc()->getHook());
     _assets->attach<WidgetValue>(WidgetLoader::alloc()->getHook());
     _assets->attach<scene2::SceneNode>(Scene2Loader::alloc()->getHook());
+    _assets->attach<Sound>(SoundLoader::alloc()->getHook());
 
     // Create a "loading" screen
     _scene = State::LOAD;
     _loading.init(_assets);
+    
+    // Initialize audio
+    _audio = make_shared<AudioController>();
     
     // Queue up the other assets
     _assets->loadDirectoryAsync("json/assets.json",nullptr);
@@ -78,6 +82,7 @@ void LCMPApp::onShutdown() {
     _host.disconnect();
     _client.disconnect();
     
+    _audio->dispose();
     _loading.dispose();
     _game.dispose();
     _assets = nullptr;
@@ -176,7 +181,7 @@ void LCMPApp::updateLoadingScene(float timestep) {
         _menu.init(_assets);
         _host.init(_assets, _network);
         _client.init(_assets, _network);
-        _game.init(_assets, _network);
+        _game.init(_assets, _network, _audio);
         _menu.setActive(true);
         _scene = State::MENU;
     }

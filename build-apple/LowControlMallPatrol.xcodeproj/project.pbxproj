@@ -31,9 +31,18 @@
 		42BFB68827DD8E9D00D04240 /* maps in Resources */ = {isa = PBXBuildFile; fileRef = 42BFB68427DD8E9D00D04240 /* maps */; };
 		42BFB68927DD8E9D00D04240 /* maps in Resources */ = {isa = PBXBuildFile; fileRef = 42BFB68427DD8E9D00D04240 /* maps */; };
 		42BFB68A27DD8E9D00D04240 /* maps in Resources */ = {isa = PBXBuildFile; fileRef = 42BFB68427DD8E9D00D04240 /* maps */; };
+		42BFB6C327DE701E00D04240 /* LCMPCollisionController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42BFB6C227DE701E00D04240 /* LCMPCollisionController.cpp */; };
+		42BFB6C427DE701E00D04240 /* LCMPCollisionController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42BFB6C227DE701E00D04240 /* LCMPCollisionController.cpp */; };
+		42BFB6C527DE701E00D04240 /* LCMPCollisionController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42BFB6C227DE701E00D04240 /* LCMPCollisionController.cpp */; };
+		42BFB6C827DE719900D04240 /* LCMPAudioController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42BFB6C627DE719900D04240 /* LCMPAudioController.cpp */; };
+		42BFB6C927DE719900D04240 /* LCMPAudioController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42BFB6C627DE719900D04240 /* LCMPAudioController.cpp */; };
+		42BFB6CA27DE719900D04240 /* LCMPAudioController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42BFB6C627DE719900D04240 /* LCMPAudioController.cpp */; };
 		42ED6B8227C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42ED6B8127C3761F00EC1EF4 /* LCMPPlayerModel.cpp */; };
 		42ED6B8327C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42ED6B8127C3761F00EC1EF4 /* LCMPPlayerModel.cpp */; };
 		42ED6B8427C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42ED6B8127C3761F00EC1EF4 /* LCMPPlayerModel.cpp */; };
+		42F2D4A927DE80FC00B5FCBA /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 42F2D4A827DE80FC00B5FCBA /* sounds */; };
+		42F2D4AA27DE80FC00B5FCBA /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 42F2D4A827DE80FC00B5FCBA /* sounds */; };
+		42F2D4AB27DE80FC00B5FCBA /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 42F2D4A827DE80FC00B5FCBA /* sounds */; };
 		EB07CFB621EFF3F8000CB3A3 /* DeviceMargins.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB07CFB021EFF3EF000CB3A3 /* DeviceMargins.plist */; };
 		EB13B3B427B2C0DF0032BF19 /* LCMPLoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB13B3A927B2C0DF0032BF19 /* LCMPLoadingScene.cpp */; };
 		EB13B3B527B2C0DF0032BF19 /* LCMPLoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB13B3A927B2C0DF0032BF19 /* LCMPLoadingScene.cpp */; };
@@ -165,8 +174,14 @@
 		42B26D7D27C2BC950019E6FB /* LCMPTrapModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPTrapModel.cpp; sourceTree = "<group>"; };
 		42B26D8127C2BD360019E6FB /* LCMPInputController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPInputController.cpp; sourceTree = "<group>"; };
 		42BFB68427DD8E9D00D04240 /* maps */ = {isa = PBXFileReference; lastKnownFileType = folder; path = maps; sourceTree = "<group>"; };
+		42BFB6C127DE701E00D04240 /* LCMPCollisionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPCollisionController.h; sourceTree = "<group>"; };
+		42BFB6C227DE701E00D04240 /* LCMPCollisionController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPCollisionController.cpp; sourceTree = "<group>"; };
+		42BFB6C627DE719900D04240 /* LCMPAudioController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPAudioController.cpp; sourceTree = "<group>"; };
+		42BFB6C727DE719900D04240 /* LCMPAudioController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPAudioController.h; sourceTree = "<group>"; };
 		42ED6B7D27C375EA00EC1EF4 /* LCMPPlayerModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LCMPPlayerModel.h; sourceTree = "<group>"; };
 		42ED6B8127C3761F00EC1EF4 /* LCMPPlayerModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPPlayerModel.cpp; sourceTree = "<group>"; };
+		42F2D4A827DE80FC00B5FCBA /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
+		42F2D4AC27DE82AF00B5FCBA /* LCMPConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPConstants.h; sourceTree = "<group>"; };
 		EB07CFB021EFF3EF000CB3A3 /* DeviceMargins.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DeviceMargins.plist; sourceTree = "<group>"; };
 		EB13B3A827B2C0DF0032BF19 /* LCMPClientScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPClientScene.h; sourceTree = "<group>"; };
 		EB13B3A927B2C0DF0032BF19 /* LCMPLoadingScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPLoadingScene.cpp; sourceTree = "<group>"; };
@@ -318,6 +333,10 @@
 		42B26D6427C1DA310019E6FB /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				42BFB6C727DE719900D04240 /* LCMPAudioController.h */,
+				42BFB6C627DE719900D04240 /* LCMPAudioController.cpp */,
+				42BFB6C127DE701E00D04240 /* LCMPCollisionController.h */,
+				42BFB6C227DE701E00D04240 /* LCMPCollisionController.cpp */,
 				42B26D6627C1DA830019E6FB /* LCMPNetworkController.h */,
 				42B26D6727C1DC580019E6FB /* LCMPNetworkController.cpp */,
 				42B26D6C27C2A6640019E6FB /* LCMPInputController.h */,
@@ -358,6 +377,7 @@
 		EB2BE9B71D749870002FE78B /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				42F2D4A827DE80FC00B5FCBA /* sounds */,
 				42BFB68427DD8E9D00D04240 /* maps */,
 				EBFE7C041E19B496001007C2 /* json */,
 				EB13B3CA27B2CA420032BF19 /* widgets */,
@@ -462,6 +482,7 @@
 				EB2BE9B41D74952A002FE78B /* main.cpp */,
 				EB13B3AE27B2C0DF0032BF19 /* LCMPApp.h */,
 				EB13B3B327B2C0DF0032BF19 /* LCMPApp.cpp */,
+				42F2D4AC27DE82AF00B5FCBA /* LCMPConstants.h */,
 				42B26D6527C1DA3F0019E6FB /* Models */,
 				42B26D6427C1DA310019E6FB /* Controllers */,
 				42B26D6027C1D97E0019E6FB /* Scenes */,
@@ -541,6 +562,7 @@
 					EB74548B1D74D75C002FBAE6 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = 8C78ZZ3P8X;
+						ProvisioningStyle = Automatic;
 					};
 					EBBF18901D74904A008E2001 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -603,6 +625,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42F2D4AB27DE80FC00B5FCBA /* sounds in Resources */,
 				EB22BF9B25D0EA5C002ACE41 /* DeviceMargins.plist in Resources */,
 				EB22BF9625D0EA50002ACE41 /* json in Resources */,
 				EB22BF9725D0EA51002ACE41 /* textures in Resources */,
@@ -619,6 +642,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42F2D4AA27DE80FC00B5FCBA /* sounds in Resources */,
 				EB7454D01D750623002FBAE6 /* textures in Resources */,
 				EB7454AB1D74D846002FBAE6 /* iOS.xcassets in Resources */,
 				EB7454AC1D74D846002FBAE6 /* Landscape.storyboard in Resources */,
@@ -637,6 +661,7 @@
 			files = (
 				EBFE7C091E19B4AC001007C2 /* json in Resources */,
 				EB2BE9BB1D7498D2002FE78B /* textures in Resources */,
+				42F2D4A927DE80FC00B5FCBA /* sounds in Resources */,
 				EBBF189B1D74904A008E2001 /* Mac.xcassets in Resources */,
 				42BFB68827DD8E9D00D04240 /* maps in Resources */,
 				EB13B3C727B2CA350032BF19 /* fonts in Resources */,
@@ -659,6 +684,7 @@
 				42B26D7C27C2BC840019E6FB /* LCMPCopModel.cpp in Sources */,
 				4298946D27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */,
 				42B26D8027C2BC950019E6FB /* LCMPTrapModel.cpp in Sources */,
+				42BFB6C527DE701E00D04240 /* LCMPCollisionController.cpp in Sources */,
 				42B26D6A27C1DC580019E6FB /* LCMPNetworkController.cpp in Sources */,
 				42B26D8427C2BD360019E6FB /* LCMPInputController.cpp in Sources */,
 				42B26D7427C2BC410019E6FB /* LCMPGameModel.cpp in Sources */,
@@ -666,6 +692,7 @@
 				EB13B3BF27B2C0DF0032BF19 /* LCMPHostScene.cpp in Sources */,
 				42ED6B8427C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */,
 				EB13B3B927B2C0DF0032BF19 /* LCMPMenuScene.cpp in Sources */,
+				42BFB6CA27DE719900D04240 /* LCMPAudioController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -681,6 +708,7 @@
 				42B26D7B27C2BC840019E6FB /* LCMPCopModel.cpp in Sources */,
 				4298946C27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */,
 				42B26D7F27C2BC950019E6FB /* LCMPTrapModel.cpp in Sources */,
+				42BFB6C427DE701E00D04240 /* LCMPCollisionController.cpp in Sources */,
 				42B26D6927C1DC580019E6FB /* LCMPNetworkController.cpp in Sources */,
 				42B26D8327C2BD360019E6FB /* LCMPInputController.cpp in Sources */,
 				42B26D7327C2BC410019E6FB /* LCMPGameModel.cpp in Sources */,
@@ -688,6 +716,7 @@
 				EB13B3BE27B2C0DF0032BF19 /* LCMPHostScene.cpp in Sources */,
 				42ED6B8327C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */,
 				EB13B3B827B2C0DF0032BF19 /* LCMPMenuScene.cpp in Sources */,
+				42BFB6C927DE719900D04240 /* LCMPAudioController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -710,6 +739,8 @@
 				EB13B3BD27B2C0DF0032BF19 /* LCMPHostScene.cpp in Sources */,
 				42ED6B8227C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */,
 				EB13B3B727B2C0DF0032BF19 /* LCMPMenuScene.cpp in Sources */,
+				42BFB6C327DE701E00D04240 /* LCMPCollisionController.cpp in Sources */,
+				42BFB6C827DE719900D04240 /* LCMPAudioController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -771,15 +802,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8C78ZZ3P8X;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.ios.LCMP1;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.ios.LCMP;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -798,7 +831,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.ios.LCMP1;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.ios.LCMP;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -933,7 +966,7 @@
 				DEVELOPMENT_TEAM = 8C78ZZ3P8X;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Mac-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.mac.LCMP;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.ak778.mac.LCMP;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -948,7 +981,7 @@
 				DEVELOPMENT_TEAM = 8C78ZZ3P8X;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Mac-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.mac.LCMP;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.ak778.mac.LCMP;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

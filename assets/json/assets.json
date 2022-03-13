@@ -49,6 +49,23 @@
             "file": "textures/characters/lcmp_thief_run_right.png"
         }
     },
+    "sounds": {
+        "dude": {
+            "type":     "sample",
+            "file":     "sounds/dude.wav",
+            "volume":   0.5
+        },
+        "fuck": {
+            "type":     "sample",
+            "file":     "sounds/fuck.wav",
+            "volume":   0.5
+        },
+        "why": {
+            "type":     "sample",
+            "file":     "sounds/why.wav",
+            "volume":   0.5
+        }
+    },
     "fonts": {
         "gyparody": {
             "file":     "fonts/gyparody-hv.ttf",
