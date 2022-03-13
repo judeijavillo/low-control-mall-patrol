@@ -91,8 +91,18 @@ void NetworkController::update() {
         vector<float> data = _deserializer.readFloatVector();
         _deserializer.reset();
         
-        _status = ((int) data.at(0) == START_GAME) ? START : _status;
-        
+        switch ((int) data.at(0)) {
+        case START_GAME:
+            _status = START;
+            int i = 2;
+            while (i < data.size()) {
+                int player = (int) data.at(i);
+                int role = (int) data.at(i+1);
+                if (player == this->getPlayerID()) _playerNumber = role;
+                i += 2;
+            }
+            break;
+        }
     });
 }
 
@@ -102,7 +112,21 @@ void NetworkController::update() {
 void NetworkController::sendStartGame() {
     vector<float> data;
     data.push_back(START_GAME);
+    data.push_back(getNumPlayers());
     
+    int count = 0;
+    int thief = rand() % getNumPlayers();
+    for (int playerID = 0; playerID < getNumPlayers(); playerID++) {
+        data.push_back(playerID);
+        if (thief == playerID) {
+            if (playerID == getPlayerID()) _playerNumber = -1;
+            data.push_back(-1);
+        } else {
+            if (playerID == getPlayerID()) _playerNumber = count;
+            data.push_back(count);
+            count++;
+        }
+    }
     _serializer.writeFloatVector(data);
     _connection->send(_serializer.serialize());
     _serializer.reset();

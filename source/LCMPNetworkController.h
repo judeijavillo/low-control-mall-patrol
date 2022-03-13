@@ -57,6 +57,9 @@ protected:
     
     /** Whether the connection being made is for a host or not */
     bool _isHost;
+    /** Whether the host decides this player is the thief or not */
+    int _playerNumber;
+    
     /** The current status of the Network Controller */
     Status _status;
     
@@ -91,12 +94,17 @@ public:
     bool isConnected() { return _connection != nullptr; }
     
     /**
+     * Returns the player number
+     */
+    int getPlayerNumber() const { return _playerNumber; }
+    
+    /**
      * Returns the player ID or empty.
      */
     std::optional<uint8_t> getPlayerID() const { return _connection->getPlayerID(); }
 
     /**
-     * Returns the room ID or empty string.
+     * Returns the room ID or empty string
      */
     std::string getRoomID() const { return _connection->getRoomID(); }
 

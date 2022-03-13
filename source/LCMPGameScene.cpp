@@ -252,17 +252,12 @@ void GameScene::dispose() {
  */
 void GameScene::start(bool host) {
     _ishost = host;
-    _isThief = host;
-    // TODO: The host should not always be the thief
+    _playerNumber = _network->getPlayerNumber();
+    _isThief = (_playerNumber == -1);
     
     // Initialize the game
     _game = make_shared<GameModel>();
     _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE);
-    if (auto pID = _network->getPlayerID(); pID) {
-        _playerID = (int)(*pID) - 1;
-    } else {
-        CULog("Failed to receive player ID");
-    }
     
     // Call helpers
     initModels();
@@ -342,6 +337,7 @@ void GameScene::update(float timestep) {
             initDirecIndicators();
         }
         _isThief = !_isThief;
+        _playerNumber = _playerNumber == -1 ? 0 : -1;
     }
     
     // Local updates
@@ -355,9 +351,9 @@ void GameScene::update(float timestep) {
         _network->sendThiefMovement(_game, flippedMovement);
         player = _game->getThief();
     } else {
-        _game->updateCop(flippedMovement, _playerID, onTackleCooldown);
-        _network->sendCopMovement(_game, flippedMovement, _playerID);
-        player = _game->getCop(_playerID);
+        _game->updateCop(flippedMovement, _playerNumber, onTackleCooldown);
+        _network->sendCopMovement(_game, flippedMovement, _playerNumber);
+        player = _game->getCop(_playerNumber);
     }
     
     shared_ptr<Font> font = _assets->get<Font>("gyparody");

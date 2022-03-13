@@ -84,8 +84,8 @@ protected:
     cugl::Vec2 _offset;
     /** The scale between the physics world and the screen (SCREEN UNITS / BOX2D WORLD UNITS) */
     float _scale;
-    /** The unique player ID of this player */
-    int _playerID;
+    /** The unique player number of this player */
+    int _playerNumber;
     
     /** The asset manager for this game mode */
     std::shared_ptr<cugl::AssetManager> _assets;
