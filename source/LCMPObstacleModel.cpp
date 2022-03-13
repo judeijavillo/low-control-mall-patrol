@@ -42,5 +42,11 @@ bool ObstacleModel::init(float scale, shared_ptr<Texture>& texture, Type type) {
             break;
     }
     setDebugColor(Color4::RED);
+
+    filter = b2Filter();
+    filter.maskBits = 0b00001;
+    filter.categoryBits = 0b00001;
+    setFilterData(filter);
+
     return true;
 }

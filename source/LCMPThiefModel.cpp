@@ -29,7 +29,7 @@ using namespace std;
 /**
  * Initializes a Thief Model
  */
-bool ThiefModel::init(float scale,
+bool ThiefModel::init(float scale, 
                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
                       const std::shared_ptr<cugl::AssetManager>& assets) {
     // The thief has constant size
@@ -52,6 +52,11 @@ bool ThiefModel::init(float scale,
     _character->setPosition(Vec2(0, width / 2.5f));
     _node->addChild(_character);
     // TODO: Get rid of the magic numbers in the lines above.
+
+    b2Filter fitler = b2Filter();
+    fitler.maskBits = THIEF_FILTER_BITS;
+    fitler.categoryBits = THIEF_FILTER_BITS;
+    setFilterData(fitler);
     
     return true;
 }

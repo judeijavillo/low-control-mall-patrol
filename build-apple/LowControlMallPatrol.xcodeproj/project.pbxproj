@@ -28,6 +28,9 @@
 		42B26D8227C2BD360019E6FB /* LCMPInputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42B26D8127C2BD360019E6FB /* LCMPInputController.cpp */; };
 		42B26D8327C2BD360019E6FB /* LCMPInputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42B26D8127C2BD360019E6FB /* LCMPInputController.cpp */; };
 		42B26D8427C2BD360019E6FB /* LCMPInputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42B26D8127C2BD360019E6FB /* LCMPInputController.cpp */; };
+		42BFB68827DD8E9D00D04240 /* maps in Resources */ = {isa = PBXBuildFile; fileRef = 42BFB68427DD8E9D00D04240 /* maps */; };
+		42BFB68927DD8E9D00D04240 /* maps in Resources */ = {isa = PBXBuildFile; fileRef = 42BFB68427DD8E9D00D04240 /* maps */; };
+		42BFB68A27DD8E9D00D04240 /* maps in Resources */ = {isa = PBXBuildFile; fileRef = 42BFB68427DD8E9D00D04240 /* maps */; };
 		42ED6B8227C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42ED6B8127C3761F00EC1EF4 /* LCMPPlayerModel.cpp */; };
 		42ED6B8327C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42ED6B8127C3761F00EC1EF4 /* LCMPPlayerModel.cpp */; };
 		42ED6B8427C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42ED6B8127C3761F00EC1EF4 /* LCMPPlayerModel.cpp */; };
@@ -161,6 +164,7 @@
 		42B26D7927C2BC840019E6FB /* LCMPCopModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPCopModel.cpp; sourceTree = "<group>"; };
 		42B26D7D27C2BC950019E6FB /* LCMPTrapModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPTrapModel.cpp; sourceTree = "<group>"; };
 		42B26D8127C2BD360019E6FB /* LCMPInputController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPInputController.cpp; sourceTree = "<group>"; };
+		42BFB68427DD8E9D00D04240 /* maps */ = {isa = PBXFileReference; lastKnownFileType = folder; path = maps; sourceTree = "<group>"; };
 		42ED6B7D27C375EA00EC1EF4 /* LCMPPlayerModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LCMPPlayerModel.h; sourceTree = "<group>"; };
 		42ED6B8127C3761F00EC1EF4 /* LCMPPlayerModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPPlayerModel.cpp; sourceTree = "<group>"; };
 		EB07CFB021EFF3EF000CB3A3 /* DeviceMargins.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DeviceMargins.plist; sourceTree = "<group>"; };
@@ -354,6 +358,7 @@
 		EB2BE9B71D749870002FE78B /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				42BFB68427DD8E9D00D04240 /* maps */,
 				EBFE7C041E19B496001007C2 /* json */,
 				EB13B3CA27B2CA420032BF19 /* widgets */,
 				EB13B3C627B2CA350032BF19 /* fonts */,
@@ -604,6 +609,7 @@
 				EB13B3C927B2CA350032BF19 /* fonts in Resources */,
 				EB22BF9025D0EA49002ACE41 /* iOS.xcassets in Resources */,
 				EB22BF9125D0EA49002ACE41 /* Landscape.storyboard in Resources */,
+				42BFB68A27DD8E9D00D04240 /* maps in Resources */,
 				EB13B3CD27B2CA420032BF19 /* widgets in Resources */,
 				EB22BF9225D0EA49002ACE41 /* Portrait.storyboard in Resources */,
 			);
@@ -619,6 +625,7 @@
 				EB13B3C827B2CA350032BF19 /* fonts in Resources */,
 				EBFE7C051E19B496001007C2 /* json in Resources */,
 				EB7454AD1D74D846002FBAE6 /* Portrait.storyboard in Resources */,
+				42BFB68927DD8E9D00D04240 /* maps in Resources */,
 				EB13B3CC27B2CA420032BF19 /* widgets in Resources */,
 				EB07CFB621EFF3F8000CB3A3 /* DeviceMargins.plist in Resources */,
 			);
@@ -631,6 +638,7 @@
 				EBFE7C091E19B4AC001007C2 /* json in Resources */,
 				EB2BE9BB1D7498D2002FE78B /* textures in Resources */,
 				EBBF189B1D74904A008E2001 /* Mac.xcassets in Resources */,
+				42BFB68827DD8E9D00D04240 /* maps in Resources */,
 				EB13B3C727B2CA350032BF19 /* fonts in Resources */,
 				EB13B3CB27B2CA420032BF19 /* widgets in Resources */,
 			);

@@ -23,6 +23,9 @@ public:
         /** A "Faris" Wheel... get it? */
         FARIS
     };
+
+    /** Defining the filter bits for the obstacle model*/
+    b2Filter filter;
     
 protected:
 //  MARK: - Properties

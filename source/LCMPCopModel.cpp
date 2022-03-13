@@ -28,6 +28,8 @@ using namespace std;
 
 /**
  * Initializes a Cop Model
+ *
+ * @param scale screenunit/worldunit
  */
 bool CopModel::init(float scale,
                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
@@ -52,6 +54,11 @@ bool CopModel::init(float scale,
     _character->setPosition(Vec2(0, width / 2.5f));
     _node->addChild(_character);
     // TODO: Get rid of the magic numbers in the lines above.
+
+    b2Filter fitler = b2Filter();
+    fitler.maskBits = COP_FILTER_BITS;
+    fitler.categoryBits = COP_FILTER_BITS;
+    setFilterData(fitler);
     
     return true;
 }

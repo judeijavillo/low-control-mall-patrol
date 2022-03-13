@@ -45,11 +45,13 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     // Initialize thief
     initThief(scale, thiefSpawn, assets);
     
-    // Initizlize cops
+    // Initialize cops
     for (int i = 0; i < 4; i++) initCop(i, scale, copsSpawn, assets);
     
-    // Initizlize walls
+    // Initialize walls
     for (int i = 0; i < walls->size(); i++) initWall(walls->get(i), scale);
+    
+    _traps = vector<shared_ptr<TrapModel>>();
     
     // Initialize borders
     initBorder(scale);

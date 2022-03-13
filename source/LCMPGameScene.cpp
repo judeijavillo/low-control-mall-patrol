@@ -24,7 +24,7 @@ using namespace std;
 //  MARK: - Constants
 
 /** Whether or not to show the debug node */
-#define DEBUG_ON        0
+#define DEBUG_ON        1
 
 /** This is the size of the active portion of the screen */
 #define SCENE_WIDTH     1024
@@ -113,10 +113,16 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Initialize the world
     _world = physics2::ObstacleWorld::alloc(rect,gravity);
+    
+    // Add callbacks for entering/leaving collisions
     _world->activateCollisionCallbacks(true);
     _world->onBeginContact = [this](b2Contact* contact) { beginContact(contact); };
-    _world->beforeSolve = [this](b2Contact* contact, const b2Manifold* oldManifold) { beforeSolve(contact,oldManifold); };
+    _world->onEndContact = [this](b2Contact* contact) { endContact(contact); };
     
+    // Add callback for filtering collisions
+    _world->activateFilterCallbacks(true);
+    _world->shouldCollide = [this](b2Fixture* f1, b2Fixture* f2) { return shouldCollide(f1, f2); };
+
     // Initialize the floor
     _floornode = scene2::SceneNode::alloc();
     shared_ptr<Texture> tile = _assets->get<Texture>(TILE_TEXTURE);
@@ -206,6 +212,7 @@ void GameScene::start(bool host) {
     
     // Call helpers
     initJoystick();
+    initModels();
 }
 
 /**
@@ -225,18 +232,21 @@ void GameScene::update(float timestep) {
     Vec2 position = _input.touch2Screen(_input.getJoystickPosition());
     Vec2 movement = _input.getMovementVector(_isThief);
     Vec2 difference = position - origin;
+    bool spacebar = _input._spacebarPressed;
     
     // Joystick updates
     if (difference.length() > JOYSTICK_RADIUS)
         position = origin + difference.getNormalization() * JOYSTICK_RADIUS;
     _innerJoystick->setPosition(_input.didPressJoystick() ? position : JOYSTICK_HOME);
     _outerJoystick->setPosition(_input.didPressJoystick() ? origin : JOYSTICK_HOME);
-    _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2 - _offset);
     
     // Local updates
     shared_ptr<PlayerModel> player;
     Vec2 flippedMovement = Vec2(movement.x, -movement.y);
     if (_isThief) {
+        if (spacebar && _game->getThief()->trapActivationFlag != -1) {
+            _trap->activate();
+        }
         _game->updateThief(flippedMovement);
         _network->sendThiefMovement(_game, flippedMovement);
         player = _game->getThief();
@@ -257,6 +267,7 @@ void GameScene::update(float timestep) {
         + (player->getVelocity() * _scale * LEAD_FACTOR);
     _camera->translate((next - curr) * timestep * LERP_FACTOR);
     _camera->update();
+    _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2 - _offset);
     
     // Network updates
     if (_network->isConnected()) {
@@ -389,6 +400,41 @@ void GameScene::initModels() {
 //    faris->setPosition(Vec2(FARIS_POSITION));
 //    farisNode->setPosition((Vec2(FARIS_POSITION) + Vec2(5, 7)) * _scale);
     
+    // Create hard-coded example trap
+    _trap = std::make_shared<TrapModel>();
+    
+    // Create the parameters to create a trap
+    Vec2 center = Vec2(30, 30);
+    std::shared_ptr<cugl::physics2::SimpleObstacle> area = physics2::WheelObstacle::alloc(Vec2::ZERO, 5);
+    std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 3);
+    std::shared_ptr<cugl::Vec2> triggerPosition = make_shared<cugl::Vec2>(center);
+    bool copSolid = false;
+    bool thiefSolid = false;
+    int numUses = 1;
+    float lingerDur = 0.3;
+    std::shared_ptr<cugl::Affine2> thiefVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
+    std::shared_ptr<cugl::Affine2> copVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
+
+    // Initialize a trap
+    _trap->init(area,
+                triggerArea,
+                triggerPosition,
+                copSolid, thiefSolid,
+                numUses,
+                lingerDur,
+                thiefVelMod, copVelMod);
+    
+    // Configure physics
+    _world->addObstacle(area);
+    _world->addObstacle(triggerArea);
+    area->setPosition(center);
+    triggerArea->setPosition(center);
+    triggerArea->setSensor(true);
+    
+    // Set the appropriate visual elements
+    _trap->setAssets(_scale, _worldnode, _assets, TrapModel::MopBucket);
+    _trap->setDebugScene(_debugnode);
+    
     // TODO: End Remove
     
 }
@@ -413,11 +459,52 @@ void GameScene::beginContact(b2Contact* contact) {
             _uinode->getChildByName("message")->setVisible(true);
         }
     }
+
+    // Check all of the traps
+    // TODO: Rewrite this code to iterate over traps in GameModel
+    auto triggerBody = _trap->getTriggerArea()->getBody();
+    auto effectBody = _trap->getEffectArea()->getBody();
+
+    if (_trap->activated) {
+        if ((thiefBody == body1 && effectBody == body2) ||
+            (thiefBody == body2 && effectBody == body1)) {
+            _gameover = true;
+        }
+    }
+    else {
+        if ((thiefBody == body1 && triggerBody == body2) ||
+            (thiefBody == body2 && triggerBody == body1)) {
+            _game->getThief()->trapActivationFlag = _trap->trapId;
+        }
+    }
 }
 
 /**
  * Callback for when two obstacles in the world end colliding
  */
-void GameScene::beforeSolve(b2Contact* contact, const b2Manifold* oldManifold) {
-    
+void GameScene::endContact(b2Contact* contact) {
+    b2Body* body1 = contact->GetFixtureA()->GetBody();
+    b2Body* body2 = contact->GetFixtureB()->GetBody();
+    b2Body* thiefBody = _game->getThief()->getBody();
+
+    if (_game->getThief()->trapActivationFlag != -1) {
+
+        //TODO: make sure this checks the appriate trap in the array once we are not hardcoding test traps
+        b2Body* triggerBody = _trap->getTriggerArea()->getBody();
+
+        if ((thiefBody == body1 && triggerBody == body2) ||
+            (thiefBody == body2 && triggerBody == body1)) {
+            _game->getThief()->trapActivationFlag = -1;
+        }
+    }
+}
+
+/**
+ * Callback for determining if two obstacles in the world should collide.
+ */
+bool GameScene::shouldCollide(b2Fixture* f1, b2Fixture* f2) {
+    const b2Filter& filterA = f1->GetFilterData();
+    const b2Filter& filterB = f2->GetFilterData();
+
+    return filterA.maskBits & filterB.maskBits;
 }
