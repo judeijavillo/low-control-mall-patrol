@@ -303,13 +303,12 @@ void GameScene::update(float timestep) {
     // Swipe updates
     if (!_isThief) {
         if (!_hitTackle) {
-            _hitTackle = tackle(timestep);
+            _hitTackle = tackle(timestep, movement);
         }
         else {
             _game->setGameOver(successfulTackle(timestep));
             _network->sendGameOver();
         }
-        
     }
     else {
         // Joystick updates
@@ -361,6 +360,9 @@ void GameScene::update(float timestep) {
         _game->updateThief(flippedMovement);
         _network->sendThiefMovement(_game, flippedMovement);
         player = _game->getThief();
+        
+        player->playAnimation(_actions, movement);
+        _actions->update(timestep);
     } else {
         _game->updateCop(flippedMovement, _playerNumber, onTackleCooldown);
         _network->sendCopMovement(_game, flippedMovement, _playerNumber);
@@ -402,10 +404,6 @@ void GameScene::update(float timestep) {
 
     // Update accelerometer visualization for the cop.
     updateAccelVis(_isThief, flippedMovement);
-    
-    // Update animation
-    player->playAnimation(_actions, movement);
-    _actions->update(timestep);
 
     // Sort world node children
     std::vector<std::shared_ptr<scene2::SceneNode>> children = _worldnode->getChildren();
@@ -583,7 +581,6 @@ void GameScene::initDirecIndicators() {
     // Calculate distances of cops from thief
     for (int i = 0; i < _game->numberOfCops(); i++) {
         Vec2 distance = _game->getThief()->getPosition() - _game->getCop(i)->getPosition();
-        float displayDistance = distance.length();
         distance = distance.getNormalization() * DIREC_INDICATOR_DIST_SCALAR;
         
         // Create and display directional indicators
@@ -679,16 +676,16 @@ void GameScene::updateAccelVis(bool isThief, Vec2 movement) {
 }
 
 
-bool GameScene::tackle(float dt) {
+bool GameScene::tackle(float dt, Vec2 movement) {
     int copID = _playerNumber;
     if (_input.didSwipe() && !onTackleCooldown) {
         onTackleCooldown = true;
         tackleTimer = 0;
         tackleDir = _input.getSwipe();
         Vec2 copToThiefDist = (_game->getThief()->getPosition() - _game->getCop(copID)->getPosition());
-        CULog("tackleDir angle: %f, copToThiefDist angle: %f", tackleDir.getAngle(), copToThiefDist.getAngle());
         float angle = (abs(tackleDir.getAngle()) - abs(copToThiefDist.getAngle()));
-        CULog("angle: %f", angle);
+        
+        _game->getCop(copID)->showTackle(tackleDir,true);
         if (abs(angle) <= TACKLE_ANGLE_MAX_ERR && copToThiefDist.lengthSquared() < TACKLE_HIT_RADIUS * TACKLE_HIT_RADIUS)
             return true; 
         else {
@@ -699,7 +696,20 @@ bool GameScene::tackle(float dt) {
     else if (onTackleCooldown) {
         tackleTimer += dt;
         _game->getCop(copID)->failedTackle(tackleTimer, tackleDir);
-        if (tackleTimer >= TACKLE_COOLDOWN_TIME) onTackleCooldown = false;
+        if (tackleTimer >= TACKLE_COOLDOWN_TIME) {
+            onTackleCooldown = false;
+            _game->getCop(copID)->hideTackle();
+            _game->getCop(copID)->playAnimation(_actions, movement);
+            _actions->update(dt);
+        }
+        else if (tackleTimer >= TACKLE_COOLDOWN_TIME / 2) {
+            _game->getCop(copID)->showTackle(tackleDir, false);
+        }
+    }
+    else {
+        _game->getCop(copID)->hideTackle();
+        _game->getCop(copID)->playAnimation(_actions, movement);
+        _actions->update(dt);
     }
     return false; 
 }

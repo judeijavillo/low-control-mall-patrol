@@ -146,6 +146,8 @@ public:
      */
     void playAnimation(std::shared_ptr<cugl::scene2::ActionManager>& actions, cugl::Vec2 movement);
     
+    int findDirection(cugl::Vec2 movement);
+    
 };
 
 #endif /* __LCMP_PLAYER_MODEL_H__ */

@@ -36,6 +36,30 @@
         "cop_run_right": {
             "file": "textures/characters/lcmp_cop_run_right.png"
         },
+        "cop_jump_down": {
+            "file": "textures/characters/lcmp_cop_jump_down.png"
+        },
+        "cop_jump_up": {
+            "file": "textures/characters/lcmp_cop_jump_up.png"
+        },
+        "cop_jump_left": {
+            "file": "textures/characters/lcmp_cop_jump_left.png"
+        },
+        "cop_jump_right": {
+            "file": "textures/characters/lcmp_cop_jump_right.png"
+        },
+        "cop_land_down": {
+            "file": "textures/characters/lcmp_cop_jump_land_down.png"
+        },
+        "cop_land_up": {
+            "file": "textures/characters/lcmp_cop_jump_land_up.png"
+        },
+        "cop_land_left": {
+            "file": "textures/characters/lcmp_cop_jump_land_left.png"
+        },
+        "cop_land_right": {
+            "file": "textures/characters/lcmp_cop_jump_land_right.png"
+        },
         "thief_run_back": {
             "file": "textures/characters/lcmp_thief_run_back.png"
         },
