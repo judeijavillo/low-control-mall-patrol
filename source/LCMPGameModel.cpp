@@ -82,8 +82,9 @@ void GameModel::updateThief(cugl::Vec2 acceleration) {
 /**
  * Applies a force to a cop (most likely for local updates)
  */
-void GameModel::updateCop(cugl::Vec2 acceleration, int copID) {
-    _cops[copID]->applyForce(acceleration);
+void GameModel::updateCop(cugl::Vec2 acceleration, int copID, bool onTackleCooldown) {
+    if(!onTackleCooldown)
+        _cops[copID]->applyForce(acceleration);
 }
 
 /**

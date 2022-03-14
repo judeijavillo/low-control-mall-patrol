@@ -62,3 +62,16 @@ bool CopModel::init(float scale,
     
     return true;
 }
+
+void CopModel::failedTackle(float timer, cugl::Vec2 swipe) {
+    if (timer <= TACKLE_AIR_TIME) {
+        Vec2 normSwipe = swipe.getNormalization();
+        b2Vec2 vel(normSwipe.x * COP_MAX_SPEED *TACKLE_MOVEMENT_MULT, -normSwipe.y * COP_MAX_SPEED * TACKLE_MOVEMENT_MULT);
+        _body->SetLinearVelocity(vel);
+    }
+    else {
+        b2Vec2 b2damping(getVelocity().x * -getDamping() * TACKLE_DAMPING_MULT,
+            getVelocity().y * -getDamping() * TACKLE_DAMPING_MULT);
+        _body->ApplyForceToCenter(b2damping, true);
+    }
+}

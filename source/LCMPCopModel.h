@@ -16,6 +16,12 @@
 #define COP_MAX_SPEED 10.0f
 /** The cops's acceleration of this player */
 #define COP_ACCELERATION 75.0f
+/** The amount of time that the cop will be in the air while tackling */
+#define TACKLE_AIR_TIME 0.25f
+/** The movement multiplier for the cop during tackle */
+#define TACKLE_MOVEMENT_MULT 2.0f
+/** The damping multiplier for the cop during tackle */
+#define TACKLE_DAMPING_MULT 2.5f
 
 /** Defining the filter bits for the cop model*/
 #define COP_FILTER_BITS 0b01001
@@ -57,6 +63,12 @@ public:
      * Returns the acceleration of a cop
      */
     float getAcceleration() override { return COP_ACCELERATION; }
+
+    /**
+     * Sets cop speeds according to a missed tackle
+    */
+    void failedTackle(float timer, cugl::Vec2 swipe);
+
 };
 
 #endif /* __LCMP_COP_MODEL_H__ */

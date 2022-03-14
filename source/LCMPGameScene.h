@@ -95,6 +95,8 @@ protected:
     bool _ishost;
     /** Whether we quit the game */
     bool _quit;
+    /** Whether the cop has hit a successful tackle. */
+    bool _hitTackle;
 
     /** An example trap */
     std::shared_ptr<TrapModel> _trap;
@@ -247,6 +249,22 @@ private:
      *  Requires movement vector length to be 1 or less.
     */
     void updateAccelVis(bool isThief, cugl::Vec2 movement);
+
+    /**
+     *  Performs all logic associated with the cop tackle.
+     *  This method is physics-based if it is a missed tackle, and discretized
+     *  if the tackle hits.
+     * 
+     *  Returns if the cop's tackle is successful.
+    */
+    bool tackle(float dt);
+
+    /**
+     *  Plays animation associated with cop hitting the tackle.
+     *  Not physics based, just moves cop body.
+     *  Returns whether animation is complete or not.
+    */
+    bool successfulTackle(float dt);
 
 //  MARK: - Callbacks
     

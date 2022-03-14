@@ -41,9 +41,9 @@ using namespace std;
 /** The default value of gravity (going down) */
 #define DEFAULT_GRAVITY 0.0f
 
-#define TACKLE_BOOST      5.0f
-#define TACKLE_STOP_SPEED 0.1f
-#define TACKLE_DAMPING    0.2f
+#define TACKLE_COOLDOWN_TIME 1.5f
+#define TACKLE_HIT_RADIUS 6.0f
+#define TACKLE_ANGLE_MAX_ERR (M_PI_4)
 #define TACKLE_LENGTH   50
 
 /** The key for the floor tile */
@@ -97,7 +97,13 @@ int resetTime = 0;
 /** Counter for tackle */
 int tackleCooldown = TACKLE_LENGTH;
 /** Whether the cop has swiped recently */
-bool hasSwiped = false;
+bool onTackleCooldown = false;
+/** Time since failed tackle */
+float tackleTimer;
+/** Direction of the cop's tackle */
+Vec2 tackleDir;
+/** Position of the cop's node when the tackle is successful initially */
+Vec2 copPosAtTackle;
 
 /**
  * Returns true iff o1 should appear behind o2.
@@ -219,6 +225,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // Set some flags
     _quit = false;
     _gameover = false;
+    _hitTackle = false;
     setActive(false);
     
     return true;
@@ -287,22 +294,13 @@ void GameScene::update(float timestep) {
     
     // Swipe updates
     if (!_isThief) {
-        if (_input.didSwipe() || (hasSwiped && tackleCooldown > 0)) {
-            hasSwiped = true;
-            Vec2 dir = _input.getSwipe();
-            dir.normalize();
-            Vec2 velocity = (COP_MAX_SPEED * TACKLE_BOOST * dir);
-            movement = Vec2(velocity.x * (TACKLE_DAMPING * COP_ACCELERATION / COP_MAX_SPEED), velocity.y * (TACKLE_DAMPING * COP_ACCELERATION / COP_MAX_SPEED));
-            tackleCooldown--;
-        }
-        else if (hasSwiped && tackleCooldown > -TACKLE_LENGTH) {
-            movement = Vec2::ZERO;
-            tackleCooldown--;
+        if (!_hitTackle) {
+            _hitTackle = tackle(timestep);
         }
         else {
-            hasSwiped = false;
-            tackleCooldown = TACKLE_LENGTH;
+            _gameover = successfulTackle(timestep);
         }
+        
     }
     else {
         // Joystick updates
@@ -352,7 +350,7 @@ void GameScene::update(float timestep) {
         _network->sendThiefMovement(_game, flippedMovement);
         player = _game->getThief();
     } else {
-        _game->updateCop(flippedMovement, 0);
+        _game->updateCop(flippedMovement, 0, onTackleCooldown);
         _network->sendCopMovement(_game, flippedMovement, 0);
         player = _game->getCop(0);
     }
@@ -437,6 +435,7 @@ void GameScene::reset() {
     initModels();
     _uinode->getChildByName("message")->setVisible(false);
     _gameover = false;
+    _hitTackle = false;
 }
 
 //  MARK: - Helpers
@@ -699,6 +698,42 @@ void GameScene::updateAccelVis(bool isThief, Vec2 movement) {
     _innerAccelVis->setVisible(!isThief);
     _innerAccelVis->setPosition(_outerAccelVis->getPosition() + (movement * OUTER_ACCEL_VIS_RADIUS));
     _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT) / 2 - _offset);
+}
+
+
+bool GameScene::tackle(float dt) {
+    int copID = 0;
+    if (_input.didSwipe() && !onTackleCooldown) {
+        onTackleCooldown = true;
+        tackleTimer = 0;
+        tackleDir = _input.getSwipe();
+        Vec2 copToThiefDist = (_game->getThief()->getPosition() - _game->getCop(copID)->getPosition());
+        CULog("tackleDir angle: %f, copToThiefDist angle: %f", tackleDir.getAngle(), copToThiefDist.getAngle());
+        float angle = (abs(tackleDir.getAngle()) - abs(copToThiefDist.getAngle()));
+        CULog("angle: %f", angle);
+        if (abs(angle) <= TACKLE_ANGLE_MAX_ERR && copToThiefDist.lengthSquared() < TACKLE_HIT_RADIUS * TACKLE_HIT_RADIUS)
+            return true; 
+        else {
+            _game->getCop(copID)->failedTackle(tackleTimer, tackleDir);
+            return false;
+        }
+    }
+    else if (onTackleCooldown) {
+        tackleTimer += dt;
+        _game->getCop(copID)->failedTackle(tackleTimer, tackleDir);
+        if (tackleTimer >= TACKLE_COOLDOWN_TIME) onTackleCooldown = false;
+    }
+    return false; 
+}
+
+bool GameScene::successfulTackle(float dt) {
+    int copID = 0;
+    copPosAtTackle = _game->getCop(copID)->getPosition();
+    Vec2 thiefPos = _game->getThief()->getPosition();
+    Vec2 diff = thiefPos - copPosAtTackle;
+    tackleTimer += dt;
+    _game->getCop(copID)->setPosition(copPosAtTackle + (diff * (tackleTimer / TACKLE_AIR_TIME)));
+    return (tackleTimer >= TACKLE_AIR_TIME);
 }
 
 

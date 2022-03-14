@@ -98,7 +98,7 @@ public:
     /**
      * Applies an acceleration to a cop (most likely for local updates)
      */
-    void updateCop(cugl::Vec2 acceleration, int copID);
+    void updateCop(cugl::Vec2 acceleration, int copID, bool onTackleCooldown);
     
     /**
      * Updates the position and velocity of the thief (most likely for network updates)

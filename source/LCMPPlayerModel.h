@@ -91,6 +91,11 @@ public:
      * Returns the acceleration of this player
      */
     virtual float getAcceleration() { return 10.0f; }
+
+    /**
+     * Returns the node of this player
+     */
+    std::shared_ptr<cugl::scene2::SceneNode> getNode() { return _node; }
     
     /**
      * Applies a force to the player (most likely for local updates)
