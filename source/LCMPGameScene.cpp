@@ -275,13 +275,17 @@ void GameScene::start(bool host) {
  */
 void GameScene::update(float timestep) {
     if (!_active) return;
+    _gameover = _game->isGameOver();
     if (_gameover) {
+        _uinode->getChildByName("message")->setVisible(true);
         resetTime++;
         if (resetTime > 120) {
             resetTime = 0;
             reset();
         }
         return;
+    } else {
+        _uinode->getChildByName("message")->setVisible(false);
     }
     
     // Input updates
@@ -298,7 +302,8 @@ void GameScene::update(float timestep) {
             _hitTackle = tackle(timestep);
         }
         else {
-            _gameover = successfulTackle(timestep);
+            _game->setGameOver(successfulTackle(timestep));
+            _network->sendGameOver();
         }
         
     }
@@ -724,8 +729,11 @@ void GameScene::beginContact(b2Contact* contact) {
             std::string sound = _isThief ? _game->getThief()->getCollisionSound() : _game->getCop(0)->getCollisionSound();
             _audio->playSound(_assets, sound);
             // Display UI win elements
-            _gameover = true;
-            _uinode->getChildByName("message")->setVisible(true);
+            if (!_game->isGameOver()) {
+                _game->setGameOver(true);
+                _network->sendGameOver();
+                _uinode->getChildByName("message")->setVisible(true);
+            }
         }
     }
 
@@ -738,7 +746,8 @@ void GameScene::beginContact(b2Contact* contact) {
         if (trap->activated) {
             if ((thiefBody == body1 && effectBody == body2) ||
                 (thiefBody == body2 && effectBody == body1)) {
-                _gameover = true;
+                // TODO: the thief and trap collisions?
+                // _gameover = true;
             }
         }
         else {
