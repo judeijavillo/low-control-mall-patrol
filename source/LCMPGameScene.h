@@ -33,6 +33,8 @@ protected:
     std::shared_ptr<NetworkController> _network;
     /** A reference to the Audio Controller instance */
     std::shared_ptr<AudioController> _audio;
+    /** Manager to process the animation actions */
+    std::shared_ptr<cugl::scene2::ActionManager> _actions;
     /** The Input Controller instance */
     InputController _input;
     /** The PolyFactory instance */

@@ -47,6 +47,30 @@
         },
         "thief_run_right": {
             "file": "textures/characters/lcmp_thief_run_right.png"
+        },
+        "ss_cop_up": {
+            "file": "textures/characters/ss_cop_up.png"
+        },
+        "ss_cop_down": {
+            "file": "textures/characters/ss_cop_down.png"
+        },
+        "ss_cop_right": {
+            "file": "textures/characters/ss_cop_right.png"
+        },
+        "ss_cop_left": {
+            "file": "textures/characters/ss_cop_left.png"
+        },
+        "ss_thief_up": {
+            "file": "textures/characters/ss_thief_up.png"
+        },
+        "ss_thief_down": {
+            "file": "textures/characters/ss_thief_down.png"
+        },
+        "ss_thief_right": {
+            "file": "textures/characters/ss_thief_right.png"
+        },
+        "ss_thief_left": {
+            "file": "textures/characters/ss_thief_left.png"
         }
     },
     "sounds": {
@@ -63,6 +87,11 @@
         "why": {
             "type":     "sample",
             "file":     "sounds/why.wav",
+            "volume":   0.5
+        },
+        "ooh": {
+            "type":     "sample",
+            "file":     "sounds/ooh.wav",
             "volume":   0.5
         }
     },
