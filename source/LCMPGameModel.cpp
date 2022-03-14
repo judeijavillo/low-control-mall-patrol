@@ -162,6 +162,7 @@ void GameModel::initThief(float scale,
     _thief->init(scale, thiefNode, assets);
     _thief->setDebugScene(_debugnode);
     _thief->setCollisionSound("fuck");
+    _thief->setObstacleSound("dude");
     _world->addObstacle(_thief);
     
     // Position thief afterwards to not have to deal with changing world size
@@ -181,7 +182,8 @@ void GameModel::initCop(int copID, float scale,
     std::shared_ptr<CopModel> cop = std::make_shared<CopModel>();
     cop->init(scale, copNode, assets);
     cop->setDebugScene(_debugnode);
-    cop->setCollisionSound("dude");
+    cop->setCollisionSound("ooh");
+    cop->setObstacleSound("dude");
     _world->addObstacle(cop);
     
     // Position cop afterwards to not have to deal with changing world size

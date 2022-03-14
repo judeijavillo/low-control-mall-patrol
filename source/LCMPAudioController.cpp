@@ -31,14 +31,8 @@ void AudioController::dispose() {
 /**
  * Plays a sound effect
  */
-void AudioController::playSound(const std::shared_ptr<cugl::AssetManager>& assets, string key) {
+void AudioController::playSound(const std::shared_ptr<cugl::AssetManager>& assets, string key, float time) {
     const std::shared_ptr<Sound>& source = assets->get<Sound>(key);
     AudioEngine::get()->play(key,source,true,source->getVolume());
-}
-
-/**
- * Stops a sound effect
- */
-void AudioController::stopSound(string key) {
-    AudioEngine::get()->stop();
+    AudioEngine::get()->setTimeRemaining(key, time);
 }

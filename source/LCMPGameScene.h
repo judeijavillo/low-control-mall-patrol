@@ -27,6 +27,12 @@
 class GameScene : public cugl::Scene2 {
 protected:
 //  MARK: - Properties
+    /** The time for this current game */
+    float _gameTime;
+    /** The time for the win game */
+    float _resetTime;
+    /** The last time the cop tackled */
+    float _tackleTime;
     
     // Controllers
     /** A reference to the Network Controller instance */
@@ -228,11 +234,6 @@ private:
      *  adds them to the UI node.
     */
     void initAccelVis();
-    
-    /**
-     * Creates the player and trap models and adds them to the world node
-     */
-    void initModels();
 
     /**
      *  Creates directional indicators for the thief that point towards the cops.

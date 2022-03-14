@@ -53,6 +53,8 @@ protected:
     float _scale;
     /** The key for the collision sound */
     std::string _collisionSound;
+    /** The key for the obstacle sound */
+    std::string _obstacleSound;
     // MODELS
     /** The animation actions */
     std::shared_ptr<cugl::scene2::Animate> _north;
@@ -108,6 +110,16 @@ public:
      * Sets the key for a collision sound
      */
     void setCollisionSound(const std::string& key) { _collisionSound = key; }
+    
+    /**
+     * Gets the appropriate key for the sound for collision
+     */
+    const std::string& getObstacleSound() const { return _obstacleSound; }
+
+    /**
+     * Sets the key for a collision sound
+     */
+    void setObstacleSound(const std::string& key) { _obstacleSound = key; }
     
     /**
      * Returns the velocity of the player's body
