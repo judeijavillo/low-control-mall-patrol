@@ -52,6 +52,21 @@ bool PlayerModel::init(const Vec2 pos, const Size size, float scale,
     _dropshadow->setColor(Color4(Vec4(0,0,0,0.25f)));
     _node->addChild(_dropshadow);
     
+    // Create animations
+    // Right character movement
+    std::vector<int> east;
+    for(int ii = 0; ii < 8; ii++) {
+        east.push_back(ii);
+    }
+    _east = scene2::Animate::alloc(east,DURATION);
+
+    // Left character movement
+    std::vector<int> west;
+    for(int ii = 0; ii < 8; ii++) {
+        west.push_back(ii);
+    }
+    _west = scene2::Animate::alloc(west,DURATION);
+    
     // We're gonna assume this always works appropriately
     return true;
 }
@@ -61,13 +76,17 @@ bool PlayerModel::init(const Vec2 pos, const Size size, float scale,
  */
 void PlayerModel::dispose() {
     _node = nullptr;
-    _character = nullptr;
     _dropshadow = nullptr;
     
-    _runBackTexture = nullptr;
-    _runFrontTexture = nullptr;
-    _runLeftTexture = nullptr;
-    _runRightTexture = nullptr;
+    _characterLeft = nullptr;
+    _characterRight = nullptr;
+    _characterFront = nullptr;
+    _characterBack = nullptr;
+    
+    runBack = nullptr;
+    runFront = nullptr;
+    runLeft = nullptr;
+    runRight = nullptr;
 }
 
 /**
@@ -81,19 +100,6 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
     b2Vec2 b2velocity = _body->GetLinearVelocity();
     b2Vec2 b2damping(b2velocity.x * -getDamping(), b2velocity.y * -getDamping());
     _body->ApplyForceToCenter(b2damping, true);
-
-    // If there is no input
-    
-    
-    // If there is a non-negligible input
-    if (force != Vec2::ZERO) {
-        // Update the texture
-        if (abs(force.x) >= abs(force.y)) {
-            _character->setTexture(force.x > 0 ? _runRightTexture : _runLeftTexture);
-        } else {
-            _character->setTexture(force.y > 0 ? _runBackTexture : _runFrontTexture);
-        }
-    }
     
     // If the player has reached max speed
     //b2Vec2 b2velocity = _body->GetLinearVelocity();
@@ -109,13 +115,6 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
  */
 void PlayerModel::applyNetwork(cugl::Vec2 position, cugl::Vec2 velocity, cugl::Vec2 force) {
     setPosition(position);
-    
-    // Update the texture
-    if (abs(force.x) >= abs(force.y)) {
-        _character->setTexture(force.x > 0 ? _runRightTexture : _runLeftTexture);
-    } else {
-        _character->setTexture(force.y > 0 ? _runBackTexture : _runFrontTexture);
-    }
 }
 
 /**
@@ -127,5 +126,70 @@ void PlayerModel::update(float timestep) {
     if (_node != nullptr) {
         Vec2 position(_body->GetPosition().x, _body->GetPosition().y);
         _node->setPosition(position * _scale);
+    }
+}
+
+/**
+ * Performs a film strip action
+ */
+void PlayerModel::playAnimation(std::shared_ptr<scene2::ActionManager>& actions, Vec2 movement) {
+    // Figure out which animation direction to use
+    float angle = movement.getAngle(Vec2(1,0)) * 180 / 3.14;
+    int key = (angle < 45 || angle >= -45) ? 0 : -1;
+    if (angle < 135 && angle >= 45) key = 1;
+    else if (angle >= 135 || angle < -135 || (movement.y == 0 && movement.x < 0)) key = 2;
+    else if (angle < -45 && angle >= -135) key = 3;
+
+    _characterRight->setVisible(false);
+    _characterLeft->setVisible(false);
+    _characterFront->setVisible(false);
+    _characterBack->setVisible(false);
+    // Animate different direction
+    bool* cycle;
+    std::shared_ptr<scene2::SpriteNode> node;
+    switch (key) {
+        case RIGHT_ANIM_KEY:
+            actions->activate(ACT_KEY, _east, _characterRight);
+            _characterRight->setVisible(true);
+            node = _characterRight;
+            cycle = &_rightCycle;
+            break;
+        case BACK_ANIM_KEY:
+            actions->activate(ACT_KEY, _north, _characterBack);
+            _characterBack->setVisible(true);
+            node = _characterBack;
+            cycle = &_backCycle;
+            break;
+        case LEFT_ANIM_KEY:
+            actions->activate(ACT_KEY, _west, _characterLeft);
+            _characterLeft->setVisible(true);
+            node = _characterLeft;
+            cycle = &_leftCycle;
+            break;
+        case FRONT_ANIM_KEY:
+            actions->activate(ACT_KEY, _south, _characterFront);
+            _characterFront->setVisible(true);
+            node = _characterFront;
+            cycle = &_frontCycle;
+            break;
+        default:
+            break;
+    }
+    if (movement.length() > 0) {
+        // Turn on the flames and go back and forth
+        if (node->getFrame() == 0 || node->getFrame() == 1) {
+            *cycle = true;
+        } else if (node->getFrame() == node->getSize()-1) {
+            *cycle = false;
+        }
+
+        // Increment
+        if (*cycle) {
+            node->setFrame(node->getFrame()+1);
+        } else {
+            node->setFrame(node->getFrame()-1);
+        }
+    } else {
+        node->setFrame(0);
     }
 }

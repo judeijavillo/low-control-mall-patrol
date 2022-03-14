@@ -14,6 +14,7 @@
 #include <box2d/b2_world.h>
 #include <box2d/b2_contact.h>
 #include <box2d/b2_collision.h>
+#include <cugl/scene2/actions/CUActionManager.h>
 #include <math.h>
 
 #include "LCMPGameScene.h"
@@ -145,6 +146,9 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Save the audio controller
     _audio = audio;
+    
+    // Create the action manager
+    _actions = scene2::ActionManager::alloc();
     
     // Initialize the input controller
     _input.init(getBounds());
@@ -361,15 +365,12 @@ void GameScene::update(float timestep) {
         _game->updateCop(flippedMovement, _playerNumber, onTackleCooldown);
         _network->sendCopMovement(_game, flippedMovement, _playerNumber);
         player = _game->getCop(_playerNumber);
-    }
-    
-    shared_ptr<Font> font = _assets->get<Font>("gyparody");
-    if (! _isThief) {
+        
         // Calculate distance of thief from cop
         float distance = _game->getThief()->getPosition().distance(_game->getCop(_playerNumber)->getPosition());
         // Create and show distance on screen
         _uinode->removeChildByName("thiefDistance");
-        _thiefDistance = scene2::Label::allocWithText("Thief Distance: " + to_string(int(distance)), font);
+        _thiefDistance = scene2::Label::allocWithText("Thief Distance: " + to_string(int(distance)), _font);
         _thiefDistance->setAnchor(Vec2::ANCHOR_CENTER);
         _thiefDistance->setPosition(Vec2(SCENE_WIDTH/2,SCENE_HEIGHT-SCENE_HEIGHT_ADJUST) + _offset);
         _thiefDistance->setName("thiefDistance");
@@ -399,8 +400,12 @@ void GameScene::update(float timestep) {
     // Directional indicator updates
     updateDirecIndicators(_isThief);
 
-    //Update accelerometer visualization for the cop.
+    // Update accelerometer visualization for the cop.
     updateAccelVis(_isThief, flippedMovement);
+    
+    // Update animation
+    player->playAnimation(_actions, movement);
+    _actions->update(timestep);
 
     // Sort world node children
     std::vector<std::shared_ptr<scene2::SceneNode>> children = _worldnode->getChildren();

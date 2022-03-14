@@ -15,6 +15,7 @@
 #define COLLISION_SOUND     "dude"
 #define COLLISION_SOUND_2     "fuck"
 #define COLLISION_SOUND_3     "why"
+#define OOH_SOUND           "ooh"
 
 class AudioController {
 public:

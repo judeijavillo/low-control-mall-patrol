@@ -19,10 +19,10 @@ using namespace std;
 #define COP_HEIGHT      1.0f
 
 /** Keys for cop run textures */
-#define COP_RUN_BACK        "cop_run_back"
-#define COP_RUN_FRONT       "cop_run_front"
-#define COP_RUN_LEFT        "cop_run_left"
-#define COP_RUN_RIGHT       "cop_run_right"
+#define COP_RUN_BACK        "ss_cop_up"
+#define COP_RUN_FRONT       "ss_cop_down"
+#define COP_RUN_LEFT        "ss_cop_left"
+#define COP_RUN_RIGHT       "ss_cop_right"
 
 //  MARK: - Constructors
 
@@ -40,19 +40,48 @@ bool CopModel::init(float scale,
     // Call the parent's initializer
     PlayerModel::init(Vec2::ZERO, size, scale, node);
     
+    // Up character movement
+      std::vector<int> north;
+      for(int ii = 0; ii < 8; ii++) {
+          north.push_back(ii);
+      }
+      _north = scene2::Animate::alloc(north,DURATION);
+
+      // Down character movement
+      std::vector<int> south;
+      for(int ii = 1; ii < 8; ii++) {
+          south.push_back(ii);
+      }
+      _south = scene2::Animate::alloc(south,DURATION);
+    
     // Set up the textures for all directions
-    _runBackTexture = assets->get<Texture>(COP_RUN_BACK);
-    _runFrontTexture = assets->get<Texture>(COP_RUN_FRONT);
-    _runLeftTexture = assets->get<Texture>(COP_RUN_LEFT);
-    _runRightTexture = assets->get<Texture>(COP_RUN_RIGHT);
+    runFront = scene2::SpriteNode::alloc(assets->get<Texture>(COP_RUN_FRONT), 1, 8);
+    runBack = scene2::SpriteNode::alloc(assets->get<Texture>(COP_RUN_BACK), 1, 8);
+    runRight = scene2::SpriteNode::alloc(assets->get<Texture>(COP_RUN_RIGHT), 1, 8);
+    runLeft = scene2::SpriteNode::alloc(assets->get<Texture>(COP_RUN_LEFT), 1, 8);
     
     // Initialize the first texture. Note: width is in screen coordinates
     float width = size.width * scale * 1.5f;
-    _character = scene2::PolygonNode::allocWithTexture(_runRightTexture);
-    _character->setScale(width / _runLeftTexture->getSize().width);
-    _character->setAnchor(Vec2::ANCHOR_CENTER);
-    _character->setPosition(Vec2(0, width / 2.5f));
-    _node->addChild(_character);
+    _characterLeft = runLeft;
+    _characterLeft->setScale(0.3f);
+    _characterLeft->setAnchor(Vec2::ANCHOR_CENTER);
+    _characterLeft->setPosition(Vec2(0, width / 2.5f));
+    _node->addChild(_characterLeft);
+    _characterRight = runRight;
+    _characterRight->setScale(0.3f);
+    _characterRight->setAnchor(Vec2::ANCHOR_CENTER);
+    _characterRight->setPosition(Vec2(0, width / 2.5f));
+    _node->addChild(_characterRight);
+    _characterFront = runFront;
+    _characterFront->setScale(0.3f);
+    _characterFront->setAnchor(Vec2::ANCHOR_CENTER);
+    _characterFront->setPosition(Vec2(0, width / 2.5f));
+    _node->addChild(_characterFront);
+    _characterBack = runBack;
+    _characterBack->setScale(0.3f);
+    _characterBack->setAnchor(Vec2::ANCHOR_CENTER);
+    _characterBack->setPosition(Vec2(0, width / 2.5f));
+    _node->addChild(_characterBack);
     // TODO: Get rid of the magic numbers in the lines above.
 
     b2Filter fitler = b2Filter();

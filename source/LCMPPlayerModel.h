@@ -9,6 +9,21 @@
 #ifndef __LCMP_PLAYER_MODEL_H__
 #define __LCMP_PLAYER_MODEL_H__
 #include <cugl/cugl.h>
+#include <cugl/scene2/actions/CUActionManager.h>
+#include <cugl/scene2/actions/CUMoveAction.h>
+#include <cugl/scene2/actions/CUScaleAction.h>
+#include <cugl/scene2/actions/CUAnimateAction.h>
+#include <cugl/math/CUEasingBezier.h>
+
+/** Define the time settings for animation */
+#define DURATION 3.0f
+#define DISTANCE 200
+#define WALKPACE 50
+#define ACT_KEY  "current"
+#define RIGHT_ANIM_KEY 0
+#define BACK_ANIM_KEY 1
+#define LEFT_ANIM_KEY 2
+#define FRONT_ANIM_KEY 3
 
 class PlayerModel : public cugl::physics2::CapsuleObstacle {
 protected:
@@ -19,24 +34,38 @@ protected:
     std::shared_ptr<cugl::scene2::SceneNode> _node;
     /** The child node for displaying the player's dropshadow */
     std::shared_ptr<cugl::scene2::PolygonNode> _dropshadow;
-    /** The child node for displaying the player */
-    std::shared_ptr<cugl::scene2::PolygonNode> _character;
-    
-    // Attributes
-    /** A reference to the texture showing the player running to the back */
-    std::shared_ptr<cugl::Texture> _runBackTexture;
-    /** A reference to the texture showing the player running to the front */
-    std::shared_ptr<cugl::Texture> _runFrontTexture;
-    /** A reference to the texture showing the player running to the left */
-    std::shared_ptr<cugl::Texture> _runLeftTexture;
-    /** A reference to the texture showing the player running to the right */
-    std::shared_ptr<cugl::Texture> _runRightTexture;
+    /** The child nodes for displaying the player */
+    std::shared_ptr<cugl::scene2::SpriteNode> _characterFront;
+    std::shared_ptr<cugl::scene2::SpriteNode> _characterLeft;
+    std::shared_ptr<cugl::scene2::SpriteNode> _characterRight;
+    std::shared_ptr<cugl::scene2::SpriteNode> _characterBack;
+    bool _rightCycle;
+    bool _leftCycle;
+    bool _frontCycle;
+    bool _backCycle;
     /** The ratio to scale the textures. (SCENE UNITS / WORLD UNITS) */
     float _scale;
     /** The key for the collision sound */
     std::string _collisionSound;
+    // MODELS
+    /** The animation actions */
+    std::shared_ptr<cugl::scene2::Animate> _north;
+    std::shared_ptr<cugl::scene2::Animate> _south;
+    std::shared_ptr<cugl::scene2::Animate> _east;
+    std::shared_ptr<cugl::scene2::Animate> _west;
+    /** Whether we are mid animation */
+    bool _occupied;
+
     
 public:
+    /** A reference to the sprite showing the player running to the back */
+    std::shared_ptr<cugl::scene2::SpriteNode> runBack;
+    /** A reference to the sprite showing the player running to the front */
+    std::shared_ptr<cugl::scene2::SpriteNode> runFront;
+    /** A reference to the sprite showing the player running to the left */
+    std::shared_ptr<cugl::scene2::SpriteNode> runLeft;
+    /** A reference to the sprite showing the player running to the right */
+    std::shared_ptr<cugl::scene2::SpriteNode> runRight;
 //  MARK: - Constructors
     
     /**
@@ -111,6 +140,11 @@ public:
      * Updates the player node based on this player's body
      */
     void update(float timestep) override;
+    
+    /**
+     * Performs a film strip action
+     */
+    void playAnimation(std::shared_ptr<cugl::scene2::ActionManager>& actions, cugl::Vec2 movement);
     
 };
 
