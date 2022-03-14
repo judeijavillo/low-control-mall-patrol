@@ -366,7 +366,7 @@ void GameScene::update(float timestep) {
     shared_ptr<Font> font = _assets->get<Font>("gyparody");
     if (! _isThief) {
         // Calculate distance of thief from cop
-        float distance = _game->getThief()->getPosition().distance(_game->getCop(0)->getPosition());
+        float distance = _game->getThief()->getPosition().distance(_game->getCop(_playerNumber)->getPosition());
         // Create and show distance on screen
         _uinode->removeChildByName("thiefDistance");
         _thiefDistance = scene2::Label::allocWithText("Thief Distance: " + to_string(int(distance)), font);
@@ -675,7 +675,7 @@ void GameScene::updateAccelVis(bool isThief, Vec2 movement) {
 
 
 bool GameScene::tackle(float dt) {
-    int copID = 0;
+    int copID = _playerNumber;
     if (_input.didSwipe() && !onTackleCooldown) {
         onTackleCooldown = true;
         tackleTimer = 0;
@@ -700,7 +700,7 @@ bool GameScene::tackle(float dt) {
 }
 
 bool GameScene::successfulTackle(float dt) {
-    int copID = 0;
+    int copID = _playerNumber;
     copPosAtTackle = _game->getCop(copID)->getPosition();
     Vec2 thiefPos = _game->getThief()->getPosition();
     Vec2 diff = thiefPos - copPosAtTackle;
@@ -726,7 +726,7 @@ void GameScene::beginContact(b2Contact* contact) {
         if ((thiefBody == body1 && copBody == body2) ||
             (thiefBody == body2 && copBody == body1)) {
             // Play collision sound
-            std::string sound = _isThief ? _game->getThief()->getCollisionSound() : _game->getCop(0)->getCollisionSound();
+            std::string sound = _isThief ? _game->getThief()->getCollisionSound() : _game->getCop(_playerNumber)->getCollisionSound();
             _audio->playSound(_assets, sound);
             // Display UI win elements
             if (!_game->isGameOver()) {
