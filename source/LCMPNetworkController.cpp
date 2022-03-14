@@ -162,6 +162,10 @@ void NetworkController::update(std::shared_ptr<GameModel>& game) {
             break;
         case TRAP_ACTIVATION:
             game->activateTrap((int) data.at(1));
+            break;
+        case GAME_OVER:
+            game->setGameOver(true);
+            break;
         default:
             break;
         }
@@ -229,4 +233,17 @@ void NetworkController::sendTrapActivation(int trapID) {
     _connection->send(_serializer.serialize());
     _serializer.reset();
     
+}
+
+/**
+ * Sends a byte vector to indicate game over
+ */
+void NetworkController::sendGameOver() {
+    if (_connection == nullptr) return;
+    vector<float> data;
+    data.push_back(GAME_OVER);
+    
+    _serializer.writeFloatVector(data);
+    _connection->send(_serializer.serialize());
+    _serializer.reset();
 }

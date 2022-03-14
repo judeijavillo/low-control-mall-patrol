@@ -41,7 +41,9 @@ public:
         /** What follows is the thief's x and y position, and its x and y velocity */
         THIEF_MOVEMENT = 2,
         /** What follows is which trap to activate */
-        TRAP_ACTIVATION = 3
+        TRAP_ACTIVATION = 3,
+        /** This indicates that the game is over (cops won) */
+        GAME_OVER = 4
     };
 
 protected:
@@ -172,6 +174,11 @@ public:
      * Sends a byte vector to activate a trap
      */
     void sendTrapActivation(int trapID);
+    
+    /**
+     * Sends a byte vector to indicate game over
+     */
+    void sendGameOver();
     
 };
 

@@ -40,6 +40,8 @@ protected:
     float _mapHeight;
     /** The size of a tile in Tiled coordinates */
     float _tileSize;
+    /** A flag indicating whether the game is over */
+    bool _gameover;
     
 public:
 //  MARK: - Constructors
@@ -69,6 +71,16 @@ public:
               float scale, const std::string& file);
     
 //  MARK: - Methods
+    
+    /**
+     * Returns true iff the game is over (cops won)
+     */
+    bool isGameOver() { return _gameover; }
+    
+    /**
+     * Sets a flag indicating game over
+     */
+    void setGameOver(bool value) { _gameover = value; }
     
     /**
      * Returns a reference to the thief
