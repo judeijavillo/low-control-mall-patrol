@@ -269,7 +269,7 @@ void GameModel::initTrap(int trapID, Vec2 center, float scale,
     std::shared_ptr<cugl::physics2::SimpleObstacle> area = physics2::WheelObstacle::alloc(Vec2::ZERO, 5);
     std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 3);
     std::shared_ptr<cugl::Vec2> triggerPosition = make_shared<cugl::Vec2>(center);
-    bool copSolid = false;
+    bool copSolid = true;
     bool thiefSolid = false;
     int numUses = 1;
     float lingerDur = 0.3;
@@ -292,6 +292,7 @@ void GameModel::initTrap(int trapID, Vec2 center, float scale,
     area->setPosition(center);
     triggerArea->setPosition(center);
     triggerArea->setSensor(true);
+    area->setSensor(true);
     
     // Set the appropriate visual elements
     trap->setAssets(scale, _worldnode, assets, TrapModel::MopBucket);

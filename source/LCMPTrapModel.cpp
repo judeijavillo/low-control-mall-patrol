@@ -108,6 +108,7 @@ bool TrapModel::use() {
 void TrapModel::activate(){
     if (activated) return;
     activated = true;
+    effectArea->setSensor(false);
     
     // Change which nodes are being shown
     _node->removeChild(_triggerNode);
