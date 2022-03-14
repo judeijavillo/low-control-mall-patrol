@@ -38,6 +38,8 @@ bool TrapModel::init(int trapID,
     thiefVelocityModifier = thiefVelMod;
     copVelocityModifier = copVelMod;
 
+    activated = false;
+
     effectFilter = b2Filter();
     effectFilter.maskBits = 0b010 + 0b10000*thiefCollide + 0b01000*copCollide;
     effectFilter.categoryBits = 0b010 + 0b10000 * thiefCollide + 0b01000 * copCollide;
