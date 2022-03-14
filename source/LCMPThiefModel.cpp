@@ -23,6 +23,9 @@ using namespace std;
 #define THIEF_RUN_FRONT     "ss_thief_down"
 #define THIEF_RUN_LEFT      "ss_thief_left"
 #define THIEF_RUN_RIGHT     "ss_thief_right"
+/** Keys for thief still textures */
+#define THIEF_IDLE_RIGHT        "ss_thief_idle_right"
+#define THIEF_IDLE_LEFT       "ss_thief_idle_left"
 
 //  MARK: - Constructors
 
@@ -31,55 +34,26 @@ using namespace std;
  */
 bool ThiefModel::init(float scale, 
                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
-                      const std::shared_ptr<cugl::AssetManager>& assets) {
+                      const std::shared_ptr<cugl::AssetManager>& assets,
+                      std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     // The thief has constant size
     Size size(THIEF_WIDTH, THIEF_HEIGHT);
+    _animFrames = {8, 6, 8, 6, 4, 4};
     
     // Call the parent's initializer
-    PlayerModel::init(Vec2::ZERO, size, scale, node);
-    
-    // Up character movement
-    std::vector<int> north;
-    for(int ii = 0; ii < 6; ii++) {
-        north.push_back(ii);
-    }
-    _north = scene2::Animate::alloc(north,DURATION);
+    PlayerModel::init(Vec2::ZERO, size, scale, node, actions);
 
-    // Down character movement
-    std::vector<int> south;
-    for(int ii = 1; ii < 6; ii++) {
-        south.push_back(ii);
-    }
-    _south = scene2::Animate::alloc(south,DURATION);
-    
     // Set up the textures for all directions
-    runFront = scene2::SpriteNode::alloc(assets->get<Texture>(THIEF_RUN_FRONT), 1, 6);
-    runBack = scene2::SpriteNode::alloc(assets->get<Texture>(THIEF_RUN_BACK), 1, 6);
-    runRight = scene2::SpriteNode::alloc(assets->get<Texture>(THIEF_RUN_RIGHT), 1, 8);
-    runLeft = scene2::SpriteNode::alloc(assets->get<Texture>(THIEF_RUN_LEFT), 1, 8);
+    _spriteSheets.push_back(assets->get<Texture>(THIEF_RUN_RIGHT));
+    _spriteSheets.push_back(assets->get<Texture>(THIEF_RUN_BACK));
+    _spriteSheets.push_back(assets->get<Texture>(THIEF_RUN_LEFT));
+    _spriteSheets.push_back(assets->get<Texture>(THIEF_RUN_FRONT));
+    _spriteSheets.push_back(assets->get<Texture>(THIEF_IDLE_RIGHT));
+    _spriteSheets.push_back(assets->get<Texture>(THIEF_IDLE_LEFT));
     
     // Initialize the first texture. Note: width is in screen coordinates
     float width = size.width * scale * 1.5f;
-    _characterLeft = runLeft;
-    _characterLeft->setScale(0.3f);
-    _characterLeft->setAnchor(Vec2::ANCHOR_CENTER);
-    _characterLeft->setPosition(Vec2(0, width / 2.5f));
-    _node->addChild(_characterLeft);
-    _characterRight = runRight;
-    _characterRight->setScale(0.3f);
-    _characterRight->setAnchor(Vec2::ANCHOR_CENTER);
-    _characterRight->setPosition(Vec2(0, width / 2.5f));
-    _node->addChild(_characterRight);
-    _characterFront = runFront;
-    _characterFront->setScale(0.3f);
-    _characterFront->setAnchor(Vec2::ANCHOR_CENTER);
-    _characterFront->setPosition(Vec2(0, width / 2.5f));
-    _node->addChild(_characterFront);
-    _characterBack = runBack;
-    _characterBack->setScale(0.3f);
-    _characterBack->setAnchor(Vec2::ANCHOR_CENTER);
-    _characterBack->setPosition(Vec2(0, width / 2.5f));
-    _node->addChild(_characterBack);
+    setSpriteNodes(width);
     // TODO: Get rid of the magic numbers in the lines above.
 
     b2Filter fitler = b2Filter();

@@ -25,11 +25,14 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
                      std::shared_ptr<cugl::scene2::SceneNode>& worldnode,
                      std::shared_ptr<cugl::scene2::SceneNode>& debugnode,
                      const std::shared_ptr<cugl::AssetManager>& assets,
-                     float scale, const std::string& file) {
+                     float scale, const std::string& file,
+                     std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     _world = world;
     _worldnode = worldnode;
     _debugnode = debugnode;
     _gameover = false;
+    
+    _actions = actions;
     
     std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(file);
     std::shared_ptr<JsonValue> json = reader->readJson();
@@ -44,10 +47,10 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     std::shared_ptr<JsonValue> thiefSpawn = layers->get(THIEF_FIELD)->get(OBJECTS_FIELD);
     
     // Initialize thief
-    initThief(scale, thiefSpawn, assets);
+    initThief(scale, thiefSpawn, assets, _actions);
     
     // Initialize cops
-    for (int i = 0; i < 4; i++) initCop(i, scale, copsSpawn, assets);
+    for (int i = 0; i < 4; i++) initCop(i, scale, copsSpawn, assets, _actions);
     
     // Initialize walls
     for (int i = 0; i < walls->size(); i++) initWall(walls->get(i), scale);
@@ -116,7 +119,8 @@ void GameModel::activateTrap(int trapID) {
 
 void GameModel::initThief(float scale,
                           const std::shared_ptr<JsonValue>& spawn,
-                          const std::shared_ptr<cugl::AssetManager>& assets) {
+                          const std::shared_ptr<cugl::AssetManager>& assets,
+                          std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     // Create thief node
     std::shared_ptr<scene2::SceneNode> thiefNode = scene2::SceneNode::alloc();
     thiefNode->setAnchor(Vec2::ANCHOR_CENTER);
@@ -124,9 +128,10 @@ void GameModel::initThief(float scale,
     
     // Create thief
     _thief = std::make_shared<ThiefModel>();
-    _thief->init(scale, thiefNode, assets);
+    _thief->init(scale, thiefNode, assets, actions);
     _thief->setDebugScene(_debugnode);
     _thief->setCollisionSound("fuck");
+    _thief->setObstacleSound("dude");
     _world->addObstacle(_thief);
     
     // Position thief afterwards to not have to deal with changing world size
@@ -136,7 +141,8 @@ void GameModel::initThief(float scale,
 
 void GameModel::initCop(int copID, float scale,
                         const std::shared_ptr<JsonValue>& spawns,
-                        const std::shared_ptr<cugl::AssetManager>& assets) {
+                        const std::shared_ptr<cugl::AssetManager>& assets,
+                        std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     // Create cop node
     std::shared_ptr<scene2::SceneNode> copNode = scene2::SceneNode::alloc();
     copNode->setAnchor(Vec2::ANCHOR_CENTER);
@@ -144,9 +150,10 @@ void GameModel::initCop(int copID, float scale,
     
     // Create cop
     std::shared_ptr<CopModel> cop = std::make_shared<CopModel>();
-    cop->init(scale, copNode, assets);
+    cop->init(scale, copNode, assets, actions);
     cop->setDebugScene(_debugnode);
-    cop->setCollisionSound("dude");
+    cop->setCollisionSound("ooh");
+    cop->setObstacleSound("dude");
     _world->addObstacle(cop);
     
     // Position cop afterwards to not have to deal with changing world size

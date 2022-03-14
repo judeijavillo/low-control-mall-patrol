@@ -47,6 +47,9 @@ using namespace std;
 #define TACKLE_ANGLE_MAX_ERR (M_PI_4)
 #define TACKLE_LENGTH   50
 
+#define RESET_TIME 5
+#define SFX_TIME 5
+
 /** The key for the floor tile */
 #define TILE_TEXTURE    "floor"
 /** The size for the floor tile */
@@ -81,26 +84,13 @@ float JOYSTICK_HOME[]   {200, 200};
 */
 float OUTER_ACCEL_VIS_POS[2]{ 0.1f, 0.1f };
 
-
-// TODO: Factor out hard-coded starting positions
-/** The positions of different trees */
-float TREE_POSITIONS[2][2] = {{-10, 10}, {10, 10}};
-/** The positions of different bushes */
-float BUSH_POSITIONS[2][2] = {{-12, 2}, {12, 2}};
-/** The positions of different bushes */
-float FARIS_POSITION[2] = {0, 20};
-
 /** The color for debugging */
 Color4 DEBUG_COLOR =    Color4::YELLOW;
 
-/** Counter for reset */
-int resetTime = 0;
 /** Counter for tackle */
 int tackleCooldown = TACKLE_LENGTH;
 /** Whether the cop has swiped recently */
 bool onTackleCooldown = false;
-/** Time since failed tackle */
-float tackleTimer;
 /** Direction of the cop's tackle */
 Vec2 tackleDir;
 /** Position of the cop's node when the tackle is successful initially */
@@ -128,7 +118,8 @@ bool compareNodes(std::shared_ptr<scene2::SceneNode> o1, std::shared_ptr<scene2:
  */
 bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
                      std::shared_ptr<NetworkController>& network,
-                     std::shared_ptr<AudioController>& audio) {
+                     std::shared_ptr<AudioController>& audio,
+                     std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     // Initialize the scene to a locked width
     _dimen = Application::get()->getDisplaySize();
     _screenSize = _dimen;
@@ -147,8 +138,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // Save the audio controller
     _audio = audio;
     
-    // Create the action manager
-    _actions = scene2::ActionManager::alloc();
+    _actions = actions;
     
     // Initialize the input controller
     _input.init(getBounds());
@@ -261,10 +251,9 @@ void GameScene::start(bool host) {
     
     // Initialize the game
     _game = make_shared<GameModel>();
-    _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE);
+    _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions);
     
     // Call helpers
-    initModels();
     initJoystick();
     initAccelVis();
     initDirecIndicators();
@@ -279,12 +268,11 @@ void GameScene::start(bool host) {
  */
 void GameScene::update(float timestep) {
     if (!_active) return;
+    _gameTime += timestep;
     _gameover = _game->isGameOver();
     if (_gameover) {
         _uinode->getChildByName("message")->setVisible(true);
-        resetTime++;
-        if (resetTime > 120) {
-            resetTime = 0;
+        if (_gameTime - _resetTime > RESET_TIME) {
             reset();
         }
         return;
@@ -300,12 +288,13 @@ void GameScene::update(float timestep) {
     Vec2 difference = position - origin;
     bool spacebar = _input._spacebarPressed;
     
-    // Swipe updates
+    // Swipe updates and animation
     if (!_isThief) {
         if (!_hitTackle) {
             _hitTackle = tackle(timestep, movement);
         }
         else {
+            _resetTime = _gameTime;
             _game->setGameOver(successfulTackle(timestep));
             _network->sendGameOver();
         }
@@ -324,6 +313,8 @@ void GameScene::update(float timestep) {
             _outerJoystick->setVisible(false);
             _innerJoystick->setVisible(false);
         }
+        _game->getThief()->playAnimation(movement);
+        _actions->update(timestep);
     }
     
     // Switch updates
@@ -336,7 +327,6 @@ void GameScene::update(float timestep) {
         // Remove indicator UI elements
         if (_isThief) {
             for (int i = 0; i < _game->numberOfCops(); i++) {
-        //        _uinode->removeChild(_copDistances[i]);
                 _uinode->removeChild(_direcIndicators[i]);
             }
         }
@@ -360,9 +350,6 @@ void GameScene::update(float timestep) {
         _game->updateThief(flippedMovement);
         _network->sendThiefMovement(_game, flippedMovement);
         player = _game->getThief();
-        
-        player->playAnimation(_actions, movement);
-        _actions->update(timestep);
     } else {
         _game->updateCop(flippedMovement, _playerNumber, onTackleCooldown);
         _network->sendCopMovement(_game, flippedMovement, _playerNumber);
@@ -438,12 +425,13 @@ void GameScene::setActive(bool value) {
 
 /** Resets the game once complete */
 void GameScene::reset() {
+    _gameTime = 0;
+    _resetTime = 0;
     _world->clear();
     _worldnode->removeAllChildren();
     _input.clear();
     _game = make_shared<GameModel>();
-    _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE);
-    initModels();
+    _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions);
     _uinode->getChildByName("message")->setVisible(false);
     _gameover = false;
     _hitTackle = false;
@@ -505,75 +493,6 @@ void GameScene::initAccelVis() {
 }
 
 /**
- * Creates the player and trap models and adds them to the world node
- */
-void GameScene::initModels() {
-    
-    // TODO: Begin Remove
-    
-//    // Create trees
-//    for (int i = 0; i < 2; i++) {
-//        // Create tree node
-//        shared_ptr<Texture> treeTexture = _assets->get<Texture>("tree");
-//        shared_ptr<scene2::PolygonNode> treeNode = scene2::PolygonNode::allocWithTexture(treeTexture);
-//        treeNode->setAnchor(Vec2::ANCHOR_CENTER);
-//        treeNode->setScale(0.75f);
-//        _worldnode->addChild(treeNode);
-//
-//        // Create tree
-//        std::shared_ptr<ObstacleModel> tree = std::make_shared<ObstacleModel>();
-//        tree->init(_scale, treeTexture, ObstacleModel::TREE);
-//        tree->setDebugScene(_debugnode);
-//        _world->addObstacle(tree);
-//
-//        // Position tree afterwards to not have to deal with changing world size
-//        tree->setPosition(Vec2(TREE_POSITIONS[i]));
-//        treeNode->setPosition((Vec2(TREE_POSITIONS[i]) + Vec2(5, 5.5f)) * _scale);
-//    }
-
-//    // Create bushes
-//    for (int i = 0; i < 2; i++) {
-//        // Create bush node
-//        shared_ptr<Texture> bushTexture = _assets->get<Texture>("bush");
-//        shared_ptr<scene2::PolygonNode> bushNode = scene2::PolygonNode::allocWithTexture(bushTexture);
-//        bushNode->setAnchor(Vec2::ANCHOR_CENTER);
-//        bushNode->setScale(0.75f);
-//        _worldnode->addChild(bushNode);
-//
-//        // Create bush
-//        std::shared_ptr<ObstacleModel> bush = std::make_shared<ObstacleModel>();
-//        bush->init(_scale, bushTexture, ObstacleModel::BUSH);
-//        bush->setDebugScene(_debugnode);
-//        _world->addObstacle(bush);
-//
-//        // Position bush afterwards to not have to deal with changing world size
-//        bush->setPosition(Vec2(BUSH_POSITIONS[i]));
-//        bushNode->setPosition((Vec2(BUSH_POSITIONS[i]) + Vec2(5, 2.5f)) * _scale);
-//    }
-    
-//    // Create faris node
-//    shared_ptr<Texture> farisTexture = _assets->get<Texture>("faris");
-//    shared_ptr<scene2::PolygonNode> farisNode = scene2::PolygonNode::allocWithTexture(farisTexture);
-//    farisNode->setAnchor(Vec2::ANCHOR_CENTER);
-//    farisNode->setScale(0.75f);
-//    _worldnode->addChild(farisNode);
-//
-//    // Create faris
-//    std::shared_ptr<ObstacleModel> faris = std::make_shared<ObstacleModel>();
-//    faris->init(_scale, farisTexture, ObstacleModel::FARIS);
-//    faris->setDebugScene(_debugnode);
-//    _world->addObstacle(faris);
-//
-//    // Position faris afterwards to not have to deal with changing world size
-//    faris->setPosition(Vec2(FARIS_POSITION));
-//    farisNode->setPosition((Vec2(FARIS_POSITION) + Vec2(5, 7)) * _scale);
-    
-    // TODO: End Remove
-    
-}
-
-
-/**
  *  Creates and displays directional indicators for the thief that point towards the cops.
  *  These indicators are added to the UI node.
 */
@@ -591,19 +510,10 @@ void GameScene::initDirecIndicators() {
         _direcIndicators[i]->setColor(Color4::RED);
         _direcIndicators[i]->setVisible(_isThief);
         _uinode->addChild(_direcIndicators[i]);
-        
-        // Create and show cop distances on screen
-        //_copDistances[i] = scene2::Label::allocWithText(to_string(int(displayDistance)), _font);
-        //_copDistances[i]->setAnchor(Vec2::ANCHOR_CENTER);
-        //_copDistances[i]->setPosition(_direcIndicators[i]->getPosition());
-        //_copDistances[i]->setScale(TEXT_SCALAR);
-        //_copDistances[i]->setVisible(_isThief);
-        //_uinode->addChild(_copDistances[i]);
     }
 }
 
 /**
- *
  * Updates directional indicators
  */
 void GameScene::updateDirecIndicators(bool isThief) {
@@ -658,7 +568,7 @@ void GameScene::updateDirecIndicators(bool isThief) {
         */
         distance *= SCENE_HEIGHT / _screenSize.height;
 
-        //Set up directional indicators
+        // Set up directional indicators
         _direcIndicators[i]->setPosition(distance);
         _direcIndicators[i]->setAngle(angle + M_PI_2 + M_PI);
         _direcIndicators[i]->setScale(size_scalar);
@@ -675,12 +585,12 @@ void GameScene::updateAccelVis(bool isThief, Vec2 movement) {
     _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT) / 2 - _offset);
 }
 
-
+/** Handles cop tackle movement */
 bool GameScene::tackle(float dt, Vec2 movement) {
     int copID = _playerNumber;
     if (_input.didSwipe() && !onTackleCooldown) {
         onTackleCooldown = true;
-        tackleTimer = 0;
+        _tackleTime = 0;
         tackleDir = _input.getSwipe();
         Vec2 copToThiefDist = (_game->getThief()->getPosition() - _game->getCop(copID)->getPosition());
         float angle = (abs(tackleDir.getAngle()) - abs(copToThiefDist.getAngle()));
@@ -689,39 +599,40 @@ bool GameScene::tackle(float dt, Vec2 movement) {
         if (abs(angle) <= TACKLE_ANGLE_MAX_ERR && copToThiefDist.lengthSquared() < TACKLE_HIT_RADIUS * TACKLE_HIT_RADIUS)
             return true; 
         else {
-            _game->getCop(copID)->failedTackle(tackleTimer, tackleDir);
+            _game->getCop(copID)->failedTackle(_tackleTime, tackleDir);
             return false;
         }
     }
     else if (onTackleCooldown) {
-        tackleTimer += dt;
-        _game->getCop(copID)->failedTackle(tackleTimer, tackleDir);
-        if (tackleTimer >= TACKLE_COOLDOWN_TIME) {
+        _tackleTime += dt;
+        _game->getCop(copID)->failedTackle(_tackleTime, tackleDir);
+        if (_tackleTime >= TACKLE_COOLDOWN_TIME) {
             onTackleCooldown = false;
             _game->getCop(copID)->hideTackle();
-            _game->getCop(copID)->playAnimation(_actions, movement);
+            _game->getCop(copID)->playAnimation(movement);
             _actions->update(dt);
         }
-        else if (tackleTimer >= TACKLE_COOLDOWN_TIME / 2) {
+        else if (_tackleTime >= TACKLE_COOLDOWN_TIME / 2) {
             _game->getCop(copID)->showTackle(tackleDir, false);
         }
     }
     else {
         _game->getCop(copID)->hideTackle();
-        _game->getCop(copID)->playAnimation(_actions, movement);
+        _game->getCop(copID)->playAnimation(movement);
         _actions->update(dt);
     }
     return false; 
 }
 
+/** Handles a successful tackle */
 bool GameScene::successfulTackle(float dt) {
     int copID = _playerNumber;
     copPosAtTackle = _game->getCop(copID)->getPosition();
     Vec2 thiefPos = _game->getThief()->getPosition();
     Vec2 diff = thiefPos - copPosAtTackle;
-    tackleTimer += dt;
-    _game->getCop(copID)->setPosition(copPosAtTackle + (diff * (tackleTimer / TACKLE_AIR_TIME)));
-    return (tackleTimer >= TACKLE_AIR_TIME);
+    _tackleTime += dt;
+    _game->getCop(copID)->setPosition(copPosAtTackle + (diff * (_tackleTime / TACKLE_AIR_TIME)));
+    return (_tackleTime >= TACKLE_AIR_TIME);
 }
 
 
@@ -734,7 +645,7 @@ void GameScene::beginContact(b2Contact* contact) {
     b2Body* body1 = contact->GetFixtureA()->GetBody();
     b2Body* body2 = contact->GetFixtureB()->GetBody();
     b2Body* thiefBody = _game->getThief()->getBody();
-    
+
     // Check all of the cops
     for (int i = 0; i < 4; i++) {
         b2Body* copBody = _game->getCop(i)->getBody();
@@ -742,15 +653,20 @@ void GameScene::beginContact(b2Contact* contact) {
             (thiefBody == body2 && copBody == body1)) {
             // Play collision sound
             std::string sound = _isThief ? _game->getThief()->getCollisionSound() : _game->getCop(_playerNumber)->getCollisionSound();
-            _audio->playSound(_assets, sound);
+            _audio->playSound(_assets, sound, SFX_TIME);
             // Display UI win elements
             if (!_game->isGameOver()) {
                 _game->setGameOver(true);
                 _network->sendGameOver();
                 _uinode->getChildByName("message")->setVisible(true);
+                return;
             }
         }
     }
+    
+    // Play regular obstacle collision sound effect
+    std::string sound = _isThief ? _game->getThief()->getObstacleSound() : _game->getCop(_playerNumber)->getObstacleSound();
+    _audio->playSound(_assets, sound, SFX_TIME);
 
     // Check all of the traps
     for (int i = 0; i < _game->numberOfTraps(); i++) {

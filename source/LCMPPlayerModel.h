@@ -24,54 +24,43 @@
 #define BACK_ANIM_KEY 1
 #define LEFT_ANIM_KEY 2
 #define FRONT_ANIM_KEY 3
+#define STILL_ANIM_KEY 4
+#define CHAR_SCALE 0.2f
 
 class PlayerModel : public cugl::physics2::CapsuleObstacle {
 protected:
 //  MARK: - Properties
-    
+    /** A reference to the Action Manager */
+    std::shared_ptr<cugl::scene2::ActionManager> _actions;
     // Views
     /** The top-level node for displaying the player */
     std::shared_ptr<cugl::scene2::SceneNode> _node;
     /** The child node for displaying the player's dropshadow */
     std::shared_ptr<cugl::scene2::PolygonNode> _dropshadow;
     /** The child nodes for displaying the player */
-    std::shared_ptr<cugl::scene2::SpriteNode> _characterFront;
-    std::shared_ptr<cugl::scene2::SpriteNode> _characterLeft;
-    std::shared_ptr<cugl::scene2::SpriteNode> _characterRight;
-    std::shared_ptr<cugl::scene2::SpriteNode> _characterBack;
-    bool _rightCycle;
-    bool _leftCycle;
-    bool _frontCycle;
-    bool _backCycle;
+    std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _spriteNodes;
+    std::vector<std::shared_ptr<cugl::scene2::Animate>> _animations;
+    std::vector<bool> _cycles;
+    std::vector<std::shared_ptr<cugl::Texture>> _spriteSheets;
+    std::vector<int> _animFrames;
+
     /** The ratio to scale the textures. (SCENE UNITS / WORLD UNITS) */
     float _scale;
     /** The key for the collision sound */
     std::string _collisionSound;
-    // MODELS
-    /** The animation actions */
-    std::shared_ptr<cugl::scene2::Animate> _north;
-    std::shared_ptr<cugl::scene2::Animate> _south;
-    std::shared_ptr<cugl::scene2::Animate> _east;
-    std::shared_ptr<cugl::scene2::Animate> _west;
+    /** The key for the obstacle sound */
+    std::string _obstacleSound;
     /** Whether we are mid animation */
     bool _occupied;
 
     
 public:
-    /** A reference to the sprite showing the player running to the back */
-    std::shared_ptr<cugl::scene2::SpriteNode> runBack;
-    /** A reference to the sprite showing the player running to the front */
-    std::shared_ptr<cugl::scene2::SpriteNode> runFront;
-    /** A reference to the sprite showing the player running to the left */
-    std::shared_ptr<cugl::scene2::SpriteNode> runLeft;
-    /** A reference to the sprite showing the player running to the right */
-    std::shared_ptr<cugl::scene2::SpriteNode> runRight;
 //  MARK: - Constructors
     
     /**
      * Constructs a Player Model
      */
-    PlayerModel() {}
+    PlayerModel() {};
     
     /**
      * Destructs a Player Model
@@ -87,7 +76,8 @@ public:
      * Initializes a Player Model
      */
     bool init(const cugl::Vec2 pos, const cugl::Size size, float scale,
-              const std::shared_ptr<cugl::scene2::SceneNode>& node);
+              const std::shared_ptr<cugl::scene2::SceneNode>& node,
+              std::shared_ptr<cugl::scene2::ActionManager>& actions);
     
 //  MARK: - Methods
     
@@ -100,6 +90,16 @@ public:
      * Sets the key for a collision sound
      */
     void setCollisionSound(const std::string& key) { _collisionSound = key; }
+    
+    /**
+     * Gets the appropriate key for the sound for collision
+     */
+    const std::string& getObstacleSound() const { return _obstacleSound; }
+
+    /**
+     * Sets the key for a collision sound
+     */
+    void setObstacleSound(const std::string& key) { _obstacleSound = key; }
     
     /**
      * Returns the velocity of the player's body
@@ -144,9 +144,11 @@ public:
     /**
      * Performs a film strip action
      */
-    void playAnimation(std::shared_ptr<cugl::scene2::ActionManager>& actions, cugl::Vec2 movement);
+    void playAnimation(cugl::Vec2 movement);
     
     int findDirection(cugl::Vec2 movement);
+    
+    void setSpriteNodes(float width);
     
 };
 

@@ -12,9 +12,9 @@
 #include <cugl/cugl.h>
 
 /** The key for collisions sounds */
-#define COLLISION_SOUND     "dude"
-#define COLLISION_SOUND_2     "fuck"
-#define COLLISION_SOUND_3     "why"
+#define DUDE_SOUND     "dude"
+#define F_SOUND     "fuck"
+#define WHY_SOUND     "why"
 #define OOH_SOUND           "ooh"
 
 class AudioController {
@@ -41,12 +41,7 @@ public:
     /**
      * Plays a sound effect
      */
-    void playSound(const std::shared_ptr<cugl::AssetManager>& assets, string key);
-    
-    /**
-     * Stops a sound effect
-     */
-    void stopSound(string key);
+    void playSound(const std::shared_ptr<cugl::AssetManager>& assets, string key, float time);
     
 };;
 
