@@ -84,6 +84,8 @@ protected:
     cugl::Vec2 _offset;
     /** The scale between the physics world and the screen (SCREEN UNITS / BOX2D WORLD UNITS) */
     float _scale;
+    /** The unique player number of this player */
+    int _playerNumber;
     
     /** The asset manager for this game mode */
     std::shared_ptr<cugl::AssetManager> _assets;
@@ -97,9 +99,6 @@ protected:
     bool _quit;
     /** Whether the cop has hit a successful tackle. */
     bool _hitTackle;
-
-    /** An example trap */
-    std::shared_ptr<TrapModel> _trap;
     
     /** The directional indicators for the thief that point to the cops */
     std::unordered_map<int, std::shared_ptr<cugl::scene2::PolygonNode>> _direcIndicators;

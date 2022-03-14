@@ -62,6 +62,8 @@ bool NetworkController::connect(const std::string room) {
     return _status != IDLE;
 }
 
+//  MARK: - Matchmaking
+
 /**
  * Checks the connection and updates the status accordingly (pre-game)
  */
@@ -89,10 +91,48 @@ void NetworkController::update() {
         vector<float> data = _deserializer.readFloatVector();
         _deserializer.reset();
         
-        _status = ((int) data.at(0) == START_GAME) ? START : _status;
-        
+        switch ((int) data.at(0)) {
+        case START_GAME:
+            _status = START;
+            int i = 2;
+            while (i < data.size()) {
+                int player = (int) data.at(i);
+                int role = (int) data.at(i+1);
+                if (player == this->getPlayerID()) _playerNumber = role;
+                i += 2;
+            }
+            break;
+        }
     });
 }
+
+/**
+ * Sends a byte vector to start the game
+ */
+void NetworkController::sendStartGame() {
+    vector<float> data;
+    data.push_back(START_GAME);
+    data.push_back(getNumPlayers());
+    
+    int count = 0;
+    int thief = rand() % getNumPlayers();
+    for (int playerID = 0; playerID < getNumPlayers(); playerID++) {
+        data.push_back(playerID);
+        if (thief == playerID) {
+            if (playerID == getPlayerID()) _playerNumber = -1;
+            data.push_back(-1);
+        } else {
+            if (playerID == getPlayerID()) _playerNumber = count;
+            data.push_back(count);
+            count++;
+        }
+    }
+    _serializer.writeFloatVector(data);
+    _connection->send(_serializer.serialize());
+    _serializer.reset();
+}
+
+//  MARK: - Gameplay
 
 /**
  * Checks the connection, updates the status accordingly, and updates the game (during game)
@@ -120,22 +160,12 @@ void NetworkController::update(std::shared_ptr<GameModel>& game) {
                               Vec2(data.at(3), data.at(4)),
                               Vec2(data.at(5), data.at(6)));
             break;
+        case TRAP_ACTIVATION:
+            game->activateTrap((int) data.at(1));
         default:
             break;
         }
     });
-}
-
-/**
- * Sends a byte vector to start the game
- */
-void NetworkController::sendStartGame() {
-    vector<float> data;
-    data.push_back(START_GAME);
-    
-    _serializer.writeFloatVector(data);
-    _connection->send(_serializer.serialize());
-    _serializer.reset();
 }
 
 /**
@@ -162,7 +192,7 @@ void NetworkController::sendThiefMovement(std::shared_ptr<GameModel>& game, Vec2
 }
 
 /**
- * Sends a byte vector to update thief movement
+ * Sends a byte vector to update cop movement
  */
 void NetworkController::sendCopMovement(std::shared_ptr<GameModel>& game, Vec2 force, int copID) {
     if (_connection == nullptr) return;
@@ -179,6 +209,21 @@ void NetworkController::sendCopMovement(std::shared_ptr<GameModel>& game, Vec2 f
     data.push_back(force.x);
     data.push_back(force.y);
     data.push_back(copID);
+    
+    _serializer.writeFloatVector(data);
+    _connection->send(_serializer.serialize());
+    _serializer.reset();
+    
+}
+
+/**
+ * Sends a byte vector to activate a trap
+ */
+void NetworkController::sendTrapActivation(int trapID) {
+    if (_connection == nullptr) return;
+    vector<float> data;
+    data.push_back(TRAP_ACTIVATION);
+    data.push_back(trapID);
     
     _serializer.writeFloatVector(data);
     _connection->send(_serializer.serialize());

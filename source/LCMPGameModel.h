@@ -86,6 +86,16 @@ public:
     int numberOfCops() { return (int)_cops.size(); }
     
     /**
+     * Returns a reference to a given trap
+     */
+    std::shared_ptr<TrapModel> getTrap(int trapID) { return _traps[trapID]; }
+    
+    /**
+     * Returns the number of traps in the game
+     */
+    int numberOfTraps() { return (int) _traps.size(); }
+    
+    /**
      * Updates all game objects
      */
     void update(float timestep);
@@ -110,6 +120,11 @@ public:
      */
     void updateCop(cugl::Vec2 position, cugl::Vec2 velocity, cugl::Vec2 force, int copID);
     
+    /**
+     * Activates a trap
+     */
+    void activateTrap(int trapID);
+    
 private:
 //  MARK: - Helpers
     
@@ -131,6 +146,12 @@ private:
      * Initializes a single wall
      */
     void initWall(const std::shared_ptr<cugl::JsonValue>& json, float scale);
+    
+    /**
+     * Initializes a single trap
+     */
+    void initTrap(int trapID, cugl::Vec2 center, float scale,
+                  const std::shared_ptr<cugl::AssetManager>& assets);
     
     /**
      * Initializes the border for the game

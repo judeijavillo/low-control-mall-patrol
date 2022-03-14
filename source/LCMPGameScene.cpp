@@ -252,8 +252,8 @@ void GameScene::dispose() {
  */
 void GameScene::start(bool host) {
     _ishost = host;
-    _isThief = host;
-    // TODO: The host should not always be the thief
+    _playerNumber = _network->getPlayerNumber();
+    _isThief = (_playerNumber == -1);
     
     // Initialize the game
     _game = make_shared<GameModel>();
@@ -337,22 +337,25 @@ void GameScene::update(float timestep) {
             initDirecIndicators();
         }
         _isThief = !_isThief;
+        _playerNumber = _playerNumber == -1 ? 0 : -1;
     }
     
     // Local updates
     shared_ptr<PlayerModel> player;
     Vec2 flippedMovement = Vec2(movement.x, -movement.y);
     if (_isThief) {
-        if (spacebar && _game->getThief()->trapActivationFlag != -1) {
-            _trap->activate();
+        int trapID = _game->getThief()->trapActivationFlag;
+        if (spacebar && trapID != -1) {
+            _game->activateTrap(trapID);
+            _network->sendTrapActivation(trapID);
         }
         _game->updateThief(flippedMovement);
         _network->sendThiefMovement(_game, flippedMovement);
         player = _game->getThief();
     } else {
-        _game->updateCop(flippedMovement, 0, onTackleCooldown);
-        _network->sendCopMovement(_game, flippedMovement, 0);
-        player = _game->getCop(0);
+        _game->updateCop(flippedMovement, _playerNumber, onTackleCooldown);
+        _network->sendCopMovement(_game, flippedMovement, _playerNumber);
+        player = _game->getCop(_playerNumber);
     }
     
     shared_ptr<Font> font = _assets->get<Font>("gyparody");
@@ -557,41 +560,6 @@ void GameScene::initModels() {
 //    faris->setPosition(Vec2(FARIS_POSITION));
 //    farisNode->setPosition((Vec2(FARIS_POSITION) + Vec2(5, 7)) * _scale);
     
-    // Create hard-coded example trap
-    _trap = std::make_shared<TrapModel>();
-    
-    // Create the parameters to create a trap
-    Vec2 center = Vec2(30, 30);
-    std::shared_ptr<cugl::physics2::SimpleObstacle> area = physics2::WheelObstacle::alloc(Vec2::ZERO, 5);
-    std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 3);
-    std::shared_ptr<cugl::Vec2> triggerPosition = make_shared<cugl::Vec2>(center);
-    bool copSolid = false;
-    bool thiefSolid = false;
-    int numUses = 1;
-    float lingerDur = 0.3;
-    std::shared_ptr<cugl::Affine2> thiefVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
-    std::shared_ptr<cugl::Affine2> copVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
-
-    // Initialize a trap
-    _trap->init(area,
-                triggerArea,
-                triggerPosition,
-                copSolid, thiefSolid,
-                numUses,
-                lingerDur,
-                thiefVelMod, copVelMod);
-    
-    // Configure physics
-    _world->addObstacle(area);
-    _world->addObstacle(triggerArea);
-    area->setPosition(center);
-    triggerArea->setPosition(center);
-    triggerArea->setSensor(true);
-    
-    // Set the appropriate visual elements
-    _trap->setAssets(_scale, _worldnode, _assets, TrapModel::MopBucket);
-    _trap->setDebugScene(_debugnode);
-    
     // TODO: End Remove
     
 }
@@ -762,22 +730,25 @@ void GameScene::beginContact(b2Contact* contact) {
     }
 
     // Check all of the traps
-    // TODO: Rewrite this code to iterate over traps in GameModel
-    auto triggerBody = _trap->getTriggerArea()->getBody();
-    auto effectBody = _trap->getEffectArea()->getBody();
+    for (int i = 0; i < _game->numberOfTraps(); i++) {
+        shared_ptr<TrapModel> trap = _game->getTrap(i);
+        auto triggerBody = trap->getTriggerArea()->getBody();
+        auto effectBody = trap->getEffectArea()->getBody();
 
-    if (_trap->activated) {
-        if ((thiefBody == body1 && effectBody == body2) ||
-            (thiefBody == body2 && effectBody == body1)) {
-            _gameover = true;
+        if (trap->activated) {
+            if ((thiefBody == body1 && effectBody == body2) ||
+                (thiefBody == body2 && effectBody == body1)) {
+                _gameover = true;
+            }
+        }
+        else {
+            if ((thiefBody == body1 && triggerBody == body2) ||
+                (thiefBody == body2 && triggerBody == body1)) {
+                _game->getThief()->trapActivationFlag = trap->getTrapID();
+            }
         }
     }
-    else {
-        if ((thiefBody == body1 && triggerBody == body2) ||
-            (thiefBody == body2 && triggerBody == body1)) {
-            _game->getThief()->trapActivationFlag = _trap->trapId;
-        }
-    }
+    
 }
 
 /**
@@ -788,10 +759,10 @@ void GameScene::endContact(b2Contact* contact) {
     b2Body* body2 = contact->GetFixtureB()->GetBody();
     b2Body* thiefBody = _game->getThief()->getBody();
 
-    if (_game->getThief()->trapActivationFlag != -1) {
-
-        //TODO: make sure this checks the appriate trap in the array once we are not hardcoding test traps
-        b2Body* triggerBody = _trap->getTriggerArea()->getBody();
+    int trapID = _game->getThief()->trapActivationFlag;
+    if (trapID != -1) {
+        shared_ptr<TrapModel> trap = _game->getTrap(trapID);
+        b2Body* triggerBody = trap->getTriggerArea()->getBody();
 
         if ((thiefBody == body1 && triggerBody == body2) ||
             (thiefBody == body2 && triggerBody == body1)) {

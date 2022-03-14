@@ -39,7 +39,9 @@ public:
         /** What follows is which cop to update, its x and y position, and its x and y velocity */
         COP_MOVEMENT = 1,
         /** What follows is the thief's x and y position, and its x and y velocity */
-        THIEF_MOVEMENT = 2
+        THIEF_MOVEMENT = 2,
+        /** What follows is which trap to activate */
+        TRAP_ACTIVATION = 3
     };
 
 protected:
@@ -57,6 +59,9 @@ protected:
     
     /** Whether the connection being made is for a host or not */
     bool _isHost;
+    /** Whether the host decides this player is the thief or not */
+    int _playerNumber;
+    
     /** The current status of the Network Controller */
     Status _status;
     
@@ -91,12 +96,17 @@ public:
     bool isConnected() { return _connection != nullptr; }
     
     /**
+     * Returns the player number
+     */
+    int getPlayerNumber() const { return _playerNumber; }
+    
+    /**
      * Returns the player ID or empty.
      */
     std::optional<uint8_t> getPlayerID() const { return _connection->getPlayerID(); }
 
     /**
-     * Returns the room ID or empty string.
+     * Returns the room ID or empty string
      */
     std::string getRoomID() const { return _connection->getRoomID(); }
 
@@ -125,21 +135,29 @@ public:
      */
     void disconnect() { _connection = nullptr; }
     
+//  MARK: - Matchmaking
+    
     /**
      * Checks the connection and updates the status accordingly (pre-game)
      */
     void update();
     
     /**
-     * Checks the connection, updates the status accordingly, and updates the game (during game)
+     * Sends a message intended for the host a unique player 
      */
-    void update(std::shared_ptr<GameModel>& game);
     
     /**
      * Sends a byte vector to start the game
      */
     void sendStartGame();
+
     
+//  MARK: - Gameplay
+
+    /**
+     * Checks the connection, updates the status accordingly, and updates the game (during game)
+     */
+    void update(std::shared_ptr<GameModel>& game);
     /**
      * Sends a byte vector to update thief movement
      */
@@ -149,6 +167,11 @@ public:
      * Sends a byte vector to update thief movement
      */
     void sendCopMovement(std::shared_ptr<GameModel>& game, cugl::Vec2 force, int copID);
+    
+    /**
+     * Sends a byte vector to activate a trap
+     */
+    void sendTrapActivation(int trapID);
     
 };
 
