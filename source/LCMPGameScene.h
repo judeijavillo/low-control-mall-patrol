@@ -258,7 +258,7 @@ private:
      * 
      *  Returns if the cop's tackle is successful.
     */
-    bool tackle(float dt);
+    bool tackle(float dt, cugl::Vec2 movement);
 
     /**
      *  Plays animation associated with cop hitting the tackle.

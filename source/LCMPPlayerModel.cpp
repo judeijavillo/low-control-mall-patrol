@@ -129,16 +129,21 @@ void PlayerModel::update(float timestep) {
     }
 }
 
-/**
- * Performs a film strip action
- */
-void PlayerModel::playAnimation(std::shared_ptr<scene2::ActionManager>& actions, Vec2 movement) {
-    // Figure out which animation direction to use
+int PlayerModel::findDirection(Vec2 movement) {
     float angle = movement.getAngle(Vec2(1,0)) * 180 / 3.14;
     int key = (angle < 45 || angle >= -45) ? 0 : -1;
     if (angle < 135 && angle >= 45) key = 1;
     else if (angle >= 135 || angle < -135 || (movement.y == 0 && movement.x < 0)) key = 2;
     else if (angle < -45 && angle >= -135) key = 3;
+    return key;
+}
+
+/**
+ * Performs a film strip action
+ */
+void PlayerModel::playAnimation(std::shared_ptr<scene2::ActionManager>& actions, Vec2 movement) {
+    // Figure out which animation direction to use
+    int key = findDirection(movement);
 
     _characterRight->setVisible(false);
     _characterLeft->setVisible(false);
