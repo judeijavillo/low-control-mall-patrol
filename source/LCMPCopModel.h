@@ -10,20 +10,6 @@
 #define __LCMP_COP_MODEL_H__
 #include "LCMPPlayerModel.h"
 
-/** The cop's damping coefficient */
-#define COP_DAMPING_DEFAULT 7.5f
-/** The cop's maximum speed of this player */
-#define COP_MAX_SPEED_DEFAULT 10.0f
-/** The cops's acceleration of this player */
-#define COP_ACCELERATION_DEFAULT 75.0f
-
-/** The amount of time that the cop will be in the air while tackling */
-#define TACKLE_AIR_TIME 0.25f
-/** The movement multiplier for the cop during tackle */
-#define TACKLE_MOVEMENT_MULT 2.0f
-/** The damping multiplier for the cop during tackle */
-#define TACKLE_DAMPING_MULT 2.5f
-
 /** Defining the filter bits for the cop model*/
 #define COP_FILTER_BITS 0b01001
 

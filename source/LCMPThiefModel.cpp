@@ -7,6 +7,7 @@
 //
 
 #include "LCMPThiefModel.h"
+#include "LCMPConstants.h"
 
 using namespace cugl;
 using namespace std;

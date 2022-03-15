@@ -19,6 +19,8 @@
 
 #include "LCMPGameScene.h"
 #include "LCMPConstants.h"
+#include "LCMPConstants.h"
+#include "LCMPConstants.h"
 
 using namespace cugl;
 using namespace std;
@@ -768,6 +770,9 @@ void GameScene::beginContact(b2Contact* contact) {
                 CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
                 //trap->changeThiefVelocity(_game->getThief()->getVelocity());
                 //_game->getThief()->setLinearVelocity(trap->changeThiefVelocity(_game->getThief()->getVelocity()));
+
+                _game->getThief()->setDamping(THIEF_DAMPING_DEFAULT*2.5);
+
                 CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
 
             }
@@ -794,10 +799,26 @@ void GameScene::endContact(b2Contact* contact) {
     if (trapID != -1) {
         shared_ptr<TrapModel> trap = _game->getTrap(trapID);
         b2Body* triggerBody = trap->getTriggerArea()->getBody();
+        auto thiefEffectBody = trap->getThiefEffectArea()->getBody();
+        auto copEffectBody = trap->getCopEffectArea()->getBody();
 
-        if ((thiefBody == body1 && triggerBody == body2) ||
-            (thiefBody == body2 && triggerBody == body1)) {
-            _game->getThief()->trapActivationFlag = -1;
+        if (trap->activated) {
+            if ((thiefBody == body1 && thiefEffectBody == body2) ||
+                (thiefBody == body2 && thiefEffectBody == body1)) {
+                CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
+                //trap->changeThiefVelocity(_game->getThief()->getVelocity());
+                //_game->getThief()->setLinearVelocity(trap->changeThiefVelocity(_game->getThief()->getVelocity()));
+
+                _game->getThief()->setDamping(THIEF_DAMPING_DEFAULT);
+
+                CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
+            }
+        }
+        else {
+            if ((thiefBody == body1 && triggerBody == body2) ||
+                (thiefBody == body2 && triggerBody == body1)) {
+                _game->getThief()->trapActivationFlag = -1;
+            }
         }
     }
 }
