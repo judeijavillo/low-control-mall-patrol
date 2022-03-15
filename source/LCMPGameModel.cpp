@@ -267,7 +267,8 @@ void GameModel::initTrap(int trapID, Vec2 center, float scale,
     shared_ptr<TrapModel> trap = std::make_shared<TrapModel>();
     
     // Create the parameters to create a trap
-    std::shared_ptr<cugl::physics2::SimpleObstacle> area = physics2::WheelObstacle::alloc(Vec2::ZERO, 5);
+    std::shared_ptr<cugl::physics2::SimpleObstacle> thiefEffectArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 5);
+    std::shared_ptr<cugl::physics2::SimpleObstacle> copEffectArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 5);
     std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 3);
     std::shared_ptr<cugl::Vec2> triggerPosition = make_shared<cugl::Vec2>(center);
     bool copSolid = true;
@@ -279,7 +280,7 @@ void GameModel::initTrap(int trapID, Vec2 center, float scale,
 
     // Initialize a trap
     trap->init(trapID,
-                area,
+                thiefEffectArea, copEffectArea,
                 triggerArea,
                 triggerPosition,
                 copSolid, thiefSolid,
@@ -288,12 +289,15 @@ void GameModel::initTrap(int trapID, Vec2 center, float scale,
                 thiefVelMod, copVelMod);
     
     // Configure physics
-    _world->addObstacle(area);
+    _world->addObstacle(thiefEffectArea);
+    _world->addObstacle(copEffectArea);
     _world->addObstacle(triggerArea);
-    area->setPosition(center);
+    thiefEffectArea->setPosition(center);
+    copEffectArea->setPosition(center);
     triggerArea->setPosition(center);
     triggerArea->setSensor(true);
-    area->setSensor(true);
+    thiefEffectArea->setSensor(true);
+    copEffectArea->setSensor(true);
     
     // Set the appropriate visual elements
     trap->setAssets(scale, _worldnode, assets, TrapModel::MopBucket);
