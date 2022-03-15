@@ -11,11 +11,11 @@
 #include "LCMPPlayerModel.h"
 
 /** The thief's damping coefficient */
-#define THIEF_DAMPING 30.0f
+#define THIEF_DAMPING_DEFAULT 30.0f
 /** The thief's maximum speed of this player */
-#define THIEF_MAX_SPEED 10.0f
+#define THIEF_MAX_SPEED_DEFAULT 10.0f
 /** The thief's acceleration of this player */
-#define THIEF_ACCELERATION 300.0f
+#define THIEF_ACCELERATION_DEFAULT 300.0f
 
 /** Defining the filter bits for the thief model*/
 #define THIEF_FILTER_BITS 0b10101
@@ -49,20 +49,20 @@ public:
     
 //  MARK: - Methods
     
-    /**
-     * Returns the damping constant
-     */
-    float getDamping() override { return THIEF_DAMPING; }
-    
-    /**
-     * Returns the max speed of the thief
-     */
-    float getMaxSpeed() override { return THIEF_MAX_SPEED; }
-    
-    /**
-     * Returns the acceleration of the thief
-     */
-    float getAcceleration() override { return THIEF_ACCELERATION; }
+    ///**
+    // * Returns the damping constant
+    // */
+    //float getDamping() override { return THIEF_DAMPING; }
+    //
+    ///**
+    // * Returns the max speed of the thief
+    // */
+    //float getMaxSpeed() override { return THIEF_MAX_SPEED; }
+    //
+    ///**
+    // * Returns the acceleration of the thief
+    // */
+    //float getAcceleration() override { return THIEF_ACCELERATION; }
     
 };
 

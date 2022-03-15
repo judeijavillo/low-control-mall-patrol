@@ -29,6 +29,12 @@ class PlayerModel : public cugl::physics2::CapsuleObstacle {
 protected:
 //  MARK: - Properties
     
+    //Physics attributes that model movement
+    float _damping;
+    float _acceleration;
+    float _maxspeed;
+
+
     // Views
     /** The top-level node for displaying the player */
     std::shared_ptr<cugl::scene2::SceneNode> _node;
@@ -66,6 +72,8 @@ public:
     std::shared_ptr<cugl::scene2::SpriteNode> runLeft;
     /** A reference to the sprite showing the player running to the right */
     std::shared_ptr<cugl::scene2::SpriteNode> runRight;
+
+
 //  MARK: - Constructors
     
     /**
@@ -109,17 +117,32 @@ public:
     /**
      * Returns the damping constant
      */
-    virtual float getDamping() { return 10.0f; }
+    virtual float getDamping() { return _damping; }
+
+    /**
+     * Sets the damping constant.
+     */
+    virtual void setDamping(float value) {  _damping = value; }
     
     /**
      * Returns the max speed of this player
      */
-    virtual float getMaxSpeed() { return 10.0f; }
+    virtual float getMaxSpeed() { return _maxspeed; }
     
+    /**
+     * Sets the max speed of this player.
+     */
+    virtual void setMaxSpeed(float value) { _maxspeed = value; }
+
     /**
      * Returns the acceleration of this player
      */
-    virtual float getAcceleration() { return 10.0f; }
+    virtual float getAcceleration() { return _acceleration; }
+
+    /**
+     * Sets the acceleration of this player.
+     */
+    virtual void setAcceleration(float value) { _acceleration = value; }
 
     /**
      * Returns the node of this player

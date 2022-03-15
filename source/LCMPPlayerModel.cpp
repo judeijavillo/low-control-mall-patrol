@@ -93,6 +93,7 @@ void PlayerModel::dispose() {
  * Applies an acceleration to the player (most likely for local updates)
  */
 void PlayerModel::applyForce(cugl::Vec2 force) {
+    // Push the player in the direction they want to go
     b2Vec2 b2force(force.x * getAcceleration(), force.y * getAcceleration());
     _body->ApplyForceToCenter(b2force, true);
     

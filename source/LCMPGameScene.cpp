@@ -767,7 +767,7 @@ void GameScene::beginContact(b2Contact* contact) {
 
                 CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
                 //trap->changeThiefVelocity(_game->getThief()->getVelocity());
-                _game->getThief()->setLinearVelocity(trap->changeThiefVelocity(_game->getThief()->getVelocity()));
+                //_game->getThief()->setLinearVelocity(trap->changeThiefVelocity(_game->getThief()->getVelocity()));
                 CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
 
             }

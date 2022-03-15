@@ -11,11 +11,12 @@
 #include "LCMPPlayerModel.h"
 
 /** The cop's damping coefficient */
-#define COP_DAMPING 7.5f
+#define COP_DAMPING_DEFAULT 7.5f
 /** The cop's maximum speed of this player */
-#define COP_MAX_SPEED 10.0f
+#define COP_MAX_SPEED_DEFAULT 10.0f
 /** The cops's acceleration of this player */
-#define COP_ACCELERATION 75.0f
+#define COP_ACCELERATION_DEFAULT 75.0f
+
 /** The amount of time that the cop will be in the air while tackling */
 #define TACKLE_AIR_TIME 0.25f
 /** The movement multiplier for the cop during tackle */
@@ -65,20 +66,20 @@ public:
     
 //  MARK: - Methods
     
-    /**
-     * Returns the damping constant
-     */
-    float getDamping() override { return COP_DAMPING; }
-    
-    /**
-     * Returns the max speed of a cop
-     */
-    float getMaxSpeed() override { return COP_MAX_SPEED; }
-    
-    /**
-     * Returns the acceleration of a cop
-     */
-    float getAcceleration() override { return COP_ACCELERATION; }
+    ///**
+    // * Returns the damping constant
+    // */
+    //float getDamping() override { return COP_DAMPING; }
+    //
+    ///**
+    // * Returns the max speed of a cop
+    // */
+    //float getMaxSpeed() override { return COP_MAX_SPEED; }
+    //
+    ///**
+    // * Returns the acceleration of a cop
+    // */
+    //float getAcceleration() override { return COP_ACCELERATION; }
     
     /**
      * Sets cop speeds according to a missed tackle

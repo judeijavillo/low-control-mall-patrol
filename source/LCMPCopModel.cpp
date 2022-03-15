@@ -49,6 +49,11 @@ bool CopModel::init(float scale,
     // Call the parent's initializer
     PlayerModel::init(Vec2::ZERO, size, scale, node);
     
+    // Set movement attributes to their default values.
+    setAcceleration(COP_ACCELERATION_DEFAULT);
+    setDamping(COP_DAMPING_DEFAULT);
+    setMaxSpeed(COP_MAX_SPEED_DEFAULT);
+
     // Up character movement
       std::vector<int> north;
       for(int ii = 0; ii < 8; ii++) {
@@ -162,7 +167,7 @@ void CopModel::hideTackle() {
 void CopModel::failedTackle(float timer, cugl::Vec2 swipe) {
     if (timer <= TACKLE_AIR_TIME) {
         Vec2 normSwipe = swipe.getNormalization();
-        b2Vec2 vel(normSwipe.x * COP_MAX_SPEED * TACKLE_MOVEMENT_MULT, -normSwipe.y * COP_MAX_SPEED * TACKLE_MOVEMENT_MULT);
+        b2Vec2 vel(normSwipe.x * COP_MAX_SPEED_DEFAULT * TACKLE_MOVEMENT_MULT, -normSwipe.y * COP_MAX_SPEED_DEFAULT * TACKLE_MOVEMENT_MULT);
         _body->SetLinearVelocity(vel);
     }
     else {
