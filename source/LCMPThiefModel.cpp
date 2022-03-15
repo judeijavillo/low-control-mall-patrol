@@ -7,6 +7,7 @@
 //
 
 #include "LCMPThiefModel.h"
+#include "LCMPConstants.h"
 
 using namespace cugl;
 using namespace std;
@@ -42,6 +43,17 @@ bool ThiefModel::init(float scale,
     
     // Call the parent's initializer
     PlayerModel::init(Vec2::ZERO, size, scale, node, actions);
+    
+    // Set movement attributes to their default values.
+    setAcceleration(THIEF_ACCELERATION_DEFAULT);
+    setDamping(THIEF_DAMPING_DEFAULT);
+    setMaxSpeed(THIEF_MAX_SPEED_DEFAULT);
+
+    // Up character movement
+    std::vector<int> north;
+    for(int ii = 0; ii < 6; ii++) {
+        north.push_back(ii);
+    }
 
     // Set up the textures for all directions
     _spriteSheets.push_back(assets->get<Texture>(THIEF_RUN_RIGHT));

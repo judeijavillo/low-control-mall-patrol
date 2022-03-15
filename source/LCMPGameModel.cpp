@@ -8,6 +8,7 @@
 
 #include "LCMPGameModel.h"
 #include "LCMPConstants.h"
+#include <map>
 
 using namespace cugl;
 
@@ -45,6 +46,7 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     std::shared_ptr<JsonValue> walls = layers->get(WALLS_FIELD)->get(OBJECTS_FIELD);
     std::shared_ptr<JsonValue> copsSpawn = layers->get(COPS_FIELD)->get(OBJECTS_FIELD);
     std::shared_ptr<JsonValue> thiefSpawn = layers->get(THIEF_FIELD)->get(OBJECTS_FIELD);
+    std::shared_ptr<JsonValue> traps = layers->get(TRAPS_FIELD)->get(OBJECTS_FIELD);
     
     // Initialize thief
     initThief(scale, thiefSpawn, assets, _actions);
@@ -57,8 +59,41 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     
     // Initialize traps
     // TODO: Make this JSON Reading
-    Vec2 traps[] = { Vec2(20, 30), Vec2(50, 30), Vec2(80, 30) };
-    for (int i = 0; i < 3; i++) initTrap(i, traps[i], scale, assets);
+    //Vec2 traps[] = { Vec2(20, 30), Vec2(50, 30), Vec2(80, 30) };
+
+    vector<shared_ptr<JsonValue>> trapsJson = vector<shared_ptr<JsonValue>>();
+    vector<shared_ptr<JsonValue>> trapsObstaclesJson = vector<shared_ptr<JsonValue>>();
+
+    for (int i = 0; i < traps->size(); i++) {
+
+        shared_ptr<JsonValue> trap = traps->get(i); // Will either be a trap or an obstacle within the trap.
+
+        bool point = trap->getBool(POINT_FIELD);
+
+        if (point) {
+            trapsJson.push_back(trap);
+        }
+        else {
+            trapsObstaclesJson.push_back(trap);
+        }
+
+    }
+    map<int, ObstacleNode_x_Y_struct> obstacleMap;
+    map<int, ObstacleNode_x_Y_struct> obstacleMap2; // This is extremely scuff but we're not sure how to copy an obstacle so we are making all the obstacles twice.
+    for (int i = 0; i < trapsObstaclesJson.size(); i++) { // On the bright side it gets only called once a game
+
+        ObstacleNode_x_Y_struct trapObstacle = readJsonShape(trapsObstaclesJson.at(i), scale);
+        obstacleMap.insert(pair<int, ObstacleNode_x_Y_struct>(trapsObstaclesJson.at(i)->getInt(ID_FIELD), trapObstacle));
+
+        // Tony: I wanna cry... Omg I'm gonna cry
+        ObstacleNode_x_Y_struct trapObstacle2 = readJsonShape(trapsObstaclesJson.at(i), scale);
+        obstacleMap2.insert(pair<int, ObstacleNode_x_Y_struct>(trapsObstaclesJson.at(i)->getInt(ID_FIELD), trapObstacle2));
+        //obstacleMap[trapsObstaclesJson.at(i)->getInt(ID_FIELD)] = trapObstacle.obstacle;
+
+    }
+
+
+    for (int i = 0; i < trapsJson.size(); i++) initTrap(i, trapsJson[i], obstacleMap, obstacleMap2, scale, assets);
     
     // Initialize borders
     initBorder(scale);
@@ -167,9 +202,10 @@ void GameModel::initCop(int copID, float scale,
 }
 
 /**
- * Initializes a single wall
+ Reads PolygonObstacle and PolygonNode from Tiled Json object.
+ Does not add either to the world/debugscene or assign color/texture, and obstacle position is 0,0.
  */
-void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
+GameModel::ObstacleNode_x_Y_struct GameModel::readJsonShape(const shared_ptr<JsonValue>& json, float scale){
     std::shared_ptr<JsonValue> polygon = json->get(POLYGON_FIELD);
     bool ellipse = json->getBool(ELLIPSE_FIELD);
     float x = json->getFloat(X_FIELD) / _tileSize;
@@ -178,7 +214,7 @@ void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
     float height = json->getFloat(HEIGHT_FIELD) / _tileSize;
     
     // We want to populate the following obstacle and node
-    shared_ptr<physics2::PolygonObstacle> wall;
+    shared_ptr<physics2::PolygonObstacle> obstacle;
     shared_ptr<scene2::PolygonNode> node;
     
     // The wall component is an ellipse
@@ -190,7 +226,7 @@ void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
         // Make a wall and a corresponding node from a polygon
         // TODO: Maybe make this a model or a type of ObstacleModel
         Poly2 poly = PolyFactory().makeEllipse(Vec2::ZERO, Vec2(width,height));
-        wall = physics2::PolygonObstacle::alloc(poly);
+        obstacle = physics2::PolygonObstacle::alloc(poly);
         node = scene2::PolygonNode::allocWithPoly(poly);
         node->setPosition(x * scale, y * scale);
     }
@@ -212,8 +248,12 @@ void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
                 
         // Create a path in the counter clockwise direction, give up if not valid
         Path2 path(vertices);
-        if (path.orientation() == 0) return;
-        else if (path.orientation() != -1) path.reverse();
+        if (path.orientation() == 0) {
+            throw runtime_error("non-closed path");
+        }
+        if (path.orientation() != -1) {
+            path.reverse();
+        }
         
         // Create a polygon from that path
         EarclipTriangulator triangulator;
@@ -229,12 +269,11 @@ void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
                     abs(bounds.getMinY()) / range.y);
         
         // Make the wall and the node from the polygon
-        wall = physics2::PolygonObstacle::alloc(poly);
+        obstacle = physics2::PolygonObstacle::alloc(poly);
         node = scene2::PolygonNode::allocWithPoly(poly);
         node->setAnchor(anchor);
         node->setPosition(x * scale, y * scale);
     }
-    
     // The wall component is a rectangle
     else {
         // Flip the y coordinate
@@ -243,10 +282,30 @@ void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
         // Make a wall and a corresponding node from a polygon
         // TODO: Maybe make this a model or a type of ObstacleModel
         Poly2 poly = PolyFactory().makeRect(Vec2::ZERO, Vec2(width, height));
-        wall = physics2::PolygonObstacle::alloc(poly);
+        obstacle = physics2::PolygonObstacle::alloc(poly);
         node = scene2::PolygonNode::allocWithPoly(poly);
         node->setPosition((x + width / 2) * scale, (y + height / 2) * scale);
     }
+
+    node->setScale(scale);
+    
+    GameModel::ObstacleNode_x_Y_struct o = {obstacle, node, x, y};
+    return o;
+}
+
+/**
+ * Initializes a single wall
+ */
+void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
+//    float x = json->getFloat(X_FIELD) / _tileSize;
+//    float y = json->getFloat(Y_FIELD) / _tileSize;
+    
+    auto shape = readJsonShape(json, scale);
+    
+    auto wall = shape.obstacle;
+    auto node = shape.node;
+    float x = shape.x;
+    float y = shape.y;
     
     // Add the wall to the world
     wall->setDebugScene(_debugnode);
@@ -257,7 +316,6 @@ void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
     wall->setPosition(x, y);
     
     // Add the node to the world node
-    node->setScale(scale);
     node->setColor(Color4::GRAY);
     _worldnode->addChild(node);
 
@@ -266,41 +324,67 @@ void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
 /**
  * Initializes a single trap
  */
-void GameModel::initTrap(int trapID, Vec2 center, float scale,
+void GameModel::initTrap(int trapID,
+                         const std::shared_ptr<cugl::JsonValue>& json,
+                         const map<int, ObstacleNode_x_Y_struct>& map1,
+                         const map<int, ObstacleNode_x_Y_struct>& map2,
+                         float scale,
                          const std::shared_ptr<cugl::AssetManager>& assets) {
-    // TODO: Change this to be JSON loading
     
     // Create hard-coded example trap
     shared_ptr<TrapModel> trap = std::make_shared<TrapModel>();
-    
-    // Create the parameters to create a trap
-    std::shared_ptr<cugl::physics2::SimpleObstacle> area = physics2::WheelObstacle::alloc(Vec2::ZERO, 5);
-    std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 3);
-    std::shared_ptr<cugl::Vec2> triggerPosition = make_shared<cugl::Vec2>(center);
-    bool copSolid = true;
-    bool thiefSolid = false;
-    int numUses = 1;
+
+    std::shared_ptr<cugl::JsonValue> properties = json->get(PROPERTIES_FIELD);
+
+    bool activated = properties->get(TRAP_ACTIVATED)->getBool(VALUE_FIELD);
+    bool copCollide = properties->get(TRAP_COP_COLLIDE)->getBool(VALUE_FIELD);
+    bool thiefCollide = properties->get(TRAP_THIEF_COLLIDE)->getBool(VALUE_FIELD);
+    float copSpeed = properties->get(TRAP_COP_SPEED_MODIFIER)->getFloat(VALUE_FIELD);
+    float thiefSpeed = properties->get(TRAP_THIEF_SPEED_MODIFIER)->getFloat(VALUE_FIELD);
+    int effectObjectId = properties->get(TRAP_EFFECT_AREA)->getInt(VALUE_FIELD);
+    int triggerObjectId = properties->get(TRAP_TRIGGER_AREA)->getInt(VALUE_FIELD);
+
+    shared_ptr<cugl::physics2::PolygonObstacle> thiefEffectArea = map1.at(effectObjectId).obstacle;
+    shared_ptr<cugl::physics2::PolygonObstacle> copEffectArea = map2.at(effectObjectId).obstacle;
+    shared_ptr<cugl::physics2::PolygonObstacle> triggerArea = map1.at(triggerObjectId).obstacle;
+
+    std::shared_ptr<cugl::Vec2> triggerPosition = make_shared<cugl::Vec2>(json->getInt(X_FIELD), json->getInt(Y_FIELD));
+    int numUses = -1;
     float lingerDur = 0.3;
-    std::shared_ptr<cugl::Affine2> thiefVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
-    std::shared_ptr<cugl::Affine2> copVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
+
+
+    // Create the parameters to create a trap
+
+    //std::shared_ptr<cugl::Vec2> triggerPosition = make_shared<cugl::Vec2>(center);
+    //bool copSolid = true;
+    //bool thiefSolid = false;
+    //int numUses = 1;
+    //float lingerDur = 0.3;
+    //std::shared_ptr<cugl::Affine2> thiefVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
+    //std::shared_ptr<cugl::Affine2> copVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
 
     // Initialize a trap
+
     trap->init(trapID,
-                area,
+                thiefEffectArea, copEffectArea,
                 triggerArea,
                 triggerPosition,
-                copSolid, thiefSolid,
+                copCollide, thiefCollide,
                 numUses,
                 lingerDur,
-                thiefVelMod, copVelMod);
+                thiefSpeed, copSpeed);
     
     // Configure physics
-    _world->addObstacle(area);
+    _world->addObstacle(thiefEffectArea);
+    _world->addObstacle(copEffectArea);
+    CULog("Id: %d", triggerObjectId);
     _world->addObstacle(triggerArea);
-    area->setPosition(center);
-    triggerArea->setPosition(center);
+    thiefEffectArea->setPosition(Vec2(map1.at(effectObjectId).x, map1.at(effectObjectId).y));
+    copEffectArea->setPosition(Vec2(map2.at(effectObjectId).x, map2.at(effectObjectId).y));
+    triggerArea->setPosition(Vec2(map1.at(triggerObjectId).x, map1.at(triggerObjectId).y));
     triggerArea->setSensor(true);
-    area->setSensor(true);
+    thiefEffectArea->setSensor(true);
+    copEffectArea->setSensor(true);
     
     // Set the appropriate visual elements
     trap->setAssets(scale, _worldnode, assets, TrapModel::MopBucket);
