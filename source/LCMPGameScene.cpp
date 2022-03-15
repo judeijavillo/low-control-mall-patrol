@@ -260,7 +260,7 @@ void GameScene::start(bool host) {
     _ishost = host;
     _playerNumber = _network->getPlayerNumber();
     _isThief = (_playerNumber == -1);
-    
+
     // Initialize the game
     _game = make_shared<GameModel>();
     _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE);
@@ -771,10 +771,25 @@ void GameScene::beginContact(b2Contact* contact) {
                 //trap->changeThiefVelocity(_game->getThief()->getVelocity());
                 //_game->getThief()->setLinearVelocity(trap->changeThiefVelocity(_game->getThief()->getVelocity()));
 
+                // Slow down
                 _game->getThief()->setDamping(THIEF_DAMPING_DEFAULT*2.5);
+
+                // Speed up
+                /*_game->getThief()->setMaxSpeed(THIEF_MAX_SPEED_DEFAULT*2);
+                _game->getThief()->setAcceleration(THIEF_ACCELERATION_DEFAULT * 2);*/
 
                 CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
 
+            }
+
+            for (int i = 0; i < 4; i++) {
+                b2Body* copBody = _game->getCop(i)->getBody();
+                if ((copBody == body1 && copEffectBody == body2) ||
+                    (copBody == body2 && copEffectBody == body1)) {
+
+                    _game->getCop(i)->setDamping(COP_DAMPING_DEFAULT * 2.5);
+
+                }
             }
         }
         else {
@@ -809,9 +824,23 @@ void GameScene::endContact(b2Contact* contact) {
                 //trap->changeThiefVelocity(_game->getThief()->getVelocity());
                 //_game->getThief()->setLinearVelocity(trap->changeThiefVelocity(_game->getThief()->getVelocity()));
 
+                // Slow down
                 _game->getThief()->setDamping(THIEF_DAMPING_DEFAULT);
 
+                // Speed up
+                /*_game->getThief()->setMaxSpeed(THIEF_MAX_SPEED_DEFAULT);
+                _game->getThief()->setAcceleration(THIEF_ACCELERATION_DEFAULT);*/
+
                 CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
+            }
+            for (int i = 0; i < 4; i++) {
+                b2Body* copBody = _game->getCop(i)->getBody();
+                if ((copBody == body1 && copEffectBody == body2) ||
+                    (copBody == body2 && copEffectBody == body1)) {
+
+                    _game->getCop(i)->setDamping(COP_DAMPING_DEFAULT);
+
+                }
             }
         }
         else {
