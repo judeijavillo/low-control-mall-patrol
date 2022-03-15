@@ -275,7 +275,7 @@ void GameModel::initTrap(int trapID, Vec2 center, float scale,
     bool thiefSolid = false;
     int numUses = 1;
     float lingerDur = 0.3;
-    std::shared_ptr<cugl::Affine2> thiefVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
+    std::shared_ptr<cugl::Affine2> thiefVelMod = make_shared<cugl::Affine2>(.1, 0, 0, .1, 0, 0);
     std::shared_ptr<cugl::Affine2> copVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
 
     // Initialize a trap

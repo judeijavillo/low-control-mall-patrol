@@ -756,13 +756,20 @@ void GameScene::beginContact(b2Contact* contact) {
     for (int i = 0; i < _game->numberOfTraps(); i++) {
         shared_ptr<TrapModel> trap = _game->getTrap(i);
         auto triggerBody = trap->getTriggerArea()->getBody();
-        auto effectBody = trap->getEffectArea()->getBody();
+        auto thiefEffectBody = trap->getThiefEffectArea()->getBody();
+        auto copEffectBody = trap->getCopEffectArea()->getBody();
 
         if (trap->activated) {
-            if ((thiefBody == body1 && effectBody == body2) ||
-                (thiefBody == body2 && effectBody == body1)) {
+            if ((thiefBody == body1 && thiefEffectBody == body2) ||
+                (thiefBody == body2 && thiefEffectBody == body1)) {
                 // TODO: the thief and trap collisions?
                 // _gameover = true;
+
+                CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
+                //trap->changeThiefVelocity(_game->getThief()->getVelocity());
+                _game->getThief()->setLinearVelocity(trap->changeThiefVelocity(_game->getThief()->getVelocity()));
+                CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
+
             }
         }
         else {
