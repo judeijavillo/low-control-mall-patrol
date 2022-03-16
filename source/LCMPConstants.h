@@ -30,6 +30,16 @@
 #define ID_FIELD			"id"
 
 
+/** The global fields for trap properties*/
+#define TRAP_ACTIVATED			0
+#define TRAP_COP_COLLIDE		1
+#define TRAP_COP_SPEED_MODIFIER	2
+#define TRAP_EFFECT_AREA		3
+#define TRAP_THIEF_COLLIDE		4
+#define TRAP_THIEF_SPEED_MODIFIER 5
+#define TRAP_TRIGGER_AREA		6
+#define VALUE_FIELD				"value"
+
 
 /** The physics fields for each object */
 #define POSITION_FIELD      "pos"

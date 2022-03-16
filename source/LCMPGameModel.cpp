@@ -75,16 +75,17 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
         }
 
     }
-    shared_ptr<map<const int, shared_ptr<cugl::physics2::PolygonObstacle>>> obstacleMap;
+    shared_ptr<map<int, shared_ptr<cugl::physics2::PolygonObstacle>>> obstacleMap;
     for (int i = 0; i < trapsObstaclesJson.size(); i++) {
 
         ObstacleNode_x_Y_struct trapObstacle = readJsonShape(trapsObstaclesJson.at(i), scale);
-        //obstacleMap->insert(pair<int, cugl::physics2::PolygonObstacle>(trapsObstaclesJson.at(i)->getInt(ID_FIELD), trapObstacle.obstacle));
-        obstacleMap[trapsObstaclesJson.at(i)->getInt(ID_FIELD)] = trapObstacle.obstacle;
+        obstacleMap->insert(pair<int, shared_ptr<cugl::physics2::PolygonObstacle>>(trapsObstaclesJson.at(i)->getInt(ID_FIELD), trapObstacle.obstacle));
+        //obstacleMap[trapsObstaclesJson.at(i)->getInt(ID_FIELD)] = trapObstacle.obstacle;
 
     }
 
-    for (int i = 0; i < 3; i++) initTrap(i, traps[i], scale, assets);
+
+    for (int i = 0; i < trapsJson.size(); i++) initTrap(i, trapsJson[i], obstacleMap, scale, assets);
     
     // Initialize borders
     initBorder(scale);
@@ -313,7 +314,7 @@ void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
  */
 void GameModel::initTrap(int trapID,
                          const std::shared_ptr<cugl::JsonValue>& json,
-                         const shared_ptr<map<int,cugl::physics2::PolygonObstacle>>& map,
+                         const shared_ptr<map<int,shared_ptr<cugl::physics2::PolygonObstacle>>>& map,
                          float scale,
                          const std::shared_ptr<cugl::AssetManager>& assets) {
 
@@ -322,18 +323,32 @@ void GameModel::initTrap(int trapID,
     // Create hard-coded example trap
     shared_ptr<TrapModel> trap = std::make_shared<TrapModel>();
 
+    std::shared_ptr<cugl::JsonValue> properties = json->get(PROPERTIES_FIELD);
+
+    bool activated = properties->get(TRAP_ACTIVATED)->getBool(VALUE_FIELD);
+    bool copCollide = properties->get(TRAP_COP_COLLIDE)->getBool(VALUE_FIELD);
+    bool thiefCollide = properties->get(TRAP_THIEF_COLLIDE)->getBool(VALUE_FIELD);
+    float copSpeed = properties->get(TRAP_COP_SPEED_MODIFIER)->getBool(VALUE_FIELD);
+    float thiefSpeed = properties->get(TRAP_THIEF_SPEED_MODIFIER)->getBool(VALUE_FIELD);
+    int effectObjectId = properties->get(TRAP_EFFECT_AREA)->getBool(VALUE_FIELD);
+    int triggerObjectId = properties->get(TRAP_TRIGGER_AREA)->getBool(VALUE_FIELD);
+
+
+    
+
+
 
     // Create the parameters to create a trap
-    std::shared_ptr<cugl::physics2::SimpleObstacle> thiefEffectArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 5);
-    std::shared_ptr<cugl::physics2::SimpleObstacle> copEffectArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 5);
-    std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 3);
-    std::shared_ptr<cugl::Vec2> triggerPosition = make_shared<cugl::Vec2>(center);
-    bool copSolid = true;
-    bool thiefSolid = false;
-    int numUses = 1;
-    float lingerDur = 0.3;
-    std::shared_ptr<cugl::Affine2> thiefVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
-    std::shared_ptr<cugl::Affine2> copVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
+    //std::shared_ptr<cugl::physics2::SimpleObstacle> thiefEffectArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 5);
+    //std::shared_ptr<cugl::physics2::SimpleObstacle> copEffectArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 5);
+    //std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea = physics2::WheelObstacle::alloc(Vec2::ZERO, 3);
+    //std::shared_ptr<cugl::Vec2> triggerPosition = make_shared<cugl::Vec2>(center);
+    //bool copSolid = true;
+    //bool thiefSolid = false;
+    //int numUses = 1;
+    //float lingerDur = 0.3;
+    //std::shared_ptr<cugl::Affine2> thiefVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
+    //std::shared_ptr<cugl::Affine2> copVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
 
     // Initialize a trap
     //trap->init(trapID,
