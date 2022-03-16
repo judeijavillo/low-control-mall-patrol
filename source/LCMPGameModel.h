@@ -173,7 +173,8 @@ private:
      */
     void initTrap(int trapID,
                   const std::shared_ptr<cugl::JsonValue>& json,
-                  const shared_ptr<map<int,shared_ptr<cugl::physics2::PolygonObstacle>>>& map,
+                  const map<int, ObstacleNode_x_Y_struct>& map1,
+                  const map<int, ObstacleNode_x_Y_struct>& map2,
                   float scale,
                   const std::shared_ptr<cugl::AssetManager>& assets);
     

@@ -176,7 +176,7 @@
                         {
                          "name":"triggerArea",
                          "type":"object",
-                         "value":68
+                         "value":73
                         }],
                  "rotation":0,
                  "type":"",
@@ -209,7 +209,7 @@
                         {
                          "name":"effectArea",
                          "type":"object",
-                         "value":61
+                         "value":72
                         }, 
                         {
                          "name":"thiefCollide",
@@ -232,58 +232,6 @@
                  "width":0,
                  "x":2624,
                  "y":1536
-                }, 
-                {
-                 "height":0,
-                 "id":61,
-                 "name":"",
-                 "polygon":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":0,
-                         "y":-128
-                        }, 
-                        {
-                         "x":-128,
-                         "y":-128
-                        }, 
-                        {
-                         "x":-128,
-                         "y":0
-                        }, 
-                        {
-                         "x":128,
-                         "y":0
-                        }, 
-                        {
-                         "x":128,
-                         "y":128
-                        }, 
-                        {
-                         "x":-256,
-                         "y":128
-                        }, 
-                        {
-                         "x":-256,
-                         "y":-256
-                        }, 
-                        {
-                         "x":128,
-                         "y":-256
-                        }, 
-                        {
-                         "x":128,
-                         "y":0
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":2688,
-                 "y":1600
                 }, 
                 {
                  "height":0,
@@ -347,6 +295,28 @@
                  "width":1150,
                  "x":2050,
                  "y":888
+                }, 
+                {
+                 "height":385.333333333333,
+                 "id":72,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":256,
+                 "x":2692,
+                 "y":1346.66666666667
+                }, 
+                {
+                 "height":62,
+                 "id":73,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":138,
+                 "x":2492,
+                 "y":966
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -728,7 +698,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":69,
+ "nextobjectid":74,
  "orientation":"orthogonal",
  "renderorder":"right-up",
  "tiledversion":"1.8.2",

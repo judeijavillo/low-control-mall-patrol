@@ -170,13 +170,15 @@ public:
      */
     void setDebugScene(const std::shared_ptr<cugl::scene2::SceneNode>& node);
 
+    // Legacy Code
+
 	/**
 	 * Changes the current thief velocity in place given the trap's affine matrix
 	 * 
 	 * @param velocity	current thief velocity
 	 * @return a referece to the modified Vec2 for chaining
 	 */
-    cugl::Vec2& changeThiefVelocity(cugl::Vec2& velocity) { return velocity.set(thiefVelocityModifier->transform(velocity)); };
+    //cugl::Vec2& changeThiefVelocity(cugl::Vec2& velocity) { return velocity.set(thiefVelocityModifier->transform(velocity)); };
 
 	/**
 	 * Changes the current cop velocity in place given the trap's affine matrix
@@ -184,7 +186,7 @@ public:
 	 * @param velocity	current cop velocity
 	 * @return a referece to the modified Vec2 for chaining
 	*/
-	cugl::Vec2& changeCopVelocity(cugl::Vec2& velocity) { return velocity.set(copVelocityModifier->transform(velocity)); };
+	//cugl::Vec2& changeCopVelocity(cugl::Vec2& velocity) { return velocity.set(copVelocityModifier->transform(velocity)); };
     
     /**
      * Returns true and decrements remaining uses if trap can be used. Returns false and has no effect otherwise.
