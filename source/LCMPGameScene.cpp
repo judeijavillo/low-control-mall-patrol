@@ -810,24 +810,20 @@ void GameScene::endContact(b2Contact* contact) {
     b2Body* body2 = contact->GetFixtureB()->GetBody();
     b2Body* thiefBody = _game->getThief()->getBody();
 
-    int trapID = _game->getThief()->trapActivationFlag;
-    if (trapID != -1) {
-        shared_ptr<TrapModel> trap = _game->getTrap(trapID);
-        b2Body* triggerBody = trap->getTriggerArea()->getBody();
+    for (int i = 0; i < _game->numberOfTraps(); i++) {
+        shared_ptr<TrapModel> trap = _game->getTrap(i);
+        auto triggerBody = trap->getTriggerArea()->getBody();
         auto thiefEffectBody = trap->getThiefEffectArea()->getBody();
         auto copEffectBody = trap->getCopEffectArea()->getBody();
 
         if (trap->activated) {
             if ((thiefBody == body1 && thiefEffectBody == body2) ||
                 (thiefBody == body2 && thiefEffectBody == body1)) {
-                CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
-                //trap->changeThiefVelocity(_game->getThief()->getVelocity());
-                //_game->getThief()->setLinearVelocity(trap->changeThiefVelocity(_game->getThief()->getVelocity()));
 
-                // Slow down
+                // Undo slow down
                 _game->getThief()->setDamping(THIEF_DAMPING_DEFAULT);
 
-                // Speed up
+                // Undo speed up
                 /*_game->getThief()->setMaxSpeed(THIEF_MAX_SPEED_DEFAULT);
                 _game->getThief()->setAcceleration(THIEF_ACCELERATION_DEFAULT);*/
 
