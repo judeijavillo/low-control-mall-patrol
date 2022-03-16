@@ -48,7 +48,7 @@
                         {
                          "name":"thiefCollide",
                          "type":"bool",
-                         "value":true
+                         "value":false
                         }, 
                         {
                          "name":"thiefSpeed",
@@ -103,22 +103,22 @@
                         {
                          "name":"copCollide",
                          "type":"bool",
-                         "value":true
+                         "value":false
                         }, 
                         {
                          "name":"copSpeed",
                          "type":"float",
-                         "value":1
+                         "value":0.5
                         }, 
                         {
                          "name":"effectArea",
                          "type":"object",
-                         "value":56
+                         "value":64
                         }, 
                         {
                          "name":"thiefCollide",
                          "type":"bool",
-                         "value":true
+                         "value":false
                         }, 
                         {
                          "name":"thiefSpeed",
@@ -128,7 +128,7 @@
                         {
                          "name":"triggerArea",
                          "type":"object",
-                         "value":55
+                         "value":65
                         }],
                  "rotation":0,
                  "type":"",
@@ -146,37 +146,37 @@
                         {
                          "name":"activated",
                          "type":"bool",
-                         "value":false
+                         "value":true
                         }, 
                         {
                          "name":"copCollide",
                          "type":"bool",
-                         "value":true
+                         "value":false
                         }, 
                         {
                          "name":"copSpeed",
                          "type":"float",
-                         "value":1
+                         "value":0.5
                         }, 
                         {
                          "name":"effectArea",
                          "type":"object",
-                         "value":56
+                         "value":68
                         }, 
                         {
                          "name":"thiefCollide",
                          "type":"bool",
-                         "value":true
+                         "value":false
                         }, 
                         {
                          "name":"thiefSpeed",
                          "type":"float",
-                         "value":1
+                         "value":0.5
                         }, 
                         {
                          "name":"triggerArea",
                          "type":"object",
-                         "value":55
+                         "value":68
                         }],
                  "rotation":0,
                  "type":"",
@@ -312,6 +312,41 @@
                  "width":0,
                  "x":2560,
                  "y":1472
+                }, 
+                {
+                 "ellipse":true,
+                 "height":346.666666666667,
+                 "id":64,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":325.333333333333,
+                 "x":2274.66666666667,
+                 "y":512
+                }, 
+                {
+                 "ellipse":true,
+                 "height":164,
+                 "id":65,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":164,
+                 "x":2354.66666666667,
+                 "y":608
+                }, 
+                {
+                 "height":266,
+                 "id":68,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1150,
+                 "x":2050,
+                 "y":888
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -693,7 +728,7 @@
          "y":0
         }],
  "nextlayerid":6,
- "nextobjectid":63,
+ "nextobjectid":69,
  "orientation":"orthogonal",
  "renderorder":"right-up",
  "tiledversion":"1.8.2",

@@ -21,9 +21,15 @@
 #define ELLIPSE_FIELD       "ellipse"
 #define POLYGON_FIELD       "polygon"
 #define FLOOR_FIELD         0
-#define WALLS_FIELD         1
-#define COPS_FIELD          2
-#define THIEF_FIELD         3
+#define TRAPS_FIELD         1
+#define WALLS_FIELD         2
+#define COPS_FIELD          3
+#define THIEF_FIELD         4
+#define POINT_FIELD			"point"
+#define PROPERTIES_FIELD    "properties"
+#define ID_FIELD			"id"
+
+
 
 /** The physics fields for each object */
 #define POSITION_FIELD      "pos"
