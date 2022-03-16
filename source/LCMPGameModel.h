@@ -13,6 +13,7 @@
 #include "LCMPCopModel.h"
 #include "LCMPTrapModel.h"
 #include "LCMPObstacleModel.h"
+#include <map>
 
 class GameModel {
 protected:
@@ -154,6 +155,14 @@ private:
                  const std::shared_ptr<cugl::JsonValue>& spawns,
                  const std::shared_ptr<cugl::AssetManager>& assets);
     
+    struct ObstacleNode_x_Y_struct{
+        std::shared_ptr<cugl::physics2::PolygonObstacle> obstacle;
+        std::shared_ptr<cugl::scene2::PolygonNode> node;
+        float x, y;
+    };
+    
+    GameModel::ObstacleNode_x_Y_struct readJsonShape(const std::shared_ptr<cugl::JsonValue>& json, float scale);
+    
     /**
      * Initializes a single wall
      */
@@ -162,7 +171,10 @@ private:
     /**
      * Initializes a single trap
      */
-    void initTrap(int trapID, cugl::Vec2 center, float scale,
+    void initTrap(int trapID,
+                  const std::shared_ptr<cugl::JsonValue>& json,
+                  const shared_ptr<map<int,cugl::physics2::PolygonObstacle>>& map,
+                  float scale,
                   const std::shared_ptr<cugl::AssetManager>& assets);
     
     /**

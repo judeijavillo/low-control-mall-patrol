@@ -18,15 +18,14 @@ using namespace cugl;
  * Initializes a Trap Model
  */
 bool TrapModel::init(int trapID,
-                     const std::shared_ptr<cugl::physics2::SimpleObstacle> thiefArea, const std::shared_ptr<cugl::physics2::SimpleObstacle> copArea,
-                     const std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea_,
-                     const std::shared_ptr<cugl::Vec2> triggerPosition,
+                     const shared_ptr<physics2::SimpleObstacle> thiefArea, const shared_ptr<physics2::SimpleObstacle> copArea,
+                     const shared_ptr<physics2::SimpleObstacle> triggerArea_,
+                     const shared_ptr<Vec2> triggerPosition,
                      bool copSolid, bool thiefSolid,
                      int numUses,
                      float lingerDur,
-                     const std::shared_ptr<cugl::Affine2> thiefVelMod,
-                     const std::shared_ptr<cugl::Affine2> copVelMod,
-                     bool startsTriggered) {
+                     float thiefSpd,
+                     float copSpd) {
     _trapID = trapID;
     thiefEffectArea = thiefArea;
     copEffectArea = copArea;
@@ -36,8 +35,8 @@ bool TrapModel::init(int trapID,
     thiefCollide = thiefSolid;
     usesRemaining = numUses;
     lingerDuration = lingerDur;
-    thiefVelocityModifier = thiefVelMod;
-    copVelocityModifier = copVelMod;
+    thiefSpeed = thiefSpd;
+    copSpeed = copSpd;
 
     activated = false;
 
@@ -55,9 +54,6 @@ bool TrapModel::init(int trapID,
     triggerFilter.maskBits = 0b00100;
     triggerFilter.categoryBits = 0b00100;
     triggerArea->setFilterData(triggerFilter);
-
-    // TODO: This can cause some problems: if you init before setAssets, activate will be working with nodes that don't exist
-    if (startsTriggered) activate();
 
     return true;
 }

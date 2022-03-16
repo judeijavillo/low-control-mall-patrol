@@ -32,10 +32,10 @@ protected:
 	int usesRemaining;
 	/** Amount of time the trap effects the player after they leave the effect bounds */
 	float lingerDuration;
-	/** Affine modification for thief velocity */
-	std::shared_ptr<cugl::Affine2> thiefVelocityModifier;
-	/** Affine modification for cop velocity */
-	std::shared_ptr<cugl::Affine2> copVelocityModifier;
+	/** Modifier to thief speed; <1 means slow, >1 mean fast */
+	float thiefSpeed;
+    /** Modifier to cop speed; <1 means slow, >1 mean fast */
+	float copSpeed;
 
     /** Defining the filter bits for the thief effect trap model*/
     b2Filter thiefEffectFilter;
@@ -93,58 +93,6 @@ public:
      * Disposes of all resources in use by this instance of Trap Model
      */
 	void dispose() {};
-
-    /**
-     * Initializes a Trap Model that doesn't start triggered
-     */
-    bool init(int trapID,
-              const std::shared_ptr<cugl::physics2::SimpleObstacle> thiefEffectArea, const std::shared_ptr<cugl::physics2::SimpleObstacle> copEffectArea,
-              const std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea,
-              const std::shared_ptr<cugl::Vec2> triggerPosition,
-              bool copSolid, bool thiefSolid,
-              int numUses,
-              float lingerDur,
-              const std::shared_ptr<cugl::Affine2> thiefVelMod,
-              const std::shared_ptr<cugl::Affine2> copVelMod) {
-        return init(trapID,
-                    thiefEffectArea, copEffectArea,
-                    triggerArea,
-                    triggerPosition,
-                    copSolid, thiefSolid,
-                    numUses,
-                    lingerDur,
-                    thiefVelMod, copVelMod,
-                    false);
-    };
-    
-    /**
-     * Initializes a Trap Model with components of the thief and cop effects
-     */
-    bool init(int trapID,
-              const std::shared_ptr<cugl::physics2::SimpleObstacle> thiefEffectArea, const std::shared_ptr<cugl::physics2::SimpleObstacle> copEffectArea,
-              const std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea,
-              const std::shared_ptr<cugl::Vec2> triggerPosition,
-              bool copSolid, bool thiefSolid,
-              int numUses,
-              float lingerDur,
-              float thiefXScale, float thiefXTrans,
-              float thiefYScale, float thiefYTrans,
-              float copXScale, float copXTrans,
-              float copYScale, float copYTrans) {
-
-        std::shared_ptr<cugl::Affine2> thiefy = std::make_shared<cugl::Affine2>(thiefXScale, 0, 0, thiefYScale, thiefXTrans, thiefYTrans);
-        std::shared_ptr<cugl::Affine2> coppy = std::make_shared<cugl::Affine2>(copXScale, 0, 0, copYScale, copXTrans, copYTrans);
-
-        return init(trapID,
-                    thiefEffectArea, copEffectArea,
-                    triggerArea,
-                    triggerPosition,
-                    copSolid, thiefSolid,
-                    numUses,
-                    lingerDur,
-                    thiefy,
-                    coppy);
-    };
     
     /**
      * Initializes a Trap Model
@@ -156,9 +104,8 @@ public:
               bool copSolid, bool thiefSolid,
               int numUses,
               float lingerDur,
-              const std::shared_ptr<cugl::Affine2> thiefVelMod,
-              const std::shared_ptr<cugl::Affine2> copVelMod,
-              bool startsTriggered);
+              float thiefSpd,
+              float copSpd);
 
 
 //	MARK: - Methods
