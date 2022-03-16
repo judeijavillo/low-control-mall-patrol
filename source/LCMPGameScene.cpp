@@ -120,7 +120,8 @@ bool compareNodes(std::shared_ptr<scene2::SceneNode> o1, std::shared_ptr<scene2:
  */
 bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
                      std::shared_ptr<NetworkController>& network,
-                     std::shared_ptr<AudioController>& audio) {
+                     std::shared_ptr<AudioController>& audio,
+                     std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     // Initialize the scene to a locked width
     _dimen = Application::get()->getDisplaySize();
     _screenSize = _dimen;
@@ -139,8 +140,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // Save the audio controller
     _audio = audio;
     
-    // Create the action manager
-    _actions = scene2::ActionManager::alloc();
+    _actions = actions;
     
     // Initialize the input controller
     _input.init(getBounds());
@@ -253,7 +253,7 @@ void GameScene::start(bool host) {
 
     // Initialize the game
     _game = make_shared<GameModel>();
-    _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE);
+    _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions);
     
     // Call helpers
     initJoystick();
@@ -290,7 +290,7 @@ void GameScene::update(float timestep) {
     Vec2 difference = position - origin;
     bool spacebar = _input._spacebarPressed;
     
-    // Swipe updates
+    // Swipe updates and animation
     if (!_isThief) {
         if (!_hitTackle) {
             _hitTackle = tackle(timestep, movement);
@@ -315,6 +315,8 @@ void GameScene::update(float timestep) {
             _outerJoystick->setVisible(false);
             _innerJoystick->setVisible(false);
         }
+        _game->getThief()->playAnimation(movement);
+        _actions->update(timestep);
     }
     
     // Switch updates
@@ -352,8 +354,9 @@ void GameScene::update(float timestep) {
         _network->sendThiefMovement(_game, flippedMovement);
         player = _game->getThief();
         
-        player->playAnimation(_actions, movement);
-        _actions->update(timestep);
+//        for (int i = 0; i < _game->numberOfCops(); i++) {
+//            _game->getCop(i)->playAnimation(_actions, _game->getCop(i)->getVelocity());
+//        }
     } else {
         _game->updateCop(flippedMovement, _playerNumber, onTackleCooldown);
         _network->sendCopMovement(_game, flippedMovement, _playerNumber);
@@ -369,6 +372,12 @@ void GameScene::update(float timestep) {
         _thiefDistance->setName("thiefDistance");
         _thiefDistance->setVisible(!_isThief);
         _uinode->addChild(_thiefDistance);
+        
+//        for (int i = 0; i < _game->numberOfCops(); i++) {
+//            if (i != _playerNumber) {
+//                _game->getCop(i)->playAnimation(_game->getCop(i)->getVelocity());
+//            }
+//        }
     }
 
     // Floor updates
@@ -435,7 +444,7 @@ void GameScene::reset() {
     _worldnode->removeAllChildren();
     _input.clear();
     _game = make_shared<GameModel>();
-    _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE);
+    _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions);
     _uinode->getChildByName("message")->setVisible(false);
     _gameover = false;
     _hitTackle = false;
@@ -614,7 +623,7 @@ bool GameScene::tackle(float dt, Vec2 movement) {
         if (_tackleTime >= TACKLE_COOLDOWN_TIME) {
             onTackleCooldown = false;
             _game->getCop(copID)->hideTackle();
-            _game->getCop(copID)->playAnimation(_actions, movement);
+            _game->getCop(copID)->playAnimation(movement);
             _actions->update(dt);
         }
         else if (_tackleTime >= TACKLE_COOLDOWN_TIME / 2) {
@@ -623,7 +632,7 @@ bool GameScene::tackle(float dt, Vec2 movement) {
     }
     else {
         _game->getCop(copID)->hideTackle();
-        _game->getCop(copID)->playAnimation(_actions, movement);
+        _game->getCop(copID)->playAnimation(movement);
         _actions->update(dt);
     }
     return false; 

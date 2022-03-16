@@ -21,7 +21,8 @@ using namespace cugl;
  * initializes a Player Model
  */
 bool PlayerModel::init(const Vec2 pos, const Size size, float scale,
-                       const std::shared_ptr<cugl::scene2::SceneNode>& node) {
+                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
+                       std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     // Call the parent's initializer
     physics2::CapsuleObstacle::init(pos, size);
     
@@ -42,6 +43,9 @@ bool PlayerModel::init(const Vec2 pos, const Size size, float scale,
     
     // Save player's top-level node
     _node = node;
+    
+    // Save action manager
+    _actions = actions;
     
     // Add a dropshadow node
     PolyFactory pf;
@@ -116,6 +120,7 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
  */
 void PlayerModel::applyNetwork(cugl::Vec2 position, cugl::Vec2 velocity, cugl::Vec2 force) {
     setPosition(position);
+    playAnimation(velocity);
 }
 
 /**
@@ -142,7 +147,7 @@ int PlayerModel::findDirection(Vec2 movement) {
 /**
  * Performs a film strip action
  */
-void PlayerModel::playAnimation(std::shared_ptr<scene2::ActionManager>& actions, Vec2 movement) {
+void PlayerModel::playAnimation(Vec2 movement) {
     // Figure out which animation direction to use
     int key = findDirection(movement);
 
@@ -150,30 +155,36 @@ void PlayerModel::playAnimation(std::shared_ptr<scene2::ActionManager>& actions,
     _characterLeft->setVisible(false);
     _characterFront->setVisible(false);
     _characterBack->setVisible(false);
+    
+    // Set still animation if no movement
+    if (movement.length() == 0) {
+        _characterFront->setVisible(true);
+        return;
+    }
     // Animate different direction
     bool* cycle;
     std::shared_ptr<scene2::SpriteNode> node;
     switch (key) {
         case RIGHT_ANIM_KEY:
-            actions->activate(ACT_KEY, _east, _characterRight);
+            _actions->activate(ACT_KEY, _east, _characterRight);
             _characterRight->setVisible(true);
             node = _characterRight;
             cycle = &_rightCycle;
             break;
         case BACK_ANIM_KEY:
-            actions->activate(ACT_KEY, _north, _characterBack);
+            _actions->activate(ACT_KEY, _north, _characterBack);
             _characterBack->setVisible(true);
             node = _characterBack;
             cycle = &_backCycle;
             break;
         case LEFT_ANIM_KEY:
-            actions->activate(ACT_KEY, _west, _characterLeft);
+            _actions->activate(ACT_KEY, _west, _characterLeft);
             _characterLeft->setVisible(true);
             node = _characterLeft;
             cycle = &_leftCycle;
             break;
         case FRONT_ANIM_KEY:
-            actions->activate(ACT_KEY, _south, _characterFront);
+            _actions->activate(ACT_KEY, _south, _characterFront);
             _characterFront->setVisible(true);
             node = _characterFront;
             cycle = &_frontCycle;

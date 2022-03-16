@@ -32,12 +32,13 @@ using namespace std;
  */
 bool ThiefModel::init(float scale, 
                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
-                      const std::shared_ptr<cugl::AssetManager>& assets) {
+                      const std::shared_ptr<cugl::AssetManager>& assets,
+                      std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     // The thief has constant size
     Size size(THIEF_WIDTH, THIEF_HEIGHT);
     
     // Call the parent's initializer
-    PlayerModel::init(Vec2::ZERO, size, scale, node);
+    PlayerModel::init(Vec2::ZERO, size, scale, node, actions);
     
     // Set movement attributes to their default values.
     setAcceleration(THIEF_ACCELERATION_DEFAULT);
@@ -70,11 +71,13 @@ bool ThiefModel::init(float scale,
     _characterLeft->setScale(0.3f);
     _characterLeft->setAnchor(Vec2::ANCHOR_CENTER);
     _characterLeft->setPosition(Vec2(0, width / 2.5f));
+    _characterLeft->setVisible(false);
     _node->addChild(_characterLeft);
     _characterRight = runRight;
     _characterRight->setScale(0.3f);
     _characterRight->setAnchor(Vec2::ANCHOR_CENTER);
     _characterRight->setPosition(Vec2(0, width / 2.5f));
+    _characterRight->setVisible(false);
     _node->addChild(_characterRight);
     _characterFront = runFront;
     _characterFront->setScale(0.3f);
@@ -85,6 +88,7 @@ bool ThiefModel::init(float scale,
     _characterBack->setScale(0.3f);
     _characterBack->setAnchor(Vec2::ANCHOR_CENTER);
     _characterBack->setPosition(Vec2(0, width / 2.5f));
+    _characterBack->setVisible(false);
     _node->addChild(_characterBack);
     // TODO: Get rid of the magic numbers in the lines above.
 

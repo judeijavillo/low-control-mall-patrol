@@ -28,12 +28,17 @@
 class PlayerModel : public cugl::physics2::CapsuleObstacle {
 protected:
 //  MARK: - Properties
+
     
     //Physics attributes that model movement
     float _damping;
     float _acceleration;
     float _maxspeed;
 
+
+
+    /** A reference to the Action Manager */
+    std::shared_ptr<cugl::scene2::ActionManager> _actions;
 
     // Views
     /** The top-level node for displaying the player */
@@ -81,7 +86,7 @@ public:
     /**
      * Constructs a Player Model
      */
-    PlayerModel() {}
+    PlayerModel() {};
     
     /**
      * Destructs a Player Model
@@ -97,7 +102,8 @@ public:
      * Initializes a Player Model
      */
     bool init(const cugl::Vec2 pos, const cugl::Size size, float scale,
-              const std::shared_ptr<cugl::scene2::SceneNode>& node);
+              const std::shared_ptr<cugl::scene2::SceneNode>& node,
+              std::shared_ptr<cugl::scene2::ActionManager>& actions);
     
 //  MARK: - Methods
     
@@ -179,7 +185,7 @@ public:
     /**
      * Performs a film strip action
      */
-    void playAnimation(std::shared_ptr<cugl::scene2::ActionManager>& actions, cugl::Vec2 movement);
+    void playAnimation(cugl::Vec2 movement);
     
     int findDirection(cugl::Vec2 movement);
     

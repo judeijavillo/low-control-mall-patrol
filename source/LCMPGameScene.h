@@ -39,7 +39,7 @@ protected:
     std::shared_ptr<NetworkController> _network;
     /** A reference to the Audio Controller instance */
     std::shared_ptr<AudioController> _audio;
-    /** Manager to process the animation actions */
+    /** A reference to the Asset Manager */
     std::shared_ptr<cugl::scene2::ActionManager> _actions;
     /** The Input Controller instance */
     InputController _input;
@@ -158,7 +158,8 @@ public:
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets,
               std::shared_ptr<NetworkController>& network,
-              std::shared_ptr<AudioController>& audio);
+              std::shared_ptr<AudioController>& audio,
+              std::shared_ptr<cugl::scene2::ActionManager>& actions);
 
 //  MARK: - Methods
 
