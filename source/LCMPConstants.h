@@ -58,9 +58,9 @@
 #define DEBUG_OPACITY_FIELD "debugopacity"
 
 /** The source for our level file */
-#define LEVEL_ONE_FILE      "maps/example2.json"
+#define LEVEL_ONE_FILE      "maps/example1.json"
 /** The key for our loaded level */
-#define LEVEL_ONE_KEY       "example2"
+#define LEVEL_ONE_KEY       "example1"
 
 /** Player constants */
 //Thief
