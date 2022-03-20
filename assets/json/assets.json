@@ -95,6 +95,18 @@
         },
         "ss_thief_left": {
             "file": "textures/characters/ss_thief_left.png"
+        },
+        "ss_cop_idle_right": {
+            "file": "textures/characters/ss_cop_idle_right.png"
+        },
+        "ss_cop_idle_left": {
+            "file": "textures/characters/ss_cop_idle_left.png"
+        },
+        "ss_thief_idle_right": {
+            "file": "textures/characters/ss_thief_idle_right.png"
+        },
+        "ss_thief_idle_left": {
+            "file": "textures/characters/ss_thief_idle_left.png"
         }
     },
     "sounds": {

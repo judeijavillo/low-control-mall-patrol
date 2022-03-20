@@ -32,6 +32,9 @@ using namespace std;
 #define COP_LAND_DOWN       "cop_land_down"
 #define COP_LAND_LEFT        "cop_land_left"
 #define COP_LAND_RIGHT       "cop_land_right"
+/** Keys for cop still textures */
+#define COP_IDLE_RIGHT        "ss_cop_idle_right"
+#define COP_IDLE_LEFT       "ss_cop_idle_left"
 
 //  MARK: - Constructors
 
@@ -42,26 +45,14 @@ using namespace std;
  */
 bool CopModel::init(float scale,
                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
-                      const std::shared_ptr<cugl::AssetManager>& assets) {
+                      const std::shared_ptr<cugl::AssetManager>& assets,
+                    std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     // The cop has constant size
     Size size(COP_WIDTH, COP_HEIGHT);
+    _animFrames = {8, 8, 8, 8, 4, 4};
     
     // Call the parent's initializer
-    PlayerModel::init(Vec2::ZERO, size, scale, node);
-    
-    // Up character movement
-      std::vector<int> north;
-      for(int ii = 0; ii < 8; ii++) {
-          north.push_back(ii);
-      }
-      _north = scene2::Animate::alloc(north,DURATION);
-
-      // Down character movement
-      std::vector<int> south;
-      for(int ii = 1; ii < 8; ii++) {
-          south.push_back(ii);
-      }
-      _south = scene2::Animate::alloc(south,DURATION);
+    PlayerModel::init(Vec2::ZERO, size, scale, node, actions);
     
     // Set up the textures for all tackle directions
     _tackleDownTexture = assets->get<Texture>(COP_JUMP_DOWN);
@@ -73,36 +64,19 @@ bool CopModel::init(float scale,
     _landLeftTexture = assets->get<Texture>(COP_LAND_LEFT);
     _landRightTexture = assets->get<Texture>(COP_LAND_RIGHT);
     
-    runFront = scene2::SpriteNode::alloc(assets->get<Texture>(COP_RUN_FRONT), 1, 8);
-    runBack = scene2::SpriteNode::alloc(assets->get<Texture>(COP_RUN_BACK), 1, 8);
-    runRight = scene2::SpriteNode::alloc(assets->get<Texture>(COP_RUN_RIGHT), 1, 8);
-    runLeft = scene2::SpriteNode::alloc(assets->get<Texture>(COP_RUN_LEFT), 1, 8);
-    
+    _spriteSheets.push_back(assets->get<Texture>(COP_RUN_RIGHT));
+    _spriteSheets.push_back(assets->get<Texture>(COP_RUN_BACK));
+    _spriteSheets.push_back(assets->get<Texture>(COP_RUN_LEFT));
+    _spriteSheets.push_back(assets->get<Texture>(COP_RUN_FRONT));
+    _spriteSheets.push_back(assets->get<Texture>(COP_IDLE_RIGHT));
+    _spriteSheets.push_back(assets->get<Texture>(COP_IDLE_LEFT));
+        
     // Initialize the first texture. Note: width is in screen coordinates
     float width = size.width * scale * 1.5f;
-    _characterLeft = runLeft;
-    _characterLeft->setScale(0.25f);
-    _characterLeft->setAnchor(Vec2::ANCHOR_CENTER);
-    _characterLeft->setPosition(Vec2(0, width / 2.5f));
-    _node->addChild(_characterLeft);
-    _characterRight = runRight;
-    _characterRight->setScale(0.25f);
-    _characterRight->setAnchor(Vec2::ANCHOR_CENTER);
-    _characterRight->setPosition(Vec2(0, width / 2.5f));
-    _node->addChild(_characterRight);
-    _characterFront = runFront;
-    _characterFront->setScale(0.25f);
-    _characterFront->setAnchor(Vec2::ANCHOR_CENTER);
-    _characterFront->setPosition(Vec2(0, width / 2.5f));
-    _node->addChild(_characterFront);
-    _characterBack = runBack;
-    _characterBack->setScale(0.25f);
-    _characterBack->setAnchor(Vec2::ANCHOR_CENTER);
-    _characterBack->setPosition(Vec2(0, width / 2.5f));
-    _node->addChild(_characterBack);
+    setSpriteNodes(width);
     
     _character = scene2::PolygonNode::allocWithTexture(_tackleDownTexture);
-    _character->setScale(_characterLeft->getWidth() / _tackleDownTexture->getWidth());
+    _character->setScale(_spriteNodes[0]->getWidth() / _tackleDownTexture->getWidth());
     _character->setAnchor(Vec2::ANCHOR_CENTER);
     _character->setPosition(Vec2(0, width / 2.5f));
     _character->setVisible(false);
@@ -132,10 +106,11 @@ void CopModel::dispose() {
 
 void CopModel::showTackle(Vec2 direction, bool inAir) {
     int key = findDirection(direction);
-    _characterRight->setVisible(false);
-    _characterLeft->setVisible(false);
-    _characterFront->setVisible(false);
-    _characterBack->setVisible(false);
+    
+    for (std::shared_ptr<scene2::SpriteNode> s : _spriteNodes) {
+        s->setVisible(false);
+    }
+
     _character->setVisible(true);
     switch (key) {
         case RIGHT_ANIM_KEY:
@@ -172,7 +147,7 @@ void CopModel::failedTackle(float timer, cugl::Vec2 swipe) {
     }
 }
 
-void CopModel::playAnimation(std::shared_ptr<scene2::ActionManager>& actions, Vec2 movement) {
-    PlayerModel::playAnimation(actions, movement);
+void CopModel::playAnimation(Vec2 movement) {
+    PlayerModel::playAnimation(movement);
     _character->setVisible(false);
 }

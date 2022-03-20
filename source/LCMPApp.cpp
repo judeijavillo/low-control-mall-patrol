@@ -28,6 +28,7 @@ using namespace cugl;
 void LCMPApp::onStartup() {
     _assets = AssetManager::alloc();
     _batch  = SpriteBatch::alloc();
+    _actions = scene2::ActionManager::alloc();
     auto cam = OrthographicCamera::alloc(getDisplaySize());
     
     // Start-up basic input
@@ -85,6 +86,7 @@ void LCMPApp::onShutdown() {
     _audio->dispose();
     _loading.dispose();
     _game.dispose();
+    _actions = nullptr;
     _assets = nullptr;
     _batch = nullptr;
 
@@ -181,7 +183,7 @@ void LCMPApp::updateLoadingScene(float timestep) {
         _menu.init(_assets);
         _host.init(_assets, _network);
         _client.init(_assets, _network);
-        _game.init(_assets, _network, _audio);
+        _game.init(_assets, _network, _audio, _actions);
         _menu.setActive(true);
         _scene = State::MENU;
     }

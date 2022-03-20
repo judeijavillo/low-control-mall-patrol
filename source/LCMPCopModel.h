@@ -61,7 +61,8 @@ public:
      */
     bool init(float scale,
               const std::shared_ptr<cugl::scene2::SceneNode>& node,
-              const std::shared_ptr<cugl::AssetManager>& assets);
+              const std::shared_ptr<cugl::AssetManager>& assets,
+              std::shared_ptr<cugl::scene2::ActionManager>& actions);
     
 //  MARK: - Methods
     
@@ -85,7 +86,7 @@ public:
     */
     void failedTackle(float timer, cugl::Vec2 swipe);
     
-    void playAnimation(std::shared_ptr<cugl::scene2::ActionManager>& actions, cugl::Vec2 movement);
+    void playAnimation(cugl::Vec2 movement);
     
     void showTackle(cugl::Vec2 direction, bool inAir);
 

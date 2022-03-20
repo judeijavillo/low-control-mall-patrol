@@ -21,7 +21,8 @@ using namespace cugl;
  * initializes a Player Model
  */
 bool PlayerModel::init(const Vec2 pos, const Size size, float scale,
-                       const std::shared_ptr<cugl::scene2::SceneNode>& node) {
+                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
+                       std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     // Call the parent's initializer
     physics2::CapsuleObstacle::init(pos, size);
     
@@ -43,6 +44,9 @@ bool PlayerModel::init(const Vec2 pos, const Size size, float scale,
     // Save player's top-level node
     _node = node;
     
+    // Save action manager
+    _actions = actions;
+    
     // Add a dropshadow node
     PolyFactory pf;
     Poly2 shadow = pf.makeCapsule(pos * scale, size * scale);
@@ -53,19 +57,14 @@ bool PlayerModel::init(const Vec2 pos, const Size size, float scale,
     _node->addChild(_dropshadow);
     
     // Create animations
-    // Right character movement
-    std::vector<int> east;
-    for(int ii = 0; ii < 8; ii++) {
-        east.push_back(ii);
+    for (int i = 0; i < _animFrames.size(); i++) {
+        std::vector<int> vec;
+        for(int ii = 0; ii < _animFrames[i]; ii++) {
+            vec.push_back(ii);
+        }
+        _animations.push_back(scene2::Animate::alloc(vec,DURATION));
+        _cycles.push_back(false);
     }
-    _east = scene2::Animate::alloc(east,DURATION);
-
-    // Left character movement
-    std::vector<int> west;
-    for(int ii = 0; ii < 8; ii++) {
-        west.push_back(ii);
-    }
-    _west = scene2::Animate::alloc(west,DURATION);
     
     // We're gonna assume this always works appropriately
     return true;
@@ -78,15 +77,10 @@ void PlayerModel::dispose() {
     _node = nullptr;
     _dropshadow = nullptr;
     
-    _characterLeft = nullptr;
-    _characterRight = nullptr;
-    _characterFront = nullptr;
-    _characterBack = nullptr;
-    
-    runBack = nullptr;
-    runFront = nullptr;
-    runLeft = nullptr;
-    runRight = nullptr;
+    for (int i = 0; i < _spriteNodes.size(); i++) {
+        _spriteNodes[i] = nullptr;
+        _animations[i] = nullptr;
+    }
 }
 
 /**
@@ -115,6 +109,7 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
  */
 void PlayerModel::applyNetwork(cugl::Vec2 position, cugl::Vec2 velocity, cugl::Vec2 force) {
     setPosition(position);
+    playAnimation(velocity);
 }
 
 /**
@@ -141,55 +136,36 @@ int PlayerModel::findDirection(Vec2 movement) {
 /**
  * Performs a film strip action
  */
-void PlayerModel::playAnimation(std::shared_ptr<scene2::ActionManager>& actions, Vec2 movement) {
+void PlayerModel::playAnimation(Vec2 movement) {
     // Figure out which animation direction to use
     int key = findDirection(movement);
-
-    _characterRight->setVisible(false);
-    _characterLeft->setVisible(false);
-    _characterFront->setVisible(false);
-    _characterBack->setVisible(false);
-    // Animate different direction
-    bool* cycle;
-    std::shared_ptr<scene2::SpriteNode> node;
-    switch (key) {
-        case RIGHT_ANIM_KEY:
-            actions->activate(ACT_KEY, _east, _characterRight);
-            _characterRight->setVisible(true);
-            node = _characterRight;
-            cycle = &_rightCycle;
-            break;
-        case BACK_ANIM_KEY:
-            actions->activate(ACT_KEY, _north, _characterBack);
-            _characterBack->setVisible(true);
-            node = _characterBack;
-            cycle = &_backCycle;
-            break;
-        case LEFT_ANIM_KEY:
-            actions->activate(ACT_KEY, _west, _characterLeft);
-            _characterLeft->setVisible(true);
-            node = _characterLeft;
-            cycle = &_leftCycle;
-            break;
-        case FRONT_ANIM_KEY:
-            actions->activate(ACT_KEY, _south, _characterFront);
-            _characterFront->setVisible(true);
-            node = _characterFront;
-            cycle = &_frontCycle;
-            break;
-        default:
-            break;
+    if (movement.length() == 0) {
+        key = STILL_ANIM_KEY;
     }
+    
+    for (shared_ptr<cugl::scene2::SpriteNode> s : _spriteNodes) {
+        s->setVisible(false);
+    }
+
+    // Animate different direction
+    bool cycle;
+    std::shared_ptr<scene2::SpriteNode> node;
+    // Set still animation if no movement
+    _actions->activate(ACT_KEY, _animations[key], _spriteNodes[key]);
+    _spriteNodes[key]->setVisible(true);
+    node = _spriteNodes[key];
+    cycle = _cycles[key];
+
     if (movement.length() > 0) {
         // Turn on the flames and go back and forth
-        if (node->getFrame() == 0 || node->getFrame() == 1) {
-            *cycle = true;
-        } else if (node->getFrame() == node->getSize()-1) {
-            *cycle = false;
+        if (node->getFrame() == node->getSize()-1) {
+            _cycles[key] = false;
+        } else {
+            _cycles[key] = true;
         }
 
         // Increment
-        if (*cycle) {
+        if (_cycles[key]) {
             node->setFrame(node->getFrame()+1);
         } else {
             node->setFrame(node->getFrame()-1);
@@ -197,4 +173,16 @@ void PlayerModel::playAnimation(std::shared_ptr<scene2::ActionManager>& actions,
     } else {
         node->setFrame(0);
     }
+}
+
+void PlayerModel::setSpriteNodes(float width) {
+    for (int i = 0; i < _spriteSheets.size(); i++) {
+        _spriteNodes.push_back(scene2::SpriteNode::alloc(_spriteSheets[i], 1, _animFrames[i]));
+        _spriteNodes[i]->setScale(CHAR_SCALE);
+        _spriteNodes[i]->setAnchor(Vec2::ANCHOR_CENTER);
+        _spriteNodes[i]->setPosition(Vec2(0, width / 2.5f));
+        _spriteNodes[i]->setVisible(false);
+        _node->addChild(_spriteNodes[i]);
+    }
+    _spriteNodes[STILL_ANIM_KEY]->setVisible(true);
 }

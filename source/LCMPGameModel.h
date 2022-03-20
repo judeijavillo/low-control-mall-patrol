@@ -26,7 +26,8 @@ protected:
     std::vector<std::shared_ptr<TrapModel>> _traps;
     /** A vector of references to obstacles */
     std::vector<std::shared_ptr<ObstacleModel>> _obstacles;
-        
+    /** Reference to the Action Manager */
+    std::shared_ptr<cugl::scene2::ActionManager> _actions;
     /** Reference to the physics node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _worldnode;
     /** Reference to the debug node of the scene graph */
@@ -67,8 +68,9 @@ public:
     bool init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
               std::shared_ptr<cugl::scene2::SceneNode>& worldnode,
               std::shared_ptr<cugl::scene2::SceneNode>& debugnode,
-              const std::shared_ptr<cugl::AssetManager>& asssets,
-              float scale, const std::string& file);
+              const std::shared_ptr<cugl::AssetManager>& assets,
+              float scale, const std::string& file,
+              std::shared_ptr<cugl::scene2::ActionManager>& actions);
     
 //  MARK: - Methods
     
@@ -145,14 +147,16 @@ private:
      */
     void initThief(float scale,
                    const std::shared_ptr<cugl::JsonValue>& spawn,
-                   const std::shared_ptr<cugl::AssetManager>& assets);
+                   const std::shared_ptr<cugl::AssetManager>& assets,
+                   std::shared_ptr<cugl::scene2::ActionManager>& actions);
     
     /**
      * Initializes a single cop
      */
     void initCop(int copID, float scale,
                  const std::shared_ptr<cugl::JsonValue>& spawns,
-                 const std::shared_ptr<cugl::AssetManager>& assets);
+                 const std::shared_ptr<cugl::AssetManager>& assets,
+                 std::shared_ptr<cugl::scene2::ActionManager>& actions);
     
     /**
      * Initializes a single wall
