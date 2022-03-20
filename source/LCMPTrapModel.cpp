@@ -18,40 +18,42 @@ using namespace cugl;
  * Initializes a Trap Model
  */
 bool TrapModel::init(int trapID,
-                     const std::shared_ptr<cugl::physics2::SimpleObstacle> area,
-                     const std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea_,
-                     const std::shared_ptr<cugl::Vec2> triggerPosition,
+                     const shared_ptr<physics2::SimpleObstacle> thiefArea, const shared_ptr<physics2::SimpleObstacle> copArea,
+                     const shared_ptr<physics2::SimpleObstacle> triggerArea_,
+                     const shared_ptr<Vec2> triggerPosition,
                      bool copSolid, bool thiefSolid,
                      int numUses,
                      float lingerDur,
-                     const std::shared_ptr<cugl::Affine2> thiefVelMod,
-                     const std::shared_ptr<cugl::Affine2> copVelMod,
-                     bool startsTriggered) {
+                     float thiefSpd,
+                     float copSpd) {
     _trapID = trapID;
-    effectArea = area;
+    thiefEffectArea = thiefArea;
+    copEffectArea = copArea;
     triggerArea = triggerArea_;
     triggerPos = triggerPosition;
     copCollide = copSolid;
     thiefCollide = thiefSolid;
     usesRemaining = numUses;
     lingerDuration = lingerDur;
-    thiefVelocityModifier = thiefVelMod;
-    copVelocityModifier = copVelMod;
+    thiefSpeed = thiefSpd;
+    copSpeed = copSpd;
 
     activated = false;
 
-    effectFilter = b2Filter();
-    effectFilter.maskBits = 0b010 + 0b10000*thiefCollide + 0b01000*copCollide;
-    effectFilter.categoryBits = 0b010 + 0b10000 * thiefCollide + 0b01000 * copCollide;
-    effectArea->setFilterData(effectFilter);
+    thiefEffectFilter = b2Filter();
+    thiefEffectFilter.maskBits = 0b10000;
+    thiefEffectFilter.categoryBits = 0b10000;
+    thiefEffectArea->setFilterData(thiefEffectFilter);
+
+    copEffectFilter = b2Filter();
+    copEffectFilter.maskBits = 0b01000;
+    copEffectFilter.categoryBits = 0b01000;
+    copEffectArea->setFilterData(copEffectFilter);
     
     triggerFilter = b2Filter();
     triggerFilter.maskBits = 0b00100;
     triggerFilter.categoryBits = 0b00100;
     triggerArea->setFilterData(triggerFilter);
-
-    // TODO: This can cause some problems: if you init before setAssets, activate will be working with nodes that don't exist
-    if (startsTriggered) activate();
 
     return true;
 }
@@ -78,7 +80,7 @@ void TrapModel::setAssets(float scale,
     // Set the nodes' positions
     _triggerNode->setPosition(triggerPos->x * scale, triggerPos->y * scale);
     _triggerActivatedNode->setPosition(triggerPos->x * scale, triggerPos->y * scale);
-    _effectAreaNode->setPosition(effectArea->getPosition() * scale);
+    _effectAreaNode->setPosition(thiefEffectArea->getPosition() * scale);
     
     // TODO: these should really be children of a parent node that isn't the world node
     // Add the unactivated trigger node as the child
@@ -90,7 +92,8 @@ void TrapModel::setAssets(float scale,
  * Sets the debug scene to all of the children nodes
  */
 void TrapModel::setDebugScene(const shared_ptr<scene2::SceneNode>& node){
-    effectArea->setDebugScene(node);
+    thiefEffectArea->setDebugScene(node);
+    copEffectArea->setDebugScene(node);
     triggerArea->setDebugScene(node);
 }
 
@@ -110,7 +113,13 @@ bool TrapModel::use() {
 void TrapModel::activate(){
     if (activated) return;
     activated = true;
-    effectArea->setSensor(false);
+    if (thiefCollide) {
+        thiefEffectArea->setSensor(false);
+    }
+    if (copCollide) {
+        copEffectArea->setSensor(false);
+    }
+
     
     // Change which nodes are being shown
     _node->removeChild(_triggerNode);

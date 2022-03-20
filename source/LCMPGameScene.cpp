@@ -19,6 +19,8 @@
 
 #include "LCMPGameScene.h"
 #include "LCMPConstants.h"
+#include "LCMPConstants.h"
+#include "LCMPConstants.h"
 
 using namespace cugl;
 using namespace std;
@@ -248,7 +250,7 @@ void GameScene::start(bool host) {
     _ishost = host;
     _playerNumber = _network->getPlayerNumber();
     _isThief = (_playerNumber == -1);
-    
+
     // Initialize the game
     _game = make_shared<GameModel>();
     _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions);
@@ -672,13 +674,38 @@ void GameScene::beginContact(b2Contact* contact) {
     for (int i = 0; i < _game->numberOfTraps(); i++) {
         shared_ptr<TrapModel> trap = _game->getTrap(i);
         auto triggerBody = trap->getTriggerArea()->getBody();
-        auto effectBody = trap->getEffectArea()->getBody();
+        auto thiefEffectBody = trap->getThiefEffectArea()->getBody();
+        auto copEffectBody = trap->getCopEffectArea()->getBody();
 
         if (trap->activated) {
-            if ((thiefBody == body1 && effectBody == body2) ||
-                (thiefBody == body2 && effectBody == body1)) {
+            if ((thiefBody == body1 && thiefEffectBody == body2) ||
+                (thiefBody == body2 && thiefEffectBody == body1)) {
                 // TODO: the thief and trap collisions?
                 // _gameover = true;
+
+                CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
+                //trap->changeThiefVelocity(_game->getThief()->getVelocity());
+                //_game->getThief()->setLinearVelocity(trap->changeThiefVelocity(_game->getThief()->getVelocity()));
+
+                // Slow down
+                _game->getThief()->setDamping(THIEF_DAMPING_DEFAULT*2.5);
+
+                // Speed up
+                /*_game->getThief()->setMaxSpeed(THIEF_MAX_SPEED_DEFAULT*2);
+                _game->getThief()->setAcceleration(THIEF_ACCELERATION_DEFAULT * 2);*/
+
+                CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
+
+            }
+
+            for (int i = 0; i < 4; i++) {
+                b2Body* copBody = _game->getCop(i)->getBody();
+                if ((copBody == body1 && copEffectBody == body2) ||
+                    (copBody == body2 && copEffectBody == body1)) {
+
+                    _game->getCop(i)->setDamping(COP_DAMPING_DEFAULT * 2.5);
+
+                }
             }
         }
         else {
@@ -699,14 +726,40 @@ void GameScene::endContact(b2Contact* contact) {
     b2Body* body2 = contact->GetFixtureB()->GetBody();
     b2Body* thiefBody = _game->getThief()->getBody();
 
-    int trapID = _game->getThief()->trapActivationFlag;
-    if (trapID != -1) {
-        shared_ptr<TrapModel> trap = _game->getTrap(trapID);
-        b2Body* triggerBody = trap->getTriggerArea()->getBody();
+    for (int i = 0; i < _game->numberOfTraps(); i++) {
+        shared_ptr<TrapModel> trap = _game->getTrap(i);
+        auto triggerBody = trap->getTriggerArea()->getBody();
+        auto thiefEffectBody = trap->getThiefEffectArea()->getBody();
+        auto copEffectBody = trap->getCopEffectArea()->getBody();
 
-        if ((thiefBody == body1 && triggerBody == body2) ||
-            (thiefBody == body2 && triggerBody == body1)) {
-            _game->getThief()->trapActivationFlag = -1;
+        if (trap->activated) {
+            if ((thiefBody == body1 && thiefEffectBody == body2) ||
+                (thiefBody == body2 && thiefEffectBody == body1)) {
+
+                // Undo slow down
+                _game->getThief()->setDamping(THIEF_DAMPING_DEFAULT);
+
+                // Undo speed up
+                /*_game->getThief()->setMaxSpeed(THIEF_MAX_SPEED_DEFAULT);
+                _game->getThief()->setAcceleration(THIEF_ACCELERATION_DEFAULT);*/
+
+                CULog("Velocity X: %f, Y: %f", _game->getThief()->getVelocity().x, _game->getThief()->getVelocity().y);
+            }
+            for (int i = 0; i < 4; i++) {
+                b2Body* copBody = _game->getCop(i)->getBody();
+                if ((copBody == body1 && copEffectBody == body2) ||
+                    (copBody == body2 && copEffectBody == body1)) {
+
+                    _game->getCop(i)->setDamping(COP_DAMPING_DEFAULT);
+
+                }
+            }
+        }
+        else {
+            if ((thiefBody == body1 && triggerBody == body2) ||
+                (thiefBody == body2 && triggerBody == body1)) {
+                _game->getThief()->trapActivationFlag = -1;
+            }
         }
     }
 }

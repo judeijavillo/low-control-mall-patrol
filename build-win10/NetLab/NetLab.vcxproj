@@ -206,6 +206,7 @@
     <ClInclude Include="..\..\source\LCMPAudioController.h" />
     <ClInclude Include="..\..\source\LCMPClientScene.h" />
     <ClInclude Include="..\..\source\LCMPCollisionController.h" />
+    <ClInclude Include="..\..\source\LCMPConstants.h" />
     <ClInclude Include="..\..\source\LCMPCopModel.h" />
     <ClInclude Include="..\..\source\LCMPGameModel.h" />
     <ClInclude Include="..\..\source\LCMPGameScene.h" />
