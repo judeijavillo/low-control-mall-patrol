@@ -58,7 +58,6 @@ protected:
     /** The network connection (as made by this scene) */
     std::shared_ptr<cugl::NetworkConnection> _connection;
     
-    
     /** Whether the connection being made is for a host or not */
     bool _isHost;
     /** Whether the host decides this player is the thief or not */

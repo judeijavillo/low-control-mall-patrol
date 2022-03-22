@@ -44,6 +44,9 @@ void LCMPApp::onStartup() {
     
     // Initialize networking
     _network = make_shared<NetworkController>();
+    
+    // Initialize audio
+    _audio = make_shared<AudioController>();
 
     // Attach loaders to the asset manager
     _assets->attach<Font>(FontLoader::alloc()->getHook());
@@ -56,9 +59,6 @@ void LCMPApp::onStartup() {
     // Create a "loading" screen
     _scene = State::LOAD;
     _loading.init(_assets);
-    
-    // Initialize audio
-    _audio = make_shared<AudioController>();
     
     // Queue up the other assets
     _assets->loadDirectoryAsync("json/assets.json",nullptr);

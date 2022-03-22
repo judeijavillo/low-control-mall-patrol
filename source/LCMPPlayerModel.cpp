@@ -126,12 +126,11 @@ void PlayerModel::update(float timestep) {
 }
 
 int PlayerModel::findDirection(Vec2 movement) {
-    float angle = movement.getAngle(Vec2(1,0)) * 180 / 3.14;
-    int key = (angle < 45 || angle >= -45) ? 0 : -1;
-    if (angle < 135 && angle >= 45) key = 1;
-    else if (angle >= 135 || angle < -135 || (movement.y == 0 && movement.x < 0)) key = 2;
-    else if (angle < -45 && angle >= -135) key = 3;
-    return key;
+    if (abs(movement.x) >= abs(movement.y)) {
+        return movement.x > 0 ? RIGHT_ANIM_KEY : LEFT_ANIM_KEY;
+    } else {
+        return movement.y > 0 ? FRONT_ANIM_KEY : BACK_ANIM_KEY;
+    }
 }
 
 /**
@@ -140,22 +139,18 @@ int PlayerModel::findDirection(Vec2 movement) {
 void PlayerModel::playAnimation(Vec2 movement) {
     // Figure out which animation direction to use
     int key = findDirection(movement);
-    if (movement.length() == 0) {
-        key = STILL_ANIM_KEY;
-    }
     
-    for (shared_ptr<cugl::scene2::SpriteNode> s : _spriteNodes) {
-        s->setVisible(false);
-    }
+    // If there is no movement, use the still animation
+    if (movement.length() == 0) key = STILL_ANIM_KEY;
+    
+    // Make all of the sprite nodes invisible
+    for (shared_ptr<cugl::scene2::SpriteNode> s : _spriteNodes) s->setVisible(false);
 
     // Animate different direction
-    bool cycle;
     std::shared_ptr<scene2::SpriteNode> node;
-    // Set still animation if no movement
     _actions->activate(ACT_KEY, _animations[key], _spriteNodes[key]);
     _spriteNodes[key]->setVisible(true);
     node = _spriteNodes[key];
-    cycle = _cycles[key];
 
     if (movement.length() > 0) {
         // Turn on the flames and go back and forth

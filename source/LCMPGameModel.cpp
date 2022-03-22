@@ -248,12 +248,8 @@ GameModel::ObstacleNode_x_Y_struct GameModel::readJsonShape(const shared_ptr<Jso
                 
         // Create a path in the counter clockwise direction, give up if not valid
         Path2 path(vertices);
-        if (path.orientation() == 0) {
-            throw runtime_error("non-closed path");
-        }
-        if (path.orientation() != -1) {
-            path.reverse();
-        }
+        if (path.orientation() == 0) throw runtime_error("non-closed path");
+        if (path.orientation() != -1) path.reverse();
         
         // Create a polygon from that path
         EarclipTriangulator triangulator;
@@ -274,6 +270,7 @@ GameModel::ObstacleNode_x_Y_struct GameModel::readJsonShape(const shared_ptr<Jso
         node->setAnchor(anchor);
         node->setPosition(x * scale, y * scale);
     }
+    
     // The wall component is a rectangle
     else {
         // Flip the y coordinate

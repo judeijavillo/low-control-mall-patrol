@@ -91,7 +91,7 @@ void TrapModel::setAssets(float scale,
 /**
  * Sets the debug scene to all of the children nodes
  */
-void TrapModel::setDebugScene(const shared_ptr<scene2::SceneNode>& node){
+void TrapModel::setDebugScene(const shared_ptr<scene2::SceneNode>& node) {
     thiefEffectArea->setDebugScene(node);
     copEffectArea->setDebugScene(node);
     triggerArea->setDebugScene(node);
@@ -110,7 +110,7 @@ bool TrapModel::use() {
 /**
  * Activates this trap.
  */
-void TrapModel::activate(){
+void TrapModel::activate() {
     if (activated) return;
     activated = true;
     if (thiefCollide) {

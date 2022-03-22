@@ -14,10 +14,6 @@
 #define EVENT_SWIPE_LENGTH  100
 /** Double tap threshold */
 #define TAP_THRESHOLD 200
-/** The radius of the joystick*/
-#define JOYSTICK_RADIUS     100
-/** This defines the joystick "deadzone" (how far we must move) */
-#define JOYSTICK_DEADZONE   15
 
 /**
  * The controller that handles all inputs to the device

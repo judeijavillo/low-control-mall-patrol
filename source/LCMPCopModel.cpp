@@ -7,7 +7,6 @@
 //
 
 #include "LCMPCopModel.h"
-#include "LCMPConstants.h"
 
 using namespace cugl;
 using namespace std;
@@ -54,11 +53,6 @@ bool CopModel::init(float scale,
     
     // Call the parent's initializer
     PlayerModel::init(Vec2::ZERO, size, scale, node, actions);
-    
-    // Set movement attributes to their default values.
-    setAcceleration(COP_ACCELERATION_DEFAULT);
-    setDamping(COP_DAMPING_DEFAULT);
-    setMaxSpeed(COP_MAX_SPEED_DEFAULT);
     
     // Set up the textures for all tackle directions
     _tackleDownTexture = assets->get<Texture>(COP_JUMP_DOWN);
@@ -111,11 +105,12 @@ void CopModel::dispose() {
 }
 
 void CopModel::showTackle(Vec2 direction, bool inAir) {
+    // Determine which direction the cop is facing
     int key = findDirection(direction);
     
-    for (std::shared_ptr<scene2::SpriteNode> s : _spriteNodes) {
-        s->setVisible(false);
-    }
+    
+    for (std::shared_ptr<scene2::SpriteNode> s : _spriteNodes) s->setVisible(false);
+    
 
     _character->setVisible(true);
     switch (key) {
@@ -143,7 +138,8 @@ void CopModel::hideTackle() {
 void CopModel::failedTackle(float timer, cugl::Vec2 swipe) {
     if (timer <= TACKLE_AIR_TIME) {
         Vec2 normSwipe = swipe.getNormalization();
-        b2Vec2 vel(normSwipe.x * COP_MAX_SPEED_DEFAULT * TACKLE_MOVEMENT_MULT, -normSwipe.y * COP_MAX_SPEED_DEFAULT * TACKLE_MOVEMENT_MULT);
+        b2Vec2 vel(normSwipe.x * COP_MAX_SPEED_DEFAULT * TACKLE_MOVEMENT_MULT,
+                   -normSwipe.y * COP_MAX_SPEED_DEFAULT * TACKLE_MOVEMENT_MULT);
         _body->SetLinearVelocity(vel);
     }
     else {

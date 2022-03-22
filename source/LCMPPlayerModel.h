@@ -32,12 +32,6 @@ protected:
 //  MARK: - Properties
     /** A reference to the Action Manager */
     std::shared_ptr<cugl::scene2::ActionManager> _actions;
-    
-    //Physics attributes that model movement
-    float _damping;
-    float _acceleration;
-    float _maxspeed;
-
 
     // Views
     /** The top-level node for displaying the player */
@@ -47,9 +41,17 @@ protected:
     /** The child nodes for displaying the player */
     std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _spriteNodes;
     std::vector<std::shared_ptr<cugl::scene2::Animate>> _animations;
-    std::vector<bool> _cycles;
     std::vector<std::shared_ptr<cugl::Texture>> _spriteSheets;
     std::vector<int> _animFrames;
+    std::vector<bool> _cycles;
+    
+    // Physics
+    /** A multipler for the damping constant */
+    float _dampingMultiplier       = 1.0f;
+    /** A multipler for the max speed constant */
+    float _maxSpeedMultiplier      = 1.0f;
+    /** A multipler for the acceleration constant */
+    float _accelerationMultiplier  = 1.0f;
 
     /** The ratio to scale the textures. (SCENE UNITS / WORLD UNITS) */
     float _scale;
@@ -118,44 +120,44 @@ public:
     void setObstacleSound(const std::string& key) { _obstacleSound = key; }
     
     /**
+     * Returns the node of this player
+     */
+    std::shared_ptr<cugl::scene2::SceneNode> getNode() { return _node; }
+    
+    /**
      * Returns the velocity of the player's body
      */
     cugl::Vec2 getVelocity() { return getLinearVelocity(); }
     
     /**
-     * Returns the damping constant
+     * Returns the damping constant of this player
      */
-    virtual float getDamping() { return _damping; }
-
-    /**
-     * Sets the damping constant.
-     */
-    virtual void setDamping(float value) {  _damping = value; }
+    virtual float getDamping() { return 10.0f; }
     
     /**
      * Returns the max speed of this player
      */
-    virtual float getMaxSpeed() { return _maxspeed; }
-    
-    /**
-     * Sets the max speed of this player.
-     */
-    virtual void setMaxSpeed(float value) { _maxspeed = value; }
+    virtual float getMaxSpeed() { return 10.0f; }
 
     /**
      * Returns the acceleration of this player
      */
-    virtual float getAcceleration() { return _acceleration; }
-
+    virtual float getAcceleration() { return 10.0f; }
+    
+    /**
+     * Sets the damping multiplier of this player
+     */
+    void setDampingMultiplier(float value) {  _dampingMultiplier = value; }
+    
+    /**
+     * Sets the max speed of this player.
+     */
+    void setMaxSpeedMultiplier(float value) { _maxSpeedMultiplier = value; }
+    
     /**
      * Sets the acceleration of this player.
      */
-    virtual void setAcceleration(float value) { _acceleration = value; }
-
-    /**
-     * Returns the node of this player
-     */
-    std::shared_ptr<cugl::scene2::SceneNode> getNode() { return _node; }
+    void setAccelerationMultiplier(float value) { _accelerationMultiplier = value; }
     
     /**
      * Applies a force to the player (most likely for local updates)

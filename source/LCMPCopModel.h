@@ -9,6 +9,7 @@
 #ifndef __LCMP_COP_MODEL_H__
 #define __LCMP_COP_MODEL_H__
 #include "LCMPPlayerModel.h"
+#include "LCMPConstants.h"
 
 /** Defining the filter bits for the cop model*/
 #define COP_FILTER_BITS 0b01001
@@ -53,20 +54,20 @@ public:
     
 //  MARK: - Methods
     
-    ///**
-    // * Returns the damping constant
-    // */
-    //float getDamping() override { return COP_DAMPING; }
-    //
-    ///**
-    // * Returns the max speed of a cop
-    // */
-    //float getMaxSpeed() override { return COP_MAX_SPEED; }
-    //
-    ///**
-    // * Returns the acceleration of a cop
-    // */
-    //float getAcceleration() override { return COP_ACCELERATION; }
+    /**
+     * Returns the damping constant
+     */
+    float getDamping() override { return COP_DAMPING_DEFAULT * _dampingMultiplier; }
+    
+    /**
+     * Returns the max speed of a cop
+     */
+    float getMaxSpeed() override { return COP_MAX_SPEED_DEFAULT * _maxSpeedMultiplier; }
+    
+    /**
+     * Returns the acceleration of a cop
+     */
+    float getAcceleration() override { return COP_ACCELERATION_DEFAULT * _accelerationMultiplier; }
     
     /**
      * Sets cop speeds according to a missed tackle

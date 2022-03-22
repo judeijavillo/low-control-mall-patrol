@@ -7,6 +7,7 @@
 //
 
 #include "LCMPInputController.h"
+#include "LCMPConstants.h"
 
 using namespace cugl;
 
@@ -145,13 +146,15 @@ cugl::Vec2 const InputController::getMovementVector(bool isThief) const {
 #ifdef CU_TOUCH_SCREEN
     if (isThief) {
         Vec2 dpos = Vec2(_joystickPosition - _joystickOrigin);
-        dpos.lengthSquared() >= (JOYSTICK_RADIUS * JOYSTICK_RADIUS) ? dpos.normalize()
+        dpos.lengthSquared() >= (JOYSTICK_RADIUS * JOYSTICK_RADIUS)
+            ? dpos.normalize()
             : dpos = dpos / JOYSTICK_RADIUS;
         return dpos;
     }
     else {
         Vec2 accel;
-        _acceleration.lengthSquared() >= (ACCEL_MAX * ACCEL_MAX) ? accel = _acceleration.getNormalization()
+        _acceleration.lengthSquared() >= (ACCEL_MAX * ACCEL_MAX)
+            ? accel = _acceleration.getNormalization()
             : accel = (_acceleration / ACCEL_MAX);
         return accel;
     }

@@ -13,9 +13,11 @@
 #include <cugl/cugl.h>
 #include <vector>
 #include "LCMPNetworkController.h"
-#include "LCMPInputController.h"
-#include "LCMPGameModel.h"
 #include "LCMPAudioController.h"
+#include "LCMPCollisionController.h"
+#include "LCMPInputController.h"
+#include "LCMPUIController.h"
+#include "LCMPGameModel.h"
 
 /**
  * This class is the primary gameplay controller for the demo.
@@ -27,24 +29,20 @@
 class GameScene : public cugl::Scene2 {
 protected:
 //  MARK: - Properties
-    /** The time for this current game */
-    float _gameTime;
-    /** The time for the win game */
-    float _resetTime;
-    /** The last time the cop tackled */
-    float _tackleTime;
     
     // Controllers
+    /** A reference to the Asset Manager */
+    std::shared_ptr<cugl::scene2::ActionManager> _actions;
     /** A reference to the Network Controller instance */
     std::shared_ptr<NetworkController> _network;
     /** A reference to the Audio Controller instance */
     std::shared_ptr<AudioController> _audio;
-    /** A reference to the Asset Manager */
-    std::shared_ptr<cugl::scene2::ActionManager> _actions;
+    /** The Collision Controller instance */
+    CollisionController _collision;
     /** The Input Controller instance */
     InputController _input;
-    /** The PolyFactory instance */
-    cugl::PolyFactory _pf;
+    /** The UI Controller instance */
+    UIController _ui;
     
     // Models
     /** A model to represent all models within the game */
@@ -59,31 +57,16 @@ protected:
     std::shared_ptr<cugl::scene2::SceneNode> _debugnode;
     /** Reference to the debug node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _uinode;
-    
-    /** A view of the part of the joystick indicating what the player is controlling */
-    std::shared_ptr<cugl::scene2::PolygonNode> _innerJoystick;
-    /** A view of the part of the joystick indicating how far the josyick can reach */
-    std::shared_ptr<cugl::scene2::PolygonNode> _outerJoystick;
-    /** Color for the joystick */
-    cugl::Color4 _joystickColor = cugl::Color4(cugl::Vec4(0, 0, 0, 0.25));
 
-    /** 
-     * A view of the part of the accelerometer visualization indicating how far
-     * the player can tilt the phone
-    */
-    std::shared_ptr<cugl::scene2::PolygonNode> _outerAccelVis;
-    /**
-     * A view of the part of the accelerometer visualization indicating the
-     * current tilt of the phone.
-    */
-    std::shared_ptr<cugl::scene2::PolygonNode> _innerAccelVis;
-    /** Colors for accelerometer visualization */
-    cugl::Color4 _outerAccelVisColor = cugl::Color4(cugl::Vec4(0, 0, 0, 0.25));
-    cugl::Color4 _innerAccelVisColor = cugl::Color4::RED;
-
+    // Pointers
     /** The Box2D world */
     std::shared_ptr<cugl::physics2::ObstacleWorld> _world;
+    /** The asset manager for this game mode */
+    std::shared_ptr<cugl::AssetManager> _assets;
+    /** Font for Scene Nodes */
+    shared_ptr<cugl::Font> _font;
     
+    // Scaling
     /** The actual size of the display. */
     cugl::Size _screenSize;
     /** The locked size of the display. */
@@ -92,11 +75,18 @@ protected:
     cugl::Vec2 _offset;
     /** The scale between the physics world and the screen (SCREEN UNITS / BOX2D WORLD UNITS) */
     float _scale;
+    
+    // Timing
+    /** The time for this current game */
+    float _gameTime;
+    /** The time for the win game */
+    float _resetTime;
+    /** The last time the cop tackled */
+    float _tackleTime;
+    
+    // Control
     /** The unique player number of this player */
     int _playerNumber;
-    
-    /** The asset manager for this game mode */
-    std::shared_ptr<cugl::AssetManager> _assets;
     /** Whether the game is over or not  */
     bool _gameover;
     /** Whether this player is the thief */
@@ -107,16 +97,6 @@ protected:
     bool _quit;
     /** Whether the cop has hit a successful tackle. */
     bool _hitTackle;
-    
-    /** The directional indicators for the thief that point to the cops */
-    std::unordered_map<int, std::shared_ptr<cugl::scene2::PolygonNode>> _direcIndicators;
-    /** The Scene Nodes for displaying cop indicators for thief */
-    std::unordered_map<int, std::shared_ptr<cugl::scene2::Label>> _copDistances;
-    /** Scene Node for displaying thief distance for cop */
-    std::shared_ptr<cugl::scene2::Label> _thiefDistance;
-    
-    /** Font for Scene Nodes */
-    shared_ptr<cugl::Font> _font;
     
 public:
 //  MARK: - Constructors
@@ -191,15 +171,6 @@ public:
      * @param value whether the scene is currently active
      */
     virtual void setActive(bool value) override;
-    
-    /**
-     * Returns true if the player is host.
-     *
-     * We may need to have gameplay specific code for host.
-     *
-     * @return true if the player is host.
-     */
-    bool isHost() const { return _ishost; }
 
     /**
      * Returns true if the player quits the game.
@@ -224,35 +195,6 @@ public:
 
 private:
 //  MARK: - Helpers
-    
-    /**
-     * Creates the necessary nodes for showing the joystick and adds them to the UI node
-     */
-    void initJoystick();
-    
-    /**
-     *  Creates the necessary nodes for the accelerometer visualization and
-     *  adds them to the UI node.
-    */
-    void initAccelVis();
-
-    /**
-     *  Creates directional indicators for the thief that point towards the cops.
-     *  These indicators are added to the UI node.
-    */
-    void initDirecIndicators();
-    
-    /**
-     *  Updates directional indicators for the thief that point towards the cops.
-    */
-    void updateDirecIndicators(bool isThief);
-  
-    /**
-     *  Updates the accelerometer visualization to match the current tilt of the phone.
-     *  Requires movement vector length to be 1 or less.
-    */
-    void updateAccelVis(bool isThief, cugl::Vec2 movement);
-
     /**
      *  Performs all logic associated with the cop tackle.
      *  This method is physics-based if it is a missed tackle, and discretized
@@ -268,23 +210,6 @@ private:
      *  Returns whether animation is complete or not.
     */
     bool successfulTackle(float dt);
-
-//  MARK: - Callbacks
-    
-    /**
-     * Callback for when two obstacles in the world begin colliding
-     */
-    void beginContact(b2Contact* contact);
-    
-    /**
-     * Callback for when two obstacles in the world end colliding
-     */
-    void endContact(b2Contact* contact);
-
-    /**
-     * Callback for determining if two obstacles in the world should collide.
-     */
-    bool shouldCollide(b2Fixture* f1, b2Fixture* f2);
     
 };
 
