@@ -55,13 +55,13 @@ void LCMPApp::onStartup() {
     _assets->attach<WidgetValue>(WidgetLoader::alloc()->getHook());
     _assets->attach<scene2::SceneNode>(Scene2Loader::alloc()->getHook());
     _assets->attach<Sound>(SoundLoader::alloc()->getHook());
-
-    // Create a "loading" screen
-    _scene = State::LOAD;
-    _loading.init(_assets);
     
     // Queue up the other assets
     _assets->loadDirectoryAsync("json/assets.json",nullptr);
+    
+    // Create a "loading" screen
+    _scene = State::LOAD;
+    _loading.init(_assets, _audio);
     
     // Call the parent's onStartup
     Application::onStartup();
@@ -83,9 +83,9 @@ void LCMPApp::onShutdown() {
     _host.disconnect();
     _client.disconnect();
     
-    _audio->dispose();
     _loading.dispose();
     _game.dispose();
+    _audio->dispose();
     _actions = nullptr;
     _assets = nullptr;
     _batch = nullptr;
@@ -180,9 +180,10 @@ void LCMPApp::updateLoadingScene(float timestep) {
     } else {
         // Leave loading for good, initialize all other scenes
         _loading.dispose();
-        _menu.init(_assets);
-        _host.init(_assets, _network);
-        _client.init(_assets, _network);
+        _audio->stopMusic(LOADING_MUSIC);
+        _menu.init(_assets, _audio);
+        _host.init(_assets, _network, _audio);
+        _client.init(_assets, _network, _audio);
         _game.init(_assets, _network, _audio, _actions);
         _menu.setActive(true);
         _scene = State::MENU;
@@ -294,6 +295,9 @@ void LCMPApp::updateGameScene(float timestep) {
         _game.setActive(false);
         _menu.setActive(true);
         _scene = State::MENU;
+        
+        _audio->stopMusic(GAME_MUSIC);
+        _audio->playSound(_assets, MENU_MUSIC, false, -1);
     }
 }
 

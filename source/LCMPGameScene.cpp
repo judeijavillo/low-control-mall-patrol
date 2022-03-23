@@ -18,6 +18,7 @@
 #include <math.h>
 
 #include "LCMPGameScene.h"
+#include "LCMPConstants.h"
 
 using namespace cugl;
 using namespace std;
@@ -36,8 +37,6 @@ using namespace std;
 
 /** The amount of time that the game waits before reseting */
 #define RESET_TIME 3
-/** The time for sound effects */
-#define SFX_TIME 5
 
 /** The key for the floor tile */
 #define TILE_TEXTURE    "floor"
@@ -174,6 +173,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
  */
 void GameScene::dispose() {
     if (_active) {
+        _audio->stopMusic(GAME_MUSIC);
         removeAllChildren();
         _active = false;
     }
@@ -192,6 +192,9 @@ void GameScene::start(bool host) {
     _gameTime = 0;
     _doneTime = 0;
     _isHost = host;
+    
+    _audio->playSound(_assets, GAME_MUSIC, false, -1);
+
     _playerNumber = _network->getPlayerNumber();
     _isThief = (_playerNumber == -1);
 
@@ -292,6 +295,16 @@ void GameScene::stateGame(float timestep) {
     // Keep track of time
     _gameTime += timestep;
     
+    // Play last frame's sound effects
+    if (_collision.didHitObstacle) {
+        _audio->playSound(_assets, OBJ_COLLISION_SFX, true, _gameTime);
+        _collision.didHitObstacle = false;
+    }
+    if (_collision.didHitTrap) {
+        _audio->playSound(_assets, TRAP_COLLISION_SFX, true, _gameTime);
+        _collision.didHitTrap = false;
+    }
+    
     // Gather the input commands
     _input.update(timestep);
     Vec2 origin = _input.touch2Screen(_input.getJoystickOrigin());
@@ -331,6 +344,7 @@ void GameScene::stateGame(float timestep) {
     // Detect transition to next state
     for (int i = 0; i < _game->numberOfCops(); i++) {
         if (_game->getCop(i)->getCaughtThief()) {
+            _audio->playSound(_assets, THIEF_COLLISION_SFX, true, _gameTime);
             if (_isHost) _game->setGameOver(true);
         }
     }
@@ -402,6 +416,16 @@ void GameScene::updateCop(float timestep, int copID, Vec2 movement, bool swipe, 
     // Get some reusable variables
     shared_ptr<CopModel> cop = _game->getCop(copID);
     Vec2 thiefPosition = _game->getThief()->getPosition();
+    
+    // Play tackling sounds
+    if (cop->didTackle) {
+        _audio->playSound(_assets, TACKLE_SFX, true, _gameTime);
+        cop->didTackle = false;
+    }
+    if (cop->didLand) {
+        _audio->playSound(_assets, LAND_SFX, true, _gameTime);
+        cop->didLand = false;
+    }
     
     // Update, animate, and network cop movement
     _game->updateCop(movement, thiefPosition, copID, timestep);

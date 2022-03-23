@@ -19,6 +19,7 @@
 #ifndef __LCMP_LOADING_SCENE_H__
 #define __LCMP_LOADING_SCENE_H__
 #include <cugl/cugl.h>
+#include "LCMPAudioController.h"
 
 /**
  * This class is a simple loading screen for asychronous asset loading.
@@ -37,6 +38,8 @@ protected:
     
     /** The asset manager for loading. */
     std::shared_ptr<cugl::AssetManager> _assets;
+    /** A reference to the Audio Controller instance */
+    std::shared_ptr<AudioController> _audio;
     
     // VIEW
     /** The animated progress bar */
@@ -87,7 +90,8 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets,
+              std::shared_ptr<AudioController>& audio);
 
     
 //  MARK: - Progress Monitoring

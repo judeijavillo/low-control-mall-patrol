@@ -17,6 +17,7 @@
 #include <cugl/cugl.h>
 #include <vector>
 #include "LCMPNetworkController.h"
+#include "LCMPAudioController.h"
 
 /**
  * This class provides the interface to make a new game.
@@ -49,6 +50,9 @@ protected:
     
     /** The asset manager for this scene. */
     std::shared_ptr<cugl::AssetManager> _assets;
+    
+    /** The sound controller for the game */
+    std::shared_ptr<AudioController> _audio;
 
     /** The menu button for starting a game */
     std::shared_ptr<cugl::scene2::Button> _startgame;
@@ -101,7 +105,9 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<NetworkController>& network);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets,
+              std::shared_ptr<NetworkController>& network,
+              std::shared_ptr<AudioController>& audio);
     
 //  MARK: - Methods
     

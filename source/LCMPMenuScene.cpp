@@ -15,6 +15,7 @@
 #include <sstream>
 
 #include "LCMPMenuScene.h"
+#include "LCMPConstants.h"
 
 using namespace cugl;
 using namespace std;
@@ -40,7 +41,8 @@ using namespace std;
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
+bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
+                     std::shared_ptr<AudioController>& audio) {
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     dimen *= SCENE_HEIGHT/dimen.height;
@@ -49,8 +51,11 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     if (assets == nullptr) return false;
     else if (!Scene2::init(dimen)) return false;
     
-    // Start up the input handler
+    // Save the references to managers and controllers
     _assets = assets;
+    _audio = audio;
+    
+    _audio->playSound(_assets, MENU_MUSIC, false, -1);
     
     // Acquire the scene built by the asset loader and resize it the scene
     std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("menu");
@@ -62,10 +67,18 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     
     // Program the buttons
     _hostbutton->addListener([this](const std::string& name, bool down) {
-        if (down) _choice = Choice::HOST;
+        if (down) {
+            _choice = Choice::HOST;
+            _audio->stopSfx(CLICK_SFX);
+            _audio->playSound(_assets, CLICK_SFX, true, 0);
+        }
     });
     _joinbutton->addListener([this](const std::string& name, bool down) {
-        if (down) _choice = Choice::JOIN;
+        if (down) {
+            _choice = Choice::JOIN;
+            _audio->stopSfx(CLICK_SFX);
+            _audio->playSound(_assets, CLICK_SFX, true, 0);
+        }
     });
 
     addChild(scene);

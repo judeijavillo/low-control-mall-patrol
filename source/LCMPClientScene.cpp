@@ -39,7 +39,9 @@ using namespace std;
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<NetworkController>& network) {
+bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
+                       std::shared_ptr<NetworkController>& network,
+                       std::shared_ptr<AudioController>& audio) {
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     dimen *= SCENE_HEIGHT/dimen.height;
@@ -48,11 +50,10 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     if (assets == nullptr) return false;
     else if (!Scene2::init(dimen)) return false;
     
-    // Start up the input handler
+    // Save the references to managers and controllers
     _assets = assets;
-    
-    // Save network controller
     _network = network;
+    _audio = audio;
     
     // Acquire the scene built by the asset loader and resize it the scene
     std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("client");
@@ -69,11 +70,15 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets, std::s
     _backout->addListener([this](const std::string& name, bool down) {
         if (down) {
             _status = Status::ABORT;
+            _audio->stopSfx(BACK_SFX);
+            _audio->playSound(_assets, BACK_SFX, true, 0);
         }
     });
 
     _startgame->addListener([=](const std::string& name, bool down) {
         if (down) {
+            _audio->stopSfx(CLICK_SFX);
+            _audio->playSound(_assets, CLICK_SFX, true, 0);
             // This will call the _gameid listener
             if (_gameid->hasFocus()) {
                 _gameid->releaseFocus();

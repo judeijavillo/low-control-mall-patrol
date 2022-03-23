@@ -14,6 +14,7 @@
 #define __LCMP_MENU_SCENE_H__
 #include <cugl/cugl.h>
 #include <vector>
+#include "LCMPAudioController.h"
 
 /**
  * This class presents the menu to the player.
@@ -41,6 +42,8 @@ protected:
     
     /** The asset manager for this scene. */
     std::shared_ptr<cugl::AssetManager> _assets;
+    /** The sound controller for the game */
+    std::shared_ptr<AudioController> _audio;
     /** The menu button for hosting a game */
     std::shared_ptr<cugl::scene2::Button> _hostbutton;
     /** The menu button for joining a game */
@@ -85,7 +88,8 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets,
+              std::shared_ptr<AudioController>& audio);
 
 //  MARK: - Methods
     

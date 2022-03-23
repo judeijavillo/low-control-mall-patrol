@@ -17,6 +17,7 @@
 //
 
 #include "LCMPLoadingScene.h"
+#include "LCMPConstants.h"
 
 using namespace cugl;
 
@@ -38,7 +39,8 @@ using namespace cugl;
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool LoadingScene::init(const std::shared_ptr<AssetManager>& assets) {
+bool LoadingScene::init(const std::shared_ptr<AssetManager>& assets,
+                        std::shared_ptr<AudioController>& audio) {
     
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
@@ -58,12 +60,17 @@ bool LoadingScene::init(const std::shared_ptr<AssetManager>& assets) {
     layer->setContentSize(dimen);
     layer->doLayout(); // This rearranges the children to fit the screen
     
+    // Start loading music
+    _audio = audio;
+    _audio->playSound(_assets, LOADING_MUSIC, false, -1);
+    
     // Save the SceneNodes that we'll need to access later
     _bar = std::dynamic_pointer_cast<scene2::ProgressBar>(assets->get<scene2::SceneNode>("load_bar"));
     _brand = assets->get<scene2::SceneNode>("load_name");
     _button = std::dynamic_pointer_cast<scene2::Button>(assets->get<scene2::SceneNode>("load_play"));
     _button->addListener([=](const std::string& name, bool down) {
         this->_active = down;
+        if (down) _audio->playSound(_assets, CLICK_SFX, true, 0);
     });
     
     // Set the background color and add the LoadingScene to the screen
