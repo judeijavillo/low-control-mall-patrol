@@ -153,7 +153,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _uinode = scene2::SceneNode::alloc();
     _uinode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _uinode->setPosition(_offset);
-    
+
     // Add the nodes as children
     addChild(_floornode);
     addChild(_worldnode);
@@ -193,9 +193,7 @@ void GameScene::start(bool host) {
     _doneTime = 0;
     _isThiefWin = false;
     _isHost = host;
-    
     _audio->playSound(_assets, GAME_MUSIC, false, -1);
-
     _playerNumber = _network->getPlayerNumber();
     _isThief = (_playerNumber == -1);
 
@@ -232,6 +230,9 @@ void GameScene::update(float timestep) {
         break;
     case DONE:
         stateDone(timestep);
+        break;
+    case SETTINGS:
+        stateSettings(timestep);
         break;
     }
 }
@@ -353,7 +354,12 @@ void GameScene::stateGame(float timestep) {
     _game->update(timestep);
     _input.clear();
     
-    // Detect transition to next state
+    // Detect transition to SETTINGS
+    if (_ui.didPause()) {
+        _state = SETTINGS;
+    }
+    
+    // Detect transition to DONE
     for (int i = 0; i < _game->numberOfCops(); i++) {
         if (_game->getCop(i)->getCaughtThief()) {
             _audio->playSound(_assets, THIEF_COLLISION_SFX, true, _gameTime);
@@ -378,6 +384,32 @@ void GameScene::stateDone(float timestep) {
     // Detect transition to next state
     if (_doneTime >= RESET_TIME) {
         reset();
+        _state = GAME;
+    }
+}
+
+/**
+ * The update method for when we are in state SETTINGS
+ */
+void GameScene::stateSettings(float timestep) {
+    // Keep track of time
+    _gameTime += timestep;
+
+    // Update the game in these steps
+    updateLocal(timestep, Vec2::ZERO, false, false, Vec2::ZERO);
+    updateNetwork(timestep);
+    updateCamera(timestep);
+    updateFloor(timestep);
+    updateUI(timestep, _isThief, Vec2::ZERO, false, Vec2::ZERO, Vec2::ZERO, _playerNumber);
+    updateOrder(timestep);
+
+    // Update the physics, then move the game nodes accordingly
+    _actions->update(timestep);
+    _world->update(timestep);
+    _game->update(timestep);
+    _input.clear();
+    
+    if (!_ui.didPause()) {
         _state = GAME;
     }
 }

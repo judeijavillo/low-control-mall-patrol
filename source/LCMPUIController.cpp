@@ -24,6 +24,9 @@ using namespace cugl;
 /** The radius of the inner accelerometer visualization. */
 #define INNER_ACCEL_VIS_RADIUS    7.0f
 
+/** The key for the settings button texture */
+#define SETTINGS_BUTTON_TEXTURE    "settings_button"
+
 /** The resting position of the joystick */
 float JOYSTICK_HOME[]   {200, 200};
 
@@ -39,7 +42,7 @@ float OUTER_ACCEL_VIS_POS[2]{ 0.1f, 0.1f };
  * Disposes of all resources in this instance of UI Controller
  */
 void UIController::dispose() {
-    
+    _settingsButton->deactivate();
 }
 
 /**
@@ -57,11 +60,54 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _worldnode = worldnode;
     _uinode = uinode;
     _game = game;
+    _assets = assets;
     _screenSize = screenSize;
     _offset = offset;
     _font = font;
     _assets = assets;
     
+    // Initialize booleans (hi jude)
+    _didQuit = false;
+    _didPause = false;
+
+    // Initialize settings button from assets manager
+    std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("game");
+    scene->setContentSize(_screenSize);
+    scene->doLayout(); // Repositions the HUD
+
+    // Initialize settings button from assets manager
+    _settingsMenu = _assets->get<scene2::SceneNode>("pause");
+    _settingsMenu->setContentSize(_screenSize);
+    _settingsMenu->doLayout(); // Repositions the HUD
+
+    // Properly sets position of the settings menu (by changing content size)
+    Vec2 settingsMenuPos = _settingsMenu->getContentSize();
+    settingsMenuPos *= SCENE_HEIGHT / _screenSize.height;
+    _settingsMenu->setContentSize(settingsMenuPos);
+
+    // Set button references
+    _settingsButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("game_gameUIsettings"));
+    _quitButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("pause_settings_Quit"));
+    _closeButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("pause_settings_X"));
+
+   
+     // Program the buttons
+    _settingsButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _didPause = true;
+        }
+        });
+    _quitButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _didQuit = true;
+        }
+        });
+    _closeButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _didPause = false;
+        }
+        });
+
     // Create subnodes
     _direcIndicatorsNode = scene2::SceneNode::alloc();
     _thiefIndicatorNode = scene2::SceneNode::alloc();
@@ -75,6 +121,10 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _uinode->addChild(_victoryNode);
     _uinode->addChild(_joystickNode);
     _uinode->addChild(_accelVisNode);
+    _uinode->addChild(scene);
+    _uinode->addChild(_settingsMenu);
+
+    _settingsMenu->setVisible(false);
     
     // Hide them all to start
     _direcIndicatorsNode->setVisible(false);
@@ -90,6 +140,7 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     initThiefIndicator();
     initMessage();
     initTimer();
+    initSettingsButton();
     
     return true;
 }
@@ -102,9 +153,27 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
 void UIController::update(float timestep, bool isThief, Vec2 movement,
                           bool didPress, Vec2 origin, Vec2 position, int copID,
                           float gameTime, bool isThiefWin) {
+    
+    // Check if the game is paused.
+    // Display and activate correct buttons depending on pause state.
+    if (_didPause) {
+        _settingsMenu->setVisible(true);  
+        _quitButton->activate();
+        _closeButton->activate();
+        _settingsButton->deactivate();
+    }
+    else {
+        _settingsMenu->setVisible(false);
+        _quitButton->deactivate();
+        _closeButton->deactivate();
+        _settingsButton->activate();
+    }
+    
+    // Show these nodes regardless
+    _direcIndicatorsNode->setVisible(true);
+
     // Show these nodes if the player is a thief, hide them if they're a cop
     _joystickNode->setVisible(isThief);
-    _direcIndicatorsNode->setVisible(isThief);
     
     // Show these nodes if the player is a cop, hide them if they're a thief
     _accelVisNode->setVisible(!isThief);
@@ -113,7 +182,6 @@ void UIController::update(float timestep, bool isThief, Vec2 movement,
     // If the player is the thief, update directional indicators and joystick
     if (isThief) {
         updateJoystick(didPress, origin, position);
-        updateDirecIndicators();
     }
     
     // If the player is a cop, update accelerometer visualization and distance
@@ -121,7 +189,9 @@ void UIController::update(float timestep, bool isThief, Vec2 movement,
         updateAccelVis(movement);
         updateThiefIndicator(copID);
     }
-    
+   
+    updateDirecIndicators(isThief, copID);
+
     // Show the appropriate message
     updateMessage(isThief, isThiefWin);
     updateTimer(gameTime);
@@ -254,6 +324,10 @@ void UIController::updateTimer(float gameTime) {
     _hourHand->setAngle(ang/60);
 }
 
+void UIController::initSettingsButton() {
+
+}
+
 /**
  * Updates the joystick
  */
@@ -283,61 +357,101 @@ void UIController::updateAccelVis(Vec2 movement) {
 /**
  * Updates directional indicators
  */
-void UIController::updateDirecIndicators() {
+void UIController::updateDirecIndicators(bool isThief, int copID) {
+    
+    // Get the position of the thief in node coordinates w/ respect to worldnode
+    Vec2 thiefScreenPos = _worldnode->nodeToScreenCoords(_game->getThief()->getNode()->getPosition());
+    //Get the position of cop with respect to Box2D world
+    Vec2 thiefPos = _game->getThief()->getPosition();
+    if (isThief) {
+        // Run calculations for each directonal indicator
+        for (int i = 0; i < _game->numberOfCops(); i++) {
+            // Get the position of cop in node coordinates w/ respect to worldnode
+            Vec2 copScreenPos = _worldnode->nodeToScreenCoords(_game->getCop(i)->getNode()->getPosition());
+            //Get the position of cop with respect to Box2D world
+            Vec2 copPos = _game->getCop(i)->getPosition();
+
+            //Call helper
+            updateDirecIndicatorHelper(thiefPos, copPos, thiefScreenPos, copScreenPos, isThief, i);
+        }
+    }
+    else {
+        // Get the position of cop in node coordinates w/ respect to worldnode
+        Vec2 copScreenPos = _worldnode->nodeToScreenCoords(_game->getCop(copID)->getNode()->getPosition());
+        //Get the position of cop with respect to Box2D world
+        Vec2 copPos = _game->getCop(copID)->getPosition();
+        for (int i = 0; i < _game->numberOfCops(); i++) {
+            _direcIndicators[i]->setVisible(false);
+        }
+        //Call helper
+        updateDirecIndicatorHelper(copPos, thiefPos, copScreenPos, thiefScreenPos, isThief, copID);
+    }
+}
+
+/**
+* Update single directional indicator (this is a helper)
+* Vec2 pos1 = the origin of the directional vector
+* This is equal to the player's position.
+* Vec2 pos2 = the end of the directional vector
+* This is equal to the position of the character we want the direction to.
+* int index = the index of the directional indicator within the map.
+*/
+void UIController::updateDirecIndicatorHelper(cugl::Vec2 pos1, cugl::Vec2 pos2, 
+    cugl::Vec2 screenPos1, cugl::Vec2 screenPos2, bool isThief, int index) {
     // Constants and variables used throughout the code
     const float size_scalar_min = 0.25;
     const float size_scalar_max_dist = 90;
     const int color_opacity = 200;
+    const float cop_min_thief_visible_distance = 25.0;
+    const float distance_from_edge = 30;
     
-    // Get the position of the thief in node coordinates w/ respect to worldnode
-    Vec2 thiefPos = _worldnode->nodeToScreenCoords(_game->getThief()->getNode()->getPosition());
+    // By default, show this indicator
+    _direcIndicators[index]->setVisible(true);
 
-    // Run calculations for each directonal indicator
-    for (int i = 0; i < _game->numberOfCops(); i++) {
-        // By default, show this indicator
-        _direcIndicators[i]->setVisible(true);
-        
-        // Get the position of cop in node coordinates w/ respect to worldnode
-        Vec2 copPos = _worldnode->nodeToScreenCoords(_game->getCop(i)->getNode()->getPosition());
-        
-        // Hide the directional indicator if the cop is on screen
-        if (copPos.over(Vec2::ZERO) && copPos.under((Vec2) _screenSize)) {
-            _direcIndicators[i]->setVisible(false);
-        }
-        
-        // Calculate distance and angle from thief to cop
-        Vec2 distance = _game->getCop(i)->getPosition() - _game->getThief()->getPosition();
-        float angle = distance.getAngle() + M_PI_2 + M_PI;
-        float displayDistance = distance.length();
-
-        // Set scale directional indicators based on distance
-        float scale = (size_scalar_max_dist - displayDistance) / size_scalar_max_dist;
-        scale = max(scale, size_scalar_min);
-        
-        // Set the color based on the distance
-        Color4 color((int)(255 * scale), (int)(255 * (1 - scale)), 0, color_opacity);
-
-        // Make the vector's origin at the thief
-        distance = distance.getNormalization() * (copPos - thiefPos).length();
-        distance.x += thiefPos.x;
-        distance.y += _screenSize.height - thiefPos.y;
-
-        // Clamp the position of the indicator within the screen
-        float minDim = DIREC_INDICATOR_SIZE * scale;
-        Vec2 minVec(minDim, minDim);
-        Vec2 maxVec(_screenSize.width - minDim, _screenSize.height - minDim);
-        distance.clamp(minVec, maxVec);
-        
-        // Scale the distance to match the fixed height
-        distance *= SCENE_HEIGHT / _screenSize.height;
-
-        // Set up directional indicators
-        _direcIndicators[i]->setPosition(distance);
-        _direcIndicators[i]->setAngle(angle);
-        _direcIndicators[i]->setScale(scale);
-        _direcIndicators[i]->setColor(color);
+    // Hide the directional indicator if the cop is on screen
+    if (screenPos2.over(Vec2::ZERO) && screenPos2.under((Vec2)_screenSize)) {
+        _direcIndicators[index]->setVisible(false);
     }
+
+    // Calculate distance and angle from thief to cop
+    Vec2 distance = pos2 - pos1;
+    float angle = distance.getAngle() + M_PI_2 + M_PI;
+    float displayDistance = distance.length();
+
+    // Set scale directional indicators based on distance
+    float scale = (size_scalar_max_dist - displayDistance) / size_scalar_max_dist;
+    scale = max(scale, size_scalar_min);
+
+    // Set the color based on the distance
+    Color4 color((int)(255 * scale), (int)(255 * (1 - scale)), 0, color_opacity);
+
+    // Make the vector's origin at the thief
+    distance = distance.getNormalization() * (screenPos2 - screenPos1).length();
+    distance.x += screenPos1.x;
+    distance.y += _screenSize.height - screenPos1.y;
+
+    // Clamp the position of the indicator within the screen
+    float minDim = DIREC_INDICATOR_SIZE * scale;
+    Vec2 minVec(minDim + distance_from_edge, minDim + distance_from_edge);
+    Vec2 maxVec(_screenSize.width - minDim - distance_from_edge, _screenSize.height - minDim - distance_from_edge);
+    distance.clamp(minVec, maxVec);
+
+    // Scale the distance to match the fixed height
+    distance *= SCENE_HEIGHT / _screenSize.height;
+
+    // Set up directional indicators
+    _direcIndicators[index]->setPosition(distance);
+    _direcIndicators[index]->setAngle(angle);
+    _direcIndicators[index]->setScale(scale);
+    _direcIndicators[index]->setColor(color);
+
+    //
+    if (!isThief && displayDistance > cop_min_thief_visible_distance) {
+        _direcIndicators[index]->setVisible(false);
+    } 
+
 }
+
 
 /**
  * Updates the thief indicator
@@ -372,4 +486,3 @@ void UIController::updateMessage(bool isThief, bool isThiefWin) {
     _victoryNode->setVisible(_game->isGameOver());
 //    _victoryText->setVisible(true);
 }
-

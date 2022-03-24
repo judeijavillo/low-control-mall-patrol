@@ -36,7 +36,9 @@ class GameScene : public cugl::Scene2 {
         /** The state when main gameplay occurs */
         GAME,
         /** The state where the game is over and we wait for reseting */
-        DONE
+        DONE,
+        /** The state where the gae has the settings menu open */
+        SETTINGS
     };
     
 protected:
@@ -67,7 +69,7 @@ protected:
     std::shared_ptr<cugl::scene2::SceneNode> _worldnode;
     /** Reference to the debug node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _debugnode;
-    /** Reference to the debug node of the scene graph */
+    /** Reference to the ui node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _uinode;
 
     // Pointers
@@ -222,6 +224,11 @@ private:
      * The update method for when we are in state DONE
      */
     void stateDone(float timestep);
+
+    /**
+     * The update method for when we are in state SETTINGS
+     */
+    void stateSettings(float timestep);
     
 //  MARK: - Helpers
     
