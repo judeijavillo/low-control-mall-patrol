@@ -109,14 +109,15 @@ void NetworkController::update() {
 /**
  * Sends a byte vector to start the game
  */
-void NetworkController::sendStartGame() {
+void NetworkController::sendStartGame(bool randomThief, int thiefChoice) {
     vector<float> data;
     data.push_back(START_GAME);
     data.push_back(getNumPlayers());
     
     int count = 0;
-    int thief = rand() % getNumPlayers();
-    for (int playerID = 0; playerID < getNumPlayers(); playerID++) {
+    int thief = randomThief ? rand() % getNumPlayers() : thiefChoice;
+    for (int playerID = 0; playerID < 5; playerID++) {
+        _players[playerID] = {playerID, playerID == getPlayerID() ? -1 : count};
         data.push_back(playerID);
         if (thief == playerID) {
             if (playerID == getPlayerID()) _playerNumber = -1;
@@ -138,6 +139,10 @@ void NetworkController::sendStartGame() {
  * Checks the connection, updates the status accordingly, and updates the game (during game)
  */
 void NetworkController::update(std::shared_ptr<GameModel>& game) {
+    // Give up if connection is not established
+    if (_connection == nullptr) return;
+    
+    // Handle different
     if (_connection->getStatus() != NetworkConnection::NetStatus::Connected) {
         // TODO: Handle other network statuses
         return;
@@ -153,7 +158,13 @@ void NetworkController::update(std::shared_ptr<GameModel>& game) {
             game->updateCop(Vec2(data.at(1), data.at(2)),
                             Vec2(data.at(3), data.at(4)),
                             Vec2(data.at(5), data.at(6)),
-                            (int) data.at(7));
+                            Vec2(data.at(7), data.at(8)),
+                            Vec2(data.at(9), data.at(10)),
+                            (float) data.at(11),
+                            (bool) data.at(12),
+                            (bool) data.at(13),
+                            (bool) data.at(14),
+                            (int) data.at(15));
             break;
         case THIEF_MOVEMENT:
             game->updateThief(Vec2(data.at(1), data.at(2)),
@@ -203,6 +214,13 @@ void NetworkController::sendCopMovement(std::shared_ptr<GameModel>& game, Vec2 f
     std::shared_ptr<CopModel> cop = game->getCop(copID);
     Vec2 position = cop->getPosition();
     Vec2 velocity = cop->getVelocity();
+    Vec2 tackleDirection = cop->getTackleDirection();
+    Vec2 tacklePosition = cop->getTacklePosition();
+    float tackleTime = cop->getTackleTime();
+    bool tackling = cop->getTackling();
+    bool caughtThief = cop->getCaughtThief();
+    bool tackleSucessful = cop->getTackleSuccessful();
+    
     vector<float> data;
     
     data.push_back(COP_MOVEMENT);
@@ -212,6 +230,14 @@ void NetworkController::sendCopMovement(std::shared_ptr<GameModel>& game, Vec2 f
     data.push_back(velocity.y);
     data.push_back(force.x);
     data.push_back(force.y);
+    data.push_back(tackleDirection.x);
+    data.push_back(tackleDirection.y);
+    data.push_back(tacklePosition.x);
+    data.push_back(tacklePosition.y);
+    data.push_back(tackleTime);
+    data.push_back(tackling);
+    data.push_back(caughtThief);
+    data.push_back(tackleSucessful);
     data.push_back(copID);
     
     _serializer.writeFloatVector(data);

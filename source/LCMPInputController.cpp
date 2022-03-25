@@ -152,10 +152,10 @@ cugl::Vec2 const InputController::getMovementVector(bool isThief) const {
         return dpos;
     }
     else {
-        Vec2 accel;
-        _acceleration.lengthSquared() >= (ACCEL_MAX * ACCEL_MAX)
-            ? accel = _acceleration.getNormalization()
-            : accel = (_acceleration / ACCEL_MAX);
+        Vec2 accel = Vec2(_acceleration);
+        accel.lengthSquared() >= (ACCEL_MAX * ACCEL_MAX)
+            ? accel.normalize()
+            : accel = accel / ACCEL_MAX;
         return accel;
     }
 #else

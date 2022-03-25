@@ -107,10 +107,12 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
 void GameModel::update(float timestep) {
     // Update the thief
     _thief->update(timestep);
+    _thief->playAnimation();
     
     // Update all of the cops
     for (auto entry = _cops.begin(); entry != _cops.end(); entry++) {
         entry->second->update(timestep);
+        entry->second->playAnimation();
     }
 }
 
@@ -124,9 +126,10 @@ void GameModel::updateThief(cugl::Vec2 acceleration) {
 /**
  * Applies a force to a cop (most likely for local updates)
  */
-void GameModel::updateCop(cugl::Vec2 acceleration, int copID, bool onTackleCooldown) {
-    if(!onTackleCooldown)
-        _cops[copID]->applyForce(acceleration);
+void GameModel::updateCop(Vec2 acceleration, Vec2 thiefPosition, int copID, float timestep) {
+    shared_ptr<CopModel> cop = _cops[copID];
+    if (cop->getTackling()) cop->applyTackle(timestep, thiefPosition);
+    else cop->applyForce(acceleration);
 }
 
 /**
@@ -135,12 +138,27 @@ void GameModel::updateCop(cugl::Vec2 acceleration, int copID, bool onTackleCoold
 void GameModel::updateThief(cugl::Vec2 position, cugl::Vec2 velocity, cugl::Vec2 force) {
     _thief->applyNetwork(position, velocity, force);
 }
+cugl::Vec2 _tackleDirection;
+cugl::Vec2 _tacklePosition;
+float _tackleTime;
+bool _tackling;
+bool _caughtThief;
+bool _tackleSuccessful;
 
 /**
  * Updates the position and velocity of a cop
  */
-void GameModel::updateCop(cugl::Vec2 position, cugl::Vec2 velocity, cugl::Vec2 force, int copID) {
-    _cops[copID]->applyNetwork(position, velocity, force);
+void GameModel::updateCop(cugl::Vec2 position, cugl::Vec2 velocity,
+                          cugl::Vec2 force, cugl::Vec2 tackleDirection,
+                          cugl::Vec2 tacklePosition,
+                          float tackleTime,
+                          bool tackling,
+                          bool caughtThief,
+                          bool tackleSuccessful,
+                          int copID) {
+    shared_ptr<CopModel> cop = _cops[copID];
+    cop->applyNetwork(position, velocity, force, tackleDirection, tacklePosition,
+                      tackleTime, tackling, caughtThief, tackleSuccessful);
 }
 
 /**
@@ -185,7 +203,7 @@ void GameModel::initCop(int copID, float scale,
     
     // Create cop
     std::shared_ptr<CopModel> cop = std::make_shared<CopModel>();
-    cop->init(scale, copNode, assets, actions);
+    cop->init(copID, scale, copNode, assets, actions);
     cop->setDebugScene(_debugnode);
     cop->setCollisionSound("ooh");
     cop->setObstacleSound("dude");

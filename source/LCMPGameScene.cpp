@@ -34,12 +34,9 @@ using namespace std;
 /** The default value of gravity (going down) */
 #define DEFAULT_GRAVITY 0.0f
 
-#define TACKLE_COOLDOWN_TIME 1.5f
-#define TACKLE_HIT_RADIUS 6.0f
-#define TACKLE_ANGLE_MAX_ERR (M_PI_4)
-#define TACKLE_LENGTH   50
-
-#define RESET_TIME 5
+/** The amount of time that the game waits before reseting */
+#define RESET_TIME 3
+/** The time for sound effects */
 #define SFX_TIME 5
 
 /** The key for the floor tile */
@@ -56,18 +53,6 @@ using namespace std;
 
 /** A coefficient for how much smaller the text font should be */
 #define TEXT_SCALAR         0.3f
-
-/** The color for debugging */
-Color4 DEBUG_COLOR =    Color4::YELLOW;
-
-/** Counter for tackle */
-int tackleCooldown = TACKLE_LENGTH;
-/** Whether the cop has swiped recently */
-bool onTackleCooldown = false;
-/** Direction of the cop's tackle */
-Vec2 tackleDir;
-/** Position of the cop's node when the tackle is successful initially */
-Vec2 copPosAtTackle;
 
 /**
  * Returns true iff o1 should appear behind o2.
@@ -177,9 +162,8 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     addChild(_uinode);
     
     // Set some flags
+    _state = INIT;
     _quit = false;
-    _gameover = false;
-    _hitTackle = false;
     setActive(false);
     
     return true;
@@ -205,7 +189,9 @@ void GameScene::dispose() {
  * @param host  Whether the player is host.
  */
 void GameScene::start(bool host) {
-    _ishost = host;
+    _gameTime = 0;
+    _doneTime = 0;
+    _isHost = host;
     _playerNumber = _network->getPlayerNumber();
     _isThief = (_playerNumber == -1);
 
@@ -216,6 +202,9 @@ void GameScene::start(bool host) {
     // Initialize subcontrollers
     _collision.init(_game);
     _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset);
+    
+    // Update the state of the game
+    _state = GAME;
 }
 
 /**
@@ -226,96 +215,21 @@ void GameScene::start(bool host) {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void GameScene::update(float timestep) {
+    // Don't update if this scene isn't active
     if (!_active) return;
-    _gameTime += timestep;
     
-    // Gameover updates
-    _gameover = _game->isGameOver();
-    if (_gameover) {
-        _ui.update(timestep, _isThief, Vec2::ZERO, false, Vec2::ZERO, Vec2::ZERO, _playerNumber);
-        if (_gameTime - _resetTime > RESET_TIME) {
-            reset();
-        }
-        return;
+    // Call the appropriate state helper for updates
+    switch (_state) {
+    case INIT:
+        stateInit(timestep);
+        break;
+    case GAME:
+        stateGame(timestep);
+        break;
+    case DONE:
+        stateDone(timestep);
+        break;
     }
-    
-    // Input updates
-    _input.update(timestep);
-    Vec2 origin = _input.touch2Screen(_input.getJoystickOrigin());
-    Vec2 position = _input.touch2Screen(_input.getJoystickPosition());
-    Vec2 movement = _input.getMovementVector(_isThief);
-    bool joystick = _input.didPressJoystick();
-    bool spacebar = _input._spacebarPressed;
-    
-    // Switch updates
-    if (_input.didSwitch()) {
-        // Stop movement
-        movement = Vec2::ZERO;
-        _isThief = !_isThief;
-        _playerNumber = _playerNumber == -1 ? 0 : -1;
-    }
-    
-    // Local updates
-    shared_ptr<PlayerModel> player;
-    Vec2 flippedMovement = Vec2(movement.x, -movement.y);
-    if (_isThief) {
-        _game->getThief()->playAnimation(movement);
-        
-        int trapID = _game->getThief()->trapActivationFlag;
-        if (spacebar && trapID != -1) {
-            _game->activateTrap(trapID);
-            _network->sendTrapActivation(trapID);
-        }
-        _game->updateThief(flippedMovement);
-        _network->sendThiefMovement(_game, flippedMovement);
-        player = _game->getThief();
-    } else {
-        if (!_hitTackle) {
-            _hitTackle = tackle(timestep, movement);
-        }
-        else {
-            _resetTime = _gameTime;
-            _game->setGameOver(successfulTackle(timestep));
-            _network->sendGameOver();
-        }
-        
-        _game->updateCop(flippedMovement, _playerNumber, onTackleCooldown);
-        _network->sendCopMovement(_game, flippedMovement, _playerNumber);
-        player = _game->getCop(_playerNumber);
-    }
-
-    // Floor updates
-    Vec2 chunk = Vec2(floor(player->getPosition().x * _scale / SCENE_WIDTH),
-                      floor(player->getPosition().y * _scale / SCENE_HEIGHT));
-    _floornode->setPosition(chunk * Vec2(SCENE_WIDTH, SCENE_HEIGHT));
-    
-    // Network updates
-    if (_network->isConnected()) _network->update(_game);
-    
-    // Camera updates
-    float lead = _isThief ? THIEF_LEAD_FACTOR : COP_LEAD_FACTOR;
-    Vec2 curr = _camera->getPosition();
-    Vec2 next = _offset + player->getPosition() * _scale
-        + (player->getVelocity() * _scale * lead);
-    _camera->translate((next - curr) * timestep * LERP_FACTOR);
-    _camera->update();
-    
-    // UI updates
-    _ui.update(timestep, _isThief, movement, joystick, origin, position, _playerNumber);
-    _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2 - _offset);
-    
-    // Sort world node children
-    std::vector<std::shared_ptr<scene2::SceneNode>> children = _worldnode->getChildren();
-    sort(children.begin(), children.end(), compareNodes);
-    _worldnode->removeAllChildren();
-    for (std::shared_ptr<scene2::SceneNode> child : children) _worldnode->addChild(child);
-    // TODO: Figure out how to do this using OrderedNode, this is __very__ bad
-    
-    // Update the physics, then move the game nodes accordingly
-    _actions->update(timestep);
-    _world->update(timestep);
-    _game->update(timestep);
-    _input.clear();
 }
 
 /**
@@ -336,10 +250,12 @@ void GameScene::setActive(bool value) {
     }
 }
 
-/** Resets the game once complete */
+/**
+ * Resets the game
+ */
 void GameScene::reset() {
     _gameTime = 0;
-    _resetTime = 0;
+    _doneTime = 0;
     _world->clear();
     _input.clear();
     
@@ -356,58 +272,196 @@ void GameScene::reset() {
     _collision.init(_game);
     _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset);
     
-    _gameover = false;
-    _hitTackle = false;
+    // Update the state of the game
+    _state = GAME;
+}
+
+//  MARK: - States
+
+/**
+ * The update method for when we are in state INIT
+ */
+void GameScene::stateInit(float timestep) {
+    // TODO: Here is where beginning countdown and stuff would go
+}
+
+/**
+ * The update method for when we are in state GAME
+ */
+void GameScene::stateGame(float timestep) {
+    // Keep track of time
+    _gameTime += timestep;
+    
+    // Gather the input commands
+    _input.update(timestep);
+    Vec2 origin = _input.touch2Screen(_input.getJoystickOrigin());
+    Vec2 position = _input.touch2Screen(_input.getJoystickPosition());
+    Vec2 movement = _input.getMovementVector(_isThief);
+    Vec2 tackle = _input.getSwipe();
+    bool joystick = _input.didPressJoystick();
+    bool activate = _input._spacebarPressed;
+    bool swipe = _input.didSwipe();
+    bool toggle = _input.didSwitch();
+    movement.y = -movement.y;
+    tackle.y = -tackle.y;
+    
+    // Toggle updates
+    // TODO: Remove this dev command, either here, or in InputController, or both
+    if (toggle) {
+        movement = Vec2::ZERO;
+        _isThief = !_isThief;
+        _playerNumber = _playerNumber == -1 ? 0 : -1;
+    }
+    
+    // Update the game in these steps
+    updateLocal(timestep, movement, activate, swipe, tackle);
+    updateNetwork(timestep);
+    updateCamera(timestep);
+    updateFloor(timestep);
+    updateUI(timestep, _isThief, movement, joystick, origin, position, _playerNumber);
+    updateOrder(timestep);
+    
+    
+    // Update the physics, then move the game nodes accordingly
+    _actions->update(timestep);
+    _world->update(timestep);
+    _game->update(timestep);
+    _input.clear();
+    
+    // Detect transition to next state
+    for (int i = 0; i < _game->numberOfCops(); i++) {
+        if (_game->getCop(i)->getCaughtThief()) {
+            if (_isHost) _game->setGameOver(true);
+        }
+    }
+    if (_game->isGameOver()) {
+        if (_isHost) _network->sendGameOver();
+        _state = DONE;
+    }
+}
+
+/**
+ * The update method for when we are in state DONE
+ */
+void GameScene::stateDone(float timestep) {
+    // Keep track of time
+    _doneTime += timestep;
+    
+    updateUI(timestep, _isThief, Vec2::ZERO, false, Vec2::ZERO, Vec2::ZERO, _playerNumber);
+    
+    // Detect transition to next state
+    if (_doneTime >= RESET_TIME) {
+        reset();
+        _state = GAME;
+    }
 }
 
 //  MARK: - Helpers
 
-/** Handles cop tackle movement */
-bool GameScene::tackle(float dt, Vec2 movement) {
-    int copID = _playerNumber;
-    if (_input.didSwipe() && !onTackleCooldown) {
-        onTackleCooldown = true;
-        _tackleTime = 0;
-        tackleDir = _input.getSwipe();
-        Vec2 copToThiefDist = (_game->getThief()->getPosition() - _game->getCop(copID)->getPosition());
-        float angle = (abs(tackleDir.getAngle()) - abs(copToThiefDist.getAngle()));
-        
-        _game->getCop(copID)->showTackle(tackleDir,true);
-        if (abs(angle) <= TACKLE_ANGLE_MAX_ERR && copToThiefDist.lengthSquared() < TACKLE_HIT_RADIUS * TACKLE_HIT_RADIUS)
-            return true; 
-        else {
-            _game->getCop(copID)->failedTackle(_tackleTime, tackleDir);
-            return false;
+/**
+ * Updates local players (own player and non-playing players)
+ */
+void GameScene::updateLocal(float timestep, Vec2 movement, bool activate,
+                            float swipe, Vec2 tackle) {
+    // Update non-playing players if host
+    if (_isHost) {
+        for (int i = 0; i < 5; i++) {
+            int copID = _network->getPlayer(i).playerNumber;
+            if (!_network->isPlayerConnected(i) && copID != -1 && copID != _playerNumber) {
+                updateCop(timestep, copID, Vec2::ZERO, false, Vec2::ZERO);
+            }
         }
     }
-    else if (onTackleCooldown) {
-        _tackleTime += dt;
-        _game->getCop(copID)->failedTackle(_tackleTime, tackleDir);
-        if (_tackleTime >= TACKLE_COOLDOWN_TIME) {
-            onTackleCooldown = false;
-            _game->getCop(copID)->hideTackle();
-            _game->getCop(copID)->playAnimation(movement);
-            _actions->update(dt);
-        }
-        else if (_tackleTime >= TACKLE_COOLDOWN_TIME / 2) {
-            _game->getCop(copID)->showTackle(tackleDir, false);
-        }
-    }
-    else {
-        _game->getCop(copID)->hideTackle();
-        _game->getCop(copID)->playAnimation(movement);
-        _actions->update(dt);
-    }
-    return false; 
+    
+    // Update own player
+    if (_isThief) updateThief(timestep, movement, activate);
+    else updateCop(timestep, _playerNumber, movement, swipe, tackle);
+    
 }
 
-/** Handles a successful tackle */
-bool GameScene::successfulTackle(float dt) {
-    int copID = _playerNumber;
-    copPosAtTackle = _game->getCop(copID)->getPosition();
-    Vec2 thiefPos = _game->getThief()->getPosition();
-    Vec2 diff = thiefPos - copPosAtTackle;
-    _tackleTime += dt;
-    _game->getCop(copID)->setPosition(copPosAtTackle + (diff * (_tackleTime / TACKLE_AIR_TIME)));
-    return (_tackleTime >= TACKLE_AIR_TIME);
+/**
+ * Updates and networks the thief and any actions it can perform
+ */
+void GameScene::updateThief(float timestep, Vec2 movement, bool activate) {
+    // Update and network thief movement
+    _game->updateThief(movement);
+    _network->sendThiefMovement(_game, movement);
+    
+    // Activate and network traps
+    int trapID = _game->getThief()->trapActivationFlag;
+    if (activate && trapID != -1) {
+        _game->activateTrap(trapID);
+        _network->sendTrapActivation(trapID);
+    }
+}
+
+/**
+ * Updates and networks a cop and any actions it can perform
+ */
+void GameScene::updateCop(float timestep, int copID, Vec2 movement, bool swipe, Vec2 tackle) {
+    // Get some reusable variables
+    shared_ptr<CopModel> cop = _game->getCop(copID);
+    Vec2 thiefPosition = _game->getThief()->getPosition();
+    
+    // Update, animate, and network cop movement
+    _game->updateCop(movement, thiefPosition, copID, timestep);
+    _network->sendCopMovement(_game, movement, copID);
+    
+    // Attempt tackle if appropriate
+    if (swipe && !cop->getTackling()) {
+        cop->attemptTackle(thiefPosition, tackle);
+    }
+}
+
+/**
+ * Updates based on data received over the network
+ */
+void GameScene::updateNetwork(float timestep) {
+    _network->update(_game);
+    // TODO: Add stuff here for migrating host, connection status, etc.
+}
+
+/**
+ * Updates camera based on the position of the controlled player
+ */
+void GameScene::updateCamera(float timestep) {
+    shared_ptr<PlayerModel> player = _isThief
+        ? (shared_ptr<PlayerModel>) _game->getThief()
+        : (shared_ptr<PlayerModel>) _game->getCop(_playerNumber);
+    float lead = _isThief ? THIEF_LEAD_FACTOR : COP_LEAD_FACTOR;
+    Vec2 curr = _camera->getPosition();
+    Vec2 next = _offset
+        + (player->getPosition() * _scale)
+        + (player->getVelocity() * _scale * lead);
+    _camera->translate((next - curr) * timestep * LERP_FACTOR);
+    _camera->update();
+}
+
+/**
+ * Updates the floor based on the camera
+ */
+void GameScene::updateFloor(float timestep) {
+    Vec2 chunk = Vec2(floor(_camera->getPosition().x / SCENE_WIDTH),
+                      floor(_camera->getPosition().y / SCENE_HEIGHT));
+    _floornode->setPosition(chunk * Vec2(SCENE_WIDTH, SCENE_HEIGHT));
+}
+
+/**
+ * Updates the UI and repositions the UI Node
+ */
+void GameScene::updateUI(float timestep, bool isThief, Vec2 movement,
+                         bool didPress, Vec2 origin, Vec2 position, int playerNumber) {
+    _ui.update(timestep, isThief, movement, didPress, origin, position, playerNumber);
+    _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2 - _offset);
+}
+
+/**
+ * Updates the ordering of the nodes in the World Node
+ */
+void GameScene::updateOrder(float timestep) {
+    std::vector<std::shared_ptr<scene2::SceneNode>> children = _worldnode->getChildren();
+    sort(children.begin(), children.end(), compareNodes);
+    _worldnode->removeAllChildren();
+    for (std::shared_ptr<scene2::SceneNode> child : children) _worldnode->addChild(child);
+    // TODO: Figure out how to do this using OrderedNode, this is __very__ bad
 }

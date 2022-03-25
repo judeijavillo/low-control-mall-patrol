@@ -25,6 +25,13 @@ protected:
     std::shared_ptr<cugl::Texture> _landUpTexture;
     std::shared_ptr<cugl::Texture> _landRightTexture;
     std::shared_ptr<cugl::Texture> _landLeftTexture;
+    
+    cugl::Vec2 _tackleDirection;
+    cugl::Vec2 _tacklePosition;
+    float _tackleTime;
+    bool _tackling;
+    bool _caughtThief;
+    bool _tackleSuccessful;
 
 public:
 //  MARK: - Constructors
@@ -40,14 +47,14 @@ public:
     ~CopModel() { dispose(); }
     
     /**
-     * Disposes of all resources in this instance of Player Model
+     * Disposes of all resources in this instance of Cop Model
      */
     void dispose();
     
     /**
      * Initializes a Cop Model
      */
-    bool init(float scale,
+    bool init(int copID, float scale,
               const std::shared_ptr<cugl::scene2::SceneNode>& node,
               const std::shared_ptr<cugl::AssetManager>& assets,
               std::shared_ptr<cugl::scene2::ActionManager>& actions);
@@ -70,20 +77,83 @@ public:
     float getAcceleration() override { return COP_ACCELERATION_DEFAULT * _accelerationMultiplier; }
     
     /**
-     * Sets cop speeds according to a missed tackle
-    */
-    void failedTackle(float timer, cugl::Vec2 swipe);
+     * Returns the direction of the tackle
+     */
+    cugl::Vec2 getTackleDirection() { return _tackleDirection; }
+    
+    /**
+     * Returns the initial position of the tackle
+     */
+    cugl::Vec2 getTacklePosition() { return _tacklePosition; }
+    
+    /**
+     * Returns the amount of time spent tackling so far
+     */
+    float getTackleTime() { return _tackleTime; }
+    
+    /**
+     * Returns whether this cop is currently tackling
+     */
+    bool getTackling() { return _tackling; }
+    
+    /**
+     * Returns whether this cop caught the thief
+     */
+    bool getCaughtThief() { return _caughtThief; }
+    
+    /**
+     * Returns whether the tackle was successful
+     */
+    bool getTackleSuccessful() { return _tackleSuccessful; }
+    
+    /**
+     * Sets whether this cop caught the thief
+     */
+    void setCaughtThief(bool value) { _caughtThief = value; }
+
+    /**
+     * Attempts to tackle the thief and sets the appropriate properties depending on success/failure
+     */
+    void attemptTackle(cugl::Vec2 thiefPosition, cugl::Vec2 tackle);
+    
+    /**
+     * Applies physics to cop when tackling
+     */
+    void applyTackle(float timestep, cugl::Vec2 thiefPosition);
+    
+    /**
+     * Updates the position and velocity of the cop, applies forces, and updates tackle properties
+     */
+    void applyNetwork(cugl::Vec2 position, cugl::Vec2 velocity,
+                      cugl::Vec2 force, cugl::Vec2 tackleDirection,
+                      cugl::Vec2 tacklePosition,
+                      float tackleTime,
+                      bool tackling,
+                      bool caughtThief,
+                      bool tackleSuccessful);
     
     /**
      * Performs a film strip action
      */
-    void playAnimation(cugl::Vec2 movement);
+    void playAnimation();
     
-    /** Shows the cop tackle textures */
-    void showTackle(cugl::Vec2 direction, bool inAir);
-
-    /** Hides the cop tackle textures */
-    void hideTackle();
+private:
+//  MARK: - Helpers
+    
+    /**
+     * Applies physics during a failed tackle
+     */
+    void applyTackleFailure();
+    
+    /**
+     * Applies physics during a successful tackle
+     */
+    void applyTackleSuccess(cugl::Vec2 thiefPosition);
+    
+    /**
+     * Updates nodes to show tackle animation
+     */
+    void playTackle();
 
 };
 

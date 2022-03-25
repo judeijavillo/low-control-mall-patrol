@@ -46,6 +46,14 @@ public:
         GAME_OVER = 4
     };
 
+//  MARK: - Structs
+    
+    /** A data representation of a Player */
+    struct Player {
+        int playerID;
+        int playerNumber;
+    };
+    
 protected:
 //  MARK: - Properties
     
@@ -58,13 +66,14 @@ protected:
     /** The network connection (as made by this scene) */
     std::shared_ptr<cugl::NetworkConnection> _connection;
     
+    /** The mapping from player ID to Player struct */
+    std::unordered_map<int, Player> _players;
+    /** The current status of the Network Controller */
+    Status _status;
     /** Whether the connection being made is for a host or not */
     bool _isHost;
     /** Whether the host decides this player is the thief or not */
     int _playerNumber;
-    
-    /** The current status of the Network Controller */
-    Status _status;
     
 public:
 //  MARK: - Constructors
@@ -95,6 +104,16 @@ public:
      * Returns true iff the Network Controller is connected
      */
     bool isConnected() { return _connection != nullptr; }
+    
+    /**
+     * Returns whether or not a player is still active
+     */
+    bool isPlayerConnected(int playerId) { return _connection->isPlayerActive(playerId); }
+    
+    /**
+     * Returns the player associated with this player ID
+     */
+    Player getPlayer(int playerID) { return _players[playerID]; }
     
     /**
      * Returns the player number
@@ -150,7 +169,7 @@ public:
     /**
      * Sends a byte vector to start the game
      */
-    void sendStartGame();
+    void sendStartGame(bool randomThief = false, int thiefChoice = 0);
 
     
 //  MARK: - Gameplay

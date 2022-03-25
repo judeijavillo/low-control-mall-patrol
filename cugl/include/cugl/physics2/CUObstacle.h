@@ -49,6 +49,7 @@
 
 #include <box2d/b2_body.h>
 #include <box2d/b2_fixture.h>
+#include <cugl/physics2/CUBodyNetData.h>
 #include <iostream>
 #include <cugl/scene2/graph/CUWireNode.h>
 
@@ -69,18 +70,19 @@ namespace cugl {
  * Base model class to support collisions.
  *
  * Instances represents a body and/or a group of bodies. There should be NO game
- * controlling logic code in a physics objects. That should reside in the 
+ * controlling logic code in a physics objects. That should reside in the
  * Controllers.
  *
  * This abstract class has no Body or Shape information and should never be
- * instantiated directly. Instead, you should instantiate either SimpleObstacle 
+ * instantiated directly. Instead, you should instantiate either SimpleObstacle
  * or ComplexObstacle. This class only exists to unify common functionality. In
- * particular, it wraps the body and and fixture information into a single 
+ * particular, it wraps the body and and fixture information into a single
  * interface.
  *
  * Many of the method comments in this class are taken from the Box2d manual by
  * Erin Catto (2011).
  */
+ // This contains all the data needed to pass a body over the network.
 class Obstacle {
 protected:
     /** Stores the body information for this shape */
@@ -91,7 +93,7 @@ protected:
     b2MassData _massdata;
     /** Whether or not to use the custom mass data */
     bool _masseffect;
-    
+
     /** The wireframe parent for debugging. */
     std::shared_ptr<scene2::SceneNode> _scene;
     /** The wireframe node for debugging. */
@@ -100,10 +102,11 @@ protected:
     Color4 _dcolor;
     /** A tag for debugging purposes */
     std::string _tag;
-    
+    /** An id for networking */
+    unsigned long _id;
     /** (Singular) callback function for state updates */
     std::function<void(Obstacle* obstacle)> _listener;
-    
+
 #pragma mark -
 #pragma mark Scene Graph Internals
     /**
@@ -122,7 +125,7 @@ protected:
      * This is very useful when the fixtures have a very different shape than
      * the texture (e.g. a circular shape attached to a square texture).
      */
-     virtual void updateDebug();
+    virtual void updateDebug();
 
     
 private:
@@ -178,9 +181,9 @@ public:
     /**
      * Returns the body type for Box2D physics
      *
-     * If you want to lock a body in place (e.g. a platform) set this value to 
-     * STATIC. KINEMATIC allows the object to move (and some limited collisions), 
-     * but ignores external forces (e.g. gravity). DYNAMIC makes this is a 
+     * If you want to lock a body in place (e.g. a platform) set this value to
+     * STATIC. KINEMATIC allows the object to move (and some limited collisions),
+     * but ignores external forces (e.g. gravity). DYNAMIC makes this is a
      * full-blown physics object.
      *
      * @return the body type for Box2D physics
@@ -203,12 +206,17 @@ public:
      * Returns the current position for this physics body
      *
      * This method converts from a Box2D vector type to a CUGL vector type. This
-     * cuts down on the confusion between vector types.  It also means that 
+     * cuts down on the confusion between vector types.  It also means that
      * changes to the returned vector will have no effect on this obstacle.
      *
      * @return the current position for this physics body
      */
     virtual Vec2 getPosition() const { return Vec2(_bodyinfo.position.x,_bodyinfo.position.y); }
+    
+    /**
+     * Returns the current position for the draw world body
+     */
+    virtual Vec2 getDrawPosition() const { return nullptr; };
     
     /**
      * Sets the current position for this physics body
@@ -264,6 +272,11 @@ public:
      * @return the angle of rotation for this body
      */
     virtual float getAngle() const { return _bodyinfo.angle; }
+
+    /**
+     * Returns the angle of the drawworld physics object
+     */
+    virtual float getDrawAngle() const { return 0; };
     
     /**
      * Sets the angle of rotation for this body (about the center).
@@ -276,7 +289,7 @@ public:
      * Returns the linear velocity for this physics body
      *
      * This method converts from a Box2D vector type to a CUGL vector type. This
-     * cuts down on the confusion between vector types.  It also means that 
+     * cuts down on the confusion between vector types.  It also means that
      * changes to the returned vector will have no effect on this object.
      *
      * @return the linear velocity for this physics body
@@ -351,8 +364,8 @@ public:
      * Returns true if the body is enabled
      *
      * A disabled body not participate in collision or dynamics. This state is
-     * similar to sleeping except the body will not be woken by other bodies and 
-     * the body's fixtures will not be placed in the broad-phase. This means the 
+     * similar to sleeping except the body will not be woken by other bodies and
+     * the body's fixtures will not be placed in the broad-phase. This means the
      * body will not participate in collisions, ray casts, etc.
      *
      * @return true if the body is enabled
@@ -362,9 +375,9 @@ public:
     /**
      * Sets whether the body is enabled
      *
-     * A disabled body not participate in collision or dynamics. This state is 
-     * similar to sleeping except the body will not be woken by other bodies and 
-     * the body's fixtures will not be placed in the broad-phase. This means the 
+     * A disabled body not participate in collision or dynamics. This state is
+     * similar to sleeping except the body will not be woken by other bodies and
+     * the body's fixtures will not be placed in the broad-phase. This means the
      * body will not participate in collisions, ray casts, etc.
      *
      * @param value  whether the body is enabled
@@ -374,10 +387,10 @@ public:
     /**
      * Returns true if the body is awake
      *
-     * An sleeping body is one that has come to rest and the physics engine has 
-     * decided to stop simulating it to save CPU cycles. If a body is awake and 
-     * collides with a sleeping body, then the sleeping body wakes up. Bodies 
-     * will also wake up if a joint or contact attached to them is destroyed.  
+     * An sleeping body is one that has come to rest and the physics engine has
+     * decided to stop simulating it to save CPU cycles. If a body is awake and
+     * collides with a sleeping body, then the sleeping body wakes up. Bodies
+     * will also wake up if a joint or contact attached to them is destroyed.
      * You can also wake a body manually.
      *
      * @return true if the body is awake
@@ -426,15 +439,15 @@ public:
     /**
      * Returns true if this body is a bullet
      *
-     * By default, Box2D uses continuous collision detection (CCD) to prevent 
-     * dynamic bodies from tunneling through static bodies. Normally CCD is not 
-     * used between dynamic bodies. This is done to keep performance reasonable. 
-     * In some game scenarios you need dynamic bodies to use CCD. For example, 
-     * you may want to shoot a high speed bullet at a stack of dynamic bricks. 
+     * By default, Box2D uses continuous collision detection (CCD) to prevent
+     * dynamic bodies from tunneling through static bodies. Normally CCD is not
+     * used between dynamic bodies. This is done to keep performance reasonable.
+     * In some game scenarios you need dynamic bodies to use CCD. For example,
+     * you may want to shoot a high speed bullet at a stack of dynamic bricks.
      * Without CCD, the bullet might tunnel through the bricks.
      *
-     * Fast moving objects in Box2D can be labeled as bullets. Bullets will 
-     * perform CCD with both static and dynamic bodies. You should decide what 
+     * Fast moving objects in Box2D can be labeled as bullets. Bullets will
+     * perform CCD with both static and dynamic bodies. You should decide what
      * bodies should be bullets based on your game design.
      *
      * @return true if this body is a bullet
@@ -500,13 +513,13 @@ public:
     /**
      * Returns the linear damping for this body.
      *
-     * Linear damping is use to reduce the linear velocity. Damping is different 
-     * than friction because friction only occurs with contact. Damping is not a 
+     * Linear damping is use to reduce the linear velocity. Damping is different
+     * than friction because friction only occurs with contact. Damping is not a
      * replacement for friction and the two effects should be used together.
      *
-     * Damping parameters should be between 0 and infinity, with 0 meaning no 
-     * damping, and infinity meaning full damping. Normally you will use a 
-     * damping value between 0 and 0.1. Most people avoid linear damping because 
+     * Damping parameters should be between 0 and infinity, with 0 meaning no
+     * damping, and infinity meaning full damping. Normally you will use a
+     * damping value between 0 and 0.1. Most people avoid linear damping because
      * it makes bodies look floaty.
      *
      * @return the linear damping for this body.
@@ -532,13 +545,13 @@ public:
     /**
      * Returns the angular damping for this body.
      *
-     * Angular damping is use to reduce the angular velocity. Damping is 
-     * different than friction because friction only occurs with contact. 
-     * Damping is not a replacement for friction and the two effects should be 
+     * Angular damping is use to reduce the angular velocity. Damping is
+     * different than friction because friction only occurs with contact.
+     * Damping is not a replacement for friction and the two effects should be
      * used together.
      *
-     * Damping parameters should be between 0 and infinity, with 0 meaning no 
-     * damping, and infinity meaning full damping. Normally you will use a 
+     * Damping parameters should be between 0 and infinity, with 0 meaning no
+     * damping, and infinity meaning full damping. Normally you will use a
      * damping value between 0 and 0.1.
      *
      * @return the angular damping for this body.
@@ -575,8 +588,8 @@ public:
     /**
      * Returns the density of this body
      *
-     * The density is typically measured in usually in kg/m^2. The density can 
-     * be zero or positive. You should generally use similar densities for all 
+     * The density is typically measured in usually in kg/m^2. The density can
+     * be zero or positive. You should generally use similar densities for all
      * your fixtures. This will improve stacking stability.
      *
      * @return the density of this body
@@ -586,8 +599,8 @@ public:
     /**
      * Sets the density of this body
      *
-     * The density is typically measured in usually in kg/m^2. The density can 
-     * be zero or positive. You should generally use similar densities for all 
+     * The density is typically measured in usually in kg/m^2. The density can
+     * be zero or positive. You should generally use similar densities for all
      * your fixtures. This will improve stacking stability.
      *
      * @param value  the density of this body
@@ -597,10 +610,10 @@ public:
     /**
      * Returns the friction coefficient of this body
      *
-     * The friction parameter is usually set between 0 and 1, but can be any 
-     * non-negative value. A friction value of 0 turns off friction and a value 
-     * of 1 makes the friction strong. When the friction force is computed 
-     * between two shapes, Box2D must combine the friction parameters of the 
+     * The friction parameter is usually set between 0 and 1, but can be any
+     * non-negative value. A friction value of 0 turns off friction and a value
+     * of 1 makes the friction strong. When the friction force is computed
+     * between two shapes, Box2D must combine the friction parameters of the
      * two parent fixtures. This is done with the geometric mean.
      *
      * @return the friction coefficient of this body
@@ -623,10 +636,10 @@ public:
     /**
      * Returns the restitution of this body
      *
-     * Restitution is used to make objects bounce. The restitution value is 
-     * usually set to be between 0 and 1. Consider dropping a ball on a table. 
-     * A value of zero means the ball won't bounce. This is called an inelastic 
-     * collision. A value of one means the ball's velocity will be exactly 
+     * Restitution is used to make objects bounce. The restitution value is
+     * usually set to be between 0 and 1. Consider dropping a ball on a table.
+     * A value of zero means the ball won't bounce. This is called an inelastic
+     * collision. A value of one means the ball's velocity will be exactly
      * reflected. This is called a perfectly elastic collision.
      *
      * @return the restitution of this body
@@ -649,8 +662,8 @@ public:
     /**
      * Returns true if this object is a sensor.
      *
-     * Sometimes game logic needs to know when two entities overlap yet there 
-     * should be no collision response. This is done by using sensors. A sensor 
+     * Sometimes game logic needs to know when two entities overlap yet there
+     * should be no collision response. This is done by using sensors. A sensor
      * is an entity that detects collision but does not produce a response.
      *
      * @return true if this object is a sensor.
@@ -671,11 +684,11 @@ public:
     /**
      * Returns the filter data for this object (or null if there is none)
      *
-     * Collision filtering allows you to prevent collision between fixtures. For 
-     * example, say you make a character that rides a bicycle. You want the 
-     * bicycle to collide with the terrain and the character to collide with 
-     * the terrain, but you don't want the character to collide with the bicycle 
-     * (because they must overlap). Box2D supports such collision filtering 
+     * Collision filtering allows you to prevent collision between fixtures. For
+     * example, say you make a character that rides a bicycle. You want the
+     * bicycle to collide with the terrain and the character to collide with
+     * the terrain, but you don't want the character to collide with the bicycle
+     * (because they must overlap). Box2D supports such collision filtering
      * using categories and groups.
      *
      * @return the filter data for this object (or null if there is none)
@@ -772,6 +785,16 @@ public:
      * Resets this body to use the mass computed from the its shape and density
      */
     virtual void resetMass() { _masseffect = false; }
+
+    /**
+     * Sets the id of this body
+     */
+    virtual void setId(unsigned long id) { _id = id; }
+
+    /**
+     * Gets the id of this body
+     */
+    virtual unsigned long getId() { return _id; }
     
     
 #pragma mark -
@@ -823,13 +846,39 @@ public:
     /**
      * Returns a (weak) reference to Box2D body for this obstacle.
      *
-     * You use this body to add joints and apply forces. As a weak reference, 
-     * this physics obstacle does not transfer ownership of this body.  In 
+     * You use this body to add joints and apply forces. As a weak reference,
+     * this physics obstacle does not transfer ownership of this body.  In
      * addition, the value may be a nullptr.
      *
      * @return a (weak) reference to Box2D body for this obstacle.
      */
-    virtual b2Body* getBody() { return nullptr; }
+    virtual b2Body* getRealBody() { return nullptr; }
+
+    /**
+     * Returns a (weak) reference to Box2D body for this obstacle.
+     *
+     * You use this body to add joints and apply forces. As a weak reference,
+     * this physics obstacle does not transfer ownership of this body.  In
+     * addition, the value may be a nullptr.
+     *
+     * @return a (weak) reference to Box2D body for this obstacle.
+     */
+    virtual b2Body* getDrawBody() { return nullptr; }
+
+    /**
+     * Returns the necessary BodyData class in order to update this body in another game instance
+     */
+    virtual BodyNetData getBodyData() { BodyNetData data; return data; }
+
+    /**
+     * Sets the real body of this fixture using a BodyNetData struct, then syncs these changes with the draw body.
+     */
+    virtual void setBodyFromData(BodyNetData data) {}
+
+    /**
+     * Syncs the real and draw bodies together.
+     */
+    virtual void syncBodies() {}
     
     /**
      * Creates the physics Body(s) for this object, adding them to the world.
@@ -841,7 +890,7 @@ public:
      *
      * @return true if object allocation succeeded
      */
-    virtual bool activatePhysics(b2World& world) { return false; }
+    virtual bool activatePhysics(b2World& realworld, b2World& drawworld) { return false; }
     
     /**
      * Destroys the physics Body(s) of this object if applicable.
@@ -850,7 +899,7 @@ public:
      *
      * @param world Box2D world that stores body
      */
-    virtual void deactivatePhysics(b2World& world) {}
+    virtual void deactivatePhysics(b2World& realworld, b2World& drawworld) {}
 
     
 #pragma mark -
@@ -859,8 +908,8 @@ public:
      * Updates the object's physics state (NOT GAME LOGIC).
      *
      * This method is called AFTER the collision resolution state. Therefore, it
-     * should not be used to process actions or any other gameplay information.  
-     * Its primary purpose is to adjust changes to the fixture, which have to 
+     * should not be used to process actions or any other gameplay information.
+     * Its primary purpose is to adjust changes to the fixture, which have to
      * take place after collision.
      *
      * In other words, this is the method that updates the scene graph.  If you
@@ -877,8 +926,8 @@ public:
      * Returns the active listener to this object.
      *
      * Listeners are called after every physics update, to notify them of any
-     * changes in this object state.  For performance reasons, a physics 
-     * obstacle can have only one listener.  If you need multiple objects 
+     * changes in this object state.  For performance reasons, a physics
+     * obstacle can have only one listener.  If you need multiple objects
      * listening to a single physics obstacle, the listener should handle the
      * dispatch to other objects.
      *
@@ -907,8 +956,8 @@ public:
 #pragma mark Debugging Methods
     /**
      * Returns the physics object tag.
-     * 
-     * A tag is a string attached to an object, in order to identify it in 
+     *
+     * A tag is a string attached to an object, in order to identify it in
      * debugging.
      *
      * @return the physics object tag.
@@ -918,7 +967,7 @@ public:
     /**
      * Sets the physics object tag.
      *
-     * A tag is a string attached to an object, in order to identify it in 
+     * A tag is a string attached to an object, in order to identify it in
      * debugging.
      *
      * @param  value    the physics object tag
@@ -982,7 +1031,7 @@ public:
      *
      * The wireframe will be drawn using physics coordinates, which is possibly
      * much smaller than your drawing coordinates (e.g. 1 Box2D unit = 1 pixel).
-     * If you want the wireframes to be larger, you should scale the parent 
+     * If you want the wireframes to be larger, you should scale the parent
      * parent coordinate space to match the rest of the application.
      *
      * This scene graph node is intended for debugging purposes only.  If

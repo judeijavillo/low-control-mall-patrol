@@ -520,6 +520,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		42C6F56227EFB30400E61CBE /* CUBodyNetData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CUBodyNetData.h; sourceTree = "<group>"; };
 		EB035D7A20C0D0F80001EAE3 /* CUFIRFilter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CUFIRFilter.h; sourceTree = "<group>"; };
 		EB035D8920C0D1590001EAE3 /* CUOneZeroFIR.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CUOneZeroFIR.h; sourceTree = "<group>"; };
 		EB035D8C20C0D34D0001EAE3 /* CUFIRFilter.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = CUFIRFilter.cpp; sourceTree = "<group>"; };
@@ -1320,6 +1321,7 @@
 			children = (
 				EB202C1F1DE2880800116616 /* cu_physics2.h */,
 				EB839DEA1DCD82A6001039BC /* CUObstacle.h */,
+				42C6F56227EFB30400E61CBE /* CUBodyNetData.h */,
 				EB839DEF1DCD82A6001039BC /* CUObstacleWorld.h */,
 				EBE91E201DCFE7C200F80D62 /* CUSimpleObstacle.h */,
 				EB9A8A491DE25561007B4123 /* CUComplexObstacle.h */,

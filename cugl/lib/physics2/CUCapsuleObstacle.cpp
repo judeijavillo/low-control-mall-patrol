@@ -76,9 +76,9 @@ using namespace cugl::physics2;
  */
 bool CapsuleObstacle::init(const Vec2 pos, const Size size, poly2::Capsule shape) {
     Obstacle::init(pos);
-    _core = nullptr;
-    _cap1 = nullptr;
-    _cap2 = nullptr;
+    _realcore = nullptr;
+    _realcap1 = nullptr;
+    _realcap2 = nullptr;
     _orient = shape;
     _seamEpsilon = (float)DEFAULT_EPSILON;
     resize(size);
@@ -250,17 +250,21 @@ void CapsuleObstacle::resetDebug() {
  */
 void CapsuleObstacle::setDensity(float value) {
     _fixture.density = value;
-    if (_core != nullptr) {
-        _core->SetDensity(value);
+    if (_realcore != nullptr && _drawcore != nullptr) {
+        _realcore->SetDensity(value);
+        _drawcore->SetDensity(value);
     }
-    if (_cap1 != nullptr) {
-        _cap1->SetDensity(value/2.0f);
+    if (_realcap1 != nullptr && _drawcap1 != nullptr) {
+        _realcap1->SetDensity(value/2.0f);
+        _drawcap1->SetDensity(value/2.0f);
     }
-    if (_cap2 != nullptr) {
-        _cap2->SetDensity(value/2.0f);
+    if (_realcap2 != nullptr && _drawcap2 != nullptr) {
+        _realcap2->SetDensity(value/2.0f);
+        _drawcap2->SetDensity(value/2.0f);
     }
-    if (_body != nullptr && !_masseffect) {
-        _body->ResetMassData();
+    if (_realbody != nullptr && _drawbody != nullptr && !_masseffect) {
+        _realbody->ResetMassData();
+        _drawbody->ResetMassData();
     }
 }
 
@@ -270,7 +274,7 @@ void CapsuleObstacle::setDensity(float value) {
  * This is the primary method to override for custom physics objects
  */
 void CapsuleObstacle::createFixtures() {
-    if (_body == nullptr) {
+    if (_realbody == nullptr || _drawbody == nullptr) {
         return;
     }
     
@@ -279,10 +283,12 @@ void CapsuleObstacle::createFixtures() {
 
     // Create the core fixture
     if (trueOrient == poly2::Capsule::DEGENERATE) {
-        _core = nullptr;
+        _realcore = nullptr;
+        _drawcore = nullptr;
     } else {
         _fixture.shape = &_shape;
-        _core = _body->CreateFixture(&_fixture);
+        _realcore = _realbody->CreateFixture(&_fixture);
+        _drawcore = _drawbody->CreateFixture(&_fixture);
     }
     
     _ends.m_p.Set(0, 0);
@@ -292,17 +298,21 @@ void CapsuleObstacle::createFixtures() {
             if (_dimension.width > _dimension.height) {
                 _ends.m_p.x = _center.lowerBound.x;
                 _fixture.shape = &_ends;
-                _cap1 = _body->CreateFixture(&_fixture);
+                _realcap1 = _realbody->CreateFixture(&_fixture);
+                _drawcap1 = _drawbody->CreateFixture(&_fixture);
                 _ends.m_p.x = _center.upperBound.x;
                 _fixture.shape = &_ends;
-                _cap2 = _body->CreateFixture(&_fixture);
+                _realcap2 = _realbody->CreateFixture(&_fixture);
+                _drawcap2 = _drawbody->CreateFixture(&_fixture);
             } else {
                 _ends.m_p.y = _center.upperBound.y;
                 _fixture.shape = &_ends;
-                _cap1 = _body->CreateFixture(&_fixture);
+                _realcap1 = _realbody->CreateFixture(&_fixture);
+                _drawcap1 = _drawbody->CreateFixture(&_fixture);
                 _ends.m_p.y = _center.lowerBound.y;
                 _fixture.shape = &_ends;
-                _cap2 = _body->CreateFixture(&_fixture);
+                _realcap2 = _realbody->CreateFixture(&_fixture);
+                _drawcap2 = _drawbody->CreateFixture(&_fixture);
             }
             _fixture.density = _fixture.density*2.0f;
             break;
@@ -311,13 +321,17 @@ void CapsuleObstacle::createFixtures() {
             if (_dimension.width > _dimension.height) {
                 _ends.m_p.x = _center.lowerBound.x;
                 _fixture.shape = &_ends;
-                _cap1 = _body->CreateFixture(&_fixture);
-                _cap2 = nullptr;
+                _realcap1 = _realbody->CreateFixture(&_fixture);
+                _drawcap1 = _drawbody->CreateFixture(&_fixture);
+                _realcap2 = nullptr;
+                _drawcap2 = nullptr;
             } else {
                 _ends.m_p.y = _center.lowerBound.y;
                 _fixture.shape = &_ends;
-                _cap1 = _body->CreateFixture(&_fixture);
-                _cap2 = nullptr;
+                _realcap1 = _realbody->CreateFixture(&_fixture);
+                _drawcap1 = _drawbody->CreateFixture(&_fixture);
+                _realcap2 = nullptr;
+                _drawcap2 = nullptr;
             }
             _fixture.density = _fixture.density*2.0f;
             break;
@@ -326,20 +340,26 @@ void CapsuleObstacle::createFixtures() {
             if (_dimension.width > _dimension.height) {
                 _ends.m_p.x = _center.upperBound.x;
                 _fixture.shape = &_ends;
-                _cap1 = _body->CreateFixture(&_fixture);
-                _cap2 = nullptr;
+                _realcap1 = _realbody->CreateFixture(&_fixture);
+                _drawcap1 = _drawbody->CreateFixture(&_fixture);
+                _realcap2 = nullptr;
+                _drawcap2 = nullptr;
             } else {
                 _ends.m_p.y = _center.upperBound.y;
                 _fixture.shape = &_ends;
-                _cap1 = _body->CreateFixture(&_fixture);
-                _cap2 = nullptr;
+                _realcap1 = _realbody->CreateFixture(&_fixture);
+                _drawcap1 = _drawbody->CreateFixture(&_fixture);
+                _realcap2 = nullptr;
+                _drawcap2 = nullptr;
             }
             _fixture.density = _fixture.density*2.0f;
             break;
         case poly2::Capsule::DEGENERATE:
             _fixture.shape = &_ends;
-            _cap1 = _body->CreateFixture(&_fixture);
-            _cap2 = nullptr;
+            _realcap1 = _realbody->CreateFixture(&_fixture);
+            _drawcap1 = _drawbody->CreateFixture(&_fixture);
+            _realcap2 = nullptr;
+            _drawcap2 = nullptr;
             break;
     }
     
@@ -352,17 +372,23 @@ void CapsuleObstacle::createFixtures() {
  * This is the primary method to override for custom physics objects
  */
 void CapsuleObstacle::releaseFixtures() {
-    if (_core != nullptr) {
-        _body->DestroyFixture(_core);
-        _core = nullptr;
+    if (_realcore != nullptr && _drawcore != nullptr) {
+        _realbody->DestroyFixture(_realcore);
+        _drawbody->DestroyFixture(_drawcore);
+        _realcore = nullptr;
+        _drawcore = nullptr;
     }
-    if (_cap1 != nullptr) {
-        _body->DestroyFixture(_cap1);
-        _cap1 = nullptr;
+    if (_realcap1 != nullptr && _drawcap1 != nullptr) {
+        _realbody->DestroyFixture(_realcap1);
+        _drawbody->DestroyFixture(_drawcap1);
+        _realcap1 = nullptr;
+        _drawcap1 = nullptr;
     }
-    if (_cap2 != nullptr) {
-        _body->DestroyFixture(_cap2);
-        _cap2 = nullptr;
+    if (_realcap2 != nullptr && _drawcap2 != nullptr) {
+        _realbody->DestroyFixture(_realcap2);
+        _drawbody->DestroyFixture(_drawcap2);
+        _realcap2 = nullptr;
+        _drawcap2 = nullptr;
     }
 }
 

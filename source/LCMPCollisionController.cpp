@@ -26,26 +26,23 @@ bool CollisionController::init(const std::shared_ptr<GameModel> game) {
 void CollisionController::beginContact(b2Contact* contact) {
     b2Body* body1 = contact->GetFixtureA()->GetBody();
     b2Body* body2 = contact->GetFixtureB()->GetBody();
-    b2Body* thiefBody = _game->getThief()->getBody();
+    b2Body* thiefBody = _game->getThief()->getRealBody();
 
     // Check all of the cops
     for (int i = 0; i < 4; i++) {
-        b2Body* copBody = _game->getCop(i)->getBody();
+        b2Body* copBody = _game->getCop(i)->getRealBody();
         if ((thiefBody == body1 && copBody == body2) ||
             (thiefBody == body2 && copBody == body1)) {
-            if (!_game->isGameOver()) {
-                _game->setGameOver(true);
-                return;
-            }
+            if (!_game->isGameOver()) _game->getCop(i)->setCaughtThief(true);
         }
     }
 
     // Check all of the traps
     for (int i = 0; i < _game->numberOfTraps(); i++) {
         shared_ptr<TrapModel> trap = _game->getTrap(i);
-        b2Body* triggerBody = trap->getTriggerArea()->getBody();
-        b2Body* thiefEffectBody = trap->getThiefEffectArea()->getBody();
-        b2Body* copEffectBody = trap->getCopEffectArea()->getBody();
+        b2Body* triggerBody = trap->getTriggerArea()->getRealBody();
+        b2Body* thiefEffectBody = trap->getThiefEffectArea()->getRealBody();
+        b2Body* copEffectBody = trap->getCopEffectArea()->getRealBody();
 
         if (trap->activated) {
             if ((thiefBody == body1 && thiefEffectBody == body2) ||
@@ -62,7 +59,7 @@ void CollisionController::beginContact(b2Contact* contact) {
             }
 
             for (int i = 0; i < 4; i++) {
-                b2Body* copBody = _game->getCop(i)->getBody();
+                b2Body* copBody = _game->getCop(i)->getRealBody();
                 if ((copBody == body1 && copEffectBody == body2) ||
                     (copBody == body2 && copEffectBody == body1)) {
 
@@ -87,13 +84,13 @@ void CollisionController::beginContact(b2Contact* contact) {
 void CollisionController::endContact(b2Contact* contact) {
     b2Body* body1 = contact->GetFixtureA()->GetBody();
     b2Body* body2 = contact->GetFixtureB()->GetBody();
-    b2Body* thiefBody = _game->getThief()->getBody();
+    b2Body* thiefBody = _game->getThief()->getRealBody();
 
     for (int i = 0; i < _game->numberOfTraps(); i++) {
         shared_ptr<TrapModel> trap = _game->getTrap(i);
-        b2Body* triggerBody = trap->getTriggerArea()->getBody();
-        b2Body* thiefEffectBody = trap->getThiefEffectArea()->getBody();
-        b2Body* copEffectBody = trap->getCopEffectArea()->getBody();
+        b2Body* triggerBody = trap->getTriggerArea()->getRealBody();
+        b2Body* thiefEffectBody = trap->getThiefEffectArea()->getRealBody();
+        b2Body* copEffectBody = trap->getCopEffectArea()->getRealBody();
 
         if (trap->activated) {
             if ((thiefBody == body1 && thiefEffectBody == body2) ||
@@ -110,7 +107,7 @@ void CollisionController::endContact(b2Contact* contact) {
 
             }
             for (int i = 0; i < 4; i++) {
-                b2Body* copBody = _game->getCop(i)->getBody();
+                b2Body* copBody = _game->getCop(i)->getRealBody();
                 if ((copBody == body1 && copEffectBody == body2) ||
                     (copBody == body2 && copEffectBody == body1)) {
                     

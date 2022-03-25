@@ -65,8 +65,8 @@ namespace cugl {
 /**
  * Capsule-shaped model to support collisions.
  *
- * A capsule is a box with semicircular ends along the major axis. They are a 
- * popular physics object, particularly for character avatars.  The rounded ends 
+ * A capsule is a box with semicircular ends along the major axis. They are a
+ * popular physics object, particularly for character avatars.  The rounded ends
  * means they are less likely to snag, and they naturally fall off platforms
  * when they go too far.
  *
@@ -86,11 +86,17 @@ protected:
     b2AABB _center;
     
     /** A cache value for the center fixture (for resizing) */
-    b2Fixture* _core;
+    b2Fixture* _realcore;
     /** A cache value for the first end cap fixture (for resizing) */
-    b2Fixture* _cap1;
+    b2Fixture* _realcap1;
     /** A cache value for the second end cap fixture (for resizing) */
-    b2Fixture* _cap2;
+    b2Fixture* _realcap2;
+    /** A cache value for the center fixture (for resizing) */
+    b2Fixture* _drawcore;
+    /** A cache value for the first end cap fixture (for resizing) */
+    b2Fixture* _drawcap1;
+    /** A cache value for the second end cap fixture (for resizing) */
+    b2Fixture* _drawcap2;
     /** The width and height of the capsule */
     Size _dimension;
     /** The capsule shape */
@@ -132,7 +138,7 @@ public:
      * the heap, use one of the static constructors instead.
      */
     CapsuleObstacle(void) : SimpleObstacle(),
-    _core(nullptr), _cap1(nullptr), _cap2(nullptr), _seamEpsilon(0.0f) { }
+    _realcore(nullptr), _realcap1(nullptr), _realcap2(nullptr), _drawcore(nullptr), _drawcap1(nullptr), _drawcap2(nullptr), _seamEpsilon(0.0f) { }
     
     /**
      * Deletes this physics object and all of its resources.
@@ -144,7 +150,7 @@ public:
      * claims on scene graph nodes.
      */
     virtual ~CapsuleObstacle() {
-        CUAssertLog(_core == nullptr, "You must deactive physics before deleting an object");
+        CUAssertLog(_realcore == nullptr || _drawcore == nullptr, "You must deactive physics before deleting an object");
     }
     
     /**
@@ -200,8 +206,8 @@ public:
      * only guarantee that the scene graph node is positioned correctly
      * according to the drawing scale.
      *
-     * @param  pos  	Initial position in world coordinates
-     * @param  size 	The capsule size (width and height)
+     * @param  pos      Initial position in world coordinates
+     * @param  size     The capsule size (width and height)
      * @param  shape    The capsule shape/orientation
      *
      * @return  true if the obstacle is initialized properly, false otherwise.
@@ -401,6 +407,6 @@ public:
     virtual void releaseFixtures() override;
     
 };
-	}
+    }
 }
 #endif /* __CU_CAPSULE_OBSTACLE_H__ */

@@ -62,12 +62,16 @@ using namespace cugl::physics2;
  */
 void SimpleObstacle::setDensity(float value) {
     _fixture.density = value;
-    if (_body != nullptr) {
-        for (b2Fixture* f = _body->GetFixtureList(); f; f = f->GetNext()) {
+    if (_realbody != nullptr && _drawbody != nullptr) {
+        for (b2Fixture* f = _realbody->GetFixtureList(); f; f = f->GetNext()) {
+            f->SetDensity(value);
+        }
+        for (b2Fixture* f = _drawbody->GetFixtureList(); f; f = f->GetNext()) {
             f->SetDensity(value);
         }
         if (!_masseffect) {
-            _body->ResetMassData();
+            _realbody->ResetMassData();
+            _drawbody->ResetMassData();
         }
     }
 }
@@ -85,8 +89,11 @@ void SimpleObstacle::setDensity(float value) {
  */
 void SimpleObstacle::setFriction(float value) {
     _fixture.friction = value;
-    if (_body != nullptr) {
-        for (b2Fixture* f = _body->GetFixtureList(); f; f = f->GetNext()) {
+    if (_realbody != nullptr && _drawbody != nullptr) {
+        for (b2Fixture* f = _realbody->GetFixtureList(); f; f = f->GetNext()) {
+            f->SetFriction(value);
+        }
+        for (b2Fixture* f = _drawbody->GetFixtureList(); f; f = f->GetNext()) {
             f->SetFriction(value);
         }
     }
@@ -105,8 +112,11 @@ void SimpleObstacle::setFriction(float value) {
  */
 void SimpleObstacle::setRestitution(float value) {
     _fixture.restitution = value;
-    if (_body != nullptr) {
-        for (b2Fixture* f = _body->GetFixtureList(); f; f = f->GetNext()) {
+    if (_realbody != nullptr && _drawbody != nullptr) {
+        for (b2Fixture* f = _realbody->GetFixtureList(); f; f = f->GetNext()) {
+            f->SetRestitution(value);
+        }
+        for (b2Fixture* f = _drawbody->GetFixtureList(); f; f = f->GetNext()) {
             f->SetRestitution(value);
         }
     }
@@ -123,8 +133,11 @@ void SimpleObstacle::setRestitution(float value) {
  */
 void SimpleObstacle::setSensor(bool value) {
     _fixture.isSensor = value;
-    if (_body != nullptr) {
-        for (b2Fixture* f = _body->GetFixtureList(); f; f = f->GetNext()) {
+    if (_realbody != nullptr && _drawbody != nullptr) {
+        for (b2Fixture* f = _realbody->GetFixtureList(); f; f = f->GetNext()) {
+            f->SetSensor(value);
+        }
+        for (b2Fixture* f = _drawbody->GetFixtureList(); f; f = f->GetNext()) {
             f->SetSensor(value);
         }
     }
@@ -146,8 +159,11 @@ void SimpleObstacle::setSensor(bool value) {
  */
 void SimpleObstacle::setFilterData(b2Filter value) {
     _fixture.filter = value;
-    if (_body != nullptr) {
-        for (b2Fixture* f = _body->GetFixtureList(); f; f = f->GetNext()) {
+    if (_realbody != nullptr && _drawbody != nullptr) {
+        for (b2Fixture* f = _realbody->GetFixtureList(); f; f = f->GetNext()) {
+            f->SetFilterData(value);
+        }
+        for (b2Fixture* f = _drawbody->GetFixtureList(); f; f = f->GetNext()) {
             f->SetFilterData(value);
         }
     }
@@ -167,14 +183,16 @@ void SimpleObstacle::setFilterData(b2Filter value) {
  *
  * @return true if object allocation succeeded
  */
-bool SimpleObstacle::activatePhysics(b2World& world) {
+bool SimpleObstacle::activatePhysics(b2World& realworld, b2World& drawworld) {
     // Make a body, if possible
     _bodyinfo.enabled = true;
-    _body = world.CreateBody(&_bodyinfo);
-    _body->GetUserData().pointer = reinterpret_cast<intptr_t>(this);
+    _realbody = realworld.CreateBody(&_bodyinfo);
+    _realbody->GetUserData().pointer = reinterpret_cast<intptr_t>(this);
+    _drawbody = drawworld.CreateBody(&_bodyinfo);
+    _drawbody->GetUserData().pointer = reinterpret_cast<intptr_t>(this);
     
-    // Only initialize if a body was created.
-    if (_body != nullptr) {
+    // Only initialize if the bodies were created.
+    if (_realbody != nullptr && _drawbody != nullptr) {
         createFixtures();
         return true;
     }
@@ -190,14 +208,17 @@ bool SimpleObstacle::activatePhysics(b2World& world) {
  *
  * @param world Box2D world that stores body
  */
-void SimpleObstacle::deactivatePhysics(b2World& world) {
+void SimpleObstacle::deactivatePhysics(b2World& realworld, b2World& drawworld) {
     // Should be good for most (simple) applications.
-    if (_body != nullptr) {
+    if (_realbody != nullptr && _drawbody != nullptr) {
         releaseFixtures(); // Have to remove these first.
         // Snapshot the values
-        setBodyState(*_body);
-        world.DestroyBody(_body);
-        _body = nullptr;
+        setBodyState(*_realbody);
+        realworld.DestroyBody(_realbody);
+        _realbody = nullptr;
+        drawworld.DestroyBody(_drawbody);
+        _drawbody = nullptr;
+
         _bodyinfo.enabled = false;
     }
 }
@@ -253,5 +274,52 @@ void SimpleObstacle::updateDebug() {
     
     _debug->setPosition(pos);
     _debug->setAngle(angle);
+}
+
+void SimpleObstacle::syncBodies() {
+    _drawbody->SetType(_realbody->GetType());
+    _drawbody->SetTransform(_realbody->GetPosition(), _realbody->GetAngle());
+    _drawbody->SetEnabled(_realbody->IsEnabled());
+    _drawbody->SetAwake(_realbody->IsAwake());
+    _drawbody->SetBullet(_realbody->IsBullet());
+    _drawbody->SetLinearVelocity(_realbody->GetLinearVelocity());
+    _drawbody->SetSleepingAllowed(_realbody->IsSleepingAllowed());
+    _drawbody->SetFixedRotation(_realbody->IsFixedRotation());
+    _drawbody->SetGravityScale(_realbody->GetGravityScale());
+    _drawbody->SetAngularDamping(_realbody->GetAngularDamping());
+    _drawbody->SetLinearDamping(_realbody->GetLinearDamping());
+}
+
+BodyNetData SimpleObstacle::getBodyData() {
+    BodyNetData data;
+    data.id = _id;
+    data.type = _realbody->GetType();
+    data.position = _realbody->GetPosition();
+    data.angle = _realbody->GetAngle();
+    data.enabled = _realbody->IsEnabled();
+    data.awake = _realbody->IsAwake();
+    data.bullet = _realbody->IsBullet();
+    data.linearVelocity = _realbody->GetLinearVelocity();
+    data.sleepingAllowed = _realbody->IsSleepingAllowed();
+    data.fixedRotation = _realbody->GetGravityScale();
+    data.gravityScale = _realbody->GetGravityScale();
+    data.angularDamping = _realbody->GetAngularDamping();
+    data.linearDamping = _realbody->GetLinearDamping();
+    return data;
+}
+
+void SimpleObstacle::setBodyFromData(BodyNetData data) {
+    _realbody->SetType(data.type);
+    _realbody->SetTransform(data.position, data.angle);
+    _realbody->SetEnabled(data.enabled);
+    _realbody->SetAwake(data.awake);
+    _realbody->SetBullet(data.bullet);
+    _realbody->SetLinearVelocity(data.linearVelocity);
+    _realbody->SetSleepingAllowed(data.sleepingAllowed);
+    _realbody->SetFixedRotation(data.fixedRotation);
+    _realbody->SetGravityScale(data.gravityScale);
+    _realbody->SetAngularDamping(data.angularDamping);
+    _realbody->SetLinearDamping(data.linearDamping);
+    syncBodies();
 }
 

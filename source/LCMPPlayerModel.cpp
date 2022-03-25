@@ -17,23 +17,27 @@
 
 using namespace cugl;
 
+//  MARK: - Constructors
+
 /**
  * initializes a Player Model
  */
-bool PlayerModel::init(const Vec2 pos, const Size size, float scale,
+bool PlayerModel::init(int playerNumber, const Vec2 pos, const Size size, float scale,
                        const std::shared_ptr<cugl::scene2::SceneNode>& node,
                        std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     // Call the parent's initializer
     physics2::CapsuleObstacle::init(pos, size);
     
     // Set physics properties for the body
-    setName("player");
     setBodyType(b2_dynamicBody);
     setDensity(DEFAULT_DENSITY);
     setFriction(DEFAULT_FRICTION);
     setRestitution(DEFAULT_RESTITUTION);
     setFixedRotation(true);
     setDebugColor(Color4::RED);
+    
+    // Save the player number
+    _playerNumber = playerNumber;
     
     // Set collision sound
     _collisionSound  = "";
@@ -82,34 +86,39 @@ void PlayerModel::dispose() {
     }
 }
 
+//  MARK: - Methods
+
 /**
  * Applies an acceleration to the player (most likely for local updates)
  */
 void PlayerModel::applyForce(cugl::Vec2 force) {
     // Push the player in the direction they want to go
     b2Vec2 b2force(force.x * getAcceleration(), force.y * getAcceleration());
-    _body->ApplyForceToCenter(b2force, true);
+    _realbody->ApplyForceToCenter(b2force, true);
     
     // Dampen the movement
-    b2Vec2 b2velocity = _body->GetLinearVelocity();
+    b2Vec2 b2velocity = _realbody->GetLinearVelocity();
     b2Vec2 b2damping(b2velocity.x * -getDamping(), b2velocity.y * -getDamping());
-    _body->ApplyForceToCenter(b2damping, true);
+    _realbody->ApplyForceToCenter(b2damping, true);
     
     // If the player has reached max speed
-    //b2Vec2 b2velocity = _body->GetLinearVelocity();
     if (b2velocity.LengthSquared() >= getMaxSpeed() * getMaxSpeed()) {
         b2velocity.Normalize();
         b2velocity *= getMaxSpeed();
-        _body->SetLinearVelocity(b2velocity);
+        _realbody->SetLinearVelocity(b2velocity);
     }
+    
+    // Save the force for animations later
+    _movement = force;
 }
 
 /**
  * Updates the position and velocity of the player (most likely for network updates)
  */
 void PlayerModel::applyNetwork(cugl::Vec2 position, cugl::Vec2 velocity, cugl::Vec2 force) {
+    setLinearVelocity(velocity);
     setPosition(position);
-    playAnimation(force);
+    applyForce(force);
 }
 
 /**
@@ -119,7 +128,7 @@ void PlayerModel::update(float timestep) {
     cugl::physics2::SimpleObstacle::update(timestep);
     
     if (_node != nullptr) {
-        Vec2 position(_body->GetPosition().x, _body->GetPosition().y);
+        Vec2 position(_drawbody->GetPosition().x, _drawbody->GetPosition().y);
         _node->setPosition(position * _scale);
     }
 }
@@ -129,35 +138,32 @@ int PlayerModel::findDirection(Vec2 movement) {
     if (abs(movement.x) >= abs(movement.y)) {
         return (movement.x > 0 ? RIGHT_ANIM_KEY : LEFT_ANIM_KEY);
     } else {
-        return (movement.y > 0 ? FRONT_ANIM_KEY : BACK_ANIM_KEY);
+        return (movement.y < 0 ? FRONT_ANIM_KEY : BACK_ANIM_KEY);
     }
 }
 
 /**
  * Performs a film strip action
  */
-void PlayerModel::playAnimation(Vec2 movement) {
+void PlayerModel::playAnimation() {
     // Figure out which animation direction to use
-    int key = findDirection(movement);
+    int key = findDirection(_movement);
     
     // If there is no movement, use the still animation
-    if (movement.length() == 0) key = STILL_ANIM_KEY;
+    if (_movement.length() == 0) key = STILL_ANIM_KEY;
     
     // Play desired animation and pause others
     for (int i = 0; i < _spriteNodes.size(); i++) {
         shared_ptr<cugl::scene2::SpriteNode> s = _spriteNodes[i];
+        string strKey = to_string(_playerNumber) + " " + to_string(i);
         if (i == key) {
             s->setVisible(true);
-            if (!_actions->isActive(to_string(i))) {
-                _actions->activate(to_string(i), _animations[i], _spriteNodes[i]);
-            }
-            else {
-                _actions->unpause(to_string(i));
-            }
+            if (_actions->isActive(strKey)) _actions->unpause(strKey);
+            else _actions->activate(strKey, _animations[i], _spriteNodes[i]);
         }
         else {
             s->setVisible(false);
-            _actions->pause(to_string(i));
+            _actions->pause(strKey);
         }
     }
 }

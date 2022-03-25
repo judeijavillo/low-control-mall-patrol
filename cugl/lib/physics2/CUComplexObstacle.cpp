@@ -68,12 +68,16 @@ using namespace cugl::physics2;
  */
 void ComplexObstacle::setDensity(float value) {
     _fixture.density = value;
-    if (_body != nullptr) {
-        for (b2Fixture* f = _body->GetFixtureList(); f; f = f->GetNext()) {
+    if (_realbody != nullptr && _drawbody != nullptr) {
+        for (b2Fixture* f = _realbody->GetFixtureList(); f; f = f->GetNext()) {
+            f->SetDensity(value);
+        }
+        for (b2Fixture* f = _drawbody->GetFixtureList(); f; f = f->GetNext()) {
             f->SetDensity(value);
         }
         if (!_masseffect) {
-            _body->ResetMassData();
+            _realbody->ResetMassData();
+            _drawbody->ResetMassData();
         }
     }
 }
@@ -94,8 +98,11 @@ void ComplexObstacle::setDensity(float value) {
  */
 void ComplexObstacle::setFriction(float value) {
     _fixture.friction = value;
-    if (_body != nullptr) {
-        for (b2Fixture* f = _body->GetFixtureList(); f; f = f->GetNext()) {
+    if (_realbody != nullptr && _drawbody != nullptr) {
+        for (b2Fixture* f = _realbody->GetFixtureList(); f; f = f->GetNext()) {
+            f->SetFriction(value);
+        }
+        for (b2Fixture* f = _drawbody->GetFixtureList(); f; f = f->GetNext()) {
             f->SetFriction(value);
         }
     }
@@ -117,8 +124,11 @@ void ComplexObstacle::setFriction(float value) {
  */
 void ComplexObstacle::setRestitution(float value) {
     _fixture.restitution = value;
-    if (_body != nullptr) {
-        for (b2Fixture* f = _body->GetFixtureList(); f; f = f->GetNext()) {
+    if (_realbody != nullptr && _drawbody != nullptr) {
+        for (b2Fixture* f = _realbody->GetFixtureList(); f; f = f->GetNext()) {
+            f->SetRestitution(value);
+        }
+        for (b2Fixture* f = _drawbody->GetFixtureList(); f; f = f->GetNext()) {
             f->SetRestitution(value);
         }
     }
@@ -138,8 +148,11 @@ void ComplexObstacle::setRestitution(float value) {
  */
 void ComplexObstacle::setSensor(bool value) {
     _fixture.isSensor = value;
-    if (_body != nullptr) {
-        for (b2Fixture* f = _body->GetFixtureList(); f; f = f->GetNext()) {
+    if (_realbody != nullptr && _drawbody != nullptr) {
+        for (b2Fixture* f = _realbody->GetFixtureList(); f; f = f->GetNext()) {
+            f->SetSensor(value);
+        }
+        for (b2Fixture* f = _drawbody->GetFixtureList(); f; f = f->GetNext()) {
             f->SetSensor(value);
         }
     }
@@ -162,8 +175,11 @@ void ComplexObstacle::setSensor(bool value) {
  */
 void ComplexObstacle::setFilterData(b2Filter value) {
     _fixture.filter = value;
-    if (_body != nullptr) {
-        for (b2Fixture* f = _body->GetFixtureList(); f; f = f->GetNext()) {
+    if (_realbody != nullptr && _drawbody != nullptr) {
+        for (b2Fixture* f = _realbody->GetFixtureList(); f; f = f->GetNext()) {
+            f->SetFilterData(value);
+        }
+        for (b2Fixture* f = _drawbody->GetFixtureList(); f; f = f->GetNext()) {
             f->SetFilterData(value);
         }
     }
@@ -183,15 +199,17 @@ void ComplexObstacle::setFilterData(b2Filter value) {
  *
  * @return true if object allocation succeeded
  */
-bool ComplexObstacle::activatePhysics(b2World& world) {
+bool ComplexObstacle::activatePhysics(b2World& realworld, b2World& drawworld) {
     // Make a body, if possible
     _bodyinfo.enabled = true;
-    _body = world.CreateBody(&_bodyinfo);
-    _body->GetUserData().pointer = reinterpret_cast<intptr_t>(this);
+    _realbody = realworld.CreateBody(&_bodyinfo);
+    _realbody->GetUserData().pointer = reinterpret_cast<intptr_t>(this);
+    _drawbody = drawworld.CreateBody(&_bodyinfo);
+    _drawbody->GetUserData().pointer = reinterpret_cast<intptr_t>(this);
     
     // Only initialize if a body was created.
     bool success = true;
-    if (_body == nullptr) {
+    if (_realbody == nullptr || _drawbody == nullptr) {
         _bodyinfo.enabled = false;
         return false;
     }
@@ -199,13 +217,13 @@ bool ComplexObstacle::activatePhysics(b2World& world) {
     
     // Active all other bodies.
     for(auto it = _bodies.begin(); it != _bodies.end(); ++it) {
-        success = success && (*it)->activatePhysics(world);
+        success = success && (*it)->activatePhysics(realworld, drawworld);
     }
-    success = success && createJoints(world);
+    success = success && createJoints(realworld, drawworld);
     
     // Clean up if we failed
     if (!success) {
-        deactivatePhysics(world);
+        deactivatePhysics(realworld, drawworld);
     }
     return success;
 }
@@ -216,23 +234,32 @@ bool ComplexObstacle::activatePhysics(b2World& world) {
  *
  * @param world Box2D world that stores body
  */
-void ComplexObstacle::deactivatePhysics(b2World& world) {
+void ComplexObstacle::deactivatePhysics(b2World& realworld, b2World& drawworld) {
     // Should be good for most (simple) applications.
-    if (_body != nullptr) {
-        for(auto it = _joints.begin(); it!= _joints.end(); ++it) {
-            world.DestroyJoint(*it);
+    if (_realbody != nullptr && _drawbody != nullptr) {
+        for(auto it = _realjoints.begin(); it!= _realjoints.end(); ++it) {
+            realworld.DestroyJoint(*it);
         }
-        _joints.clear();
+        _realjoints.clear();
+
+        for (auto it = _drawjoints.begin(); it != _drawjoints.end(); ++it) {
+            drawworld.DestroyJoint(*it);
+        }
+        _drawjoints.clear();
+
         for(auto it = _bodies.begin(); it!= _bodies.end(); ++it) {
-            (*it)->deactivatePhysics(world);
+            (*it)->deactivatePhysics(realworld, drawworld);
         }
         
         releaseFixtures();
         
         // Snapshot the values
-        setBodyState(*_body);
-        world.DestroyBody(_body);
-        _body = nullptr;
+        setBodyState(*_realbody);
+        realworld.DestroyBody(_realbody);
+        _realbody = nullptr;
+        drawworld.DestroyBody(_drawbody);
+        _drawbody = nullptr;
+
         _bodyinfo.enabled = false;
     }
 }
@@ -362,7 +389,54 @@ void ComplexObstacle::updateDebug() { }
  * pre-maturely.
  */
 ComplexObstacle::~ComplexObstacle() {
-    CUAssertLog(_body == nullptr, "You must deactive physics before deleting an object");
+    CUAssertLog(_realbody == nullptr || _drawbody == nullptr, "You must deactive physics before deleting an object");
     setDebugScene(nullptr);
     _bodies.clear();
+}
+
+void ComplexObstacle::syncBodies() {
+    _drawbody->SetType(_realbody->GetType());
+    _drawbody->SetTransform(_realbody->GetPosition(), _realbody->GetAngle());
+    _drawbody->SetEnabled(_realbody->IsEnabled());
+    _drawbody->SetAwake(_realbody->IsAwake());
+    _drawbody->SetBullet(_realbody->IsBullet());
+    _drawbody->SetLinearVelocity(_realbody->GetLinearVelocity());
+    _drawbody->SetSleepingAllowed(_realbody->IsSleepingAllowed());
+    _drawbody->SetFixedRotation(_realbody->IsFixedRotation());
+    _drawbody->SetGravityScale(_realbody->GetGravityScale());
+    _drawbody->SetAngularDamping(_realbody->GetAngularDamping());
+    _drawbody->SetLinearDamping(_realbody->GetLinearDamping());
+}
+
+BodyNetData ComplexObstacle::getBodyData() {
+    BodyNetData data;
+    data.id = _id;
+    data.type = _realbody->GetType();
+    data.position = _realbody->GetPosition();
+    data.angle = _realbody->GetAngle();
+    data.enabled = _realbody->IsEnabled();
+    data.awake = _realbody->IsAwake();
+    data.bullet = _realbody->IsBullet();
+    data.linearVelocity = _realbody->GetLinearVelocity();
+    data.sleepingAllowed = _realbody->IsSleepingAllowed();
+    data.fixedRotation = _realbody->GetGravityScale();
+    data.gravityScale = _realbody->GetGravityScale();
+    data.angularDamping = _realbody->GetAngularDamping();
+    data.linearDamping = _realbody->GetLinearDamping();
+    return data;
+}
+
+void ComplexObstacle::setBodyFromData(BodyNetData data) {
+    _realbody->SetType(data.type);
+    _realbody->SetTransform(data.position, data.angle);
+    _realbody->SetEnabled(data.enabled);
+    _realbody->SetAwake(data.awake);
+    _realbody->SetBullet(data.bullet);
+    _realbody->SetLinearVelocity(data.linearVelocity);
+    _realbody->SetSleepingAllowed(data.sleepingAllowed);
+    _realbody->SetFixedRotation(data.fixedRotation);
+    _realbody->SetGravityScale(data.gravityScale);
+    _realbody->SetAngularDamping(data.angularDamping);
+    _realbody->SetLinearDamping(data.linearDamping);
+    syncBodies();
 }

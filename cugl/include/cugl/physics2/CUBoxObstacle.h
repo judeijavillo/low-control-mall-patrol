@@ -63,7 +63,7 @@ namespace cugl {
  *
  * Given the name Box2D, this is your primary model class.  Most of the time,
  * unless it is a player controlled avatar, you do not even need to subclass
- * BoxObject.  Look through some of our samples and see how many times we use 
+ * BoxObject.  Look through some of our samples and see how many times we use
  * this class.
  *
  * Unless otherwise specified, the center of mass is as the center.
@@ -73,7 +73,9 @@ protected:
     /** Shape information for this box */
     b2PolygonShape _shape;
     /** A cache value for the fixture (for resizing) */
-    b2Fixture* _geometry;
+    b2Fixture* _realgeometry;
+    /** A cache value for the fixture (for resizing) */
+    b2Fixture* _drawgeometry;
     /** The width and height of the box */
     Size _dimension;
     
@@ -83,7 +85,7 @@ protected:
     /**
      * Resets the polygon vertices in the shape to match the dimension.
      *
-     * This is an internal method and it does not mark the physics object as 
+     * This is an internal method and it does not mark the physics object as
      * dirty.
      *
      * @param  size The new dimension (width and height)
@@ -109,7 +111,7 @@ public:
      * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
      * the heap, use one of the static constructors instead.
      */
-    BoxObstacle(void) : SimpleObstacle(), _geometry(nullptr) { }
+    BoxObstacle(void) : SimpleObstacle(), _realgeometry(nullptr), _drawgeometry(nullptr) { }
     
     /**
      * Deletes this physics object and all of its resources.
@@ -121,7 +123,7 @@ public:
      * claims on scene graph nodes.
      */
     virtual ~BoxObstacle() {
-        CUAssertLog(_geometry == nullptr, "You must deactive physics before deleting an object");
+        CUAssertLog(_realgeometry == nullptr || _drawgeometry == nullptr, "You must deactive physics before deleting an object");
     }
 
     /**

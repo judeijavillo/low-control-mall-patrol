@@ -60,7 +60,8 @@ using namespace cugl::physics2;
  */
 bool BoxObstacle::init(const Vec2 pos, const Size size) {
     Obstacle::init(pos);
-    _geometry = nullptr;
+    _realgeometry = nullptr;
+    _drawgeometry = nullptr;
     resize(size);
     return true;
 }
@@ -129,7 +130,7 @@ void BoxObstacle::resetDebug() {
  * This is the primary method to override for custom physics objects
  */
 void BoxObstacle::createFixtures() {
-    if (_body == nullptr) {
+    if (_realbody == nullptr || _drawbody == nullptr) {
         return;
     }
     
@@ -137,7 +138,8 @@ void BoxObstacle::createFixtures() {
     
     // Create the fixture
     _fixture.shape = &_shape;
-    _geometry = _body->CreateFixture(&_fixture);
+    _realgeometry = _realbody->CreateFixture(&_fixture);
+    _drawgeometry = _drawbody->CreateFixture(&_fixture);
     markDirty(false);
 }
 
@@ -147,8 +149,10 @@ void BoxObstacle::createFixtures() {
  * This is the primary method to override for custom physics objects
  */
 void BoxObstacle::releaseFixtures() {
-    if (_geometry != nullptr) {
-        _body->DestroyFixture(_geometry);
-        _geometry = nullptr;
+    if (_realgeometry != nullptr && _drawgeometry != nullptr) {
+        _realbody->DestroyFixture(_realgeometry);
+        _drawbody->DestroyFixture(_drawgeometry);
+        _realgeometry = nullptr;
+        _drawgeometry = nullptr;
     }
 }
