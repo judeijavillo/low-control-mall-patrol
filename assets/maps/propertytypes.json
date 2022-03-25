@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "members": [
+        ],
+        "name": "Effect",
+        "type": "class"
+    },
+    {
+        "id": 3,
+        "members": [
+            {
+                "name": "x",
+                "type": "float",
+                "value": 0
+            },
+            {
+                "name": "y",
+                "type": "float",
+                "value": 0
+            }
+        ],
+        "name": "Vec2",
+        "type": "class"
+    }
+]

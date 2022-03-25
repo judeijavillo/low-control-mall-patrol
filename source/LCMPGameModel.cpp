@@ -34,9 +34,30 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     _gameover = false;
     
     _actions = actions;
-    
     std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(file);
     std::shared_ptr<JsonValue> json = reader->readJson();
+
+    //init the map that converts Json Strings into Json Values
+    constantsMap["activated"] = ACTIVATED; 
+    constantsMap["copCollide"] = COP_COLLIDE;
+    constantsMap["copEffect"] = COP_EFFECT;
+    constantsMap["copLingerDuration"] = COP_LINGER_DURATION;
+    constantsMap["copLingerEffect"] = COP_LINGER_EFFECT;
+    constantsMap["effectArea"] = EFFECT_AREA;
+    constantsMap["numUsages"] = NUM_USAGES;
+    constantsMap["thiefCollide"] = THIEF_COLLIDE;
+    constantsMap["thiefEffect"] = THIEF_EFFECT;
+    constantsMap["thiefLingerDuration"] = THIEF_LINGER_DURATION;
+    constantsMap["thiefLingerEffect"] = THIEF_LINGER_EFFECT;
+    constantsMap["triggerArea"] = TRIGGER_AREA;
+    constantsMap["triggerDeactivationArea"] = TRIGGER_DEACTIVATION_AREA;
+
+    constantsMap["Escalator"] = ESCALATOR;
+    constantsMap["Teleport"] = TELEPORT;
+    constantsMap["Stairs"] = STAIRS;
+    constantsMap["Velocity Modifier"] = VELOCITY_MODIFIER;
+
+    constantsMap["NULL"] = NIL;
     
     _mapWidth = json->getFloat(WIDTH_FIELD);
     _mapHeight = json->getFloat(HEIGHT_FIELD);
@@ -336,6 +357,7 @@ void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
 
 }
 
+
 /**
  * Initializes a single trap
  */
@@ -346,26 +368,103 @@ void GameModel::initTrap(int trapID,
                          float scale,
                          const std::shared_ptr<cugl::AssetManager>& assets) {
     
-    // Create hard-coded example trap
+    // Create the trap from the json
+
+    //init instances
+
     shared_ptr<TrapModel> trap = std::make_shared<TrapModel>();
+    shared_ptr<TrapModel::Effect> copEffect = std::make_shared<TrapModel::Effect>();
+    shared_ptr<TrapModel::Effect> thiefEffect = std::make_shared<TrapModel::Effect>();
+    shared_ptr<TrapModel::Effect> copLingerEffect = std::make_shared<TrapModel::Effect>();
+    shared_ptr<TrapModel::Effect> thiefLingerEffect = std::make_shared<TrapModel::Effect>();
 
     std::shared_ptr<cugl::JsonValue> properties = json->get(PROPERTIES_FIELD);
+    vector<std::shared_ptr<cugl::JsonValue>> children = properties->children();
 
-    bool activated = properties->get(TRAP_ACTIVATED)->getBool(VALUE_FIELD);
-    bool copCollide = properties->get(TRAP_COP_COLLIDE)->getBool(VALUE_FIELD);
-    bool thiefCollide = properties->get(TRAP_THIEF_COLLIDE)->getBool(VALUE_FIELD);
-    float copSpeed = properties->get(TRAP_COP_SPEED_MODIFIER)->getFloat(VALUE_FIELD);
-    float thiefSpeed = properties->get(TRAP_THIEF_SPEED_MODIFIER)->getFloat(VALUE_FIELD);
-    int effectObjectId = properties->get(TRAP_EFFECT_AREA)->getInt(VALUE_FIELD);
-    int triggerObjectId = properties->get(TRAP_TRIGGER_AREA)->getInt(VALUE_FIELD);
+    bool activated = false;
+    bool copCollide = false;
+    bool thiefCollide = false;
+    int effectObjectId = -1;
+    int triggerObjectId = -1;
+    int deactivationObjectId = -1;
+    int numUses = -1;
+    int copEffectLingerDur = 0;
+    int thiefEffectLingerDur = 0;
+
+    //CULog("%s", children.at(3)->get(NAME_FIELD)->asString());
+    // read in the JSON values and match it to the proper property
+    for (int i = 0; i < children.size(); i++) {
+        std::shared_ptr<cugl::JsonValue> elem = children.at(i);
+
+        switch (constantsMap[elem->getString(NAME_FIELD, "NULL")])
+        {
+        
+
+        case ACTIVATED:
+            activated = elem->getBool(VALUE_FIELD);
+            break;
+
+        case COP_COLLIDE:
+            copCollide = elem->getBool(VALUE_FIELD);
+            break;
+        
+        case COP_EFFECT:
+            copEffect = readJsonEffect(elem);
+            break;
+        
+        case COP_LINGER_DURATION:
+            copEffectLingerDur = elem->getFloat(VALUE_FIELD);
+            break;
+
+        case COP_LINGER_EFFECT:
+            copLingerEffect = readJsonEffect(elem);
+            break;
+
+        case EFFECT_AREA:
+            effectObjectId = elem->getInt(VALUE_FIELD);
+            break;
+
+        case NUM_USAGES:
+            numUses = elem->getInt(VALUE_FIELD);
+            break;
+
+        case THIEF_COLLIDE:
+            thiefCollide = elem->getBool(VALUE_FIELD);
+            break;
+
+        case THIEF_EFFECT:
+            thiefEffect = readJsonEffect(elem);
+            break;
+
+        case THIEF_LINGER_DURATION:
+            thiefEffectLingerDur = elem->getFloat(VALUE_FIELD);
+            break;
+
+        case THIEF_LINGER_EFFECT:
+            thiefLingerEffect = readJsonEffect(elem);
+            break;
+
+        case TRIGGER_AREA:
+            triggerObjectId = elem->getInt(VALUE_FIELD);
+            break;
+
+        case TRIGGER_DEACTIVATION_AREA:
+            deactivationObjectId = elem->getInt(VALUE_FIELD);
+            break;
+
+        case NIL:
+        default:
+            break;
+        }
+    }
+
 
     shared_ptr<cugl::physics2::PolygonObstacle> thiefEffectArea = map1.at(effectObjectId).obstacle;
     shared_ptr<cugl::physics2::PolygonObstacle> copEffectArea = map2.at(effectObjectId).obstacle;
     shared_ptr<cugl::physics2::PolygonObstacle> triggerArea = map1.at(triggerObjectId).obstacle;
+    shared_ptr<cugl::physics2::PolygonObstacle> deactivationArea = map2.at(deactivationObjectId).obstacle;
 
     std::shared_ptr<cugl::Vec2> triggerPosition = make_shared<cugl::Vec2>(json->getInt(X_FIELD), json->getInt(Y_FIELD));
-    int numUses = -1;
-    float lingerDur = 0.3;
 
 
     // Create the parameters to create a trap
@@ -382,31 +481,88 @@ void GameModel::initTrap(int trapID,
 
     trap->init(trapID,
                 thiefEffectArea, copEffectArea,
-                triggerArea,
+                triggerArea, deactivationArea,
                 triggerPosition,
                 copCollide, thiefCollide,
                 numUses,
-                lingerDur,
-                thiefSpeed, copSpeed);
+                copEffectLingerDur,
+                thiefEffectLingerDur,
+                copEffect,
+                thiefEffect,
+                copLingerEffect,
+                thiefLingerEffect);
     
     // Configure physics
     _world->addObstacle(thiefEffectArea);
     _world->addObstacle(copEffectArea);
-//    CULog("Id: %d", triggerObjectId);
     _world->addObstacle(triggerArea);
     thiefEffectArea->setPosition(Vec2(map1.at(effectObjectId).x, map1.at(effectObjectId).y));
     copEffectArea->setPosition(Vec2(map2.at(effectObjectId).x, map2.at(effectObjectId).y));
     triggerArea->setPosition(Vec2(map1.at(triggerObjectId).x, map1.at(triggerObjectId).y));
+    deactivationArea->setPosition(Vec2(map2.at(deactivationObjectId).x, map2.at(deactivationObjectId).y));
+    deactivationArea->setSensor(true);
     triggerArea->setSensor(true);
     thiefEffectArea->setSensor(true);
     copEffectArea->setSensor(true);
     
-    // Set the appropriate visual elements
-    trap->setAssets(scale, _worldnode, assets, TrapModel::MopBucket);
+    // TODO: fix this once assets are written
+    trap->setAssets(scale, _worldnode, assets, TrapModel::Teleport);
     trap->setDebugScene(_debugnode);
     
     // Add the trap to the vector of traps
     _traps.push_back(trap);
+}
+
+/**
+ * Takes a JsonValue pointing towards an Effect object and parses it
+ */
+shared_ptr<TrapModel::Effect> GameModel::readJsonEffect(shared_ptr<JsonValue> effect) {
+    std::shared_ptr<cugl::Vec2> effectVec = make_shared<cugl::Vec2>(0, 0);
+    TrapModel::TrapType effectType = TrapModel::TrapType::Teleport;
+    float effectx = 0.0;
+    float effecty = 0.0;
+
+    if (effect->get(VALUE_FIELD)->children().size() > 0) {
+        switch (constantsMap[effect->get(VALUE_FIELD)->getString(TRAP_TYPE, "NULL")])
+        {
+
+        case ESCALATOR:
+            effectType = TrapModel::TrapType::Moving_Platform;
+            effectx = effect->get(VALUE_FIELD)->get(ESCALATOR_VELOCITY)->getFloat(X_FIELD, 0);
+            effecty = effect->get(VALUE_FIELD)->get(ESCALATOR_VELOCITY)->getFloat(Y_FIELD, 0);
+            effectVec = make_shared<cugl::Vec2>(effectx, effecty);
+            break;
+
+        case TELEPORT:
+            effectType = TrapModel::TrapType::Teleport;
+            effectx = effect->get(VALUE_FIELD)->get(TELEPORT_LOCATION)->getFloat(X_FIELD, 0) / _tileSize;
+            effecty = _mapHeight - effect->get(VALUE_FIELD)->get(TELEPORT_LOCATION)->getFloat(Y_FIELD, 0) / _tileSize;
+            effectVec = make_shared<cugl::Vec2>(effectx, effecty);
+            break;
+
+        case STAIRS:
+            effectType = TrapModel::TrapType::Directional_VelMod;
+            effectx = effect->get(VALUE_FIELD)->get(STAIRCASE_VELOCITY)->getFloat(X_FIELD, 0);
+            effecty = effect->get(VALUE_FIELD)->get(STAIRCASE_VELOCITY)->getFloat(Y_FIELD, 0);
+            effectVec = make_shared<cugl::Vec2>(effectx, effecty);
+            break;
+
+        case VELOCITY_MODIFIER:
+            effectType = TrapModel::TrapType::VelMod;
+            effectx = effect->get(VALUE_FIELD)->get(SPEED_MODIFIER)->getFloat(X_FIELD, 0);
+            effecty = effect->get(VALUE_FIELD)->get(SPEED_MODIFIER)->getFloat(Y_FIELD, 0);
+            effectVec = make_shared<cugl::Vec2>(effectx, effecty);
+            break;
+
+        case NIL:
+        default:
+            break;
+        }
+    }
+
+    shared_ptr<TrapModel::Effect> temp = make_shared<TrapModel::Effect>();
+    temp->init(effectType, effectVec);
+    return temp;
 }
 
 /**

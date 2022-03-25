@@ -14,6 +14,8 @@
 #include <cugl/scene2/actions/CUScaleAction.h>
 #include <cugl/scene2/actions/CUAnimateAction.h>
 #include <cugl/math/CUEasingBezier.h>
+#include <map>
+#include "LCMPTrapModel.h"
 
 /** Define the time settings for animation */
 #define DURATION 0.4f
@@ -46,14 +48,16 @@ protected:
     std::vector<std::shared_ptr<cugl::Texture>> _spriteSheets;
     /** The number of animation frames per player animation */
     std::vector<int> _animFrames;
+    /** Map that associates trap ID to <trap type, effect vector> vector list, since there could be repeats */
+    map<int, shared_ptr<vector<std::tuple<TrapModel::TrapType, shared_ptr<cugl::Vec2>>>>> playerEffects;
     
     // Physics
     /** A multipler for the damping constant */
-    float _dampingMultiplier       = 1.0f;
+    cugl::Vec2 _dampingMultiplier       = cugl::Vec2(1.0f, 1.0f);
     /** A multipler for the max speed constant */
     float _maxSpeedMultiplier      = 1.0f;
     /** A multipler for the acceleration constant */
-    float _accelerationMultiplier  = 1.0f;
+    cugl::Vec2 _accelerationMultiplier  = cugl::Vec2(1.0f, 1.0f);
     /** The last force applied to this player */
     cugl::Vec2 _movement;
     
@@ -78,6 +82,13 @@ public:
     std::shared_ptr<cugl::scene2::SpriteNode> runLeft;
     /** A reference to the sprite showing the player running to the right */
     std::shared_ptr<cugl::scene2::SpriteNode> runRight;
+
+
+    // Trap Effect Flags
+    std::tuple<bool, cugl::Vec2> teleportFlag = std::tuple<bool, cugl::Vec2>(make_tuple(false, cugl::Vec2(0, 0)));
+    std::tuple<bool, cugl::Vec2> stairsFlag = std::tuple<bool, cugl::Vec2>(make_tuple(false, cugl::Vec2(0, 0)));
+    std::tuple<bool, cugl::Vec2> escalatorFlag = std::tuple<bool, cugl::Vec2>(make_tuple(false, cugl::Vec2(0, 0)));
+
 
 //  MARK: - Constructors
     
@@ -105,6 +116,27 @@ public:
     
 //  MARK: - Methods
     
+    /**
+    * applies the effect to the player model
+    */
+    void act(int trapID, std::shared_ptr<TrapModel::Effect> trap);
+
+
+    /**
+    * reverts player model to default state, adding any linger effects as needed
+    */
+    void unact(int trapID, std::shared_ptr<TrapModel::Effect> trap);
+
+    /**
+     * Adds the effect to the map of current player effects
+     */
+    void addEffects(int trapID, TrapModel::TrapType type, shared_ptr<cugl::Vec2> effect);
+
+    /**
+     * Removes an instance of the effect with the corresponding trap id from the player effects
+     */
+    bool removeEffects(int trapID);
+
     /**
      * Gets the appropriate key for the sound for collision
      */
@@ -138,7 +170,7 @@ public:
     /**
      * Returns the damping constant of this player
      */
-    virtual float getDamping() { return 10.0f; }
+    virtual cugl::Vec2 getDamping() { return cugl::Vec2(10.0f, 10.0f); }
     
     /**
      * Returns the max speed of this player
@@ -148,12 +180,12 @@ public:
     /**
      * Returns the acceleration of this player
      */
-    virtual float getAcceleration() { return 10.0f; }
+    virtual cugl::Vec2 getAcceleration() { return cugl::Vec2(10.0f, 10.0f); }
     
     /**
      * Sets the damping multiplier of this player
      */
-    void setDampingMultiplier(float value) {  _dampingMultiplier = value; }
+    void setDampingMultiplier(cugl::Vec2 value) {  _dampingMultiplier = value; }
     
     /**
      * Sets the max speed of this player.
@@ -163,7 +195,7 @@ public:
     /**
      * Sets the acceleration of this player.
      */
-    void setAccelerationMultiplier(float value) { _accelerationMultiplier = value; }
+    void setAccelerationMultiplier(cugl::Vec2 value) { _accelerationMultiplier = value; }
     
     /**
      * Applies a force to the player (most likely for local updates)

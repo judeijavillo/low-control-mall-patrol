@@ -43,28 +43,24 @@ void CollisionController::beginContact(b2Contact* contact) {
         b2Body* triggerBody = trap->getTriggerArea()->getRealBody();
         b2Body* thiefEffectBody = trap->getThiefEffectArea()->getRealBody();
         b2Body* copEffectBody = trap->getCopEffectArea()->getRealBody();
+        b2Body* deactivationBody = trap->getDeactivationArea()->getRealBody();
 
         if (trap->activated) {
             if ((thiefBody == body1 && thiefEffectBody == body2) ||
                 (thiefBody == body2 && thiefEffectBody == body1)) {
-                
-                // TODO: Set multipliers based on colliding trap
-                
-                // Slow down
-                _game->getThief()->setDampingMultiplier(2.5f);
-
-                // Speed up
-                // _game->getThief()->setMaxSpeedMultiplier(2.0f);
-                // _game->getThief()->setAccelerationMultiplier(2.0f);
+                _game->getThief()->act(trap->getTrapID(), trap->getThiefEffect());
             }
 
             for (int i = 0; i < 4; i++) {
                 b2Body* copBody = _game->getCop(i)->getRealBody();
                 if ((copBody == body1 && copEffectBody == body2) ||
                     (copBody == body2 && copEffectBody == body1)) {
+                    _game->getCop(i)->act(trap->getTrapID(), trap->getCopEffect());
+                }
 
-                    // TODO: Set multipliers based on colliding trap
-                    _game->getCop(i)->setDampingMultiplier(2.5);
+                if ((copBody == body1 && deactivationBody == body2) ||
+                    (copBody == body2 && deactivationBody == body1)) {
+                    _game->getCop(i)->trapDeactivationFlag = trap->getTrapID();
                 }
             }
         }
@@ -95,24 +91,13 @@ void CollisionController::endContact(b2Contact* contact) {
         if (trap->activated) {
             if ((thiefBody == body1 && thiefEffectBody == body2) ||
                 (thiefBody == body2 && thiefEffectBody == body1)) {
-                
-                // TODO: Set multipliers based on colliding trap
-                
-                // Undo slow down
-                 _game->getThief()->setDampingMultiplier(1.0f);
-
-                // Undo speed up
-                // _game->getThief()->setMaxSpeedMultiplier(1.0f);
-                // _game->getThief()->setAccelerationMultiplier(1.0f);
-
+                _game->getThief()->unact(trap->getTrapID(), trap->getThiefEffect());
             }
             for (int i = 0; i < 4; i++) {
                 b2Body* copBody = _game->getCop(i)->getRealBody();
                 if ((copBody == body1 && copEffectBody == body2) ||
                     (copBody == body2 && copEffectBody == body1)) {
-                    
-                    // TODO: Set multipliers based on colliding trap
-                    _game->getCop(i)->setDampingMultiplier(1.0f);
+                    _game->getCop(i)->unact( trap->getTrapID(), trap->getCopEffect());
                 }
             }
         }

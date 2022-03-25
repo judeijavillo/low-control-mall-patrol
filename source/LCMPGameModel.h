@@ -35,6 +35,8 @@ protected:
     std::shared_ptr<cugl::scene2::SceneNode> _debugnode;
     /** Reference to the Box2D world */
     std::shared_ptr<cugl::physics2::ObstacleWorld> _world;
+    // Map to associate the json strings with the json enum values
+    std::map<std::string, JsonConstants> constantsMap;
     
     /** The width of the map in Box2D coordinates */
     float _mapWidth;
@@ -44,6 +46,8 @@ protected:
     float _tileSize;
     /** A flag indicating whether the game is over */
     bool _gameover;
+
+
     
 public:
 //  MARK: - Constructors
@@ -188,6 +192,12 @@ private:
                   const map<int, ObstacleNode_x_Y_struct>& map2,
                   float scale,
                   const std::shared_ptr<cugl::AssetManager>& assets);
+
+
+    /**
+    * Takes a JsonValue pointing towards an Effect object and parses it
+    */
+    shared_ptr<TrapModel::Effect> readJsonEffect(shared_ptr<cugl::JsonValue> effect);
     
     /**
      * Initializes the border for the game

@@ -14,6 +14,9 @@
 /** Defining the filter bits for the cop model*/
 #define COP_FILTER_BITS 0b01001
 
+
+
+
 class CopModel : public PlayerModel {
 protected:
     std::shared_ptr<cugl::scene2::PolygonNode> _character;
@@ -36,6 +39,9 @@ protected:
 public:
 //  MARK: - Constructors
     
+    /** Flag for whether cop is in range to deactivate a trap. -1 indicates out of range, otherwise it indicates the id of the trap the cop will deactivate */
+    int trapDeactivationFlag = -1;
+
     /**
      * Constructs a Cop Model
      */
@@ -64,7 +70,7 @@ public:
     /**
      * Returns the damping constant
      */
-    float getDamping() override { return COP_DAMPING_DEFAULT * _dampingMultiplier; }
+    cugl::Vec2 getDamping() override { return cugl::Vec2( COP_DAMPING_DEFAULT * _dampingMultiplier.x, COP_DAMPING_DEFAULT * _dampingMultiplier.y); }
     
     /**
      * Returns the max speed of a cop
@@ -74,7 +80,7 @@ public:
     /**
      * Returns the acceleration of a cop
      */
-    float getAcceleration() override { return COP_ACCELERATION_DEFAULT * _accelerationMultiplier; }
+    cugl::Vec2 getAcceleration() override { return cugl::Vec2(COP_ACCELERATION_DEFAULT * _accelerationMultiplier.x, COP_ACCELERATION_DEFAULT * _accelerationMultiplier.y); }
     
     /**
      * Returns the direction of the tackle

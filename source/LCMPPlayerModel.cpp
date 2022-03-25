@@ -93,12 +93,12 @@ void PlayerModel::dispose() {
  */
 void PlayerModel::applyForce(cugl::Vec2 force) {
     // Push the player in the direction they want to go
-    b2Vec2 b2force(force.x * getAcceleration(), force.y * getAcceleration());
+    b2Vec2 b2force(force.x * getAcceleration().x, force.y * getAcceleration().y);
     _realbody->ApplyForceToCenter(b2force, true);
     
     // Dampen the movement
     b2Vec2 b2velocity = _realbody->GetLinearVelocity();
-    b2Vec2 b2damping(b2velocity.x * -getDamping(), b2velocity.y * -getDamping());
+    b2Vec2 b2damping(b2velocity.x * -getDamping().x, b2velocity.y * -getDamping().y);
     _realbody->ApplyForceToCenter(b2damping, true);
     
     // If the player has reached max speed
@@ -110,6 +110,133 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
     
     // Save the force for animations later
     _movement = force;
+
+    //check for trap effects
+    Vec2 playerVel;
+    Vec2 addedVel;
+
+    //iterate through the player effects and execute them
+    for (auto it = playerEffects.begin(); it != playerEffects.end(); it++) {
+        if (playerEffects.count(it->first) > 0 && playerEffects[it->first]->size() > 0) {
+            std::tuple<TrapModel::TrapType, shared_ptr<Vec2>> elem = it->second->at(0);
+            switch (std::get<0>(elem))
+            {
+
+            case TrapModel::TrapType::Directional_VelMod:
+                playerVel = Vec2(b2velocity.x, b2velocity.y);
+                addedVel = -0.5 * abs(playerVel.dot(Vec2(std::get<1>(elem)->x, std::get<1>(elem)->y))) * Vec2(std::get<1>(elem)->x, std::get<1>(elem)->y);
+                _realbody->SetLinearVelocity(b2Vec2(b2velocity.x + addedVel.x, b2velocity.y + addedVel.y));
+                break;
+            case TrapModel::TrapType::Teleport:
+                setPosition(Vec2(std::get<1>(elem)->x, std::get<1>(elem)->y));
+                break;
+            case TrapModel::TrapType::Moving_Platform:
+                _realbody->SetLinearVelocity(b2Vec2(b2velocity.x + std::get<1>(elem)->x, b2velocity.y + std::get<1>(elem)->y));
+                break;
+            default:
+                break;
+            }
+        }
+
+    }
+
+    /**
+    if (std::get<0>(escalatorFlag)) {
+        _realbody->SetLinearVelocity(b2Vec2(b2velocity.x + std::get<1>(escalatorFlag).x, b2velocity.y + std::get<1>(escalatorFlag).y));
+    }
+
+    if (std::get<0>(teleportFlag)) {
+        setPosition(Vec2(std::get<1>(teleportFlag)));
+    }
+
+    if (std::get<0>(stairsFlag)) {
+        Vec2 playerVel = Vec2(b2velocity.x, b2velocity.y);
+        Vec2 addedVel = -0.5 * abs(playerVel.dot(std::get<1>(stairsFlag))) * std::get<1>(stairsFlag);
+        CULog("%f", addedVel.x);
+        _realbody->SetLinearVelocity(b2Vec2(b2velocity.x + addedVel.x, b2velocity.y + addedVel.y));
+    }
+    */
+    // Save the force for animations later
+    _movement = force;
+}
+
+
+/**
+ * Adds the effect to the map of current player effects
+ */
+void PlayerModel::addEffects(int trapID, TrapModel::TrapType type, shared_ptr<cugl::Vec2> effect) {
+    if (playerEffects.count(trapID) == 0) {
+        playerEffects[trapID] = make_shared<vector<std::tuple<TrapModel::TrapType, shared_ptr<cugl::Vec2> >>>();
+    }
+    playerEffects[trapID]->push_back(make_tuple(type, effect));
+}
+
+/**
+ * Removes an instance of the effect with the corresponding trap id from the player effects
+ */
+bool PlayerModel::removeEffects(int trapID) {
+    if (playerEffects.count(trapID) ==0) {
+        return false;
+    }
+
+    if (playerEffects[trapID]->size() == 1) {
+        playerEffects.erase(trapID);
+        return true;
+    }
+
+    playerEffects[trapID]->pop_back();
+    return true;
+}
+
+/**
+* applies the effect to the player model
+*/
+void PlayerModel::act(int trapID, std::shared_ptr<TrapModel::Effect> effect) {
+    switch (effect->traptype)
+    {
+    case TrapModel::VelMod:
+        setAccelerationMultiplier(Vec2(effect->effectVec->x, effect->effectVec->y));
+        setMaxSpeedMultiplier(max(effect->effectVec->x, effect->effectVec->y));
+        break;
+    case TrapModel::Directional_VelMod:
+        addEffects(trapID, effect->traptype, effect->effectVec);
+        break;
+    case TrapModel::Moving_Platform:
+        addEffects(trapID, effect->traptype, effect->effectVec);
+        break;
+    case TrapModel::Teleport:
+        addEffects(trapID, effect->traptype, effect->effectVec);
+        break;
+    default:
+        break;
+    }
+}
+
+
+/**
+* reverts player model to default state, adding any linger effects as needed
+*/
+void PlayerModel::unact(int trapID, std::shared_ptr<TrapModel::Effect> effect) {
+    switch (effect->traptype)
+    {
+    case TrapModel::VelMod:
+        setAccelerationMultiplier(Vec2(1, 1));
+        setMaxSpeedMultiplier(1);
+        break;
+    case TrapModel::Directional_VelMod:
+        removeEffects(trapID);
+        break;
+    case TrapModel::Moving_Platform:
+        removeEffects(trapID);
+        break;
+    case TrapModel::Teleport:
+        removeEffects(trapID);
+        break;
+    default:
+        break;
+    }
+
+    //TODO: Apply any lingering effects on the player
 }
 
 /**
