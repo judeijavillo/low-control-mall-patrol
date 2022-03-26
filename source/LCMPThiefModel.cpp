@@ -42,13 +42,7 @@ bool ThiefModel::init(float scale,
     
     // Call the parent's initializer
     PlayerModel::init(Vec2::ZERO, size, scale, node, actions);
-
-    // Up character movement
-    std::vector<int> north;
-    for(int ii = 0; ii < 6; ii++) {
-        north.push_back(ii);
-    }
-
+    
     // Set up the textures for all directions
     _spriteSheets.push_back(assets->get<Texture>(THIEF_RUN_RIGHT));
     _spriteSheets.push_back(assets->get<Texture>(THIEF_RUN_BACK));

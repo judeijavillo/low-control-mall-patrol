@@ -247,22 +247,6 @@ void GameScene::update(float timestep) {
     bool joystick = _input.didPressJoystick();
     bool spacebar = _input._spacebarPressed;
     
-    // Swipe updates and animation
-    if (!_isThief) {
-        if (!_hitTackle) {
-            _hitTackle = tackle(timestep, movement);
-        }
-        else {
-            _resetTime = _gameTime;
-            _game->setGameOver(successfulTackle(timestep));
-            _network->sendGameOver();
-        }
-    }
-    else {
-        _game->getThief()->playAnimation(movement);
-        _actions->update(timestep);
-    }
-    
     // Switch updates
     if (_input.didSwitch()) {
         // Stop movement
@@ -275,6 +259,8 @@ void GameScene::update(float timestep) {
     shared_ptr<PlayerModel> player;
     Vec2 flippedMovement = Vec2(movement.x, -movement.y);
     if (_isThief) {
+        _game->getThief()->playAnimation(movement);
+        
         int trapID = _game->getThief()->trapActivationFlag;
         if (spacebar && trapID != -1) {
             _game->activateTrap(trapID);
@@ -284,6 +270,15 @@ void GameScene::update(float timestep) {
         _network->sendThiefMovement(_game, flippedMovement);
         player = _game->getThief();
     } else {
+        if (!_hitTackle) {
+            _hitTackle = tackle(timestep, movement);
+        }
+        else {
+            _resetTime = _gameTime;
+            _game->setGameOver(successfulTackle(timestep));
+            _network->sendGameOver();
+        }
+        
         _game->updateCop(flippedMovement, _playerNumber, onTackleCooldown);
         _network->sendCopMovement(_game, flippedMovement, _playerNumber);
         player = _game->getCop(_playerNumber);
@@ -317,6 +312,7 @@ void GameScene::update(float timestep) {
     // TODO: Figure out how to do this using OrderedNode, this is __very__ bad
     
     // Update the physics, then move the game nodes accordingly
+    _actions->update(timestep);
     _world->update(timestep);
     _game->update(timestep);
     _input.clear();

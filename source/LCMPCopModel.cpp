@@ -104,6 +104,7 @@ void CopModel::dispose() {
     _character = nullptr;
 }
 
+/** Shows the cop tackle textures */
 void CopModel::showTackle(Vec2 direction, bool inAir) {
     // Determine which direction the cop is facing
     int key = findDirection(direction);
@@ -131,6 +132,7 @@ void CopModel::showTackle(Vec2 direction, bool inAir) {
     }
 }
 
+/** Hides the cop tackle textures */
 void CopModel::hideTackle() {
     _character->setVisible(false);
 }
@@ -149,6 +151,9 @@ void CopModel::failedTackle(float timer, cugl::Vec2 swipe) {
     }
 }
 
+/**
+ * Performs a film strip action
+ */
 void CopModel::playAnimation(Vec2 movement) {
     PlayerModel::playAnimation(movement);
     _character->setVisible(false);

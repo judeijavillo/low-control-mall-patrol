@@ -74,10 +74,15 @@ public:
     */
     void failedTackle(float timer, cugl::Vec2 swipe);
     
+    /**
+     * Performs a film strip action
+     */
     void playAnimation(cugl::Vec2 movement);
     
+    /** Shows the cop tackle textures */
     void showTackle(cugl::Vec2 direction, bool inAir);
 
+    /** Hides the cop tackle textures */
     void hideTackle();
 
 };

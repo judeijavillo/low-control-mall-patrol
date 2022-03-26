@@ -374,7 +374,7 @@ void GameModel::initTrap(int trapID,
     // Configure physics
     _world->addObstacle(thiefEffectArea);
     _world->addObstacle(copEffectArea);
-    CULog("Id: %d", triggerObjectId);
+//    CULog("Id: %d", triggerObjectId);
     _world->addObstacle(triggerArea);
     thiefEffectArea->setPosition(Vec2(map1.at(effectObjectId).x, map1.at(effectObjectId).y));
     copEffectArea->setPosition(Vec2(map2.at(effectObjectId).x, map2.at(effectObjectId).y));
