@@ -63,7 +63,6 @@ bool PlayerModel::init(const Vec2 pos, const Size size, float scale,
             vec.push_back(ii);
         }
         _animations.push_back(scene2::Animate::alloc(vec,DURATION));
-        _cycles.push_back(false);
     }
     
     // We're gonna assume this always works appropriately
@@ -110,7 +109,7 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
  */
 void PlayerModel::applyNetwork(cugl::Vec2 position, cugl::Vec2 velocity, cugl::Vec2 force) {
     setPosition(position);
-    playAnimation(velocity);
+    playAnimation(force);
 }
 
 /**
@@ -125,11 +124,12 @@ void PlayerModel::update(float timestep) {
     }
 }
 
+/** Returns player animation key */
 int PlayerModel::findDirection(Vec2 movement) {
     if (abs(movement.x) >= abs(movement.y)) {
-        return movement.x > 0 ? RIGHT_ANIM_KEY : LEFT_ANIM_KEY;
+        return (movement.x > 0 ? RIGHT_ANIM_KEY : LEFT_ANIM_KEY);
     } else {
-        return movement.y > 0 ? FRONT_ANIM_KEY : BACK_ANIM_KEY;
+        return (movement.y > 0 ? FRONT_ANIM_KEY : BACK_ANIM_KEY);
     }
 }
 
@@ -143,34 +143,26 @@ void PlayerModel::playAnimation(Vec2 movement) {
     // If there is no movement, use the still animation
     if (movement.length() == 0) key = STILL_ANIM_KEY;
     
-    // Make all of the sprite nodes invisible
-    for (shared_ptr<cugl::scene2::SpriteNode> s : _spriteNodes) s->setVisible(false);
-
-    // Animate different direction
-    std::shared_ptr<scene2::SpriteNode> node;
-    _actions->activate(ACT_KEY, _animations[key], _spriteNodes[key]);
-    _spriteNodes[key]->setVisible(true);
-    node = _spriteNodes[key];
-
-    if (movement.length() > 0) {
-        // Turn on the flames and go back and forth
-        if (node->getFrame() == node->getSize()-1) {
-            _cycles[key] = false;
-        } else {
-            _cycles[key] = true;
+    // Play desired animation and pause others
+    for (int i = 0; i < _spriteNodes.size(); i++) {
+        shared_ptr<cugl::scene2::SpriteNode> s = _spriteNodes[i];
+        if (i == key) {
+            s->setVisible(true);
+            if (!_actions->isActive(to_string(i))) {
+                _actions->activate(to_string(i), _animations[i], _spriteNodes[i]);
+            }
+            else {
+                _actions->unpause(to_string(i));
+            }
         }
-
-        // Increment
-        if (_cycles[key]) {
-            node->setFrame(node->getFrame()+1);
-        } else {
-            node->setFrame(node->getFrame()-1);
+        else {
+            s->setVisible(false);
+            _actions->pause(to_string(i));
         }
-    } else {
-        node->setFrame(0);
     }
 }
 
+/** Sets sprite nodes for animation */
 void PlayerModel::setSpriteNodes(float width) {
     for (int i = 0; i < _spriteSheets.size(); i++) {
         _spriteNodes.push_back(scene2::SpriteNode::alloc(_spriteSheets[i], 1, _animFrames[i]));

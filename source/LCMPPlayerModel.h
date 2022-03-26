@@ -40,10 +40,12 @@ protected:
     std::shared_ptr<cugl::scene2::PolygonNode> _dropshadow;
     /** The child nodes for displaying the player */
     std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _spriteNodes;
+    /** The player animations */
     std::vector<std::shared_ptr<cugl::scene2::Animate>> _animations;
+    /** The player sprite sheets */
     std::vector<std::shared_ptr<cugl::Texture>> _spriteSheets;
+    /** The number of animation frames per player animation */
     std::vector<int> _animFrames;
-    std::vector<bool> _cycles;
     
     // Physics
     /** A multipler for the damping constant */
@@ -179,8 +181,10 @@ public:
      */
     void playAnimation(cugl::Vec2 movement);
     
+    /** Returns player animation key */
     int findDirection(cugl::Vec2 movement);
     
+    /** Sets sprite nodes for animation */
     void setSpriteNodes(float width);
     
 };
