@@ -152,14 +152,18 @@ bool PolygonObstacle::initWithAnchor(const Poly2& poly, const Vec2 anchor) {
  * the fixture pointers for the polygons.
  */
 PolygonObstacle::~PolygonObstacle() {
-    CUAssertLog(_body == nullptr, "You must deactive physics before deleting an object");
+    CUAssertLog(_realbody == nullptr || _drawbody == nullptr, "You must deactive physics before deleting an object");
     if (_shapes != nullptr) {
         delete[] _shapes;
         _shapes = nullptr;
     }
-    if (_geoms != nullptr) {
-        delete[] _geoms;
-        _geoms = nullptr;
+    if (_realgeoms != nullptr) {
+        delete[] _realgeoms;
+        _realgeoms = nullptr;
+    }
+    if (_drawgeoms != nullptr) {
+        delete[] _drawgeoms;
+        _drawgeoms = nullptr;
     }
 }
 
@@ -214,9 +218,11 @@ void PolygonObstacle::resetShapes() {
     }
     ntris = index;
     
-    if (_geoms == nullptr) {
-        _geoms = new b2Fixture*[ntris];
-        for(int ii = 0; ii < ntris; ii++) { _geoms[ii] = nullptr; }
+    if (_realgeoms == nullptr && _drawgeoms == nullptr) {
+        _realgeoms = new b2Fixture*[ntris];
+        _drawgeoms = new b2Fixture*[ntris];
+        for(int ii = 0; ii < ntris; ii++) { _realgeoms[ii] = nullptr; }
+        for (int ii = 0; ii < ntris; ii++) { _drawgeoms[ii] = nullptr; }
         _fixCount = ntris;
     } else {
         markDirty(true);
@@ -297,18 +303,20 @@ void PolygonObstacle::resetDebug() {
  * This is the primary method to override for custom physics objects
  */
 void PolygonObstacle::createFixtures() {
-    if (_body == nullptr) {
+    if (_realbody == nullptr || _drawbody == nullptr) {
         return;
     }
     
     // Create the fixtures
     releaseFixtures();
-    if (_geoms == nullptr) {
-        _geoms = new b2Fixture*[_fixCount];
+    if (_realgeoms == nullptr && _drawgeoms == nullptr) {
+        _realgeoms = new b2Fixture*[_fixCount];
+        _drawgeoms = new b2Fixture*[_fixCount];
     }
     for(int ii = 0; ii < _fixCount; ii++) {
         _fixture.shape = &(_shapes[ii]);
-        _geoms[ii] = _body->CreateFixture(&_fixture);
+        _realgeoms[ii] = _realbody->CreateFixture(&_fixture);
+        _drawgeoms[ii] = _drawbody->CreateFixture(&_fixture);
     }
     markDirty(false);
 }
@@ -319,14 +327,18 @@ void PolygonObstacle::createFixtures() {
  * This is the primary method to override for custom physics objects
  */
 void PolygonObstacle::releaseFixtures() {
-    if (_geoms != nullptr && _geoms[0] != nullptr) {
+    if (_realgeoms != nullptr && _realgeoms[0] != nullptr && _drawgeoms != nullptr && _drawgeoms[0] != nullptr) {
         for(int ii = 0; ii < _fixCount; ii++) {
-            _body->DestroyFixture(_geoms[ii]);
-            _geoms[ii] = nullptr;
+            _realbody->DestroyFixture(_realgeoms[ii]);
+            _drawbody->DestroyFixture(_drawgeoms[ii]);
+            _realgeoms[ii] = nullptr;
+            _drawgeoms[ii] = nullptr;
         }
     }
-    if (_geoms != nullptr) {
-        delete[] _geoms;
-        _geoms = nullptr;
+    if (_realgeoms != nullptr && _drawgeoms != nullptr) {
+        delete[] _realgeoms;
+        delete[] _drawgeoms;
+        _realgeoms = nullptr;
+        _drawgeoms = nullptr;
     }
 }

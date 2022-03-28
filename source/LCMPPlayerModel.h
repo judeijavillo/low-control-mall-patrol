@@ -16,7 +16,7 @@
 #include <cugl/math/CUEasingBezier.h>
 
 /** Define the time settings for animation */
-#define DURATION 3.0f
+#define DURATION 0.4f
 #define DISTANCE 200
 #define WALKPACE 50
 #define ACT_KEY  "current"
@@ -54,7 +54,9 @@ protected:
     float _maxSpeedMultiplier      = 1.0f;
     /** A multipler for the acceleration constant */
     float _accelerationMultiplier  = 1.0f;
-
+    /** The last force applied to this player */
+    cugl::Vec2 _movement;
+    
     /** The ratio to scale the textures. (SCENE UNITS / WORLD UNITS) */
     float _scale;
     /** The key for the collision sound */
@@ -63,6 +65,8 @@ protected:
     std::string _obstacleSound;
     /** Whether we are mid animation */
     bool _occupied;
+    /** The unique identifier for this player */
+    int _playerNumber;
 
     
 public:
@@ -95,7 +99,7 @@ public:
     /**
      * Initializes a Player Model
      */
-    bool init(const cugl::Vec2 pos, const cugl::Size size, float scale,
+    bool init(int playerNumber, const cugl::Vec2 pos, const cugl::Size size, float scale,
               const std::shared_ptr<cugl::scene2::SceneNode>& node,
               std::shared_ptr<cugl::scene2::ActionManager>& actions);
     
@@ -179,12 +183,16 @@ public:
     /**
      * Performs a film strip action
      */
-    void playAnimation(cugl::Vec2 movement);
+    void playAnimation();
     
-    /** Returns player animation key */
+    /**
+     * Returns player animation key
+     */
     int findDirection(cugl::Vec2 movement);
     
-    /** Sets sprite nodes for animation */
+    /**
+     * Sets sprite nodes for animation
+     */
     void setSpriteNodes(float width);
     
 };

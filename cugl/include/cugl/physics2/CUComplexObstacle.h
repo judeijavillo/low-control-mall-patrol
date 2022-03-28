@@ -70,21 +70,21 @@ namespace cugl {
  * Composite model class to support collisions.
  *
  * ComplexObstacle instances are built of many bodies, and are assumed to be
- * connected by joints (though this is not actually a requirement). This is the 
- * class to use for chains, ropes, levers, and so on. This class does not 
- * provide Shape information, and cannot be instantiated directly. There are 
- * no default complex objects.  You will need to create your own subclasses to 
+ * connected by joints (though this is not actually a requirement). This is the
+ * class to use for chains, ropes, levers, and so on. This class does not
+ * provide Shape information, and cannot be instantiated directly. There are
+ * no default complex objects.  You will need to create your own subclasses to
  * use this class.
  *
- * ComplexObstacle is a hierarchical class.  It groups children as Obstacles, 
+ * ComplexObstacle is a hierarchical class.  It groups children as Obstacles,
  * not not bodies.  So you could have a ComplexObstacle made up of other
- * ComplexObstacles. However, it is not the same as a scene graph.  Children 
- * have absolute, nott relative, position data.  Indeed, this class illustrates 
+ * ComplexObstacles. However, it is not the same as a scene graph.  Children
+ * have absolute, nott relative, position data.  Indeed, this class illustrates
  * the need for decoupling the physics representation from the scene graph.
  *
  * Transformations to an object of this class are restricted to the root body.
  * They do not automatically effect the children (like a scene graph).  If you
- * want changes to the root body to effect the children, you should connect 
+ * want changes to the root body to effect the children, you should connect
  * them with joints and allow Box2D to handle this.
  *
  * Many of the method comments in this class are taken from the Box2d manual by
@@ -93,11 +93,15 @@ namespace cugl {
 class ComplexObstacle : public Obstacle {
 protected:
     /** A root body for this box 2d. */
-    b2Body* _body;
+    b2Body* _realbody;
+    /** A root body for this box 2d. */
+    b2Body* _drawbody;
     /** A complex physics object has multiple bodies */
     std::vector<std::shared_ptr<Obstacle>> _bodies;
     /** Potential joints for connecting the multiple bodies */
-    std::vector<b2Joint*>  _joints;
+    std::vector<b2Joint*>  _realjoints;
+    /** Potential joints for connecting the multiple bodies */
+    std::vector<b2Joint*>  _drawjoints;
     
 #pragma mark -
 #pragma mark Scene Graph Internals
@@ -129,7 +133,7 @@ public:
      * the heap, use one of the static constructors instead (in this case, in
      * one of the subclasses).
      */
-    ComplexObstacle() : Obstacle(), _body(nullptr) { }
+    ComplexObstacle() : Obstacle(), _realbody(nullptr), _drawbody(nullptr) { }
     
     /**
      * Deletes this physics object and all of its resources.
@@ -157,7 +161,7 @@ public:
      * @return the body type for Box2D physics
      */
     virtual b2BodyType getBodyType() const override {
-        return (_body != nullptr ? _body->GetType() : _bodyinfo.type);
+        return (_realbody != nullptr ? _realbody->GetType() : _bodyinfo.type);
     }
     
     /**
@@ -173,8 +177,9 @@ public:
      * @param value the body type for Box2D physics
      */
     virtual void setBodyType(b2BodyType value) override {
-        if (_body != nullptr) {
-            _body->SetType(value);
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetType(value);
+            _drawbody->SetType(value);
         } else {
             _bodyinfo.type = value;
         }
@@ -192,10 +197,29 @@ public:
      * @return the current position for this physics body
      */
     virtual Vec2 getPosition() const override {
-        if (_body != nullptr) {
-            return Vec2(_body->GetPosition().x,_body->GetPosition().y);
+        if (_realbody != nullptr) {
+            return Vec2(_realbody->GetPosition().x,_realbody->GetPosition().y);
         } else {
             return Vec2(_bodyinfo.position.x,_bodyinfo.position.y);
+        }
+    }
+    /**
+    * Returns the current position for this physics body
+    *
+    * This method does NOT return a reference to the position vector. Changes to this
+    * vector will not affect the body.  However, it returns the same vector each time
+     * its is called, and so cannot be used as an allocator.
+    *
+     * This method returns the position for the root object of this composite structure.
+    *
+     * @return the current position for this physics body
+    */
+    virtual Vec2 getDrawPosition() const override {
+        if (_drawbody != nullptr) {
+            return Vec2(_drawbody->GetPosition().x, _drawbody->GetPosition().y);
+        }
+        else {
+            return Vec2(_bodyinfo.position.x, _bodyinfo.position.y);
         }
     }
     
@@ -221,10 +245,12 @@ public:
      * @param  y    the y-coordinate of the linear velocity
      */
     virtual void setPosition(float x, float y) override {
-        if (_body != nullptr) {
-            _body->SetTransform(b2Vec2(x,y),_body->GetAngle());
-        } else {
-            _bodyinfo.position.Set(x,y);
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetTransform(b2Vec2(x, y), _realbody->GetAngle());
+            _drawbody->SetTransform(b2Vec2(x, y), _realbody->GetAngle());
+        }
+        else {
+            _bodyinfo.position.Set(x, y);
         }
     }
     
@@ -236,7 +262,7 @@ public:
      * @return the x-coordinate for this physics body
      */
     virtual float getX() const override {
-        return (_body != nullptr ? _body->GetPosition().x : _bodyinfo.position.x);
+        return (_realbody != nullptr ? _realbody->GetPosition().x : _bodyinfo.position.x);
     }
     
     /**
@@ -250,9 +276,11 @@ public:
      * @param  value  the x-coordinate for this physics body
      */
     virtual void setX(float value) override {
-        if (_body != nullptr) {
-            _body->SetTransform(b2Vec2(value,_body->GetPosition().y),_body->GetAngle());
-        } else {
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetTransform(b2Vec2(value, _realbody->GetPosition().y), _realbody->GetAngle());
+            _drawbody->SetTransform(b2Vec2(value, _realbody->GetPosition().y), _realbody->GetAngle());
+        }
+        else {
             _bodyinfo.position.x = value;
         }
     }
@@ -265,7 +293,7 @@ public:
      * @return the y-coordinate for this physics body
      */
     virtual float getY() const override {
-        return (_body != nullptr ? _body->GetPosition().y : _bodyinfo.position.y);
+        return (_realbody != nullptr ? _realbody->GetPosition().y : _bodyinfo.position.y);
     }
     
     /**
@@ -279,9 +307,11 @@ public:
      * @param  value  the y-coordinate for this physics body
      */
     virtual void setY(float value) override {
-        if (_body != nullptr) {
-            _body->SetTransform(b2Vec2(_body->GetPosition().x,value),_body->GetAngle());
-        } else {
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetTransform(b2Vec2(_realbody->GetPosition().y, value), _realbody->GetAngle());
+            _drawbody->SetTransform(b2Vec2(_realbody->GetPosition().y, value), _realbody->GetAngle());
+        }
+        else {
             _bodyinfo.position.y = value;
         }
     }
@@ -295,7 +325,19 @@ public:
      * @return the angle of rotation for this body
      */
     virtual float getAngle() const override {
-        return (_body != nullptr ? _body->GetAngle() : _bodyinfo.angle);
+        return (_realbody != nullptr ? _realbody->GetAngle() : _bodyinfo.angle);
+    }
+
+    /**
+    * Returns the angle of rotation for this body (about the center).
+    *
+    * The value is determined by the angle of the root object of this
+    * composite structure.  The value returned is in radians.
+     *
+     * @return the angle of rotation for this body
+    */
+    virtual float getDrawAngle() const override {
+        return (_drawbody != nullptr ? _drawbody->GetAngle() : _bodyinfo.angle);
     }
     
     /**
@@ -309,9 +351,11 @@ public:
      * @param  value  the angle of rotation for this body (in radians)
      */
     virtual void setAngle(float value) override {
-        if (_body != nullptr) {
-            _body->SetTransform(_body->GetPosition(),value);
-        } else {
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetTransform(_realbody->GetPosition(), value);
+            _drawbody->SetTransform(_realbody->GetPosition(), value);
+        }
+        else {
             _bodyinfo.angle = value;
         }
     }
@@ -328,8 +372,8 @@ public:
      * @return the linear velocity for this physics body
      */
     virtual Vec2 getLinearVelocity() const override {
-        if (_body != nullptr) {
-            return Vec2(_body->GetLinearVelocity().x,_body->GetLinearVelocity().y);
+        if (_realbody != nullptr) {
+            return Vec2(_realbody->GetLinearVelocity().x,_realbody->GetLinearVelocity().y);
         } else {
             return Vec2(_bodyinfo.linearVelocity.x,_bodyinfo.linearVelocity.y);
         }
@@ -357,10 +401,12 @@ public:
      * @param  y    the y-coordinate of the linear velocity
      */
     virtual void setLinearVelocity(float x, float y) override {
-        if (_body != nullptr) {
-            _body->SetLinearVelocity(b2Vec2(x,y));
-        } else {
-            _bodyinfo.linearVelocity.Set(x,y);
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetLinearVelocity(b2Vec2(x, y));
+            _drawbody->SetLinearVelocity(b2Vec2(x, y));
+        }
+        else {
+            _bodyinfo.linearVelocity.Set(x, y);
         }
     }
     
@@ -372,8 +418,8 @@ public:
      * @return the x-velocity for this physics body
      */
     virtual float getVX() const override {
-        if (_body != nullptr) {
-            return _body->GetLinearVelocity().x;
+        if (_realbody != nullptr) {
+            return _realbody->GetLinearVelocity().x;
         } else {
             return _bodyinfo.linearVelocity.x;
         }
@@ -390,9 +436,11 @@ public:
      * @param  value  the x-velocity for this physics body
      */
     virtual void setVX(float value) override {
-        if (_body != nullptr) {
-            _body->SetLinearVelocity(b2Vec2(value,_body->GetLinearVelocity().y));
-        } else {
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetLinearVelocity(b2Vec2(value, _realbody->GetLinearVelocity().y));
+            _drawbody->SetLinearVelocity(b2Vec2(value, _realbody->GetLinearVelocity().y));
+        }
+        else {
             _bodyinfo.linearVelocity.x = value;
         }
     }
@@ -403,8 +451,8 @@ public:
      * @return the y-velocity for this physics body
      */
     virtual float getVY() const override {
-        if (_body != nullptr) {
-            return _body->GetLinearVelocity().y;
+        if (_realbody != nullptr) {
+            return _realbody->GetLinearVelocity().y;
         } else {
             return _bodyinfo.linearVelocity.y;
         }
@@ -421,10 +469,12 @@ public:
      * @param  value  the y-velocity for this physics body
      */
     virtual void setVY(float value) override {
-        if (_body != nullptr) {
-            _body->SetLinearVelocity(b2Vec2(value,_body->GetLinearVelocity().y));
-        } else {
-            _bodyinfo.linearVelocity.x = value;
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetLinearVelocity(b2Vec2(_realbody->GetLinearVelocity().x, value));
+            _drawbody->SetLinearVelocity(b2Vec2(_realbody->GetLinearVelocity().x, value));
+        }
+        else {
+            _bodyinfo.linearVelocity.y = value;
         }
     }
     
@@ -437,7 +487,7 @@ public:
      * @return the angular velocity for this physics body
      */
     virtual float getAngularVelocity() const override {
-        return (_body != nullptr ? _body->GetAngularVelocity() : _bodyinfo.angularVelocity);
+        return (_realbody != nullptr ? _realbody->GetAngularVelocity() : _bodyinfo.angularVelocity);
     }
     
     /**
@@ -451,9 +501,11 @@ public:
      * @param  value    the angular velocity for this physics body (in radians)
      */
     virtual void setAngularVelocity(float value) override {
-        if (_body != nullptr) {
-            _body->SetAngularVelocity(value);
-        } else {
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetAngularVelocity(value);
+            _drawbody->SetAngularVelocity(value);
+        }
+        else {
             _bodyinfo.angularVelocity = value;
         }
     }
@@ -473,7 +525,7 @@ public:
      * @return true if the body is enabled
      */
     virtual bool isEnabled() const override {
-        return (_body != nullptr ? _body->IsEnabled() : _bodyinfo.enabled);
+        return (_realbody != nullptr ? _realbody->IsEnabled() : _bodyinfo.enabled);
     }
     
     /**
@@ -490,9 +542,11 @@ public:
      * @param value  whether the body is active
      */
     virtual void setEnabled(bool value) override {
-        if (_body != nullptr) {
-            _body->SetEnabled(value);
-        } else {
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetEnabled(value);
+            _drawbody->SetEnabled(value);
+        }
+        else {
             _bodyinfo.enabled = value;
         }
     }
@@ -512,7 +566,7 @@ public:
      * @return true if the body is awake
      */
     virtual bool isAwake() const override {
-        return (_body != nullptr ? _body->IsAwake() : _bodyinfo.awake);
+        return (_realbody != nullptr ? _realbody->IsAwake() : _bodyinfo.awake);
     }
     
     /**
@@ -529,9 +583,11 @@ public:
      * @param value  whether the body is awake
      */
     virtual void setAwake(bool value) override {
-        if (_body != nullptr) {
-            _body->SetAwake(value);
-        } else {
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetAwake(value);
+            _drawbody->SetAwake(value);
+        }
+        else {
             _bodyinfo.awake = value;
         }
     }
@@ -551,7 +607,7 @@ public:
      * @return false if this body should never fall asleep
      */
     virtual bool isSleepingAllowed() const override {
-        return (_body != nullptr ? _body->IsSleepingAllowed() : _bodyinfo.allowSleep);
+        return (_realbody != nullptr ? _realbody->IsSleepingAllowed() : _bodyinfo.allowSleep);
     }
     
     /**
@@ -562,15 +618,17 @@ public:
      * sleeping body, then the sleeping body wakes up. Bodies will also wake up if a
      * joint or contact attached to them is destroyed.  You can also wake a body manually.
      *
-     * This method affects the root body of this composite structure only.  If you want 
-     * to set the value for any of the child obstacles, iterate over the children. 
+     * This method affects the root body of this composite structure only.  If you want
+     * to set the value for any of the child obstacles, iterate over the children.
      *
      * @param value  whether the body should ever fall asleep
      */
     virtual void setSleepingAllowed(bool value) override {
-        if (_body != nullptr) {
-            _body->SetSleepingAllowed(value);
-        } else {
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetSleepingAllowed(value);
+            _drawbody->SetSleepingAllowed(value);
+        }
+        else {
             _bodyinfo.allowSleep = value;
         }
     }
@@ -597,7 +655,7 @@ public:
      * @return true if this body is a bullet
      */
     virtual bool isBullet() const override {
-        return (_body != nullptr ? _body->IsBullet() : _bodyinfo.bullet);
+        return (_realbody != nullptr ? _realbody->IsBullet() : _bodyinfo.bullet);
     }
     
     /**
@@ -620,9 +678,11 @@ public:
      * @param value  whether this body is a bullet
      */
     virtual void setBullet(bool value) override {
-        if (_body != nullptr) {
-            _body->SetBullet(value);
-        } else {
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetBullet(value);
+            _drawbody->SetBullet(value);
+        }
+        else {
             _bodyinfo.bullet = value;
         }
     }
@@ -637,13 +697,13 @@ public:
      * @return true if this body be prevented from rotating
      */
     virtual bool isFixedRotation() const override {
-        return (_body != nullptr ? _body->IsFixedRotation() : _bodyinfo.fixedRotation);
+        return (_realbody != nullptr ? _realbody->IsFixedRotation() : _bodyinfo.fixedRotation);
     }
     
     /**
      * Sets whether this body be prevented from rotating
      *
-     * This is very useful for characters that should remain upright. 
+     * This is very useful for characters that should remain upright.
      *
      * This method affects the root body of this composite structure only.  If you want
      * to set the value for any of the child obstacles, iterate over the children.
@@ -651,9 +711,11 @@ public:
      * @param value  whether this body be prevented from rotating
      */
     virtual void setFixedRotation(bool value) override {
-        if (_body != nullptr) {
-            _body->SetFixedRotation(value);
-        } else {
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetFixedRotation(value);
+            _drawbody->SetFixedRotation(value);
+        }
+        else {
             _bodyinfo.fixedRotation = value;
         }
     }
@@ -671,7 +733,7 @@ public:
      * @return the gravity scale to apply to this body
      */
     virtual float getGravityScale() const override {
-        return (_body != nullptr ? _body->GetGravityScale() : _bodyinfo.gravityScale);
+        return (_realbody != nullptr ? _realbody->GetGravityScale() : _bodyinfo.gravityScale);
     }
     
     /**
@@ -686,9 +748,11 @@ public:
      * @param value  the gravity scale to apply to this body
      */
     virtual void setGravityScale(float value) override {
-        if (_body != nullptr) {
-            _body->SetGravityScale(value);
-        } else {
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetGravityScale(value);
+            _drawbody->SetGravityScale(value);
+        }
+        else {
             _bodyinfo.gravityScale = value;
         }
     }
@@ -711,7 +775,7 @@ public:
      * @return the linear damping for this body.
      */
     virtual float getLinearDamping() const override {
-        return (_body != nullptr ? _body->GetLinearDamping() : _bodyinfo.linearDamping);
+        return (_realbody != nullptr ? _realbody->GetLinearDamping() : _bodyinfo.linearDamping);
     }
     
     /**
@@ -731,9 +795,11 @@ public:
      * @param value  the linear damping for this body.
      */
     virtual void setLinearDamping(float value) override {
-        if (_body != nullptr) {
-            _body->SetLinearDamping(value);
-        } else {
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetLinearDamping(value);
+            _drawbody->SetLinearDamping(value);
+        }
+        else {
             _bodyinfo.linearDamping = value;
         }
     }
@@ -756,7 +822,7 @@ public:
      * @return the angular damping for this body.
      */
     virtual float getAngularDamping() const override {
-        return (_body != nullptr ? _body->GetAngularDamping() : _bodyinfo.angularDamping);
+        return (_realbody != nullptr ? _realbody->GetAngularDamping() : _bodyinfo.angularDamping);
     }
     
     /**
@@ -776,9 +842,11 @@ public:
      * @param value  the angular damping for this body.
      */
     virtual void setAngularDamping(float value) override {
-        if (_body != nullptr) {
-            _body->SetAngularDamping(value);
-        } else {
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetAngularDamping(value);
+            _drawbody->SetAngularDamping(value);
+        }
+        else {
             _bodyinfo.angularDamping = value;
         }
     }
@@ -865,7 +933,7 @@ public:
     
     
 #pragma mark -
-#pragma mark MassData Methods    
+#pragma mark MassData Methods
     /**
      * Returns the center of mass of this body
      *
@@ -880,8 +948,8 @@ public:
      * @return the center of mass for this physics body
      */
     virtual Vec2 getCentroid() const override {
-        if (_body != nullptr) {
-            return Vec2(_body->GetLocalCenter().x,_body->GetLocalCenter().y);
+        if (_realbody != nullptr) {
+            return Vec2(_realbody->GetLocalCenter().x,_realbody->GetLocalCenter().y);
         } else {
             return Vec2(_massdata.center.x,_massdata.center.y);
         }
@@ -910,8 +978,9 @@ public:
      */
     virtual void setCentroid(float x, float y) override {
         Obstacle::setCentroid(x, y);
-        if (_body != nullptr) {
-            _body->SetMassData(&_massdata); // Protected accessor?
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetMassData(&_massdata); // Protected accessor?
+            _drawbody->SetMassData(&_massdata); // Protected accessor?
         }
     }
     
@@ -928,7 +997,7 @@ public:
      * @return the rotational inertia of this body
      */
     virtual float getInertia() const override {
-        return  (_body != nullptr ? _body->GetInertia() : _massdata.I);
+        return  (_realbody != nullptr ? _realbody->GetInertia() : _massdata.I);
     }
     
     /**
@@ -945,8 +1014,9 @@ public:
      */
     virtual void setInertia(float value) override {
         Obstacle::setInertia(value);
-        if (_body != nullptr) {
-            _body->SetMassData(&_massdata); // Protected accessor?
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetMassData(&_massdata); // Protected accessor?
+            _drawbody->SetMassData(&_massdata); // Protected accessor?
         }
     }
     
@@ -960,7 +1030,7 @@ public:
      * @return the mass of this body
      */
     virtual float getMass() const override {
-        return  (_body != nullptr ? _body->GetMass() : _massdata.mass);
+        return  (_realbody != nullptr ? _realbody->GetMass() : _massdata.mass);
     }
     
     /**
@@ -974,8 +1044,9 @@ public:
      */
     virtual void setMass(float value) override {
         Obstacle::setMass(value);
-        if (_body != nullptr) {
-            _body->SetMassData(&_massdata); // Protected accessor?
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->SetMassData(&_massdata); // Protected accessor?
+            _drawbody->SetMassData(&_massdata); // Protected accessor?
         }
     }
     
@@ -988,8 +1059,9 @@ public:
      */
     virtual void resetMass() override {
         Obstacle::resetMass();
-        if (_body != nullptr) {
-            _body->ResetMassData();
+        if (_realbody != nullptr && _drawbody != nullptr) {
+            _realbody->ResetMassData();
+            _drawbody->ResetMassData();
         }
     }
     
@@ -1003,7 +1075,33 @@ public:
      *
      * @return the Box2D body for this object.
      */
-    virtual b2Body* getBody() override { return _body; }
+    virtual b2Body* getRealBody() override { return _realbody; }
+
+    /**
+    * Returns a (weak) reference to Box2D body for this obstacle.
+    *
+    * You use this body to add joints and apply forces. As a weak reference,
+    * this physics obstacle does not transfer ownership of this body.  In
+     * addition, the value may be a nullptr.
+    *
+    * @return a (weak) reference to Box2D body for this obstacle.
+    */
+    virtual b2Body* getDrawBody() override { return _realbody; }
+
+    /*
+    * Returns the necessary BodyData class in order to update this body in another game instance
+    */
+    virtual BodyNetData getBodyData() override;
+
+    /*
+    * Sets the real body of this fixture using a BodyNetData struct, then syncs these changes with the draw body.
+    */
+    virtual void setBodyFromData(BodyNetData data) override;
+
+    /*
+    * Syncs the real and draw bodies together.
+    */
+    virtual void syncBodies() override;
     
     /**
      * Returns the collection of component physics objects.
@@ -1023,29 +1121,38 @@ public:
      *
      * @return the collection of joints for this object.
      */
-    const std::vector<b2Joint*>& getJoints() { return _joints; }
+    const std::vector<b2Joint*>& getRealJoints() { return _realjoints; }
+
+    /**
+    * Returns the collection of joints for this object (may be empty).
+    *
+    * While the iterable does not allow you to modify the list, it is possible to
+    * modify the individual joints.
+    *
+    * @return the collection of joints for this object.
+    */
+    const std::vector<b2Joint*>& getDrawJoints() { return _drawjoints; }
     
     /**
      * Creates the physics Body(s) for this object, adding them to the world.
      *
-     * This method invokes ActivatePhysics for the individual PhysicsObjects
-     * in the list. It also calls the internal method createJoints() to 
-     * link them all together. You should override that method, not this one, 
-     * for specific physics objects.
+     * Implementations of this method should NOT retain ownership of the
+     * Box2D world. That is a tight coupling that we should avoid.
      *
      * @param world Box2D world to store body
      *
      * @return true if object allocation succeeded
      */
-    virtual bool activatePhysics(b2World& world) override;
-    
+    virtual bool activatePhysics(b2World& realworld, b2World& drawworld) override;
+
     /**
-     * Destroys the physics Body(s) of this object if applicable,
-     * removing them from the world.
-     * 
+     * Destroys the physics Body(s) of this object if applicable.
+     *
+     * This removes the body from the Box2D world.
+     *
      * @param world Box2D world that stores body
      */
-    virtual void deactivatePhysics(b2World& world) override;
+    virtual void deactivatePhysics(b2World& realworld, b2World& drawworld) override;
     
     /**
      * Create new fixtures for this body, defining the shape
@@ -1067,22 +1174,22 @@ public:
     
     /**
      * Creates the joints for this object.
-     * 
-     * This method is executed as part of activePhysics. This is the primary method to 
+     *
+     * This method is executed as part of activePhysics. This is the primary method to
      * override for custom physics objects.
      *
      * @param world Box2D world to store joints
      *
      * @return true if object allocation succeeded
      */
-    virtual bool createJoints(b2World& world) {  return false;  }
+    virtual bool createJoints(b2World& realworld, b2World& drawworld) {  return false;  }
     
     /**
      * Updates the object's physics state (NOT GAME LOGIC).
      *
-     * This method is called AFTER the collision resolution state. Therefore, it 
-     * should not be used to process actions or any other gameplay information.  Its 
-     * primary purpose is to adjust changes to the fixture, which have to take place 
+     * This method is called AFTER the collision resolution state. Therefore, it
+     * should not be used to process actions or any other gameplay information.  Its
+     * primary purpose is to adjust changes to the fixture, which have to take place
      * after collision.
      *
      * @param delta Timing values from parent loop

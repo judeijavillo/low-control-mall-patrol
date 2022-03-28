@@ -43,7 +43,7 @@ using namespace std;
  *
  * @param scale screenunit/worldunit
  */
-bool CopModel::init(float scale,
+bool CopModel::init(int copID, float scale,
                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
                       const std::shared_ptr<cugl::AssetManager>& assets,
                     std::shared_ptr<cugl::scene2::ActionManager>& actions) {
@@ -52,7 +52,7 @@ bool CopModel::init(float scale,
     _animFrames = {8, 8, 8, 8, 4, 4};
     
     // Call the parent's initializer
-    PlayerModel::init(Vec2::ZERO, size, scale, node, actions);
+    PlayerModel::init(copID, Vec2::ZERO, size, scale, node, actions);
     
     // Set up the textures for all tackle directions
     _tackleDownTexture = assets->get<Texture>(COP_JUMP_DOWN);
@@ -82,6 +82,13 @@ bool CopModel::init(float scale,
     _character->setVisible(false);
     _node->addChild(_character);
     // TODO: Get rid of the magic numbers in the lines above.
+    
+    // Initialize tackle properties
+    _tacklePosition = Vec2::ZERO;
+    _tackleTime = 0;
+    _tackling = false;
+    _caughtThief = false;
+    _tackleSuccessful = false;
 
     b2Filter filter = b2Filter();
     filter.maskBits = COP_FILTER_BITS;
@@ -91,6 +98,9 @@ bool CopModel::init(float scale,
     return true;
 }
 
+/**
+ * Disposes of all resources in this instance of Cop Model
+ */
 void CopModel::dispose() {
     PlayerModel::dispose();
     _tackleDownTexture = nullptr;
@@ -104,57 +114,138 @@ void CopModel::dispose() {
     _character = nullptr;
 }
 
-/** Shows the cop tackle textures */
-void CopModel::showTackle(Vec2 direction, bool inAir) {
-    // Determine which direction the cop is facing
-    int key = findDirection(direction);
+/**
+ * Attempts to tackle the thief and sets the appropriate properties depending on success/failure
+ */
+void CopModel::attemptTackle(Vec2 thiefPosition, Vec2 tackle) {
+    // Set the basic tackle properties
+    _tackling = true;
+    _tackleTime = 0;
+    _tacklePosition = getPosition();
+    _tackleDirection = tackle;
     
+    // Do some math between this cop, the the thief, and the tackle
+    Vec2 dist = thiefPosition - _tacklePosition;
+    float angle = abs(abs(tackle.getAngle()) - abs(dist.getAngle()));
     
-    for (std::shared_ptr<scene2::SpriteNode> s : _spriteNodes) s->setVisible(false);
-    
-
-    _character->setVisible(true);
-    switch (key) {
-        case RIGHT_ANIM_KEY:
-            _character->setTexture(inAir ? _tackleRightTexture : _landRightTexture);
-            break;
-        case BACK_ANIM_KEY:
-            _character->setTexture(inAir ? _tackleUpTexture : _landUpTexture);
-            break;
-        case LEFT_ANIM_KEY:
-            _character->setTexture(inAir ? _tackleLeftTexture : _landLeftTexture);
-            break;
-        case FRONT_ANIM_KEY:
-            _character->setTexture(inAir ? _tackleDownTexture : _landDownTexture);
-            break;
-        default:
-            break;
-    }
+    // See if the tackle was successful
+    _tackleSuccessful =
+        angle <= TACKLE_ANGLE_MAX_ERR
+        && dist.lengthSquared() < TACKLE_HIT_RADIUS * TACKLE_HIT_RADIUS;
 }
 
-/** Hides the cop tackle textures */
-void CopModel::hideTackle() {
-    _character->setVisible(false);
+/**
+ * Applies physics to cop when tackling
+ */
+void CopModel::applyTackle(float timestep, Vec2 thiefPosition) {
+    _tackleTime += timestep;
+    _tackleSuccessful
+        ? applyTackleSuccess(thiefPosition)
+        : applyTackleFailure();
 }
 
-void CopModel::failedTackle(float timer, cugl::Vec2 swipe) {
-    if (timer <= TACKLE_AIR_TIME) {
-        Vec2 normSwipe = swipe.getNormalization();
-        b2Vec2 vel(normSwipe.x * COP_MAX_SPEED_DEFAULT * TACKLE_MOVEMENT_MULT,
-                   -normSwipe.y * COP_MAX_SPEED_DEFAULT * TACKLE_MOVEMENT_MULT);
-        _body->SetLinearVelocity(vel);
-    }
-    else {
-        b2Vec2 b2damping(getVelocity().x * -getDamping() * TACKLE_DAMPING_MULT,
-            getVelocity().y * -getDamping() * TACKLE_DAMPING_MULT);
-        _body->ApplyForceToCenter(b2damping, true);
-    }
+/**
+ * Updates the position and velocity of the cop, applies forces, and updates tackle properties
+ */
+void CopModel::applyNetwork(cugl::Vec2 position, cugl::Vec2 velocity,
+                            cugl::Vec2 force, cugl::Vec2 tackleDirection,
+                            cugl::Vec2 tacklePosition,
+                            float tackleTime,
+                            bool tackling,
+                            bool caughtThief,
+                            bool tackleSuccessful) {
+    PlayerModel::applyNetwork(position, velocity, force);
+    _tackleDirection = tackleDirection;
+    _tacklePosition = tacklePosition;
+    _tackleTime = tackleTime;
+    _tackling = tackling;
+    _caughtThief = caughtThief;
+    _tackleSuccessful = tackleSuccessful;
 }
 
 /**
  * Performs a film strip action
  */
-void CopModel::playAnimation(Vec2 movement) {
-    PlayerModel::playAnimation(movement);
-    _character->setVisible(false);
+void CopModel::playAnimation() {
+    if (_tackling) playTackle();
+    else {
+        PlayerModel::playAnimation();
+        _character->setVisible(false);
+    }
+}
+
+//  MARK: - Helpers
+
+/**
+ * Applies physics during a failed tackle
+ */
+void CopModel::applyTackleFailure() {
+    // The cop is still in the air
+    if (_tackleTime <= TACKLE_AIR_TIME) {
+        Vec2 normTackle = _tackleDirection.getNormalization();
+        b2Vec2 vel(normTackle.x * COP_MAX_SPEED_DEFAULT * TACKLE_MOVEMENT_MULT,
+                   normTackle.y * COP_MAX_SPEED_DEFAULT * TACKLE_MOVEMENT_MULT);
+        _realbody->SetLinearVelocity(vel);
+    }
+    
+    // The cop is on the floor
+    else {
+        b2Vec2 b2damping(
+            getVelocity().x * -getDamping() * TACKLE_DAMPING_MULT,
+            getVelocity().y * -getDamping() * TACKLE_DAMPING_MULT);
+        _realbody->ApplyForceToCenter(b2damping, true);
+    }
+    
+    // The cop can get off the floor
+    if (_tackleTime >= TACKLE_COOLDOWN_TIME) _tackling = false;
+}
+
+/**
+ * Applies physics during a successful tackle
+ */
+void CopModel::applyTackleSuccess(Vec2 thiefPosition) {
+    // Perform interpolation between the thief and the starting tackle position
+    Vec2 diff = thiefPosition - _tacklePosition;
+    setPosition(_tacklePosition + (diff * (_tackleTime / TACKLE_AIR_TIME)));
+    
+    // Terminate the tackle
+    if (_tackleTime >= TACKLE_AIR_TIME) {
+        _tackling = false;
+        _caughtThief = true;
+    }
+}
+
+/**
+ * Updates nodes to show tackle animation
+ */
+void CopModel::playTackle() {
+    // Determine which direction the cop is facing
+    int key = findDirection(_tackleDirection);
+    
+    // Determine whether the cop is in the air or not
+    bool inAir = _tackleTime < TACKLE_AIR_TIME;
+    
+    // Hide the idle and movement animations
+    for (std::shared_ptr<scene2::SpriteNode> s : _spriteNodes) s->setVisible(false);
+    
+    // Show the tackle texture
+    _character->setVisible(true);
+    
+    // Show the appropriate direction
+    switch (key) {
+    case RIGHT_ANIM_KEY:
+        _character->setTexture(inAir ? _tackleRightTexture : _landRightTexture);
+        break;
+    case BACK_ANIM_KEY:
+        _character->setTexture(inAir ? _tackleUpTexture : _landUpTexture);
+        break;
+    case LEFT_ANIM_KEY:
+        _character->setTexture(inAir ? _tackleLeftTexture : _landLeftTexture);
+        break;
+    case FRONT_ANIM_KEY:
+        _character->setTexture(inAir ? _tackleDownTexture : _landDownTexture);
+        break;
+    default:
+        break;
+    }
 }

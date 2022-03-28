@@ -113,7 +113,7 @@ public:
     RaycastProxy() { onQuery = nullptr; }
 
     /**
-     * Called for each fixture found in the query. 
+     * Called for each fixture found in the query.
      *
      * This callback controls how the ray cast proceeds by returning a float.
      * If -1, it ignores this fixture and continues.  If 0, it terminates the
@@ -162,15 +162,18 @@ public:
  * The Box2d world will not be created until the appropriate init is called.
  */
 ObstacleWorld::ObstacleWorld() :
-_world(nullptr),
+_realworld(nullptr),
+_drawworld(nullptr),
 _collide(false),
 _filters(false),
 _destroy(false) {
-    _lockstep   = false;
+    _stepsplits = DEFAULT_SPLITS;
     _stepssize  = DEFAULT_WORLD_STEP;
     _itvelocity = DEFAULT_WORLD_VELOC;
     _itposition = DEFAULT_WORLD_POSIT;
     _gravity = Vec2(0,DEFAULT_GRAVITY);
+    _objectsAdded = 0;
+    _remainingtime = 0;
     
     onBeginContact = nullptr;
     onEndContact   = nullptr;
@@ -186,9 +189,13 @@ _destroy(false) {
  */
 void ObstacleWorld::dispose() {
     clear();
-    if (_world != nullptr) {
-        delete _world;
-        _world  = nullptr;
+    if (_realworld != nullptr) {
+        delete _realworld;
+        _realworld  = nullptr;
+    }
+    if (_drawworld != nullptr) {
+        delete _drawworld;
+        _drawworld = nullptr;
     }
     onBeginContact = nullptr;
     onEndContact   = nullptr;
@@ -230,10 +237,12 @@ bool ObstacleWorld::init(const Rect bounds) {
  * @return  true if the controller is initialized properly, false otherwise.
  */
 bool ObstacleWorld::init(const Rect bounds, const Vec2 gravity) {
-    CUAssertLog(!_world,"Attempt to reinitialize and active world");
+    CUAssertLog(!_realworld,"Attempt to reinitialize and active world");
+    CUAssertLog(!_drawworld, "Attempt to reinitialize and active world");
     _bounds = bounds;
-    _world = new b2World(b2Vec2(gravity.x,gravity.y));
-    if (_world) {
+    _realworld = new b2World(b2Vec2(gravity.x,gravity.y));
+    _drawworld = new b2World(b2Vec2(gravity.x, gravity.y));
+    if (_realworld && _drawworld) {
         return true;
     }
     return false;
@@ -257,8 +266,10 @@ bool ObstacleWorld::init(const Rect bounds, const Vec2 gravity) {
  */
 void ObstacleWorld::addObstacle(const std::shared_ptr<Obstacle>& obj) {
     CUAssertLog(inBounds(obj.get()), "Obstacle is not in bounds");
-    _objects.push_back(obj);
-    obj->activatePhysics(*_world);
+    obj->setId(_objectsAdded);
+    _objects[obj->getId()] = obj;
+    obj->activatePhysics(*_realworld, *_drawworld);
+    _objectsAdded++;
 }
 
 /**
@@ -276,14 +287,10 @@ void ObstacleWorld::addObstacle(const std::shared_ptr<Obstacle>& obj) {
  * @release a reference to the obstacle
  */
 void ObstacleWorld::removeObstacle(Obstacle* obj) {
-    for(auto it = _objects.begin(); it != _objects.end(); ++it) {
-        if (it->get() == obj) {
-            obj->deactivatePhysics(*_world);
-            _objects.erase(it);
-            return;
-        }
-    }
-    CUAssertLog(false, "Physics object not present in world");
+    obj->deactivatePhysics(*_realworld, *_drawworld);
+    auto result = _objects.erase(obj->getId());
+    // Result 3 means that zero elements were removed
+    if (result == 3) CUAssertLog(false, "Physics object not present in world");
 }
 
 /**
@@ -295,22 +302,14 @@ void ObstacleWorld::removeObstacle(Obstacle* obj) {
  * This method is the efficient, preferred way to remove objects.
  */
 void ObstacleWorld::garbageCollect() {
-    size_t count = 0;
-    size_t pos = 0;
-    for(size_t ii = 0; ii < _objects.size(); ii++) {
-        if (_objects[ii]->isRemoved()) {
-            _objects[ii]->deactivatePhysics(*_world);
-            _objects[ii] = nullptr;
-        } else {
-            if (pos != ii) {
-                _objects[pos] = _objects[ii];
-                _objects[ii]  = nullptr;
-            }
-            pos++;
-            count++;
+    for (auto it : _objects) {
+        if (it.second->isRemoved()) {
+            it.second->deactivatePhysics(*_realworld, *_drawworld);
+            // #TODO This may be unwise. Find a way to use erase instead at some point? Doing this
+            // makes the hash map just get bigger and bigger with longs pointing to null elements (I think?)
+            it.second = nullptr;
         }
     }
-    _objects.resize(count);
 }
 
 /**
@@ -320,9 +319,9 @@ void ObstacleWorld::garbageCollect() {
  * receive new objects.
  */
 void ObstacleWorld::clear() {
-    for(auto it = _objects.begin() ; it != _objects.end(); ++it) {
-        Obstacle* obj = it->get();
-        obj->deactivatePhysics(*_world);
+    for(auto it : _objects) {
+        Obstacle* obj = it.second.get();
+        obj->deactivatePhysics(*_realworld, *_drawworld);
     }
     _objects.clear();
     update(0);
@@ -341,8 +340,11 @@ void ObstacleWorld::clear() {
  */
 void ObstacleWorld::setGravity(const Vec2 gravity) {
     _gravity = gravity;
-    if (_world != nullptr) {
-        _world->SetGravity(b2Vec2(gravity.x,gravity.y));
+    if (_realworld != nullptr) {
+        _realworld->SetGravity(b2Vec2(gravity.x,gravity.y));
+    }
+    if (_drawworld != nullptr) {
+        _drawworld->SetGravity(b2Vec2(gravity.x, gravity.y));
     }
 }
 
@@ -362,12 +364,31 @@ void ObstacleWorld::setGravity(const Vec2 gravity) {
  */
 void ObstacleWorld::update(float dt) {
     // Turn the physics engine crank.
-    _world->Step((_lockstep ? _stepssize : dt),_itvelocity,_itposition);
+
+    // The mini step size. This is the "mini" steps we will use to get "close enough" to the amount of time that has actually passed.
+    float ministep = _stepssize / (float)_stepsplits;
+    // The total time needed to simulate
+    float totaltime = _remainingtime + dt;
+    // The total sim time (needed for obj->update)
+    float totalsimtime = _remainingtime + dt;
+    while (totaltime > ministep) {
+        _realworld->Step(ministep, _itvelocity, _itposition);
+        totaltime -= ministep;
+    }
+
+    // Now our real world is in the right state. Make one final step to set up the draw world and remember the remaining time from this frame
+    _remainingtime = totaltime;
+    // Sync real body to draw body
+    for (auto it : _objects) {
+        it.second->syncBodies();
+    }
+    // Step the draw world by the remaining time
+    _drawworld->Step(_remainingtime, _itvelocity, _itposition);
     
     // Post process all objects after physics (this updates graphics)
-    for(auto it = _objects.begin() ; it != _objects.end(); ++it) {
-        Obstacle* obj = it->get();
-        obj->update(dt);
+    for(auto it : _objects) {
+        Obstacle* obj = it.second.get();
+        obj->update(totalsimtime);
     }
 }
 
@@ -404,7 +425,7 @@ void ObstacleWorld::activateCollisionCallbacks(bool flag) {
         return;
     }
     
-    _world->SetContactListener(flag ? this : nullptr);
+    _realworld->SetContactListener(flag ? this : nullptr);
     _collide = flag;
 }
 
@@ -422,7 +443,7 @@ void ObstacleWorld::activateFilterCallbacks(bool flag) {
         return;
     }
     
-    _world->SetContactFilter(flag ? this : nullptr);
+    _realworld->SetContactFilter(flag ? this : nullptr);
     _filters = flag;
 }
 
@@ -439,7 +460,7 @@ void ObstacleWorld::activateDestructionCallbacks(bool flag) {
         return;
     }
     
-    _world->SetDestructionListener(flag ? this : nullptr);
+    _realworld->SetDestructionListener(flag ? this : nullptr);
     _destroy = flag;
 }
 
@@ -461,11 +482,11 @@ void ObstacleWorld::queryAABB(std::function<bool(b2Fixture* fixture)> callback, 
     b2box.upperBound.Set(aabb.origin.x+aabb.size.width, aabb.origin.y+aabb.size.height);
     QueryProxy proxy;
     proxy.onQuery = callback;
-    _world->QueryAABB(&proxy, b2box);
+    _realworld->QueryAABB(&proxy, b2box);
 }
 
-/** 
- * Ray-cast the world for all fixtures in the path of the ray. 
+/**
+ * Ray-cast the world for all fixtures in the path of the ray.
  *
  * The callback controls whether you get the closest point, any point, or n-points.
  * The ray-cast ignores shapes that contain the starting point.
@@ -478,5 +499,21 @@ void ObstacleWorld::rayCast(std::function<float(b2Fixture* fixture, const Vec2 p
                               const Vec2 point1, const Vec2 point2) const {
     RaycastProxy proxy;
     proxy.onQuery = callback;
-    _world->RayCast(&proxy, b2Vec2(point1.x,point1.y), b2Vec2(point2.x,point2.y));
+    _realworld->RayCast(&proxy, b2Vec2(point1.x,point1.y), b2Vec2(point2.x,point2.y));
+}
+
+std::vector<BodyNetData> ObstacleWorld::getState() {
+    std::vector<BodyNetData> state;
+    for (auto it : _objects) {
+        std::shared_ptr<Obstacle> obs = it.second;
+        // Only record non-static bodies. No need to update state on static bodies.
+        if(obs->getBodyType() != b2_staticBody) state.push_back(obs->getBodyData());
+    }
+    return state;
+}
+
+void ObstacleWorld::updateFromState(std::vector<BodyNetData> data) {
+    for (BodyNetData body : data) {
+        _objects[body.id]->setBodyFromData(body);
+    }
 }

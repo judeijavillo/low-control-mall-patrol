@@ -75,7 +75,9 @@ protected:
     /** Shape information for this physics object */
     b2PolygonShape* _shapes;
     /** A cache value for the fixtures (for resizing) */
-    b2Fixture** _geoms;
+    b2Fixture** _realgeoms;
+    /** A cache value for the fixtures (for resizing) */
+    b2Fixture** _drawgeoms;
     /** Anchor point to synchronize with the scene graph */
     Vec2 _anchor;
     /** In case the number of polygons changes */
@@ -119,7 +121,7 @@ public:
      * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
      * the heap, use one of the static constructors instead.
      */
-    PolygonObstacle(void) : SimpleObstacle(), _shapes(nullptr), _geoms(nullptr) { }
+    PolygonObstacle(void) : SimpleObstacle(), _shapes(nullptr), _realgeoms(nullptr), _drawgeoms(nullptr) { }
     
     /**
      * Deletes this physics object and all of its resources.
@@ -136,7 +138,7 @@ public:
      * Initializes a (not necessarily convex) polygon
      *
      * The given polygon defines an implicit coordinate space, with (0,0) at the
-     * origin. This origin will be the position of the body, and hence its 
+     * origin. This origin will be the position of the body, and hence its
      * rotation center.
      *
      * @param poly   The polygon vertices
@@ -162,9 +164,9 @@ public:
      * Initializes a (not necessarily convex) polygon
      *
      * The anchor point (the rotational center) of the polygon is specified as a
-     * ratio of the bounding box.  An anchor point of (0,0) is the bottom left 
-     * of the bounding box.  An anchor point of (1,1) is the top right of the 
-     * bounding box.  The anchor point does not need to be contained with the 
+     * ratio of the bounding box.  An anchor point of (0,0) is the bottom left
+     * of the bounding box.  An anchor point of (1,1) is the top right of the
+     * bounding box.  The anchor point does not need to be contained with the
      * bounding box.
      *
      * @param  poly     The polygon vertices
@@ -181,7 +183,7 @@ public:
      * Returns a (not necessarily convex) polygon
      *
      * The given polygon defines an implicit coordinate space, with (0,0) at the
-     * origin. This origin will be the position of the body, and hence its 
+     * origin. This origin will be the position of the body, and hence its
      * rotation center.
      *
      * @param poly   The polygon vertices
@@ -213,8 +215,8 @@ public:
      * Returns a (not necessarily convex) polygon
      *
      * The anchor point (the rotational center) of the polygon is specified as a
-     * ratio of the bounding box.  An anchor point of (0,0) is the bottom left of 
-     * the bounding box.  An anchor point of (1,1) is the top right of the bounding 
+     * ratio of the bounding box.  An anchor point of (0,0) is the bottom left of
+     * the bounding box.  An anchor point of (1,1) is the top right of the bounding
      * box.  The anchor point does not need to be contained with the bounding box.
      *
      * @param  poly     The polygon vertices
@@ -364,6 +366,6 @@ public:
      */
     virtual void releaseFixtures() override;
 };
-	}
+    }
 }
 #endif /* __CU_POLYGON_OBSTACLE_H__ */

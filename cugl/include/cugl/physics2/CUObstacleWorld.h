@@ -48,6 +48,7 @@
 #include <vector>
 #include <box2d/b2_world_callbacks.h>
 #include <cugl/math/cu_math.h>
+#include <cugl/physics2/CUBodyNetData.h>
 class b2World;
 
 namespace cugl {
@@ -66,13 +67,16 @@ class Obstacle;
 /** Default amount of time for a physics engine step. */
 #define DEFAULT_WORLD_STEP  1/60.0f
 /** Default number of velocity iterations for the constrain solvers */
-#define DEFAULT_WORLD_VELOC 6
+#define DEFAULT_WORLD_VELOC 3
 /** Default number of position iterations for the constrain solvers */
 #define DEFAULT_WORLD_POSIT 2
+/** Default number of splits in our time step */
+#define DEFAULT_SPLITS 10;
 
 
 #pragma mark -
 #pragma mark World Controller
+
 /**
  * A CUGL wrapper for a Box2d world.
  *
@@ -81,27 +85,33 @@ class Obstacle;
  * objects that does not require the multi-step approach of Box2D.  It also
  * supports shared pointers for simply memory management.
  *
- * In addition, this class provides a modern callback approach supporting 
- * closures assigned to attributes.  This allows you to modify the callback 
+ * In addition, this class provides a modern callback approach supporting
+ * closures assigned to attributes.  This allows you to modify the callback
  * functions while the program is running.
  */
 class ObstacleWorld : public b2ContactListener, b2DestructionListener, b2ContactFilter {
 protected:
-    /** Reference to the Box2D world */
-    b2World* _world;
-    /** Whether to lock the physic timestep to a constant amount */
-    bool _lockstep;
+    /** Reference to the Box2D real world */
+    b2World* _realworld;
+    /** Reference to the Box2D draw world */
+    b2World* _drawworld;
     /** The amount of time for a single engine step */
     float _stepssize;
-    /** The number of velocity iterations for the constrain solvers */
+    /** The amount of times to split up our steps */
+    int _stepsplits;
+    /** The left over time that needs to be iterated for next frame */
+    float _remainingtime;
+    /** The number of velocity iterations for the constrain solvers per ministep */
     int _itvelocity;
-    /** The number of position iterations for the constrain solvers */
+    /** The number of position iterations for the constrain solvers per ministep*/
     int _itposition;
     /** The current gravitational value of the world */
     Vec2 _gravity;
     
-    /** The list of objects in this world */
-    std::vector<std::shared_ptr<Obstacle>> _objects;
+    /** The list of real objects in this world. This is a hashmap that maps object IDs to Obstacles. */
+    std::unordered_map<unsigned long, std::shared_ptr<Obstacle>> _objects;
+    /** The total number of objects added to this world. This is our IDing function for new obstacles */
+    unsigned long _objectsAdded;
     
     /** The boundary of the world */
     Rect _bounds;
@@ -136,7 +146,7 @@ public:
      * Disposes all of the resources used by this world.
      *
      * A disposed ObstacleWorld can be safely reinitialized. Any obstacles owned
-     * by this world will be deactivates.  They will be deleted if no other 
+     * by this world will be deactivates.  They will be deleted if no other
      * object owns them.
      */
     void dispose();
@@ -224,31 +234,10 @@ public:
      *
      * @return a reference to the Box2d world.
      */
-    b2World* getWorld() { return _world; }
+    b2World* getWorld() { return _realworld; }
     
     /**
-     * Returns true if the physics is locked to a constant timestep.
-     *
-     * If this is false, the physics timestep will vary with the graphics framerate.
-     *
-     * @return true if the physics is locked to a constant timestep.
-     */
-    bool isLockStep() const { return _lockstep; }
-    
-    /**
-     * Sets whether the physics is locked to a constant timestep.
-     *
-     * If this is false, the physics timestep will vary with the graphics framerate.
-     * Any change will take effect at the time of the next call to update.
-     *
-     * @param  flag whether the physics is locked to a constant timestep.
-     */
-    void setLockStep(bool flag) { _lockstep = flag; }
-    
-    /** 
      * Returns the amount of time for a single engine step.
-     *
-     * This attribute is only relevant if isLockStep() is true.
      *
      * @return the amount of time for a single engine step.
      */
@@ -257,15 +246,13 @@ public:
     /**
      * Sets the amount of time for a single engine step.
      *
-     * This attribute is only relevant if isLockStep() is true. Any change will take 
-     * effect at the time of the next call to update.
      *
      * @param  step the amount of time for a single engine step.
      */
     void setStepsize(float step) { _stepssize = step; }
 
-    /** 
-     * Returns number of velocity iterations for the constrain solvers 
+    /**
+     * Returns number of velocity iterations for the constrain solvers
      *
      * @return number of velocity iterations for the constrain solvers
      */
@@ -354,7 +341,7 @@ public:
      *
      * @return a read-only reference to the list of active obstacles.
      */
-    const std::vector<std::shared_ptr<Obstacle>>& getObstacles() { return _objects; }
+    const std::unordered_map<unsigned long, std::shared_ptr<Obstacle>>& getObstacles() { return _objects; }
 
     /**
      * Immediately adds the obstacle to the physics world
@@ -364,7 +351,7 @@ public:
      * between the obstacles.  The physics world will include the obstacle in
      * its next call to update.
      *
-     * The obstacle will be retained by this world, preventing it from being 
+     * The obstacle will be retained by this world, preventing it from being
      * garbage collected.
      *
      * param obj The obstacle to add
@@ -375,9 +362,9 @@ public:
      * Immediately removes an obstacle from the physics world
      *
      * The obstacle will be released immediately. The physics will be deactivated
-     * and it will be removed from the Box2D world. This method of removing 
-     * objects is very heavy weight, and should only be used for single object 
-     * removal.  If you want to remove multiple objects, then you should mark 
+     * and it will be removed from the Box2D world. This method of removing
+     * objects is very heavy weight, and should only be used for single object
+     * removal.  If you want to remove multiple objects, then you should mark
      * them for removal and call garbageCollect.
      *
      * Removing an obstacle does not automatically delete the obstacle itself.
@@ -410,6 +397,15 @@ public:
      */
     void clear();
 
+    /**
+     * Gets the state of all NON-STATIC objects in the world
+     */
+    std::vector<BodyNetData> getState();
+
+    /**
+     * Updates the physics world given a vector of BodyNetData structs. This is used when data from the network is received.
+     */
+    void updateFromState(std::vector<BodyNetData> data);
     
 #pragma mark -
 #pragma mark Collision Callback Functions
@@ -454,9 +450,9 @@ public:
     std::function<void(b2Contact* contact)> onEndContact;
     
     /**
-     * Called after a contact is updated. 
+     * Called after a contact is updated.
      *
-     * This callback allows you to inspect a contact before it goes to the solver. 
+     * This callback allows you to inspect a contact before it goes to the solver.
      * If you are careful, you can modify the contact manifold (e.g. disable contact).
      *
      * A copy of the old manifold is provided so that you can detect changes.
@@ -465,7 +461,7 @@ public:
      * Note: this is called even when the number of contact points is zero.
      * Note: this is not called for sensors.
      * Note: if you set the number of contact points to zero, you will not get an
-     * EndContact callback. However, you may get a BeginContact callback the 
+     * EndContact callback. However, you may get a BeginContact callback the
      * next step.
      *
      * This attribute is a dynamically assignable callback and may be changed at
@@ -479,11 +475,11 @@ public:
     /**
      * Called after the solver is finished.
      *
-     * This callback lets you inspect a contact after the solver is finished. 
+     * This callback lets you inspect a contact after the solver is finished.
      * This is useful for inspecting impulses.
      *
-     * Note: the contact manifold does not include time of impact impulses, which 
-     * can be arbitrarily large if the sub-step is small. Hence the impulse is 
+     * Note: the contact manifold does not include time of impact impulses, which
+     * can be arbitrarily large if the sub-step is small. Hence the impulse is
      * provided explicitly in a separate data structure.
      * Note: this is only called for contacts that are touching, solid, and awake.
      *
@@ -526,7 +522,7 @@ public:
     /**
      * Called after a contact is updated.
      *
-     * This callback allows you to inspect a contact before it goes to the solver. 
+     * This callback allows you to inspect a contact before it goes to the solver.
      * If you are careful, you can modify the contact manifold (e.g. disable contact).
      *
      * A copy of the old manifold is provided so that you can detect changes.
@@ -535,7 +531,7 @@ public:
      * Note: this is called even when the number of contact points is zero.
      * Note: this is not called for sensors.
      * Note: if you set the number of contact points to zero, you will not get an
-     * EndContact callback. However, you may get a BeginContact callback the 
+     * EndContact callback. However, you may get a BeginContact callback the
      * next step.
      *
      * This method is the static callback required by the Box2d API.  It should
@@ -550,14 +546,14 @@ public:
         }
     }
     
-    /** 
+    /**
      * Called after the solver is finished.
-     * 
-     * This callback lets you inspect a contact after the solver is finished. 
+     *
+     * This callback lets you inspect a contact after the solver is finished.
      * This is useful for inspecting impulses.
      *
-     * Note: the contact manifold does not include time of impact impulses, 
-     * which can be arbitrarily large if the sub-step is small. Hence the 
+     * Note: the contact manifold does not include time of impact impulses,
+     * which can be arbitrarily large if the sub-step is small. Hence the
      * impulse is provided explicitly in a separate data structure.
      * Note: this is only called for contacts that are touching, solid, and awake.
      *
@@ -579,7 +575,7 @@ public:
     /**
      * Activates the collision filter callbacks.
      *
-     * If flag is false, then the collision filter callbacks (even if defined) will be 
+     * If flag is false, then the collision filter callbacks (even if defined) will be
      * ignored. Otherwise, the callbacks will be executed (to test a collision) if they
      * are defined.
      *
@@ -643,8 +639,8 @@ public:
     /**
      * Returns true if the destruction callbacks are active
      *
-     * If this value is false, then the destruction callbacks (even if defined) will be 
-     * ignored. Otherwise, the callbacks will be executed (on body destruction) if they 
+     * If this value is false, then the destruction callbacks (even if defined) will be
+     * ignored. Otherwise, the callbacks will be executed (on body destruction) if they
      * are defined.
      *
      * @return true if the destruction callbacks are active

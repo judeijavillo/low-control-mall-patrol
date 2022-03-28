@@ -64,7 +64,7 @@ namespace cugl {
 /**
  * Circle-shaped model to support collisions.
  *
- * Note that the shape must be circular, not elliptical. If you want to make an 
+ * Note that the shape must be circular, not elliptical. If you want to make an
  * ellipse, you will need to use the PolygonObstacle class.
  *
  * Unless otherwise specified, the center of mass is as the center.
@@ -74,7 +74,9 @@ protected:
     /** Shape information for this box */
     b2CircleShape _shape;
     /** A cache value for the fixture (for resizing) */
-    b2Fixture* _geometry;
+    b2Fixture* _realgeometry;
+    /** A cache value for the fixture (for resizing) */
+    b2Fixture* _drawgeometry;
 
     
 #pragma mark -
@@ -98,7 +100,7 @@ public:
      * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
      * the heap, use one of the static constructors instead.
      */
-    WheelObstacle(void) : SimpleObstacle(), _geometry(nullptr) { }
+    WheelObstacle(void) : SimpleObstacle(), _realgeometry(nullptr), _drawgeometry(nullptr) { }
     
     /**
      * Deletes this physics object and all of its resources.
@@ -110,7 +112,7 @@ public:
      * claims on scene graph nodes.
      */
     virtual ~WheelObstacle() {
-        CUAssertLog(_geometry == nullptr, "You must deactive physics before deleting an object");
+        CUAssertLog(_realgeometry == nullptr || _drawgeometry == nullptr, "You must deactive physics before deleting an object");
     }
 
     /**
@@ -232,6 +234,6 @@ public:
     virtual void releaseFixtures() override;
 
 };
-	}
+    }
 }
 #endif /* __CU_WHEEL_OBSTACLE_H__ */

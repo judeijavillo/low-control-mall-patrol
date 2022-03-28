@@ -79,14 +79,14 @@ class ObstacleWorld;
 /**
  * Selection tool to move and drag physics obstacles
  *
- * This class is essentially an instance of b2MouseJoint, but with an API that 
- * makes it a lot easier to use. It must be attached to a WorldController on 
- * creation, and this controller can never change.  If you want a selector for 
+ * This class is essentially an instance of b2MouseJoint, but with an API that
+ * makes it a lot easier to use. It must be attached to a WorldController on
+ * creation, and this controller can never change.  If you want a selector for
  * a different ObstacleWorld, make a new instance.
  *
- * As with all instances of b2MouseJoint, there will be some lag in the drag 
- * (though this is true on touch devices in general).  You can adjust the degree 
- * of this lag by adjusting the force.  However, larger forces can cause 
+ * As with all instances of b2MouseJoint, there will be some lag in the drag
+ * (though this is true on touch devices in general).  You can adjust the degree
+ * of this lag by adjusting the force.  However, larger forces can cause
  * artifacts when dragging an obstacle through other obstacles.
  */
 class ObstacleSelector {
@@ -138,7 +138,7 @@ protected:
     /**
      * Repositions the debug wireframe so that it agrees with the physics object.
      *
-     * The debug wireframe is use to outline the fixtures attached to this 
+     * The debug wireframe is use to outline the fixtures attached to this
      * selector.  It is useful when you want to visualize the relationship
      * between the mouse and the selected shape.
      */
@@ -159,7 +159,7 @@ public:
     /**
      * Creates a new ObstacleSelector
      *
-     * The selector created is not usable.  This constructor only initializes 
+     * The selector created is not usable.  This constructor only initializes
      * default values.
      *
      * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
@@ -202,7 +202,7 @@ public:
      * Initializes a new selector for the given ObstacleWorld and mouse size.
      *
      * This controller can never change.  If you want a selector for a different
-     * ObstacleWorld, make a new instance.  However, the mouse size can be 
+     * ObstacleWorld, make a new instance.  However, the mouse size can be
      * changed at any time.
      *
      * @param world     the physics controller
@@ -388,9 +388,9 @@ public:
     /**
      * Returns the size of the mouse pointer
      *
-     * When a selection is made, this selector will create an axis-aligned 
-     * bounding box centered at the mouse position.  Any fixture overlapping 
-     * this box will be selected.  The size of this box is determined by this 
+     * When a selection is made, this selector will create an axis-aligned
+     * bounding box centered at the mouse position.  Any fixture overlapping
+     * this box will be selected.  The size of this box is determined by this
      * value.
      *
      * @return the size of the mouse pointer
@@ -515,6 +515,6 @@ public:
      */
     bool hasDebug() { return _hatch != nullptr; }
 };
-	}
+    }
 }
 #endif /* __CU_OBSTACLE_SELECTOR_H__ */

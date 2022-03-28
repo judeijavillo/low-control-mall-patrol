@@ -41,7 +41,7 @@ bool ThiefModel::init(float scale,
     _animFrames = {8, 6, 8, 6, 4, 4};
     
     // Call the parent's initializer
-    PlayerModel::init(Vec2::ZERO, size, scale, node, actions);
+    PlayerModel::init(-1, Vec2::ZERO, size, scale, node, actions);
     
     // Set up the textures for all directions
     _spriteSheets.push_back(assets->get<Texture>(THIEF_RUN_RIGHT));

@@ -123,8 +123,8 @@ public:
     /**
      * Applies an acceleration to a cop (most likely for local updates)
      */
-    void updateCop(cugl::Vec2 acceleration, int copID, bool onTackleCooldown);
-    
+    void updateCop(cugl::Vec2 acceleration, cugl::Vec2 thiefPosition, int copID, float timestep);
+
     /**
      * Updates the position and velocity of the thief (most likely for network updates)
      */
@@ -133,7 +133,14 @@ public:
     /**
      * Updates the position and velocity of a cop (most likely for network updates)
      */
-    void updateCop(cugl::Vec2 position, cugl::Vec2 velocity, cugl::Vec2 force, int copID);
+    void updateCop(cugl::Vec2 position, cugl::Vec2 velocity,
+                   cugl::Vec2 force, cugl::Vec2 tackleDirection,
+                   cugl::Vec2 tacklePosition,
+                   float tackleTime,
+                   bool tackling,
+                   bool caughtThief,
+                   bool tackleSuccessful,
+                   int copID);
     
     /**
      * Activates a trap

@@ -81,12 +81,18 @@
 #define COP_ACCELERATION_DEFAULT 75.0f
 
 // Tackle Physics Constants
-/** The amount of time that the cop will be in the air while tackling */
+/** The amount of time that the cop will be in the air while in a successful tackle */
 #define TACKLE_AIR_TIME 0.25f
+/** The amount of time that the cop will be in the air while in a failed tackle*/
+#define TACKLE_COOLDOWN_TIME 1.5f
 /** The movement multiplier for the cop during tackle */
 #define TACKLE_MOVEMENT_MULT 2.0f
 /** The damping multiplier for the cop during tackle */
-#define TACKLE_DAMPING_MULT 2.5f
+#define TACKLE_DAMPING_MULT 5.0f
+/** The distance the cop's successful tackle spans in Box2D units */
+#define TACKLE_HIT_RADIUS 6.0f
+/** The margin of error allowed by a ocp's tackle */
+#define TACKLE_ANGLE_MAX_ERR (M_PI_4)
 
 // MARK: - UI Constants
 

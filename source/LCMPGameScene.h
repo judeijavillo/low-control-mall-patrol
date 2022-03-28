@@ -27,6 +27,18 @@
  * so that we can have a separate mode for the loading screen.
  */
 class GameScene : public cugl::Scene2 {
+//  MARK: - Enumerations
+    
+    /** The different states to represent logic in GameScene as a Finite State Machine */
+    enum State {
+        /** The state when the game has not begun, and the game is being initialized */
+        INIT,
+        /** The state when main gameplay occurs */
+        GAME,
+        /** The state where the game is over and we wait for reseting */
+        DONE
+    };
+    
 protected:
 //  MARK: - Properties
     
@@ -77,26 +89,24 @@ protected:
     float _scale;
     
     // Timing
-    /** The time for this current game */
+    /** The time for the state GAME */
     float _gameTime;
-    /** The time for the win game */
-    float _resetTime;
+    /** The time for the state DONE */
+    float _doneTime;
     /** The last time the cop tackled */
     float _tackleTime;
     
     // Control
+    /** The current state of the game */
+    State _state;
     /** The unique player number of this player */
     int _playerNumber;
-    /** Whether the game is over or not  */
-    bool _gameover;
     /** Whether this player is the thief */
     bool _isThief;
     /** Whether this player is the host */
-    bool _ishost;
+    bool _isHost;
     /** Whether we quit the game */
     bool _quit;
-    /** Whether the cop has hit a successful tackle. */
-    bool _hitTackle;
     
 public:
 //  MARK: - Constructors
@@ -194,22 +204,66 @@ public:
    void reset() override;
 
 private:
+//  MARK: - States
+    
+    /**
+     * The update method for when we are in state INIT
+     */
+    void stateInit(float timestep);
+    
+    /**
+     * The update method for when we are in state GAME
+     */
+    void stateGame(float timestep);
+    
+    /**
+     * The update method for when we are in state DONE
+     */
+    void stateDone(float timestep);
+    
 //  MARK: - Helpers
+    
     /**
-     *  Performs all logic associated with the cop tackle.
-     *  This method is physics-based if it is a missed tackle, and discretized
-     *  if the tackle hits.
-     * 
-     *  Returns if the cop's tackle is successful.
-    */
-    bool tackle(float dt, cugl::Vec2 movement);
-
+     * Updates local players (own player and non-playing players)
+     */
+    void updateLocal(float timestep, cugl::Vec2 movement, bool activate,
+                     float swipe, cugl::Vec2 tackle);
+    
     /**
-     *  Plays animation associated with cop hitting the tackle.
-     *  Not physics based, just moves cop body.
-     *  Returns whether animation is complete or not.
-    */
-    bool successfulTackle(float dt);
+     * Updates and networks the thief and any actions it can perform
+     */
+    void updateThief(float timestep, cugl::Vec2 movement, bool activate);
+    
+    /**
+     * Updates and networks a cop and any actions it can perform
+     */
+    void updateCop(float timestep, int copID, cugl::Vec2 movement, bool swipe, cugl::Vec2 tackle);
+    
+    /**
+     * Updates based on data received over the network
+     */
+    void updateNetwork(float timestep);
+    
+    /**
+     * Updates camera based on the position of the controlled player
+     */
+    void updateCamera(float timestep);
+    
+    /**
+     * Updates the floor based on the camera
+     */
+    void updateFloor(float timestep);
+    
+    /**
+     * Updates the UI and repositions the UI Node
+     */
+    void updateUI(float timestep, bool isThief, cugl::Vec2 movement,
+                  bool didPress, cugl::Vec2 origin, cugl::Vec2 position, int playerNumber);
+    
+    /**
+     * Updates the ordering of the nodes in the World Node
+     */
+    void updateOrder(float timestep);
     
 };
 
