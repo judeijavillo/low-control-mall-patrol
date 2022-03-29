@@ -37,6 +37,8 @@ protected:
     bool _tackleSuccessful;
 
 public:
+    bool didTackle;
+    bool didLand;
 //  MARK: - Constructors
     
     /** Flag for whether cop is in range to deactivate a trap. -1 indicates out of range, otherwise it indicates the id of the trap the cop will deactivate */

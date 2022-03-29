@@ -89,6 +89,8 @@ bool CopModel::init(int copID, float scale,
     _tackling = false;
     _caughtThief = false;
     _tackleSuccessful = false;
+    didTackle = false;
+    didLand = false;
 
     b2Filter filter = b2Filter();
     filter.maskBits = COP_FILTER_BITS;
@@ -138,6 +140,7 @@ void CopModel::attemptTackle(Vec2 thiefPosition, Vec2 tackle) {
  * Applies physics to cop when tackling
  */
 void CopModel::applyTackle(float timestep, Vec2 thiefPosition) {
+    didTackle = true;
     _tackleTime += timestep;
     _tackleSuccessful
         ? applyTackleSuccess(thiefPosition)
@@ -190,6 +193,7 @@ void CopModel::applyTackleFailure() {
     
     // The cop is on the floor
     else {
+        didLand = true;
         b2Vec2 b2damping(
             getVelocity().x * -getDamping().x * TACKLE_DAMPING_MULT,
             getVelocity().y * -getDamping().y * TACKLE_DAMPING_MULT);

@@ -11,14 +11,14 @@
 
 #include <cugl/cugl.h>
 
-/** The key for collisions sounds */
-#define DUDE_SOUND     "dude"
-#define F_SOUND     "fuck"
-#define WHY_SOUND     "why"
-#define OOH_SOUND           "ooh"
-
 class AudioController {
+protected:
+    std::shared_ptr<cugl::AudioQueue> _queue;
+    std::vector<pair<float, std::string>> _heap;
+
 public:
+    std::unordered_map<string, std::shared_ptr<cugl::audio::AudioPlayer>> audioPlayers;
+
 //  MARK: - Constructors
     
     /**
@@ -37,11 +37,20 @@ public:
     void dispose();
 
 //  MARK: - Methods
-
-    /**
-     * Plays a sound effect
-     */
-    void playSound(const std::shared_ptr<cugl::AssetManager>& assets, string key, float time);
+    
+    std::shared_ptr<cugl::AudioQueue> getQueue() { return _queue; }
+    
+    /** Plays a sound effect or music track */
+    void playSound(const std::shared_ptr<cugl::AssetManager>& assets, std::string key, bool isSfx, float gameTime);
+    
+    /** Pauses a music track */
+    void pauseMusic(string key);
+    
+    /** Stops a music track */
+    void stopMusic(string key);
+    
+    /** Stops a sound effect */
+    void stopSfx(string key);
     
 };;
 

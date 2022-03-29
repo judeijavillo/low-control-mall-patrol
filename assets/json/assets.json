@@ -24,6 +24,27 @@
         "floor": {
             "file": "textures/environment/floor.png"
         },
+        "cleaning_cart": {
+            "file": "textures/environment/cleaning_cart.png"
+        },
+        "baby_carriage": {
+            "file": "textures/environment/baby_carriage.png"
+        },
+        "long_plant_mid": {
+            "file": "textures/environment/long_plant_mid.png"
+        },
+        "long_plant_left": {
+            "file": "textures/environment/long_plant_left.png"
+        },
+        "long_plant_right": {
+            "file": "textures/environment/long_plant_right.png"
+        },
+        "round_plant": {
+            "file": "textures/environment/round_plant.png"
+        },
+        "tall_plant": {
+            "file": "textures/environment/tall_plant.png"
+        },
         "cop_run_back": {
             "file": "textures/characters/lcmp_cop_run_back.png"
         },
@@ -110,6 +131,21 @@
         }
     },
     "sounds": {
+        "trap": {
+            "type":     "sample",
+            "file":     "sounds/crash.wav",
+            "volume":   0.5
+        },
+        "tackle": {
+            "type":     "sample",
+            "file":     "sounds/tackle.wav",
+            "volume":   0.5
+        },
+        "land": {
+            "type":     "sample",
+            "file":     "sounds/land.wav",
+            "volume":   0.5
+        },
         "dude": {
             "type":     "sample",
             "file":     "sounds/dude.wav",
@@ -128,6 +164,26 @@
         "ooh": {
             "type":     "sample",
             "file":     "sounds/ooh.wav",
+            "volume":   0.5
+        },
+        "elevator": {
+            "type":     "sample",
+            "file":     "sounds/elevator.ogg",
+            "volume":   0.5
+        },
+        "menu": {
+            "type":     "sample",
+            "file":     "sounds/menu.ogg",
+            "volume":   0.5
+        },
+        "click": {
+            "type":     "sample",
+            "file":     "sounds/click.wav",
+            "volume":   0.5
+        },
+        "back": {
+            "type":     "sample",
+            "file":     "sounds/back.wav",
             "volume":   0.5
         }
     },

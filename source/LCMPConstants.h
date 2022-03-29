@@ -89,6 +89,23 @@ enum JsonConstants :int {
 
 //  MARK: - Physics Constants
 
+/** Music constants */
+#define THIEF_COLLISION_SFX     "fuck"
+#define COP_COLLISION_SFX       "ooh"
+#define OBJ_COLLISION_SFX       "dude"
+#define TRAP_COLLISION_SFX      "trap"
+#define TACKLE_SFX              "tackle"
+#define LAND_SFX                "land"
+#define CLICK_SFX               "click"
+#define BACK_SFX                "back"
+#define GAME_MUSIC              "elevator"
+#define LOADING_MUSIC           "loading"
+#define MENU_MUSIC              "menu"
+#define SFX_COOLDOWN            2.0f
+#define MUSIC_VOLUME            0.5f
+#define SFX_VOLUME              0.5f
+
+/** Player constants */
 // Thief Physics Constants
 /** The thief's damping coefficient */
 #define THIEF_DAMPING_DEFAULT 30.0f
