@@ -175,9 +175,9 @@
             "file":     "sounds/ooh.wav",
             "volume":   0.5
         },
-        "elevator": {
+        "game": {
             "type":     "sample",
-            "file":     "sounds/elevator.ogg",
+            "file":     "sounds/garbage.ogg",
             "volume":   0.5
         },
         "menu": {
