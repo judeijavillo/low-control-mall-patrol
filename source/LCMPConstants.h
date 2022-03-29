@@ -98,7 +98,7 @@ enum JsonConstants :int {
 #define LAND_SFX                "land"
 #define CLICK_SFX               "click"
 #define BACK_SFX                "back"
-#define GAME_MUSIC              "elevator"
+#define GAME_MUSIC              "game"
 #define LOADING_MUSIC           "loading"
 #define MENU_MUSIC              "menu"
 #define SFX_COOLDOWN            2.0f
