@@ -50,7 +50,8 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
                         const shared_ptr<GameModel> game,
                         const shared_ptr<Font> font,
                         Size screenSize,
-                        Vec2 offset) {
+                        Vec2 offset,
+                        const std::shared_ptr<cugl::AssetManager>& assets) {
     
     // Save properties
     _worldnode = worldnode;
@@ -59,16 +60,19 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _screenSize = screenSize;
     _offset = offset;
     _font = font;
+    _assets = assets;
     
     // Create subnodes
     _direcIndicatorsNode = scene2::SceneNode::alloc();
     _thiefIndicatorNode = scene2::SceneNode::alloc();
     _joystickNode = scene2::SceneNode::alloc();
     _accelVisNode = scene2::SceneNode::alloc();
+    _victoryNode = scene2::SceneNode::alloc();
     
     // Add nodes to the top-level nodes
     _uinode->addChild(_direcIndicatorsNode);
     _uinode->addChild(_thiefIndicatorNode);
+    _uinode->addChild(_victoryNode);
     _uinode->addChild(_joystickNode);
     _uinode->addChild(_accelVisNode);
     
@@ -77,6 +81,7 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _thiefIndicatorNode->setVisible(false);
     _joystickNode->setVisible(false);
     _accelVisNode->setVisible(false);
+    _victoryNode->setVisible(false);
     
     // Call helpers to populate sub-level nodes
     initJoystick();
@@ -84,6 +89,7 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     initDirecIndicators();
     initThiefIndicator();
     initMessage();
+    initTimer();
     
     return true;
 }
@@ -94,7 +100,8 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
  * Updates the UI Controller
  */
 void UIController::update(float timestep, bool isThief, Vec2 movement,
-                          bool didPress, Vec2 origin, Vec2 position, int copID) {
+                          bool didPress, Vec2 origin, Vec2 position, int copID,
+                          float gameTime, bool isThiefWin) {
     // Show these nodes if the player is a thief, hide them if they're a cop
     _joystickNode->setVisible(isThief);
     _direcIndicatorsNode->setVisible(isThief);
@@ -116,7 +123,8 @@ void UIController::update(float timestep, bool isThief, Vec2 movement,
     }
     
     // Show the appropriate message
-    updateMessage();
+    updateMessage(isThief, isThiefWin);
+    updateTimer(gameTime);
 }
 
 //  MARK: - Helpers
@@ -203,11 +211,47 @@ void UIController::initThiefIndicator() {
  * Creates the message label and adds it the UI node
  */
 void UIController::initMessage() {
-    _message = scene2::Label::allocWithText("Cops Win!", _font);
-    _message->setAnchor(Vec2::ANCHOR_CENTER);
-    _message->setPosition(Vec2(SCENE_WIDTH/2,SCENE_HEIGHT/2) + _offset);
-    _message->setVisible(false);
-    _uinode->addChild(_message);
+    _victoryText = scene2::Label::allocWithText("should be replaced", _font);
+    _victoryText->setAnchor(Vec2::ANCHOR_CENTER);
+    _victoryText->setPosition(Vec2(SCENE_WIDTH/2,SCENE_HEIGHT/2) + _offset);
+    _victoryNode->addChild(_victoryText);
+}
+
+/**
+ * Creates the timer texture and adds it the UI node
+ */
+void UIController::initTimer() {
+    // Create clock
+    _timer = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("clock"));
+    _timer->setAnchor(Vec2::ANCHOR_CENTER);
+    _timer->setPosition(Vec2(SCENE_WIDTH_ADJUST,SCENE_HEIGHT-SCENE_HEIGHT_ADJUST) + _offset);
+    _timer->setScale(0.3f);
+    
+    // Create hour and minute hands
+    _hourHand = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("hour_hand"));
+    _minuteHand = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("minute_hand"));
+    _hourHand->setScale(_timer->getScale());
+    _minuteHand->setScale(_timer->getScale());
+    _hourHand->setAnchor(_timer->getAnchor());
+    _minuteHand->setAnchor(_timer->getAnchor());
+    _hourHand->setPosition(_timer->getPosition());
+    _minuteHand->setPosition(_timer->getPosition());
+    
+    _uinode->addChild(_timer);
+    _uinode->addChild(_hourHand);
+    _uinode->addChild(_minuteHand);
+}
+
+/**
+ * Updates the minute and hour hand nodes
+ */
+void UIController::updateTimer(float gameTime) {
+    float ang = 0;
+    float deg = (360 * gameTime / GAME_LENGTH);
+    ang = (- deg) * 3.14 / 180;
+    
+    _minuteHand->setAngle(ang);
+    _hourHand->setAngle(ang/60);
 }
 
 /**
@@ -306,7 +350,26 @@ void UIController::updateThiefIndicator(int copID) {
 /**
  * Updates the message label
  */
-void UIController::updateMessage() {
-    _message->setVisible(_game->isGameOver());
+void UIController::updateMessage(bool isThief, bool isThiefWin) {
+    if (! _game->isGameOver()) return;
+    
+    if (isThief) {
+        if (isThiefWin) {
+            _victoryText->setText("Thief Wins!", true);
+        }
+        else {
+            _victoryText->setText("Thief Loses!", true);
+        }
+    }
+    else {
+        if (isThiefWin) {
+            _victoryText->setText("Cops Lose!", true);
+        }
+        else {
+            _victoryText->setText("Cops Win!", true);
+        }
+    }
+    _victoryNode->setVisible(_game->isGameOver());
+//    _victoryText->setVisible(true);
 }
 

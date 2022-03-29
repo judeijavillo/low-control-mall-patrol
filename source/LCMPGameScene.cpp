@@ -191,6 +191,7 @@ void GameScene::dispose() {
 void GameScene::start(bool host) {
     _gameTime = 0;
     _doneTime = 0;
+    _isThiefWin = false;
     _isHost = host;
     
     _audio->playSound(_assets, GAME_MUSIC, false, -1);
@@ -204,7 +205,7 @@ void GameScene::start(bool host) {
     
     // Initialize subcontrollers
     _collision.init(_game);
-    _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset);
+    _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset, _assets);
     
     // Update the state of the game
     _state = GAME;
@@ -259,6 +260,7 @@ void GameScene::setActive(bool value) {
 void GameScene::reset() {
     _gameTime = 0;
     _doneTime = 0;
+    _isThiefWin = false;
     _world->clear();
     _input.clear();
     
@@ -273,7 +275,7 @@ void GameScene::reset() {
     
     // Initialize subcontrollers
     _collision.init(_game);
-    _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset);
+    _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset, _assets);
     
     // Update the state of the game
     _state = GAME;
@@ -317,6 +319,16 @@ void GameScene::stateGame(float timestep) {
     bool toggle = _input.didSwitch();
     movement.y = -movement.y;
     tackle.y = -tackle.y;
+    
+    // If time surpasses the game length, thief wins
+    if (_gameTime > GAME_LENGTH) {
+        _game->setGameOver(true);
+        if (_isHost) _network->sendGameOver();
+        _isThiefWin = true;
+        _state = DONE;
+        updateUI(timestep, _isThief, movement, joystick, origin, position, _playerNumber);
+        return;
+    }
     
     // Toggle updates
     // TODO: Remove this dev command, either here, or in InputController, or both
@@ -475,7 +487,7 @@ void GameScene::updateFloor(float timestep) {
  */
 void GameScene::updateUI(float timestep, bool isThief, Vec2 movement,
                          bool didPress, Vec2 origin, Vec2 position, int playerNumber) {
-    _ui.update(timestep, isThief, movement, didPress, origin, position, playerNumber);
+    _ui.update(timestep, isThief, movement, didPress, origin, position, playerNumber, _gameTime, _isThiefWin);
     _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2 - _offset);
 }
 

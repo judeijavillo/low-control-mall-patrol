@@ -3,6 +3,15 @@
         "button": {
             "file":  "textures/button.png"
         },
+        "clock": {
+            "file":  "textures/ui/clock.png"
+        },
+        "hour_hand": {
+            "file":  "textures/ui/hour_hand.png"
+        },
+        "minute_hand": {
+            "file":  "textures/ui/minute_hand.png"
+        },
         "frame": {
             "file":  "textures/frame.png"
         },
