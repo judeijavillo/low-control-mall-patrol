@@ -32,7 +32,7 @@ using namespace std;
 /**
  * Initializes a Thief Model
  */
-bool ThiefModel::init(float scale, 
+bool ThiefModel::init(float scale,  
                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
                       const std::shared_ptr<cugl::AssetManager>& assets,
                       std::shared_ptr<cugl::scene2::ActionManager>& actions) {
@@ -53,7 +53,7 @@ bool ThiefModel::init(float scale,
     
     // Initialize the first texture. Note: width is in screen coordinates
     float width = size.width * scale * 1.5f;
-    setSpriteNodes(width);
+    setSpriteNodes(width); 
     // TODO: Get rid of the magic numbers in the lines above.
 
     b2Filter fitler = b2Filter();

@@ -19,24 +19,31 @@ using namespace cugl;
  */
 bool TrapModel::init(int trapID,
                      const shared_ptr<physics2::SimpleObstacle> thiefArea, const shared_ptr<physics2::SimpleObstacle> copArea,
-                     const shared_ptr<physics2::SimpleObstacle> triggerArea_,
+                     const shared_ptr<physics2::SimpleObstacle> triggerArea_, const shared_ptr<physics2::SimpleObstacle> deactivationArea_,
                      const shared_ptr<Vec2> triggerPosition,
                      bool copSolid, bool thiefSolid,
                      int numUses,
-                     float lingerDur,
-                     float thiefSpd,
-                     float copSpd) {
+                     float copLingerDuration_,
+                     float thiefLingerDuration_,
+                     std::shared_ptr<Effect> copEffect_,
+                     std::shared_ptr<Effect> thiefEffect_,
+                     std::shared_ptr<Effect> copLingerEffect_,
+                     std::shared_ptr<Effect> thiefLingerEffect_) {
     _trapID = trapID;
     thiefEffectArea = thiefArea;
     copEffectArea = copArea;
     triggerArea = triggerArea_;
+    deactivationArea = deactivationArea_;
     triggerPos = triggerPosition;
     copCollide = copSolid;
     thiefCollide = thiefSolid;
     usesRemaining = numUses;
-    lingerDuration = lingerDur;
-    thiefSpeed = thiefSpd;
-    copSpeed = copSpd;
+    copLingerDuration = copLingerDuration_;
+    thiefLingerDuration = thiefLingerDuration_;
+    copEffect = copEffect_;
+    thiefEffect = thiefEffect_;
+    copLingerEffect = copLingerEffect_;
+    thiefLingerEffect = thiefLingerEffect_;
 
     activated = false;
 
@@ -55,8 +62,23 @@ bool TrapModel::init(int trapID,
     triggerFilter.categoryBits = 0b00100;
     triggerArea->setFilterData(triggerFilter);
 
+    deactivationFilter = b2Filter();
+    deactivationFilter.maskBits = 0b01000;
+    deactivationFilter.categoryBits = 0b01000;
+    deactivationArea->setFilterData(deactivationFilter);
+
     return true;
 }
+/**
+* Initializes an Effect
+*/
+bool TrapModel::Effect::init(TrapType type, std::shared_ptr<cugl::Vec2> effect) {
+    traptype = type;
+    effectVec = effect;
+
+    return true;
+}
+
 
 //  MARK: - Methods
 
@@ -95,6 +117,7 @@ void TrapModel::setDebugScene(const shared_ptr<scene2::SceneNode>& node) {
     thiefEffectArea->setDebugScene(node);
     copEffectArea->setDebugScene(node);
     triggerArea->setDebugScene(node);
+    deactivationArea->setDebugScene(node);
 }
 
 /**
@@ -126,3 +149,21 @@ void TrapModel::activate() {
     _node->addChild(_triggerActivatedNode);
     _node->addChild(_effectAreaNode);
 }
+
+/**
+ * Deactivates this trap.
+ */
+void TrapModel::deactivate() {
+    if (!activated) return;
+    activated = false;
+    thiefEffectArea->setSensor(true);
+    copEffectArea->setSensor(true);
+
+    // Change which nodes are being shown
+    _node->removeChild(_triggerActivatedNode);
+    _node->removeChild(_effectAreaNode);
+    _node->addChild(_triggerNode);
+   
+}
+
+

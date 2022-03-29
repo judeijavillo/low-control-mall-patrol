@@ -76,6 +76,9 @@
     <ClInclude Include="..\..\source\LCMPConstants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\source\LCMPUIController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\LCMPApp.cpp">
@@ -127,6 +130,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\LCMPCollisionController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\LCMPUIController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

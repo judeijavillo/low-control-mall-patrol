@@ -191,8 +191,8 @@ void CopModel::applyTackleFailure() {
     // The cop is on the floor
     else {
         b2Vec2 b2damping(
-            getVelocity().x * -getDamping() * TACKLE_DAMPING_MULT,
-            getVelocity().y * -getDamping() * TACKLE_DAMPING_MULT);
+            getVelocity().x * -getDamping().x * TACKLE_DAMPING_MULT,
+            getVelocity().y * -getDamping().y * TACKLE_DAMPING_MULT);
         _realbody->ApplyForceToCenter(b2damping, true);
     }
     

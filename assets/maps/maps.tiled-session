@@ -1,0 +1,64 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "example1.json",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "C:/Users/tzhan/OneDrive/Desktop/IMG_4638.tsx": {
+            "scaleInDock": 0.03125,
+            "scaleInEditor": 0.06
+        },
+        "Map1Overlay.tsx": {
+            "scaleInDock": 0.5,
+            "scaleInEditor": 0.5
+        },
+        "example1.json": {
+            "scale": 0.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 2680,
+                "y": 426
+            }
+        },
+        "example2.json": {
+            "scale": 0.0625,
+            "selectedLayer": 2,
+            "viewCenter": {
+                "x": 7968,
+                "y": 8000
+            }
+        }
+    },
+    "last.exportedFilePath": "C:/Users/tzhan/OneDrive/Desktop",
+    "last.imagePath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/maps",
+    "last.objectTypesPath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/maps/propertytypes.json",
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "json",
+    "map.orientation": null,
+    "map.tileHeight": 64,
+    "map.tileWidth": 64,
+    "openFiles": [
+        "example1.json",
+        "example2.json",
+        "Map1Overlay.tsx"
+    ],
+    "project": "maps.tiled-project",
+    "property.type": "float",
+    "recentFiles": [
+        "example1.json",
+        "Map1Overlay.tsx",
+        "example2.json",
+        "C:/Users/tzhan/OneDrive/Desktop/IMG_4638.tsx"
+    ],
+    "resizeMap.removeObjects": false,
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 2048,
+        "width": 2048
+    },
+    "tileset.type": 0
+}

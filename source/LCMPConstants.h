@@ -32,14 +32,39 @@
 #define ID_FIELD			"id"
 
 /** The global fields for trap properties*/
-#define TRAP_ACTIVATED			    0
-#define TRAP_COP_COLLIDE		    1
-#define TRAP_COP_SPEED_MODIFIER	    2
-#define TRAP_EFFECT_AREA		    3
-#define TRAP_THIEF_COLLIDE		    4
-#define TRAP_THIEF_SPEED_MODIFIER   5
-#define TRAP_TRIGGER_AREA		    6
+enum JsonConstants :int {
+	ACTIVATED,
+	COP_COLLIDE,
+	COP_EFFECT,
+	COP_LINGER_DURATION,
+	COP_LINGER_EFFECT,
+	EFFECT_AREA,
+	NUM_USAGES,
+	THIEF_COLLIDE,
+	THIEF_EFFECT,
+	THIEF_LINGER_DURATION,
+	THIEF_LINGER_EFFECT,
+	TRIGGER_AREA,
+	TRIGGER_DEACTIVATION_AREA,
+
+
+	ESCALATOR,
+	TELEPORT,
+	STAIRS,
+	VELOCITY_MODIFIER,
+
+
+	NIL
+};
+
 #define VALUE_FIELD				    "value"
+#define NAME_FIELD				    "name"
+#define TRAP_TYPE					"Type"
+#define LINGER_DURATION				"LingerDuration"
+#define ESCALATOR_VELOCITY			"Escalator Velocity"
+#define STAIRCASE_VELOCITY			"Staircase Vector"
+#define TELEPORT_LOCATION			"Teleport Location"
+#define SPEED_MODIFIER				"Speed Modifier"
 
 /** The physics fields for each object */
 #define POSITION_FIELD      "pos"
@@ -109,4 +134,4 @@
 #define JOYSTICK_DEADZONE   15
 
 
-#endif /* __LCMP_CONSTANTS_H__ */
+#endif /* __LCMP_CONSTANTS_H__ */ 

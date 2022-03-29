@@ -6,7 +6,7 @@
 //  Version: 2/20/22
 //
 
-#ifndef __LCMP_THIEF_MODEL_H__ 
+#ifndef __LCMP_THIEF_MODEL_H__  
 #define __LCMP_THIEF_MODEL_H__
 #include "LCMPPlayerModel.h"
 #include "LCMPConstants.h"
@@ -47,7 +47,7 @@ public:
     /**
      * Returns the damping constant
      */
-    float getDamping() override { return THIEF_DAMPING_DEFAULT * _dampingMultiplier; }
+    cugl::Vec2 getDamping() override { return cugl::Vec2( THIEF_DAMPING_DEFAULT * _dampingMultiplier.x, THIEF_DAMPING_DEFAULT * _dampingMultiplier.y); }
     
     /**
      * Returns the max speed of the thief
@@ -57,7 +57,7 @@ public:
     /**
      * Returns the acceleration of the thief
      */
-    float getAcceleration() override { return THIEF_ACCELERATION_DEFAULT * _accelerationMultiplier; }
+    cugl::Vec2 getAcceleration() override { return cugl::Vec2( THIEF_ACCELERATION_DEFAULT * _accelerationMultiplier.x, THIEF_ACCELERATION_DEFAULT * _accelerationMultiplier.y); }
     
 };
 

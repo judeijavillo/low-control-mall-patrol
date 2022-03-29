@@ -21,7 +21,7 @@
          "objects":[
                 {
                  "height":0,
-                 "id":53,
+                 "id":84,
                  "name":"",
                  "point":true,
                  "properties":[
@@ -33,17 +33,26 @@
                         {
                          "name":"copCollide",
                          "type":"bool",
-                         "value":true
+                         "value":false
                         }, 
                         {
-                         "name":"copSpeed",
-                         "type":"float",
-                         "value":1
+                         "name":"copEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+
+                            }
                         }, 
                         {
                          "name":"effectArea",
                          "type":"object",
-                         "value":56
+                         "value":81
+                        }, 
+                        {
+                         "name":"numUsages",
+                         "type":"int",
+                         "value":-1
                         }, 
                         {
                          "name":"thiefCollide",
@@ -51,21 +60,109 @@
                          "value":false
                         }, 
                         {
-                         "name":"thiefSpeed",
-                         "type":"float",
-                         "value":1
+                         "name":"thiefEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Escalator Velocity":
+                                {
+                                 "x":0.3
+                                },
+                             "Staircase Vector":
+                                {
+                                 "x":9
+                                },
+                             "Type":"Escalator",
+                             "lingerDuration":1
+                            }
+                        }, 
+                        {
+                         "name":"triggerArea",
+                         "type":"object",
+                         "value":82
+                        }, 
+                        {
+                         "name":"triggerDeactivationArea",
+                         "type":"object",
+                         "value":80
+                        }],
+                 "rotation":0,
+                 "type":"Trap",
+                 "visible":true,
+                 "width":0,
+                 "x":2944,
+                 "y":257.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":79,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"activated",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"copCollide",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"copEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+
+                            }
+                        }, 
+                        {
+                         "name":"effectArea",
+                         "type":"object",
+                         "value":56
+                        }, 
+                        {
+                         "name":"numUsages",
+                         "type":"int",
+                         "value":-1
+                        }, 
+                        {
+                         "name":"thiefCollide",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"thiefEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Staircase Vector":
+                                {
+                                 "x":-0.34
+                                },
+                             "Type":"Stairs"
+                            }
                         }, 
                         {
                          "name":"triggerArea",
                          "type":"object",
                          "value":55
+                        }, 
+                        {
+                         "name":"triggerDeactivationArea",
+                         "type":"object",
+                         "value":74
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"Trap",
                  "visible":true,
                  "width":0,
-                 "x":2048,
-                 "y":256
+                 "x":2045,
+                 "y":259
                 }, 
                 {
                  "height":128,
@@ -79,7 +176,18 @@
                  "y":128
                 }, 
                 {
-                 "height":64,
+                 "height":128,
+                 "id":82,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":128,
+                 "x":2880,
+                 "y":129.333333333333
+                }, 
+                {
+                 "height":114.666666666667,
                  "id":56,
                  "name":"",
                  "rotation":0,
@@ -90,30 +198,100 @@
                  "y":256
                 }, 
                 {
+                 "height":114.666666666667,
+                 "id":81,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":640,
+                 "x":2752,
+                 "y":257.333333333333
+                }, 
+                {
+                 "height":49.3333333333333,
+                 "id":74,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":60,
+                 "x":2114.66666666667,
+                 "y":205.333333333333
+                }, 
+                {
+                 "height":49.3333333333333,
+                 "id":80,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":60,
+                 "x":3010.66666666667,
+                 "y":206.666666666666
+                }, 
+                {
+                 "height":2.66666666666652,
+                 "id":78,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":1.33333333333348,
+                 "x":2409.33333333333,
+                 "y":1272
+                }, 
+                {
+                 "height":181.333333333333,
+                 "id":85,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":210.666666666667,
+                 "x":1856,
+                 "y":514.666666666667
+                }, 
+                {
+                 "height":182.666666666667,
+                 "id":86,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":234.666666666667,
+                 "x":2457.33333333333,
+                 "y":517.333333333333
+                }, 
+                {
                  "height":0,
-                 "id":57,
+                 "id":87,
                  "name":"",
                  "point":true,
                  "properties":[
-                        {
-                         "name":"activated",
-                         "type":"bool",
-                         "value":false
-                        }, 
                         {
                          "name":"copCollide",
                          "type":"bool",
                          "value":false
                         }, 
                         {
-                         "name":"copSpeed",
-                         "type":"float",
-                         "value":0.5
+                         "name":"copEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Teleport Location":
+                                {
+                                 "x":1600,
+                                 "y":597
+                                },
+                             "Type":"Teleport"
+                            }
                         }, 
                         {
                          "name":"effectArea",
                          "type":"object",
-                         "value":64
+                         "value":86
                         }, 
                         {
                          "name":"thiefCollide",
@@ -121,47 +299,65 @@
                          "value":false
                         }, 
                         {
-                         "name":"thiefSpeed",
-                         "type":"float",
-                         "value":1
+                         "name":"thiefEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Teleport Location":
+                                {
+                                 "x":1750,
+                                 "y":597
+                                },
+                             "Type":"Teleport"
+                            }
                         }, 
                         {
                          "name":"triggerArea",
                          "type":"object",
-                         "value":65
+                         "value":91
+                        }, 
+                        {
+                         "name":"triggerDeactivationArea",
+                         "type":"object",
+                         "value":92
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"Trap",
                  "visible":true,
                  "width":0,
-                 "x":2432,
-                 "y":704
+                 "x":2740.66666666667,
+                 "y":616
                 }, 
                 {
                  "height":0,
-                 "id":58,
+                 "id":88,
                  "name":"",
                  "point":true,
                  "properties":[
-                        {
-                         "name":"activated",
-                         "type":"bool",
-                         "value":true
-                        }, 
                         {
                          "name":"copCollide",
                          "type":"bool",
                          "value":false
                         }, 
                         {
-                         "name":"copSpeed",
-                         "type":"float",
-                         "value":0.5
+                         "name":"copEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Teleport Location":
+                                {
+                                 "x":2760,
+                                 "y":600
+                                },
+                             "Type":"Teleport"
+                            }
                         }, 
                         {
                          "name":"effectArea",
                          "type":"object",
-                         "value":68
+                         "value":85
                         }, 
                         {
                          "name":"thiefCollide",
@@ -169,73 +365,95 @@
                          "value":false
                         }, 
                         {
-                         "name":"thiefSpeed",
-                         "type":"float",
-                         "value":0.5
+                         "name":"thiefEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Teleport Location":
+                                {
+                                 "x":2800,
+                                 "y":600
+                                },
+                             "Type":"Teleport"
+                            }
                         }, 
                         {
                          "name":"triggerArea",
                          "type":"object",
-                         "value":73
+                         "value":89
+                        }, 
+                        {
+                         "name":"triggerDeactivationArea",
+                         "type":"object",
+                         "value":90
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"Trap",
                  "visible":true,
                  "width":0,
-                 "x":2560,
-                 "y":1024
+                 "x":1824,
+                 "y":611.333333333333
                 }, 
                 {
-                 "height":0,
-                 "id":60,
+                 "height":60,
+                 "id":89,
                  "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"activated",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"copCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"copSpeed",
-                         "type":"float",
-                         "value":2
-                        }, 
-                        {
-                         "name":"effectArea",
-                         "type":"object",
-                         "value":72
-                        }, 
-                        {
-                         "name":"thiefCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"thiefSpeed",
-                         "type":"float",
-                         "value":1.75
-                        }, 
-                        {
-                         "name":"triggerArea",
-                         "type":"object",
-                         "value":62
-                        }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":0,
-                 "x":2624,
-                 "y":1536
+                 "width":62.6666666666667,
+                 "x":1793.33333333333,
+                 "y":637.333333333333
+                }, 
+                {
+                 "height":50.6666666666666,
+                 "id":90,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":56,
+                 "x":1800,
+                 "y":524
+                }, 
+                {
+                 "height":68,
+                 "id":91,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":82.6666666666665,
+                 "x":2704,
+                 "y":524
+                }, 
+                {
+                 "height":58.6666666666667,
+                 "id":92,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":85.3333333333335,
+                 "x":2706.66666666667,
+                 "y":641.333333333333
+                }, 
+                {
+                 "ellipse":true,
+                 "height":214.666666666667,
+                 "id":93,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":209.333333333333,
+                 "x":1930.66666666667,
+                 "y":813.333333333333
                 }, 
                 {
                  "height":0,
-                 "id":62,
+                 "id":95,
                  "name":"",
                  "polygon":[
                         {
@@ -243,80 +461,231 @@
                          "y":0
                         }, 
                         {
-                         "x":128,
-                         "y":0
+                         "x":212,
+                         "y":36
                         }, 
                         {
-                         "x":128,
-                         "y":128
+                         "x":301.333333333333,
+                         "y":-94.6666666666667
                         }, 
                         {
-                         "x":0,
-                         "y":128
+                         "x":102.666666666667,
+                         "y":-161.333333333333
+                        }, 
+                        {
+                         "x":344,
+                         "y":-197.333333333333
+                        }, 
+                        {
+                         "x":460,
+                         "y":-44
+                        }, 
+                        {
+                         "x":446.666666666667,
+                         "y":94.6666666666665
+                        }, 
+                        {
+                         "x":302.666666666667,
+                         "y":117.333333333333
+                        }, 
+                        {
+                         "x":213.333333333333,
+                         "y":230.666666666667
+                        }, 
+                        {
+                         "x":10.666666666667,
+                         "y":241.333333333333
+                        }, 
+                        {
+                         "x":-193.333333333333,
+                         "y":172
+                        }, 
+                        {
+                         "x":-136,
+                         "y":17.3333333333333
                         }],
                  "rotation":0,
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":2560,
-                 "y":1472
+                 "x":2409.33333333333,
+                 "y":1048
                 }, 
                 {
-                 "ellipse":true,
-                 "height":346.666666666667,
-                 "id":64,
+                 "height":54.6666666666666,
+                 "id":96,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":325.333333333333,
-                 "x":2274.66666666667,
-                 "y":512
+                 "width":58.6666666666665,
+                 "x":1872,
+                 "y":832
                 }, 
                 {
-                 "ellipse":true,
-                 "height":164,
-                 "id":65,
+                 "height":54.6666666666666,
+                 "id":97,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":164,
-                 "x":2354.66666666667,
-                 "y":608
+                 "width":56,
+                 "x":1873.33333333333,
+                 "y":968
                 }, 
                 {
-                 "height":266,
-                 "id":68,
+                 "height":49.3333333333334,
+                 "id":98,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":1150,
-                 "x":2050,
-                 "y":888
+                 "width":68,
+                 "x":2544,
+                 "y":930.666666666667
                 }, 
                 {
-                 "height":385.333333333333,
-                 "id":72,
+                 "height":53.3333333333333,
+                 "id":99,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":256,
-                 "x":2692,
-                 "y":1346.66666666667
+                 "width":66.6666666666665,
+                 "x":2548,
+                 "y":1016
                 }, 
                 {
-                 "height":62,
-                 "id":73,
+                 "height":0,
+                 "id":100,
                  "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"copCollide",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"copEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "lingerDuration":0
+                            }
+                        }, 
+                        {
+                         "name":"effectArea",
+                         "type":"object",
+                         "value":93
+                        }, 
+                        {
+                         "name":"thiefCollide",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"thiefEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Speed Modifier":
+                                {
+                                 "x":0.1,
+                                 "y":0.3
+                                },
+                             "Type":"Velocity Modifier"
+                            }
+                        }, 
+                        {
+                         "name":"triggerArea",
+                         "type":"object",
+                         "value":96
+                        }, 
+                        {
+                         "name":"triggerDeactivationArea",
+                         "type":"object",
+                         "value":97
+                        }],
                  "rotation":0,
-                 "type":"",
+                 "type":"Trap",
                  "visible":true,
-                 "width":138,
-                 "x":2492,
-                 "y":966
+                 "width":0,
+                 "x":1899.33333333333,
+                 "y":933.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":101,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"activated",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"copCollide",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"copEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "lingerDuration":0
+                            }
+                        }, 
+                        {
+                         "name":"effectArea",
+                         "type":"object",
+                         "value":95
+                        }, 
+                        {
+                         "name":"numUsages",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"thiefCollide",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"thiefEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Speed Modifier":
+                                {
+                                 "x":5,
+                                 "y":2
+                                },
+                             "Type":"Velocity Modifier"
+                            }
+                        }, 
+                        {
+                         "name":"triggerArea",
+                         "type":"object",
+                         "value":98
+                        }, 
+                        {
+                         "name":"triggerDeactivationArea",
+                         "type":"object",
+                         "value":99
+                        }],
+                 "rotation":0,
+                 "type":"Trap",
+                 "visible":true,
+                 "width":0,
+                 "x":2581.33333333333,
+                 "y":1006.66666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -522,8 +891,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1088,
-                 "y":2112
+                 "x":1081.33333333333,
+                 "y":2113.33333333333
                 }, 
                 {
                  "height":0,
@@ -697,8 +1066,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":6,
- "nextobjectid":74,
+ "nextlayerid":7,
+ "nextobjectid":102,
  "orientation":"orthogonal",
  "renderorder":"right-up",
  "tiledversion":"1.8.2",
