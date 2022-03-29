@@ -52,10 +52,20 @@ class UIController {
     
     // Victory/Defeat Message
     /** A reference to the label for displaying the vicory/defeat meesage */
-    std::shared_ptr<cugl::scene2::SceneNode> _message;
+    std::shared_ptr<cugl::scene2::SceneNode> _victoryNode;
+    std::shared_ptr<cugl::scene2::Label> _victoryText;
+    
+    /** A reference to the node for displaying time remaining */
+    std::shared_ptr<cugl::scene2::PolygonNode> _timer;
+    std::shared_ptr<cugl::scene2::PolygonNode> _hourHand;
+    std::shared_ptr<cugl::scene2::PolygonNode> _minuteHand;
+    std::shared_ptr<cugl::Texture> _hourTexture;
+    std::shared_ptr<cugl::Texture> _minuteTexture;
     
     /** A model to represent all models within the game */
     std::shared_ptr<GameModel> _game;
+    /** The asset manager for this game mode */
+    std::shared_ptr<cugl::AssetManager> _assets;
     /** A reference to the font style for the UI node */
     std::shared_ptr<cugl::Font> _font;
     /** The actual size of the display. */
@@ -91,7 +101,8 @@ public:
               const std::shared_ptr<GameModel> game,
               const std::shared_ptr<cugl::Font> font,
               cugl::Size screenSize,
-              cugl::Vec2 offset);
+              cugl::Vec2 offset,
+              const std::shared_ptr<cugl::AssetManager>& assets);
         
 //  MARK: - Methods
     
@@ -99,7 +110,8 @@ public:
      * Updates the UI Controller
      */
     void update(float timestep, bool isThief, cugl::Vec2 movement,
-                bool didPress, cugl::Vec2 origin, cugl::Vec2 position, int copID);
+                bool didPress, cugl::Vec2 origin, cugl::Vec2 position, int copID,
+                float gameTime, bool isThiefWin);
 
     
 private:
@@ -134,6 +146,16 @@ private:
     void initMessage();
     
     /**
+     * Creates the timer nodes and adds them the UI node
+     */
+    void initTimer();
+    
+    /**
+     * Updates the minute and hour hand nodes
+     */
+    void updateTimer(float time);
+    
+    /**
      * Updates the joystick
      */
     void updateJoystick(bool didPress, cugl::Vec2 origin, cugl::Vec2 position);
@@ -154,9 +176,9 @@ private:
     void updateThiefIndicator(int copID);
 
     /**
-     * Updates the message label
+     * Updates the victory label
      */
-    void updateMessage();
+    void updateMessage(bool isThief, bool isThiefWin);
         
 };
 

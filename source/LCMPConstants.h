@@ -138,12 +138,17 @@ enum JsonConstants :int {
 
 // MARK: - UI Constants
 
+/** This is how long the game will be */
+#define GAME_LENGTH     30
+
 /** This is the size of the active portion of the screen */
 #define SCENE_WIDTH     1024
 /** Regardless of logo, lock the height to this */
 #define SCENE_HEIGHT    576
 /** Amount UI elements should be shifted down to remain on screen */
 #define SCENE_HEIGHT_ADJUST 80
+/** Amount UI elements should be shifted left or right to remain on screen */
+#define SCENE_WIDTH_ADJUST 80
 
 /** The radius of the joystick*/
 #define JOYSTICK_RADIUS     100

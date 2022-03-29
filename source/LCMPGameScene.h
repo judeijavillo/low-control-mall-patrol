@@ -107,6 +107,8 @@ protected:
     bool _isHost;
     /** Whether we quit the game */
     bool _quit;
+    /** Whether the thief wins or loses */
+    bool _isThiefWin;
     
 public:
 //  MARK: - Constructors
