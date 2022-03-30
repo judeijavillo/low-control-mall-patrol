@@ -83,9 +83,9 @@ enum JsonConstants :int {
 #define DEBUG_OPACITY_FIELD "debugopacity"
 
 /** The source for our level file */
-#define LEVEL_ONE_FILE      "maps/example1.json"
+#define LEVEL_ONE_FILE      "maps/example3.json"
 /** The key for our loaded level */
-#define LEVEL_ONE_KEY       "example1"
+#define LEVEL_ONE_KEY       "example3"
 
 //  MARK: - Physics Constants
 
@@ -139,7 +139,7 @@ enum JsonConstants :int {
 // MARK: - UI Constants
 
 /** This is how long the game will be */
-#define GAME_LENGTH     30
+#define GAME_LENGTH     160
 
 /** This is the size of the active portion of the screen */
 #define SCENE_WIDTH     1024

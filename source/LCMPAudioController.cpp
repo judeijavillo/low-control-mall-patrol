@@ -76,7 +76,7 @@ void AudioController::playSound(const std::shared_ptr<cugl::AssetManager>& asset
         if (frames != -1) {
             // Repeat if loading or menu themes
             if (key == LOADING_MUSIC || key == MENU_MUSIC) {
-                _queue->play(resample, true, MUSIC_VOLUME, DEFAULT_FADE);
+                _queue->play(source, true, MUSIC_VOLUME, DEFAULT_FADE);
             }
             else {
                 _queue->play(source, false, MUSIC_VOLUME, DEFAULT_FADE);

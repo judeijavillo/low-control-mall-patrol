@@ -38,7 +38,7 @@
     "sounds": {
         "loading": {
             "type":     "sample",
-            "file":     "sounds/trash.ogg",
+            "file":     "sounds/pop1.ogg",
             "volume":   0.5
         },
         "click": {

@@ -18,309 +18,10 @@
          "draworder":"topdown",
          "id":5,
          "name":"Traps",
-         "objects":[
-                {
-                 "height":0,
-                 "id":53,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"activated",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"copCollide",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"copSpeed",
-                         "type":"float",
-                         "value":1
-                        }, 
-                        {
-                         "name":"effectArea",
-                         "type":"object",
-                         "value":56
-                        }, 
-                        {
-                         "name":"thiefCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"thiefSpeed",
-                         "type":"float",
-                         "value":1
-                        }, 
-                        {
-                         "name":"triggerArea",
-                         "type":"object",
-                         "value":55
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":2048,
-                 "y":256
-                }, 
-                {
-                 "height":128,
-                 "id":55,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":128,
-                 "x":1984,
-                 "y":128
-                }, 
-                {
-                 "height":64,
-                 "id":56,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":640,
-                 "x":1856,
-                 "y":256
-                }, 
-                {
-                 "height":0,
-                 "id":57,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"activated",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"copCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"copSpeed",
-                         "type":"float",
-                         "value":0.5
-                        }, 
-                        {
-                         "name":"effectArea",
-                         "type":"object",
-                         "value":64
-                        }, 
-                        {
-                         "name":"thiefCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"thiefSpeed",
-                         "type":"float",
-                         "value":1
-                        }, 
-                        {
-                         "name":"triggerArea",
-                         "type":"object",
-                         "value":65
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":2432,
-                 "y":704
-                }, 
-                {
-                 "height":0,
-                 "id":58,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"activated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"copCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"copSpeed",
-                         "type":"float",
-                         "value":0.5
-                        }, 
-                        {
-                         "name":"effectArea",
-                         "type":"object",
-                         "value":68
-                        }, 
-                        {
-                         "name":"thiefCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"thiefSpeed",
-                         "type":"float",
-                         "value":0.5
-                        }, 
-                        {
-                         "name":"triggerArea",
-                         "type":"object",
-                         "value":73
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":2560,
-                 "y":1024
-                }, 
-                {
-                 "height":0,
-                 "id":60,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"activated",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"copCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"copSpeed",
-                         "type":"float",
-                         "value":2
-                        }, 
-                        {
-                         "name":"effectArea",
-                         "type":"object",
-                         "value":72
-                        }, 
-                        {
-                         "name":"thiefCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"thiefSpeed",
-                         "type":"float",
-                         "value":1.75
-                        }, 
-                        {
-                         "name":"triggerArea",
-                         "type":"object",
-                         "value":62
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":2624,
-                 "y":1536
-                }, 
-                {
-                 "height":0,
-                 "id":62,
-                 "name":"",
-                 "polygon":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":128,
-                         "y":0
-                        }, 
-                        {
-                         "x":128,
-                         "y":128
-                        }, 
-                        {
-                         "x":0,
-                         "y":128
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":2560,
-                 "y":1472
-                }, 
-                {
-                 "ellipse":true,
-                 "height":346.666666666667,
-                 "id":64,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":325.333333333333,
-                 "x":2274.66666666667,
-                 "y":512
-                }, 
-                {
-                 "ellipse":true,
-                 "height":164,
-                 "id":65,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":164,
-                 "x":2354.66666666667,
-                 "y":608
-                }, 
-                {
-                 "height":266,
-                 "id":68,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1150,
-                 "x":2050,
-                 "y":888
-                }, 
-                {
-                 "height":385.333333333333,
-                 "id":72,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":256,
-                 "x":2692,
-                 "y":1346.66666666667
-                }, 
-                {
-                 "height":62,
-                 "id":73,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":138,
-                 "x":2492,
-                 "y":966
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -880,8 +581,8 @@
                  "name":"",
                  "polygon":[
                         {
-                         "x":0,
-                         "y":0
+                         "x":-9.41414582828997,
+                         "y":-26.76840252491
                         }, 
                         {
                          "x":408.150253904677,
@@ -968,8 +669,8 @@
                          "y":9935.54332362243
                         }, 
                         {
-                         "x":-1294.41937666911,
-                         "y":116.614358258479
+                         "x":-1289.41414582829,
+                         "y":101.23159747509
                         }],
                  "rotation":0,
                  "type":"",
@@ -984,12 +685,12 @@
                  "name":"",
                  "polygon":[
                         {
-                         "x":0,
-                         "y":0
+                         "x":-73.5130007284001,
+                         "y":11.4058084485005
                         }, 
                         {
-                         "x":0,
-                         "y":653.040406247484
+                         "x":-73.5130007284001,
+                         "y":651.4058084485
                         }, 
                         {
                          "x":7148.4601612448,
@@ -1000,8 +701,8 @@
                          "y":-5947.33227118244
                         }, 
                         {
-                         "x":6098.93093691847,
-                         "y":-5947.33227118244
+                         "x":6070.4869992716,
+                         "y":-6004.5941915515
                         }, 
                         {
                          "x":6110.59237274431,
@@ -1489,29 +1190,6 @@
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":9,
-         "name":"Overlay",
-         "objects":[
-                {
-                 "gid":1,
-                 "height":15984,
-                 "id":74,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":15976,
-                 "x":16,
-                 "y":16000
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":false,
          "x":0,
          "y":0
         }],
