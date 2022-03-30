@@ -21,29 +21,32 @@
          "objects":[
                 {
                  "height":0,
-                 "id":53,
+                 "id":128,
                  "name":"",
                  "point":true,
                  "properties":[
                         {
-                         "name":"activated",
+                         "name":"copCollide",
                          "type":"bool",
                          "value":false
                         }, 
                         {
-                         "name":"copCollide",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"copSpeed",
-                         "type":"float",
-                         "value":1
+                         "name":"copEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Teleport Location":
+                                {
+                                 "x":10236,
+                                 "y":6990
+                                }
+                            }
                         }, 
                         {
                          "name":"effectArea",
                          "type":"object",
-                         "value":56
+                         "value":112
                         }, 
                         {
                          "name":"thiefCollide",
@@ -51,276 +54,170 @@
                          "value":false
                         }, 
                         {
-                         "name":"thiefSpeed",
-                         "type":"float",
-                         "value":1
+                         "name":"thiefEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Teleport Location":
+                                {
+                                 "x":10236,
+                                 "y":6990
+                                }
+                            }
                         }, 
                         {
                          "name":"triggerArea",
                          "type":"object",
-                         "value":55
+                         "value":129
+                        }, 
+                        {
+                         "name":"triggerDeactivationArea",
+                         "type":"object",
+                         "value":130
                         }],
                  "rotation":0,
-                 "type":"",
+                 "type":"Trap",
                  "visible":true,
                  "width":0,
-                 "x":2048,
-                 "y":256
+                 "x":5269.69696969697,
+                 "y":6945.45454545455
                 }, 
                 {
-                 "height":128,
-                 "id":55,
+                 "height":918.181818181818,
+                 "id":129,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":128,
-                 "x":1984,
-                 "y":128
+                 "width":512.121212121212,
+                 "x":5081.81818181818,
+                 "y":6475.75757575758
                 }, 
                 {
-                 "height":64,
-                 "id":56,
+                 "height":127.272727272727,
+                 "id":130,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":640,
-                 "x":1856,
-                 "y":256
-                }, 
-                {
-                 "height":0,
-                 "id":57,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"activated",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"copCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"copSpeed",
-                         "type":"float",
-                         "value":0.5
-                        }, 
-                        {
-                         "name":"effectArea",
-                         "type":"object",
-                         "value":64
-                        }, 
-                        {
-                         "name":"thiefCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"thiefSpeed",
-                         "type":"float",
-                         "value":1
-                        }, 
-                        {
-                         "name":"triggerArea",
-                         "type":"object",
-                         "value":65
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":2432,
-                 "y":704
-                }, 
-                {
-                 "height":0,
-                 "id":58,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"activated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"copCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"copSpeed",
-                         "type":"float",
-                         "value":0.5
-                        }, 
-                        {
-                         "name":"effectArea",
-                         "type":"object",
-                         "value":68
-                        }, 
-                        {
-                         "name":"thiefCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"thiefSpeed",
-                         "type":"float",
-                         "value":0.5
-                        }, 
-                        {
-                         "name":"triggerArea",
-                         "type":"object",
-                         "value":73
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":2560,
-                 "y":1024
-                }, 
-                {
-                 "height":0,
-                 "id":60,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"activated",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"copCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"copSpeed",
-                         "type":"float",
-                         "value":2
-                        }, 
-                        {
-                         "name":"effectArea",
-                         "type":"object",
-                         "value":72
-                        }, 
-                        {
-                         "name":"thiefCollide",
-                         "type":"bool",
-                         "value":false
-                        }, 
-                        {
-                         "name":"thiefSpeed",
-                         "type":"float",
-                         "value":1.75
-                        }, 
-                        {
-                         "name":"triggerArea",
-                         "type":"object",
-                         "value":62
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":2624,
-                 "y":1536
-                }, 
-                {
-                 "height":0,
-                 "id":62,
-                 "name":"",
-                 "polygon":[
-                        {
-                         "x":0,
-                         "y":0
-                        }, 
-                        {
-                         "x":128,
-                         "y":0
-                        }, 
-                        {
-                         "x":128,
-                         "y":128
-                        }, 
-                        {
-                         "x":0,
-                         "y":128
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":2560,
-                 "y":1472
+                 "width":42.4242424242429,
+                 "x":5024.24242424242,
+                 "y":6560.60606060606
                 }, 
                 {
                  "ellipse":true,
-                 "height":346.666666666667,
-                 "id":64,
+                 "height":1072,
+                 "id":112,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":325.333333333333,
-                 "x":2274.66666666667,
-                 "y":512
+                 "width":1136,
+                 "x":3936,
+                 "y":6384
+                }, 
+                {
+                 "height":0,
+                 "id":131,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"copCollide",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"copEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Teleport Location":
+                                {
+                                 "x":5296,
+                                 "y":6945
+                                }
+                            }
+                        }, 
+                        {
+                         "name":"effectArea",
+                         "type":"object",
+                         "value":111
+                        }, 
+                        {
+                         "name":"thiefCollide",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"thiefEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Teleport Location":
+                                {
+                                 "x":5296,
+                                 "y":6945
+                                }
+                            }
+                        }, 
+                        {
+                         "name":"triggerArea",
+                         "type":"object",
+                         "value":132
+                        }, 
+                        {
+                         "name":"triggerDeactivationArea",
+                         "type":"object",
+                         "value":133
+                        }],
+                 "rotation":0,
+                 "type":"Trap",
+                 "visible":true,
+                 "width":0,
+                 "x":10236.3636363636,
+                 "y":6990.90909090909
+                }, 
+                {
+                 "height":648.484848484848,
+                 "id":132,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":509.090909090908,
+                 "x":10100,
+                 "y":6666.66666666667
+                }, 
+                {
+                 "height":90.909090909091,
+                 "id":133,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":33.3333333333339,
+                 "x":10624.2424242424,
+                 "y":6681.81818181818
                 }, 
                 {
                  "ellipse":true,
-                 "height":164,
-                 "id":65,
+                 "height":992,
+                 "id":111,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":164,
-                 "x":2354.66666666667,
-                 "y":608
-                }, 
-                {
-                 "height":266,
-                 "id":68,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1150,
-                 "x":2050,
-                 "y":888
-                }, 
-                {
-                 "height":385.333333333333,
-                 "id":72,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":256,
-                 "x":2692,
-                 "y":1346.66666666667
-                }, 
-                {
-                 "height":62,
-                 "id":73,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":138,
-                 "x":2492,
-                 "y":966
+                 "width":1024,
+                 "x":10608,
+                 "y":6480
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -1354,30 +1251,6 @@
                  "y":13472
                 }, 
                 {
-                 "ellipse":true,
-                 "height":992,
-                 "id":111,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1024,
-                 "x":10608,
-                 "y":6480
-                }, 
-                {
-                 "ellipse":true,
-                 "height":1072,
-                 "id":112,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":1136,
-                 "x":3936,
-                 "y":6384
-                }, 
-                {
                  "height":0,
                  "id":113,
                  "name":"",
@@ -1514,7 +1387,7 @@
          "y":0
         }],
  "nextlayerid":10,
- "nextobjectid":114,
+ "nextobjectid":134,
  "orientation":"orthogonal",
  "renderorder":"right-up",
  "tiledversion":"1.8.2",

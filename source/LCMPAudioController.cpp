@@ -56,6 +56,7 @@ void AudioController::playSound(const std::shared_ptr<cugl::AssetManager>& asset
         
             // Adjust sfx volume
             for (int i = 0; i < _heap.size(); i++) {
+                //CULog("%d", i);
                 AudioEngine::get()->setVolume(_heap.at(i).second,SFX_VOLUME/_heap.size());
             }
         

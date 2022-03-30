@@ -7,7 +7,7 @@
 //
 
 #ifndef __LCMP_COP_MODEL_H__
-#define __LCMP_COP_MODEL_H__
+#define __LCMP_COP_MODEL_H__ 
 #include "LCMPPlayerModel.h"
 #include "LCMPConstants.h"
 

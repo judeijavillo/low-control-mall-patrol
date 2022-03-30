@@ -83,9 +83,9 @@ enum JsonConstants :int {
 #define DEBUG_OPACITY_FIELD "debugopacity"
 
 /** The source for our level file */
-#define LEVEL_ONE_FILE      "maps/example3.json"
+#define LEVEL_ONE_FILE      "maps/example2.json"
 /** The key for our loaded level */
-#define LEVEL_ONE_KEY       "example3"
+#define LEVEL_ONE_KEY       "example32"
 
 //  MARK: - Physics Constants
 

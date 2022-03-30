@@ -468,7 +468,7 @@ void GameScene::updateCop(float timestep, int copID, Vec2 movement, bool swipe, 
     }
     if (cop->didLand) {
         _audio->playSound(_assets, LAND_SFX, true, _gameTime);
-        cop->didLand = false;
+        cop->didLand = false; 
     }
     
     // Update, animate, and network cop movement
