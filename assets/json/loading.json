@@ -38,18 +38,18 @@
     "sounds": {
         "loading": {
             "type":     "sample",
-            "file":     "sounds/loading.ogg",
-            "volume":   0.2
+            "file":     "sounds/trash.ogg",
+            "volume":   0.5
         },
         "click": {
             "type":     "sample",
             "file":     "sounds/click.wav",
-            "volume":   0.2
+            "volume":   0.5
         },
         "back": {
             "type":     "sample",
             "file":     "sounds/back.wav",
-            "volume":   0.2
+            "volume":   0.5
         }
     },
     "scene2s" : {

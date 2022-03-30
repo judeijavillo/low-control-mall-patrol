@@ -197,7 +197,7 @@
         },
         "menu": {
             "type":     "sample",
-            "file":     "sounds/menu.ogg",
+            "file":     "sounds/trash.ogg",
             "volume":   0.5
         },
         "click": {
