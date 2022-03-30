@@ -294,7 +294,7 @@
 							"data": {
 								"upnode": "up",
 								"anchor": [0.5, 0.5],
-								"position": [1000, 400],
+								"position": [1000, 550],
 								"scale": [1.6, 1.6]
 							},
 							"children": {
@@ -312,7 +312,7 @@
 							"data": {
 								"upnode": "up",
 								"anchor": [0.5, 0.5],
-								"position": [1000, 200],
+								"position": [1000, 350],
 								"scale": [1.5, 1.5]
 							},
 							"children": {
@@ -324,6 +324,23 @@
 								}
 							}
 						},
+                        "find": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [1000, 150],
+                                "scale": [1.5, 1.5]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "join_button"
+                                    }
+                                }
+                            }
+                        },
 						"settings": {
 							"type": "Button",
 							"data": {
@@ -405,7 +422,7 @@
 				}
 			}
 		},
-        "client": {
+        "room": {
             "type"      : "Node",
             "format"    : {
                 "type"        : "Anchored"
@@ -417,7 +434,7 @@
                         "anchor"  : [0.5,1.0],
                         "scale"    : 1.5,
                         "font"     : "gyparody",
-                        "text"     : "Client View",
+                        "text"     : "Room View",
                         "padding"  : [20, 20, 20, 20],
                         "halign"   : "center",
                         "valign"   : "middle"
@@ -480,7 +497,7 @@
                                     "data"   : {
                                         "anchor"   : [0.5, 0.5],
                                         "font"     : "gyparody",
-                                        "text"     : "Game ID:",
+                                        "text"     : "Status:",
                                         "padding"  : [20, 20, 40, 20],
                                         "halign"   : "left",
                                         "valign"   : "middle"
@@ -492,7 +509,7 @@
                                 "field": {
                                     "type": "Widget",
                                     "data"   : {
-                                        "key"     : "textfield",
+                                        "key"     : "labelbox",
                                         "variables" : {
                                             "size": [200,100],
                                             "text": "",
@@ -540,7 +557,7 @@
                                 "field": {
                                     "type": "Widget",
                                     "data"   : {
-                                        "key"     : "labelbox",
+                                        "key"     : "textfield",
                                         "variables" : {
                                             "size": [200,100],
                                             "text": "1",
@@ -564,7 +581,7 @@
                                  "key"     : "textbutton",
                                  "variables" : {
                                      "size": [400,100],
-                                     "text": "Start Game",
+                                     "text": "Waiting",
                                      "color": "#000088"
                                  }
                              },

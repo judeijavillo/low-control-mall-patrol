@@ -13,8 +13,15 @@ using namespace std;
 
 //  MARK: - Constants
 
+// Webserver Constants
+/** The address of the webserver */
+#define WEBSERVER_ADDRESS   "3.15.40.206"
+/** The port of the webserver */
+#define WEBSERVER_PORT      8080
+
+// NAT Punchthrough server Constants
 /** The address of the server */
-#define SERVER_ADDRESS  "3.145.38.224"
+#define SERVER_ADDRESS  "3.15.40.206"
 /** The port of the server */
 #define SERVER_PORT     61111
 /** The maximum number of players allowed in a single room */
@@ -25,7 +32,7 @@ using namespace std;
 //  MARK: - Constructors
 
 /**
- * Initializes a Network Controller. Returns true iff successful.
+ * Constructs a Network Controller
  */
 NetworkController::NetworkController() {
     _config.punchthroughServerAddr = SERVER_ADDRESS;
@@ -40,6 +47,17 @@ NetworkController::NetworkController() {
  */
 void NetworkController::dispose() {
     _connection = nullptr;
+}
+
+/**
+ * Initializes a Network Controller. Returns true iff successful.
+ */
+bool NetworkController::init() {
+    _http = SLNet::HTTPConnection2::GetInstance();
+    _tcp = SLNet::TCPInterface::GetInstance();
+    _tcp->AttachPlugin(_http);
+    _tcp->Start(0, 0, 1);
+    return true;
 }
 
 //  MARK: - Methods
@@ -274,3 +292,136 @@ void NetworkController::sendGameOver() {
     _connection->send(_serializer.serialize());
     _serializer.reset();
 }
+
+//  MARK: - Server
+
+/**
+ * Makes a request for a test endpoint
+ */
+void NetworkController::getTest() {
+    makeGETrequest("/");
+}
+
+/**
+ * Makes a request to check if the suggested roomID has been assigned a roomID
+ */
+void NetworkController::getRoom(string roomID) {
+    makeGETrequest("/matchmaking/" + roomID);
+}
+
+/**
+ * Makes a request to post a public room
+ */
+void NetworkController::postRoom(string roomID) {
+    makePOSTrequest("/matchmaking/" + roomID, "");
+}
+
+/**
+ * Makes a request to delete a public room
+ */
+void NetworkController::deleteRoom(string roomID) {
+    makeDELETErequest("/matchmaking/" + roomID);
+}
+
+/**
+ * Returns the content body of the response of a previously made request as a JsonValue
+ */
+shared_ptr<JsonValue> NetworkController::readResponse() {
+    // Receive packets via the TCP Interface
+    _tcp->HasCompletedConnectionAttempt();
+    SLNet::Packet* packet = _tcp->Receive();
+    while (packet) {
+        _tcp->DeallocatePacket(packet);
+        packet = _tcp->Receive();
+    }
+    _tcp->HasFailedConnectionAttempt();
+    _tcp->HasLostConnection();
+
+    // Create variables to store results of HTTP response
+    SLNet::RakString stringTransmitted;
+    SLNet::RakString hostTransmitted;
+    SLNet::RakString responseReceived;
+    SLNet::SystemAddress hostReceived;
+    ptrdiff_t offset;
+    
+    // If there was an HTTP response received, store the results in variables
+    if (_http->GetResponse(stringTransmitted,
+                           hostTransmitted,
+                           responseReceived,
+                           hostReceived,
+                           offset)) {
+        // If the response isn't empty
+        if (!responseReceived.IsEmpty()) {
+            // If the response has content
+            if (offset != -1) {
+                // Get the content body
+                string content = responseReceived.C_String() + offset;
+                int begin = (int) content.find("{");
+                int end = (int) content.find_last_of("}");
+                
+                // If the body is retrievable
+                if (begin > -1 && begin < end && end < content.length()) {
+                    string body = content.substr(begin, end + 1);
+                    shared_ptr<JsonValue> json = JsonValue::allocWithJson(body);
+                    return json;
+                } else {
+                    CULog("HTTP: Malformed JSON body");
+                }
+            } else {
+                CULog("HTTP: No content body");
+            }
+        } else {
+            CULog("HTTP: Response empty");
+        }
+    }
+    return nullptr;
+}
+
+//  MARK: - Helpers
+
+/**
+ * Makes an HTTP request using the given RakString
+ */
+void NetworkController::makeRequest(SLNet::RakString request) {
+    _http->TransmitRequest(request, WEBSERVER_ADDRESS, WEBSERVER_PORT);
+}
+
+/**
+ * Makes a GET request at a given endpoint
+ */
+void NetworkController::makeGETrequest(string endpoint) {
+    SLNet::RakString request = SLNet::RakString::FormatForGET(
+        (WEBSERVER_ADDRESS + endpoint).c_str()
+    );
+    makeRequest(request);
+}
+
+/**
+ * Makes a POST request at a given endpoint
+ */
+void NetworkController::makePOSTrequest(string endpoint, string body) {
+    SLNet::RakString request = SLNet::RakString::FormatForPOST(
+        (WEBSERVER_ADDRESS + endpoint).c_str(),
+        "application/json",
+        body.c_str()
+    );
+    makeRequest(request);
+}
+
+/**
+ * Makes a PATCH request at a given endpoint
+ */
+void NetworkController::makePATCHrequest(string endpoint, string body) {
+    
+}
+
+/**
+ * Makes a DELETE request at a given endpoint
+ */
+void NetworkController::makeDELETErequest(string endpoint) {
+    SLNet::RakString request = SLNet::RakString::FormatForDELETE(
+        (WEBSERVER_ADDRESS + endpoint).c_str()
+    );
+    makeRequest(request);
+}
+

@@ -16,6 +16,7 @@
 #include "LCMPMenuScene.h"
 #include "LCMPHostScene.h"
 #include "LCMPClientScene.h"
+#include "LCMPFindScene.h"
 #include "LCMPGameScene.h"
 
 /**
@@ -35,6 +36,8 @@ protected:
         HOST,
         /** The scene to join a game */
         CLIENT,
+        /** The scene to find a game */
+        FIND,
         /** The scene to play the game */
         GAME
     };
@@ -60,6 +63,8 @@ protected:
     HostScene _host;
     /** The scene to join a game */
     ClientScene _client;
+    /** The scene to find a game */
+    FindScene _find;
     /** The primary controller for the game world */
     GameScene _game;
 
@@ -182,6 +187,16 @@ private:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void updateClientScene(float timestep);
+    
+    /**
+     * Inidividualized update method for the find scene.
+     *
+     * This method keeps the primary {@link #update} from being a mess of switch
+     * statements. It also handles the transition logic from the find scene.
+     *
+     * @param timestep  The amount of time (in seconds) since the last frame
+     */
+    void updateFindScene(float timestep);
 
     /**
      * Inidividualized update method for the game scene.
