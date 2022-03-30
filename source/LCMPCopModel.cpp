@@ -14,9 +14,9 @@ using namespace std;
 //  MARK: - Constants
 
 /** The width of a cop in world units */
-#define COP_WIDTH       2.0f
+#define COP_WIDTH       1.4f
 /** The height of a cop body (its dropshadow) in world units */
-#define COP_HEIGHT      1.0f
+#define COP_HEIGHT      0.7f
 
 /** Keys for cop run textures */
 #define COP_RUN_BACK        "ss_cop_up"

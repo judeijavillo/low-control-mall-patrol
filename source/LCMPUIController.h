@@ -20,6 +20,7 @@ class UIController {
     /** Reference to the debug node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _uinode;
     
+
     // Sub-level nodes
     /** Reference to the node containing the joystick */
     std::shared_ptr<cugl::scene2::SceneNode> _joystickNode;
@@ -29,7 +30,22 @@ class UIController {
     std::shared_ptr<cugl::scene2::SceneNode> _direcIndicatorsNode;
     /** Reference to the node containing the thief indicator */
     std::shared_ptr<cugl::scene2::SceneNode> _thiefIndicatorNode;
-    
+    /** Reference to the node containing the settings button */
+    std::shared_ptr<cugl::scene2::Button> _settingsButton;
+
+    // References to the settings menu
+    /** Reference to the node containing the settings menu */
+    std::shared_ptr<cugl::scene2::SceneNode> _settingsMenu;
+    /** Reference to the node containing the sounds button */
+    std::shared_ptr<cugl::scene2::Button> _soundsButton;
+    /** Reference to the node containing the stats button */
+    std::shared_ptr<cugl::scene2::Button> _statsButton;
+    /** Reference to the node containing the quit button */
+    std::shared_ptr<cugl::scene2::Button> _quitButton;
+    /** Reference to the node containing the close button */
+    std::shared_ptr<cugl::scene2::Button> _closeButton;
+
+        
     // Joystick
     /** A view of the part of the joystick indicating what the player is controlling */
     std::shared_ptr<cugl::scene2::PolygonNode> _innerJoystick;
@@ -74,6 +90,13 @@ class UIController {
     cugl::Vec2 _offset;
     /** The PolyFactory instance */
     cugl::PolyFactory _pf;
+    
+    // Information to be sent to GameScene
+    /** Whether or not the game has been quit. */
+    bool _didQuit;
+    /** Whether or not the game is being sent to the pause menu. */
+    bool _didPause;
+
 
 public:
 //  MARK: - Constructors
@@ -113,7 +136,17 @@ public:
                 bool didPress, cugl::Vec2 origin, cugl::Vec2 position, int copID,
                 float gameTime, bool isThiefWin);
 
-    
+//  MARK: - Getters
+
+    /**
+     * Gets whether or not the game is being quit. 
+     */
+    bool didQuit() { return _didQuit; }
+    /**
+     * Gets whether or not the game is being paused.
+     */
+    bool didPause() { return _didPause; }
+
 private:
 //  MARK: - Helpers
     
@@ -156,6 +189,11 @@ private:
     void updateTimer(float time);
     
     /**
+     * Creates the settings button.
+     */
+    void initSettingsButton();
+
+    /**
      * Updates the joystick
      */
     void updateJoystick(bool didPress, cugl::Vec2 origin, cugl::Vec2 position);
@@ -168,7 +206,20 @@ private:
     /**
      * Updates directional indicators
      */
-    void updateDirecIndicators();
+    void updateDirecIndicators(bool isThief, int copID);
+
+    /**
+    * Update single directional indicator (this is a helper)
+    * Vec2 pos1 = the origin of the directional vector
+    * This is equal to the player's position.
+    * Vec2 pos2 = the end of the directional vector
+    * This is equal to the position of the character we want the direction to.
+    * Vec2 screenPos = the screen coordinates of the end of the directional vector.
+    * int index = the index of the directional indicator within the map.
+    */
+    void updateDirecIndicatorHelper(cugl::Vec2 pos1, cugl::Vec2 pos2, 
+        cugl::Vec2 screenPos1, cugl::Vec2 screenPos2, bool isThief, int index);
+
 
     /**
      * Updates the thief indicator

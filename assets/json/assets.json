@@ -137,7 +137,22 @@
         },
         "ss_thief_idle_left": {
             "file": "textures/characters/ss_thief_idle_left.png"
-        }
+        },
+		"settings_button": {
+			"file": "textures/ui/settings_button.png"
+		},
+		"settings_base" : {
+			"file" :  "textures/ui/settings_base.png"
+		},
+		"button_blue" 	: {
+			"file" :   "textures/ui/lcmp_buttons_blue.png"
+		},
+		"button_pink" 	: {
+			"file" :   "textures/ui/lcmp_buttons_pink.png"
+		},
+		"button_x" 	: {
+			"file" :   "textures/ui/close.png"
+		}
     },
     "sounds": {
         "trap": {
@@ -614,22 +629,158 @@
                 "anchor" : [0.5,0.5]
             },
             "children": {
-                "title" : {
-                    "type"      : "Label",
-                    "data" : {
-                        "anchor"  : [0.5,0.5],
-                        "scale"    : 1.5,
-                        "font"     : "gyparody",
-                        "text"     : "Game View",
-                        "halign"   : "center",
-                        "valign"   : "middle"
+                "gameUIsettings" : {
+                    "type"      : "Button",
+                    "data"   : {
+                        "upnode"  : "up",
+                        "anchor":   [0.0,0.0]
+                    },
+                    "children": {
+                        "up" : {
+                            "type": "Image",
+                            "data": {
+                                "texture":  "settings_button"
+                            }
+                        }
                     },
                     "layout" : {
-                        "x_anchor" : "center",
-                        "y_anchor" : "middle"
+                        "x_anchor" : "left",
+                        "y_anchor" : "bottom",
+                        "y_offset" : 10,
+                        "x_offset" : 10,
+                        "absolute" : true
                     }
                 }
             }
-        }
+        },
+		"pause" : {
+			"type" : "Node",
+			"format" : {
+				"type" : "Anchored"
+			},
+			"children" : {
+				"settings" : {
+					"type" : "Image",
+					"data" :{
+						"texture":  "settings_base",
+						"anchor" : [0.5, 0.5],
+						"size" : [500, 608]
+					},
+					"layout" : {
+						"x_anchor" : "center",
+						"y_anchor" : "middle",
+						"y_offset" : 0,
+						"x_offset" : 0,
+						"absolute" : true
+					},
+					"children" : {
+						"Sound" : {
+							"type"      : "Button",
+							"data"   : {
+								"upnode"  : "up",
+								"anchor":   [0.5,0.5],
+								"position" : [225, 400],
+								"scale" : [0.5, 0.5]
+							},
+							"children": {
+								"up" : {
+									"type": "Image",
+									"data": {
+										"texture":  "button_blue"
+									}
+								},
+								"title" : {
+									"type"      : "Label",
+									"data" : {
+										"anchor"  : [0.5,0.5],
+										"scale"    : 1.5,
+										"font"     : "gyparody",
+										"text"     : "Sound",
+										"halign"   : "center",
+										"valign"   : "middle",
+										"position" : [246, 118]
+									}
+								}
+							}
+						},
+						"Stats" : {
+							"type"      : "Button",
+							"data"   : {
+								"upnode"  : "up",
+								"anchor":   [0.5,0.5],
+								"position" : [225, 260],
+								"scale" : [0.5, 0.5]
+							},
+							"children": {
+								"up" : {
+									"type": "Image",
+									"data": {
+										"texture":  "button_blue"
+									}
+								},
+								"title" : {
+									"type"      : "Label",
+									"data" : {
+										"anchor"  : [0.5,0.5],
+										"scale"    : 1.5,
+										"font"     : "gyparody",
+										"text"     : "Stats",
+										"halign"   : "center",
+										"valign"   : "middle",
+										"position" : [246, 118]
+									}
+								}
+							}
+						},
+						"Quit" : {
+							"type"      : "Button",
+							"data"   : {
+								"upnode"  : "up",
+								"anchor":   [0.5,0.5],
+								"position" : [225, 120],
+								"scale" : [0.5, 0.5]
+							},
+							"children": {
+								"up" : {
+									"type": "Image",
+									"data": {
+										"texture":  "button_pink"
+									}
+								},
+								"title" : {
+									"type"      : "Label",
+									"data" : {
+										"anchor"  : [0.5,0.5],
+										"scale"    : 1.5,
+										"font"     : "gyparody",
+										"text"     : "Quit",
+										"halign"   : "center",
+										"valign"   : "middle",
+										"position" : [246, 118]
+									}
+								}
+							}
+						},
+						"X" : {
+							"type"      : "Button",
+							"data"   : {
+								"upnode"  : "up",
+								"anchor":   [0.5,0.5],
+								"position" : [430, 540],
+								"scale" : [1.0, 1.0]
+							},
+							"children": {
+								"up" : {
+									"type": "Image",
+									"data": {
+										"texture":  "button_x"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
     }
 }
