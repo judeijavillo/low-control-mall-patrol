@@ -70,12 +70,13 @@ void AudioController::playSound(const std::shared_ptr<cugl::AssetManager>& asset
         std::shared_ptr<AudioSample> sample = AudioSample::alloc(source->getFile());
         sample->init(source->getFile(), !isSfx);
         audioPlayers[key] = audio::AudioPlayer::alloc(sample);
+        std::shared_ptr<audio::AudioResampler> resample = audio::AudioResampler::alloc(audioPlayers[key], 48000);
         float *buffer = sample->getBuffer();
         float frames = sample->getDecoder()->pagein(buffer);
         if (frames != -1) {
             // Repeat if loading or menu themes
             if (key == LOADING_MUSIC || key == MENU_MUSIC) {
-                _queue->play(source, true, MUSIC_VOLUME, DEFAULT_FADE);
+                _queue->play(resample, true, MUSIC_VOLUME, DEFAULT_FADE);
             }
             else {
                 _queue->play(source, false, MUSIC_VOLUME, DEFAULT_FADE);
