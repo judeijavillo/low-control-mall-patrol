@@ -20,6 +20,8 @@
 #define __LCMP_LOADING_SCENE_H__
 #include <cugl/cugl.h>
 #include "LCMPAudioController.h"
+#include <cugl/scene2/actions/CUActionManager.h>
+#include <cugl/scene2/actions/CUAnimateAction.h>
 
 /**
  * This class is a simple loading screen for asychronous asset loading.
@@ -40,6 +42,8 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     /** A reference to the Audio Controller instance */
     std::shared_ptr<AudioController> _audio;
+    /** A reference to the Action Manager */
+    std::shared_ptr<cugl::scene2::ActionManager> _actions;
     
     // VIEW
     /** The animated progress bar */
@@ -48,6 +52,20 @@ protected:
     std::shared_ptr<cugl::scene2::SceneNode>  _brand;
     /** The "play" button */
     std::shared_ptr<cugl::scene2::Button>    _button;
+
+
+    /** The child node for displaying the loading texture */
+    std::shared_ptr<cugl::scene2::SpriteNode> _aniSpriteNode;
+    /** The loading screen animation */
+    std::shared_ptr<cugl::scene2::Animate> _animation;
+    /** The loading screen sprite sheet */
+    std::shared_ptr<cugl::Texture> _spriteSheet;
+    /** The current animation frame */
+    int _aniFrame;
+    /** The number of animation frames per player animation */
+    std::vector<int> _animFrames;
+    /** The previous timestep. */
+    float _prevTime;
 
     // MODEL
     /** The progress displayed on the screen */
@@ -91,7 +109,8 @@ public:
      * @return true if the controller is initialized properly, false otherwise.
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets,
-              std::shared_ptr<AudioController>& audio);
+              std::shared_ptr<AudioController>& audio,
+              std::shared_ptr<cugl::scene2::ActionManager>& actions);
 
     
 //  MARK: - Progress Monitoring
@@ -111,6 +130,11 @@ public:
      * @return true if loading is complete, but the player has not pressed play
      */
     bool isPending() const;
+
+    /**
+     * Controls animation
+     */
+    void playAnimation(float dt);
 };
 
 #endif /* __NL_LOADING_SCENE_H__ */
