@@ -391,7 +391,7 @@ void GameModel::initTrap(int trapID,
     int copEffectLingerDur = 0;
     int thiefEffectLingerDur = 0;
 
-    //CULog("%s", children.at(3)->get(NAME_FIELD)->asString());
+    CULog("%s", "we here nows");
     // read in the JSON values and match it to the proper property
     for (int i = 0; i < children.size(); i++) {
         std::shared_ptr<cugl::JsonValue> elem = children.at(i);
@@ -409,6 +409,7 @@ void GameModel::initTrap(int trapID,
             break;
         
         case COP_EFFECT:
+            CULog("%s", "Cop Effect");
             copEffect = readJsonEffect(elem);
             break;
         
@@ -417,10 +418,12 @@ void GameModel::initTrap(int trapID,
             break;
 
         case COP_LINGER_EFFECT:
+            CULog("%s", "Cop Linger");
             copLingerEffect = readJsonEffect(elem);
             break;
 
         case EFFECT_AREA:
+            CULog("%s", "Effect Area");
             effectObjectId = elem->getInt(VALUE_FIELD);
             break;
 
@@ -429,10 +432,12 @@ void GameModel::initTrap(int trapID,
             break;
 
         case THIEF_COLLIDE:
+            CULog("%s", "Thief Collide");
             thiefCollide = elem->getBool(VALUE_FIELD);
             break;
 
         case THIEF_EFFECT:
+            CULog("%s", "Thief Effect");
             thiefEffect = readJsonEffect(elem);
             break;
 
@@ -479,6 +484,7 @@ void GameModel::initTrap(int trapID,
 
     // Initialize a trap
 
+    CULog("%s", "Makes trap");
     trap->init(trapID,
                 thiefEffectArea, copEffectArea,
                 triggerArea, deactivationArea,
@@ -517,12 +523,15 @@ void GameModel::initTrap(int trapID,
  * Takes a JsonValue pointing towards an Effect object and parses it
  */
 shared_ptr<TrapModel::Effect> GameModel::readJsonEffect(shared_ptr<JsonValue> effect) {
+    CULog("made it into readJson");
     std::shared_ptr<cugl::Vec2> effectVec = make_shared<cugl::Vec2>(0, 0);
     TrapModel::TrapType effectType = TrapModel::TrapType::Teleport;
     float effectx = 0.0;
     float effecty = 0.0;
+    CULog("made it into readJson 2");
 
-    if (effect->get(VALUE_FIELD)->children().size() > 0) {
+    if (effect!=NULL && effect->get(VALUE_FIELD)->children().size() > 0) {
+        CULog("%d", effect->get(VALUE_FIELD)->children().size());
         switch (constantsMap[effect->get(VALUE_FIELD)->getString(TRAP_TYPE, "NULL")])
         {
 
@@ -562,6 +571,7 @@ shared_ptr<TrapModel::Effect> GameModel::readJsonEffect(shared_ptr<JsonValue> ef
 
     shared_ptr<TrapModel::Effect> temp = make_shared<TrapModel::Effect>();
     temp->init(effectType, effectVec);
+    CULog("%s", "exits readjson");
     return temp;
 }
 

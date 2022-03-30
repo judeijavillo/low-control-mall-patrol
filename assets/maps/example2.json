@@ -40,7 +40,16 @@
                                 {
                                  "x":10236,
                                  "y":6990
-                                }
+                                },
+                             "Type":"Teleport"
+                            }
+                        }, 
+                        {
+                         "name":"copLingerEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
                             }
                         }, 
                         {
@@ -63,7 +72,8 @@
                                 {
                                  "x":10236,
                                  "y":6990
-                                }
+                                },
+                             "Type":"Teleport"
                             }
                         }, 
                         {
@@ -138,7 +148,8 @@
                                 {
                                  "x":5296,
                                  "y":6945
-                                }
+                                },
+                             "Type":"Teleport"
                             }
                         }, 
                         {
@@ -161,7 +172,8 @@
                                 {
                                  "x":5296,
                                  "y":6945
-                                }
+                                },
+                             "Type":"Teleport"
                             }
                         }, 
                         {

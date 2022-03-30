@@ -129,6 +129,7 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
                 break;
             case TrapModel::TrapType::Teleport:
                 setPosition(Vec2(std::get<1>(elem)->x, std::get<1>(elem)->y));
+                CULog("%f, %f", std::get<1>(elem)->x, std::get<1>(elem)->y);
                 break;
             case TrapModel::TrapType::Moving_Platform:
                 _realbody->SetLinearVelocity(b2Vec2(b2velocity.x + std::get<1>(elem)->x, b2velocity.y + std::get<1>(elem)->y));

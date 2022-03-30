@@ -25,11 +25,11 @@
             }
         },
         "example2.json": {
-            "scale": 0.125,
-            "selectedLayer": 2,
+            "scale": 0.25,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 7896,
-                "y": 5984
+                "x": 7036,
+                "y": 6136
             }
         }
     },
@@ -49,9 +49,9 @@
     "project": "maps.tiled-project",
     "property.type": "Effect",
     "recentFiles": [
+        "example2.json",
         "example1.json",
         "Map1Overlay.tsx",
-        "example2.json",
         "C:/Users/tzhan/OneDrive/Desktop/IMG_4638.tsx"
     ],
     "resizeMap.removeObjects": false,
