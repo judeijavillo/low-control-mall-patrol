@@ -61,7 +61,7 @@ void LCMPApp::onStartup() {
     
     // Create a "loading" screen
     _scene = State::LOAD;
-    _loading.init(_assets, _audio);
+    _loading.init(_assets, _audio, _actions);
     
     // Call the parent's onStartup
     Application::onStartup();

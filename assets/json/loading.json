@@ -33,7 +33,10 @@
                 "leftcap"    : [0,   45,  24, 90],
                 "rightcap"   : [296, 45, 320, 90]
             }
-        }
+        },
+		"ss_load_animation" : {	
+			"file":		"textures/ss_loadinggif.png"
+		}
 	},
     "sounds": {
         "loading": {
@@ -59,7 +62,7 @@
                 "type" : "Anchored"
             },
             "data" : {
-                "color": [239,61,49,255]
+                "color": [153,255,255,255]	
             },
             "children"  : {
                 "logo"  : {
@@ -96,6 +99,21 @@
                         "absolute" : true
                     }
                 },
+				"animation" : {
+					"type"	: "Sprite",
+					"data"	: {
+						"anchor"	: [0.5, 0.5],
+						"texture"	: "ss_load_animation",
+						"span"		: 53,
+						"cols" 		: 6,
+						"frame"		: 0
+					},
+					    "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+				},
                 "play"  : {
                     "type"   : "Button",
                     "data"   : {

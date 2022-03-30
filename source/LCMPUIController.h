@@ -187,7 +187,7 @@ private:
      * Updates the minute and hour hand nodes
      */
     void updateTimer(float time);
-    
+
     /**
      * Creates the settings button.
      */
