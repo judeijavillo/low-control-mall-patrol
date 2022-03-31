@@ -27,8 +27,12 @@ protected:
     std::vector<std::shared_ptr<TrapModel>> _traps;
     /** A vector of references to obstacles */
     std::vector<std::shared_ptr<ObstacleModel>> _obstacles;
+    /** A vector of references to the nodes holding the map textures */
+    std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _mapChunks;
     /** Reference to the Action Manager */
     std::shared_ptr<cugl::scene2::ActionManager> _actions;
+    /** Reference to the background node of the scene graph */
+    std::shared_ptr<cugl::scene2::SceneNode> _floornode;
     /** Reference to the physics node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _worldnode;
     /** Reference to the debug node of the scene graph */
@@ -71,6 +75,7 @@ public:
      * initializes a Game Model
      */
     bool init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
+              std::shared_ptr<cugl::scene2::SceneNode>& floornode,
               std::shared_ptr<cugl::scene2::SceneNode>& worldnode,
               std::shared_ptr<cugl::scene2::SceneNode>& debugnode,
               const std::shared_ptr<cugl::AssetManager>& assets,
@@ -153,6 +158,14 @@ public:
     
 private:
 //  MARK: - Helpers
+    
+    /**
+     * Initializes the background of the map
+     */
+    void initBackdrop(float scale,
+                      int rows,
+                      int cols,
+                      const std::shared_ptr<cugl::AssetManager>& assets);
     
     /**
      * Initializes a thief

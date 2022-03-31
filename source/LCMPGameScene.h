@@ -65,6 +65,8 @@ protected:
     // Views
     /** Reference to the floor node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _floornode;
+    /** Reference to the background node of the scene graph */
+    std::shared_ptr<cugl::scene2::SceneNode> _backgroundnode;
     /** Reference to the physics node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _worldnode;
     /** Reference to the debug node of the scene graph */
