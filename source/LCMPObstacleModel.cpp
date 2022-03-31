@@ -1,6 +1,6 @@
 //
 //  LCMPObstacleModel.cpp
-//  LowControlMallPatrol
+//  Low Control Mall Patrol
 //
 //  Author: Kevin Games
 //  Version: 3/04/22

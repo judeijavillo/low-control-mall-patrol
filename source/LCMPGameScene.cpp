@@ -1,6 +1,6 @@
 //
 //  LCMPGameScene.cpp
-//  Network Lab
+//  Low Control Mall Patrol
 //
 //  This class provides the main gameplay logic.
 //
@@ -411,6 +411,17 @@ void GameScene::stateSettings(float timestep) {
     
     if (!_ui.didPause()) {
         _state = GAME;
+    }
+    if (_ui.didQuit()) {
+        _quit = true;
+        
+        // Do tasks that reset does that start does not
+        _world->clear();
+        _input.clear();
+        _worldnode->removeAllChildren();
+        _debugnode->removeAllChildren();
+        _uinode->removeAllChildren();
+
     }
 }
 

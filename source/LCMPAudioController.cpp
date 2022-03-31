@@ -42,14 +42,14 @@ void AudioController::playSound(const std::shared_ptr<cugl::AssetManager>& asset
     // Play sound effects
     if (isSfx) {
         // Clear sound effects as they finish
-        while (_heap.size() > 0 && _heap.front().first >= -gameTime) {
+        while (_heap.size() > 0 && (gameTime == 0 || _heap.front().first >= -gameTime)) {
             cout << "pop " << key << " at " << gameTime << "\n";
             AudioEngine::get()->clear(_heap.front().second);
             _heap.pop_back();
         }
         
         // Play new sfx and add to heap
-        if (AudioEngine::get()->getState(key) != AudioEngine::State::PLAYING) {
+        if (gameTime == 0 || AudioEngine::get()->getState(key) != AudioEngine::State::PLAYING) {
             float timeRemaining = -gameTime - source->getDuration() - SFX_COOLDOWN;
             _heap.push_back(make_pair(timeRemaining, key));
             sort_heap(_heap.begin(), _heap.end());

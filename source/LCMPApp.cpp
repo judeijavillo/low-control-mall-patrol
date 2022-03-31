@@ -192,7 +192,7 @@ void LCMPApp::updateLoadingScene(float timestep) {
 
 
 /**
- * Inidividualized update method for the menu scene.
+ * Individualized update method for the menu scene.
  *
  * This method keeps the primary {@link #update} from being a mess of switch
  * statements. It also handles the transition logic from the menu scene.

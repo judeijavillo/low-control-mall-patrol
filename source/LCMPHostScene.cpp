@@ -1,5 +1,5 @@
 //
-//  NLHostScene.cp
+//  LCMPHostScene.cpp
 //  Low Control Mall Patrol
 //
 //  This class represents the scene for the host when creating a game. Normally
