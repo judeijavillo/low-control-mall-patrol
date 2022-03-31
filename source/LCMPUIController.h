@@ -36,6 +36,8 @@ class UIController {
     // References to the settings menu
     /** Reference to the node containing the settings menu */
     std::shared_ptr<cugl::scene2::SceneNode> _settingsMenu;
+    /** Reference to the node containing the settings node */
+    std::shared_ptr<cugl::scene2::SceneNode> _settingsNode;
     /** Reference to the node containing the sounds button */
     std::shared_ptr<cugl::scene2::Button> _soundsButton;
     /** Reference to the node containing the stats button */
@@ -116,6 +118,9 @@ public:
      */
     void dispose();
     
+    /** Resets the UI Controller */
+    void reset();
+    
     /**
      * Initializes a UI Controller
      */
@@ -184,14 +189,19 @@ private:
     void initTimer();
     
     /**
+     * Initializes the settings nodes
+     */
+    void initSettings();
+    
+    /**
+     * Updates the settings nodes
+     */
+    void updateSettings();
+    
+    /**
      * Updates the minute and hour hand nodes
      */
     void updateTimer(float time);
-
-    /**
-     * Creates the settings button.
-     */
-    void initSettingsButton();
 
     /**
      * Updates the joystick
@@ -209,17 +219,12 @@ private:
     void updateDirecIndicators(bool isThief, int copID);
 
     /**
-    * Update single directional indicator (this is a helper)
-    * Vec2 pos1 = the origin of the directional vector
-    * This is equal to the player's position.
-    * Vec2 pos2 = the end of the directional vector
-    * This is equal to the position of the character we want the direction to.
-    * Vec2 screenPos = the screen coordinates of the end of the directional vector.
-    * int index = the index of the directional indicator within the map.
+     * Updates a single directional indicator.
+     * Takes in the player's position, the position in the direction we want to move to, the screen coordinates
+     * of these positions, and the index of the directional indicator within the map.
     */
     void updateDirecIndicatorHelper(cugl::Vec2 pos1, cugl::Vec2 pos2, 
         cugl::Vec2 screenPos1, cugl::Vec2 screenPos2, bool isThief, int index);
-
 
     /**
      * Updates the thief indicator

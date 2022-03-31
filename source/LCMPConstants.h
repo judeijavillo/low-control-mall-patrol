@@ -1,9 +1,9 @@
 //
 //  LCMPConstants.h
-//  LowControlMallPatrol
+//  Low Control Mall Patrol
 //
-//  Created by Jude Javillo on 3/10/22.
-//  Copyright © 2022 Game Design Initiative at Cornell. All rights reserved.
+//  Author: Kevin Games
+//  Version: 2/18/22
 //
 
 #ifndef __LCMP_CONSTANTS_H__

@@ -1,6 +1,6 @@
 //
 //  LCMPGameScene.h
-//  Network Lab
+//  Low Control Mall Patrol
 //
 //  This class provides the main gameplay logic.
 //

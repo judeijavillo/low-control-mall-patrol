@@ -1,5 +1,5 @@
 //
-//  LCMPMenuScene.h
+//  LCMPMenuScene.cpp
 //  Low Control Mall Patrol
 //
 //  This class presents the initial menu scene.  It allows the player to

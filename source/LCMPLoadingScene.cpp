@@ -1,6 +1,6 @@
 //
-//  NLLoadingScene.cpp
-//  Network Lab
+//  LCMPLoadingScene.cpp
+//  Low Control Mall Patrol
 //
 //  This module provides a very barebones loading screen.  Most of the time you
 //  will not need a loading screen, because the assets will load so fast.  But
@@ -85,14 +85,11 @@ bool LoadingScene::init(const std::shared_ptr<AssetManager>& assets,
         if (down) _audio->playSound(_assets, CLICK_SFX, true, 0);
     });
 
-    //dumb animation code init
+    // Loading screen animation initalization
     _aniSpriteNode = std::dynamic_pointer_cast<scene2::SpriteNode>(assets->get<scene2::SceneNode>("load_animation"));
     _aniFrame = 0;
     _spriteSheet = assets->get<Texture>(TEXTURE_KEY);
     _prevTime = 0;
-
-    // Start loading music
-    _audio = audio;
     
     // Set the background color and add the LoadingScene to the screen
     Application::get()->setClearColor(Color4(192,192,192,255));
@@ -157,15 +154,8 @@ void LoadingScene::playAnimation(float timestep) {
     
     if (_prevTime >= 0.1) {
         _prevTime = 0;
-        int f = _aniSpriteNode->getFrame();
-        if (f >= (ANIMATION_NUM_FRAMES - 1)) {
-            f = 0;
-        }
-        else {
-            f++;
-        }
-        CULog("f: %i", f);
-        _aniSpriteNode->setFrame(f);
+        int frame = _aniSpriteNode->getFrame();
+        frame >= (ANIMATION_NUM_FRAMES - 1) ? frame = 0 : frame++;
+        _aniSpriteNode->setFrame(frame);
     }
-
 }

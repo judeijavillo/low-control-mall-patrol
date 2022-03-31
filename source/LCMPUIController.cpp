@@ -66,47 +66,9 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _font = font;
     _assets = assets;
     
-    // Initialize booleans (hi jude)
+    // Initialize booleans
     _didQuit = false;
     _didPause = false;
-
-    // Initialize settings button from assets manager
-    std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("game");
-    scene->setContentSize(_screenSize);
-    scene->doLayout(); // Repositions the HUD
-
-    // Initialize settings button from assets manager
-    _settingsMenu = _assets->get<scene2::SceneNode>("pause");
-    _settingsMenu->setContentSize(_screenSize);
-    _settingsMenu->doLayout(); // Repositions the HUD
-
-    // Properly sets position of the settings menu (by changing content size)
-    Vec2 settingsMenuPos = _settingsMenu->getContentSize();
-    settingsMenuPos *= SCENE_HEIGHT / _screenSize.height;
-    _settingsMenu->setContentSize(settingsMenuPos);
-
-    // Set button references
-    _settingsButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("game_gameUIsettings"));
-    _quitButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("pause_settings_Quit"));
-    _closeButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("pause_settings_X"));
-
-   
-     // Program the buttons
-    _settingsButton->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _didPause = true;
-        }
-        });
-    _quitButton->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _didQuit = true;
-        }
-        });
-    _closeButton->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _didPause = false;
-        }
-        });
 
     // Create subnodes
     _direcIndicatorsNode = scene2::SceneNode::alloc();
@@ -121,10 +83,6 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _uinode->addChild(_victoryNode);
     _uinode->addChild(_joystickNode);
     _uinode->addChild(_accelVisNode);
-    _uinode->addChild(scene);
-    _uinode->addChild(_settingsMenu);
-
-    _settingsMenu->setVisible(false);
     
     // Hide them all to start
     _direcIndicatorsNode->setVisible(false);
@@ -140,7 +98,7 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     initThiefIndicator();
     initMessage();
     initTimer();
-    initSettingsButton();
+    initSettings();
     
     return true;
 }
@@ -153,21 +111,6 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
 void UIController::update(float timestep, bool isThief, Vec2 movement,
                           bool didPress, Vec2 origin, Vec2 position, int copID,
                           float gameTime, bool isThiefWin) {
-    
-    // Check if the game is paused.
-    // Display and activate correct buttons depending on pause state.
-    if (_didPause) {
-        _settingsMenu->setVisible(true);  
-        _quitButton->activate();
-        _closeButton->activate();
-        _settingsButton->deactivate();
-    }
-    else {
-        _settingsMenu->setVisible(false);
-        _quitButton->deactivate();
-        _closeButton->deactivate();
-        _settingsButton->activate();
-    }
     
     // Show these nodes regardless
     _direcIndicatorsNode->setVisible(true);
@@ -191,8 +134,7 @@ void UIController::update(float timestep, bool isThief, Vec2 movement,
     }
    
     updateDirecIndicators(isThief, copID);
-
-    // Show the appropriate message
+    updateSettings();
     updateMessage(isThief, isThiefWin);
     updateTimer(gameTime);
 }
@@ -313,6 +255,70 @@ void UIController::initTimer() {
 }
 
 /**
+ * Initializes the settings nodes
+ */
+void UIController::initSettings() {
+    // Set button references
+    _settingsButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("game_gameUIsettings"));
+    _quitButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("pause_settings_Quit"));
+    _closeButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("pause_settings_X"));
+    
+    // Initialize settings button from assets manager
+    _settingsNode = _assets->get<scene2::SceneNode>("game");
+    _settingsNode->setContentSize(_screenSize);
+    _settingsNode->doLayout(); // Repositions the HUD
+    
+    // Initialize settings button from assets manager
+    _settingsMenu = _assets->get<scene2::SceneNode>("pause");
+    _settingsMenu->setContentSize(_screenSize);
+    _settingsMenu->doLayout(); // Repositions the HUD
+    
+    // Properly sets position of the settings menu (by changing content size)
+    Vec2 settingsMenuPos = _settingsMenu->getContentSize();
+    settingsMenuPos *= SCENE_HEIGHT / _screenSize.height;
+    _settingsMenu->setContentSize(settingsMenuPos);
+   
+     // Program the buttons
+    _settingsButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _didPause = true;
+        }
+    });
+    _quitButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _didQuit = true;
+        }
+    });
+    _closeButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _didPause = false;
+        }
+    });
+    
+    // Set visibility
+    _settingsMenu->setVisible(false);
+
+    _uinode->addChild(_settingsMenu);
+    _uinode->addChild(_settingsNode);
+}
+
+void UIController::updateSettings() {
+    // Display and activate correct buttons depending on pause state.
+    if (_didPause) {
+        _settingsMenu->setVisible(true);
+        _quitButton->activate();
+        _closeButton->activate();
+        _settingsButton->deactivate();
+    }
+    else {
+        _settingsMenu->setVisible(false);
+        _quitButton->deactivate();
+        _closeButton->deactivate();
+        _settingsButton->activate();
+    }
+}
+
+/**
  * Updates the minute and hour hand nodes
  */
 void UIController::updateTimer(float gameTime) {
@@ -322,10 +328,6 @@ void UIController::updateTimer(float gameTime) {
     
     _minuteHand->setAngle(ang);
     _hourHand->setAngle(ang/60);
-}
-
-void UIController::initSettingsButton() {
-
 }
 
 /**
@@ -358,43 +360,39 @@ void UIController::updateAccelVis(Vec2 movement) {
  * Updates directional indicators
  */
 void UIController::updateDirecIndicators(bool isThief, int copID) {
-    
     // Get the position of the thief in node coordinates w/ respect to worldnode
     Vec2 thiefScreenPos = _worldnode->nodeToScreenCoords(_game->getThief()->getNode()->getPosition());
-    //Get the position of cop with respect to Box2D world
+    // Get the position of cop with respect to Box2D world
     Vec2 thiefPos = _game->getThief()->getPosition();
     if (isThief) {
         // Run calculations for each directonal indicator
         for (int i = 0; i < _game->numberOfCops(); i++) {
             // Get the position of cop in node coordinates w/ respect to worldnode
             Vec2 copScreenPos = _worldnode->nodeToScreenCoords(_game->getCop(i)->getNode()->getPosition());
-            //Get the position of cop with respect to Box2D world
+            // Get the position of cop with respect to Box2D world
             Vec2 copPos = _game->getCop(i)->getPosition();
 
-            //Call helper
+            // Call helper
             updateDirecIndicatorHelper(thiefPos, copPos, thiefScreenPos, copScreenPos, isThief, i);
         }
     }
     else {
         // Get the position of cop in node coordinates w/ respect to worldnode
         Vec2 copScreenPos = _worldnode->nodeToScreenCoords(_game->getCop(copID)->getNode()->getPosition());
-        //Get the position of cop with respect to Box2D world
+        // Get the position of cop with respect to Box2D world
         Vec2 copPos = _game->getCop(copID)->getPosition();
         for (int i = 0; i < _game->numberOfCops(); i++) {
             _direcIndicators[i]->setVisible(false);
         }
-        //Call helper
+        // Call helper
         updateDirecIndicatorHelper(copPos, thiefPos, copScreenPos, thiefScreenPos, isThief, copID);
     }
 }
 
 /**
-* Update single directional indicator (this is a helper)
-* Vec2 pos1 = the origin of the directional vector
-* This is equal to the player's position.
-* Vec2 pos2 = the end of the directional vector
-* This is equal to the position of the character we want the direction to.
-* int index = the index of the directional indicator within the map.
+ * Updates a single directional indicator.
+ * Takes in the player's position, the position in the direction we want to move to, the screen coordinates
+ * of these positions, and the index of the directional indicator within the map.
 */
 void UIController::updateDirecIndicatorHelper(cugl::Vec2 pos1, cugl::Vec2 pos2, 
     cugl::Vec2 screenPos1, cugl::Vec2 screenPos2, bool isThief, int index) {
@@ -445,13 +443,11 @@ void UIController::updateDirecIndicatorHelper(cugl::Vec2 pos1, cugl::Vec2 pos2,
     _direcIndicators[index]->setScale(scale);
     _direcIndicators[index]->setColor(color);
 
-    //
     if (!isThief && displayDistance > cop_min_thief_visible_distance) {
         _direcIndicators[index]->setVisible(false);
     } 
 
 }
-
 
 /**
  * Updates the thief indicator
@@ -484,5 +480,4 @@ void UIController::updateMessage(bool isThief, bool isThiefWin) {
         }
     }
     _victoryNode->setVisible(_game->isGameOver());
-//    _victoryText->setVisible(true);
 }

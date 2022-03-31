@@ -150,6 +150,15 @@
 		"button_pink" 	: {
 			"file" :   "textures/ui/lcmp_buttons_pink.png"
 		},
+        "button_white"     : {
+            "file" :   "textures/ui/btn_white.png"
+        },
+        "button_brown"     : {
+            "file" :   "textures/ui/btn_brown.png"
+        },
+        "button_yellow"     : {
+            "file" :   "textures/ui/btn_yellow.png"
+        },
 		"button_x" 	: {
 			"file" :   "textures/ui/close.png"
 		}

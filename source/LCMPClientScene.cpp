@@ -1,6 +1,6 @@
 //
 //  LCMPClientScene.cpp
-//  Network Lab
+//  Low Control Mall Patrol
 //
 //  This class represents the scene for the client when joining a game. Normally
 //  this class would be combined with the class for the client scene (as both
