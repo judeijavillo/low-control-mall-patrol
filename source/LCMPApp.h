@@ -17,6 +17,7 @@
 #include "LCMPHostScene.h"
 #include "LCMPClientScene.h"
 #include "LCMPFindScene.h"
+#include "LCMPCustomizeScene.h"
 #include "LCMPGameScene.h"
 
 /**
@@ -38,6 +39,8 @@ protected:
         CLIENT,
         /** The scene to find a game */
         FIND,
+        /** The scene to customize characters */
+        CUSTOM,
         /** The scene to play the game */
         GAME
     };
@@ -65,6 +68,8 @@ protected:
     ClientScene _client;
     /** The scene to find a game */
     FindScene _find;
+    /** The scene to customize characters */
+    CustomizeScene _customize;
     /** The primary controller for the game world */
     GameScene _game;
 
@@ -149,7 +154,7 @@ private:
 //  MARK: - Helpers
     
     /**
-     * Inidividualized update method for the loading scene.
+     * Individualized update method for the loading scene.
      *
      * This method keeps the primary {@link #update} from being a mess of switch
      * statements. It also handles the transition logic from the loading scene.
@@ -159,7 +164,7 @@ private:
     void updateLoadingScene(float timestep);
 
     /**
-     * Inidividualized update method for the menu scene.
+     * Individualized update method for the menu scene.
      *
      * This method keeps the primary {@link #update} from being a mess of switch
      * statements. It also handles the transition logic from the menu scene.
@@ -169,7 +174,7 @@ private:
     void updateMenuScene(float timestep);
 
     /**
-     * Inidividualized update method for the host scene.
+     * Individualized update method for the host scene.
      *
      * This method keeps the primary {@link #update} from being a mess of switch
      * statements. It also handles the transition logic from the host scene.
@@ -179,7 +184,7 @@ private:
     void updateHostScene(float timestep);
     
     /**
-     * Inidividualized update method for the client scene.
+     * Individualized update method for the client scene.
      *
      * This method keeps the primary {@link #update} from being a mess of switch
      * statements. It also handles the transition logic from the client scene.
@@ -189,7 +194,7 @@ private:
     void updateClientScene(float timestep);
     
     /**
-     * Inidividualized update method for the find scene.
+     * Individualized update method for the find scene.
      *
      * This method keeps the primary {@link #update} from being a mess of switch
      * statements. It also handles the transition logic from the find scene.
@@ -197,9 +202,19 @@ private:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void updateFindScene(float timestep);
+    
+    /**
+     * Individualized update method for the client scene.
+     *
+     * This method keeps the primary {@link #update} from being a mess of switch
+     * statements. It also handles the transition logic from the client scene.
+     *
+     * @param timestep  The amount of time (in seconds) since the last frame
+     */
+    void updateCustomizeScene(float timestep);
 
     /**
-     * Inidividualized update method for the game scene.
+     * Individualized update method for the game scene.
      *
      * This method keeps the primary {@link #update} from being a mess of switch
      * statements. It also handles the transition logic from the game scene.

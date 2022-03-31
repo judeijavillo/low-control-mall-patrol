@@ -98,6 +98,8 @@ class UIController {
     bool _didQuit;
     /** Whether or not the game is being sent to the pause menu. */
     bool _didPause;
+    /** Whether or not the game is muted */
+    bool _didMute;
 
 
 public:
@@ -151,6 +153,11 @@ public:
      * Gets whether or not the game is being paused.
      */
     bool didPause() { return _didPause; }
+    /**
+     * Gets whether or not the game is being muted.
+     */
+    bool didMute() { return _didMute; }
+
 
 private:
 //  MARK: - Helpers

@@ -49,6 +49,7 @@
 		42F2D4A927DE80FC00B5FCBA /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 42F2D4A827DE80FC00B5FCBA /* sounds */; };
 		42F2D4AA27DE80FC00B5FCBA /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 42F2D4A827DE80FC00B5FCBA /* sounds */; };
 		42F2D4AB27DE80FC00B5FCBA /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 42F2D4A827DE80FC00B5FCBA /* sounds */; };
+		B140973627F67252005C7F11 /* LCMPCustomizeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */; };
 		EB07CFB621EFF3F8000CB3A3 /* DeviceMargins.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB07CFB021EFF3EF000CB3A3 /* DeviceMargins.plist */; };
 		EB13B3B427B2C0DF0032BF19 /* LCMPLoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB13B3A927B2C0DF0032BF19 /* LCMPLoadingScene.cpp */; };
 		EB13B3B527B2C0DF0032BF19 /* LCMPLoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB13B3A927B2C0DF0032BF19 /* LCMPLoadingScene.cpp */; };
@@ -192,6 +193,8 @@
 		42ED6B8127C3761F00EC1EF4 /* LCMPPlayerModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPPlayerModel.cpp; sourceTree = "<group>"; };
 		42F2D4A827DE80FC00B5FCBA /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
 		42F2D4AC27DE82AF00B5FCBA /* LCMPConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPConstants.h; sourceTree = "<group>"; };
+		B140973127F67252005C7F11 /* LCMPCustomizeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPCustomizeScene.h; sourceTree = "<group>"; };
+		B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPCustomizeScene.cpp; sourceTree = "<group>"; };
 		EB07CFB021EFF3EF000CB3A3 /* DeviceMargins.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DeviceMargins.plist; sourceTree = "<group>"; };
 		EB13B3A827B2C0DF0032BF19 /* LCMPClientScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPClientScene.h; sourceTree = "<group>"; };
 		EB13B3A927B2C0DF0032BF19 /* LCMPLoadingScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPLoadingScene.cpp; sourceTree = "<group>"; };
@@ -326,6 +329,8 @@
 		42B26D6027C1D97E0019E6FB /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				B140973127F67252005C7F11 /* LCMPCustomizeScene.h */,
+				B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */,
 				EB13B3B027B2C0DF0032BF19 /* LCMPLoadingScene.h */,
 				EB13B3A927B2C0DF0032BF19 /* LCMPLoadingScene.cpp */,
 				EB13B3B227B2C0DF0032BF19 /* LCMPMenuScene.h */,
@@ -747,6 +752,7 @@
 				EB13B3B427B2C0DF0032BF19 /* LCMPLoadingScene.cpp in Sources */,
 				42B26D7627C2BC730019E6FB /* LCMPThiefModel.cpp in Sources */,
 				EB13B3C327B2C0DF0032BF19 /* LCMPApp.cpp in Sources */,
+				B140973627F67252005C7F11 /* LCMPCustomizeScene.cpp in Sources */,
 				EB13B3BA27B2C0DF0032BF19 /* LCMPGameScene.cpp in Sources */,
 				42B26D7A27C2BC840019E6FB /* LCMPCopModel.cpp in Sources */,
 				4298946B27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */,

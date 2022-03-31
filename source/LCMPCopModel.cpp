@@ -23,6 +23,8 @@ using namespace std;
 #define COP_RUN_FRONT       "ss_cop_down"
 #define COP_RUN_LEFT        "ss_cop_left"
 #define COP_RUN_RIGHT       "ss_cop_right"
+#define COP_RUN_LEFT_F        "ss_cop_left"
+#define COP_RUN_RIGHT_F       "ss_cop_right"
 /** Keys for cop tackle textures */
 #define COP_JUMP_UP         "cop_jump_up"
 #define COP_JUMP_DOWN       "cop_jump_down"
@@ -35,6 +37,8 @@ using namespace std;
 /** Keys for cop still textures */
 #define COP_IDLE_RIGHT        "ss_cop_idle_right"
 #define COP_IDLE_LEFT       "ss_cop_idle_left"
+#define COP_IDLE_RIGHT_F        "ss_cop_idle_right_f"
+#define COP_IDLE_LEFT_F       "ss_cop_idle_left_f"
 
 //  MARK: - Constructors
 
@@ -46,7 +50,8 @@ using namespace std;
 bool CopModel::init(int copID, float scale,
                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
                       const std::shared_ptr<cugl::AssetManager>& assets,
-                    std::shared_ptr<cugl::scene2::ActionManager>& actions) {
+                    std::shared_ptr<cugl::scene2::ActionManager>& actions,
+                    string skinKey) {
     // The cop has constant size
     Size size(COP_WIDTH, COP_HEIGHT);
     _animFrames = {8, 8, 8, 8, 4, 4};
@@ -64,12 +69,16 @@ bool CopModel::init(int copID, float scale,
     _landLeftTexture = assets->get<Texture>(COP_LAND_LEFT);
     _landRightTexture = assets->get<Texture>(COP_LAND_RIGHT);
     
-    _spriteSheets.push_back(assets->get<Texture>(COP_RUN_RIGHT));
+    // Set up the textures for all directions
+    bool female;
+    skinKey == "THIEF_RUN_RIGHT_F" ? female = true : female = false;
+    
+    !female ? _spriteSheets.push_back(assets->get<Texture>(COP_RUN_RIGHT)) : _spriteSheets.push_back(assets->get<Texture>(COP_RUN_RIGHT_F));
     _spriteSheets.push_back(assets->get<Texture>(COP_RUN_BACK));
-    _spriteSheets.push_back(assets->get<Texture>(COP_RUN_LEFT));
+    !female ? _spriteSheets.push_back(assets->get<Texture>(COP_RUN_LEFT)) : _spriteSheets.push_back(assets->get<Texture>(COP_RUN_LEFT_F));
     _spriteSheets.push_back(assets->get<Texture>(COP_RUN_FRONT));
-    _spriteSheets.push_back(assets->get<Texture>(COP_IDLE_RIGHT));
-    _spriteSheets.push_back(assets->get<Texture>(COP_IDLE_LEFT));
+    !female ? _spriteSheets.push_back(assets->get<Texture>(COP_IDLE_RIGHT)) : _spriteSheets.push_back(assets->get<Texture>(COP_IDLE_RIGHT_F));
+    !female ? _spriteSheets.push_back(assets->get<Texture>(COP_IDLE_LEFT)) : _spriteSheets.push_back(assets->get<Texture>(COP_IDLE_LEFT_F));
         
     // Initialize the first texture. Note: width is in screen coordinates
     float width = size.width * scale * 1.5f;

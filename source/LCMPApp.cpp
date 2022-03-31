@@ -139,6 +139,9 @@ void LCMPApp::update(float timestep) {
     case FIND:
         updateFindScene(timestep);
         break;
+    case CUSTOM:
+        updateCustomizeScene(timestep);
+        break;
     case GAME:
         updateGameScene(timestep);
         break;
@@ -171,6 +174,9 @@ void LCMPApp::draw() {
     case FIND:
         _find.render(_batch);
         break;
+    case CUSTOM:
+        _customize.render(_batch);
+        break;
     case GAME:
         _game.render(_batch);
         break;
@@ -198,6 +204,7 @@ void LCMPApp::updateLoadingScene(float timestep) {
         _host.init(_assets, _network, _audio);
         _client.init(_assets, _network, _audio);
         _find.init(_assets, _network);
+        _customize.init(_assets, _network, _audio, _actions);
         _game.init(_assets, _network, _audio, _actions);
         _menu.setActive(true);
         _scene = State::MENU;
@@ -241,7 +248,7 @@ void LCMPApp::updateMenuScene(float timestep) {
 }
 
 /**
- * Inidividualized update method for the host scene.
+ * Individualized update method for the host scene.
  *
  * This method keeps the primary {@link #update} from being a mess of switch
  * statements. It also handles the transition logic from the host scene.
@@ -259,9 +266,8 @@ void LCMPApp::updateHostScene(float timestep) {
         break;
     case HostScene::Status::START:
         _host.setActive(false);
-        _game.setActive(true);
-        _scene = State::GAME;
-        _game.start(true);
+        _customize.setActive(true);
+        _scene = State::CUSTOM;
         break;
     case HostScene::Status::WAIT:
     case HostScene::Status::IDLE:
@@ -271,7 +277,7 @@ void LCMPApp::updateHostScene(float timestep) {
 }
 
 /**
- * Inidividualized update method for the client scene.
+ * Individualized update method for the client scene.
  *
  * This method keeps the primary {@link #update} from being a mess of switch
  * statements. It also handles the transition logic from the client scene.
@@ -289,9 +295,8 @@ void LCMPApp::updateClientScene(float timestep) {
         break;
     case ClientScene::Status::START:
         _client.setActive(false);
-        _game.setActive(true);
-        _scene = State::GAME;
-        _game.start(false);
+        _customize.setActive(true);
+        _scene = State::CUSTOM;
         break;
     case ClientScene::Status::WAIT:
     case ClientScene::Status::IDLE:
@@ -302,7 +307,7 @@ void LCMPApp::updateClientScene(float timestep) {
 }
 
 /**
- * Inidividualized update method for the room scene.
+ * Individualized update method for the room scene.
  *
  * This method keeps the primary {@link #update} from being a mess of switch
  * statements. It also handles the transition logic from the room scene.
@@ -319,9 +324,8 @@ void LCMPApp::updateFindScene(float timestep) {
         break;
     case FindScene::Status::START:
         _find.setActive(false);
-        _game.setActive(true);
-        _scene = State::GAME;
-        _game.start(_network->isHost());
+        _customize.setActive(true);
+        _scene = State::CUSTOM;
         break;
     case FindScene::Status::WAIT:
     case FindScene::Status::IDLE:
@@ -333,7 +337,37 @@ void LCMPApp::updateFindScene(float timestep) {
 }
 
 /**
- * Inidividualized update method for the game scene.
+ * Individualized update method for the customization scene.
+ *
+ * This method keeps the primary {@link #update} from being a mess of switch
+ * statements. It also handles the transition logic from the host scene.
+ *
+ * @param timestep  The amount of time (in seconds) since the last frame
+ */
+void LCMPApp::updateCustomizeScene(float timestep) {
+    _customize.update(timestep);
+    // TODO: Make changes with factored out Network Controller
+    switch (_customize.getStatus()) {
+    case CustomizeScene::Status::ABORT:
+        _customize.setActive(false);
+        _menu.setActive(true);
+        _scene = State::MENU;
+        break;
+    case CustomizeScene::Status::START:
+        _customize.setActive(false);
+        _game.setActive(true);
+        _scene = State::GAME;
+        _game.start(true, _customize.skinKey);
+        break;
+    case CustomizeScene::Status::WAIT:
+    case CustomizeScene::Status::IDLE:
+        // DO NOTHING
+        break;
+    }
+}
+
+/**
+ * Individualized update method for the game scene.
  *
  * This method keeps the primary {@link #update} from being a mess of switch
  * statements. It also handles the transition logic from the game scene.

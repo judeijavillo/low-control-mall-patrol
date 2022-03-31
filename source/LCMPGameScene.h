@@ -113,6 +113,8 @@ protected:
     bool _quit;
     /** Whether the thief wins or loses */
     bool _isThiefWin;
+    /** Which custom skin the player selected */
+    string _skinKey;
     
 public:
 //  MARK: - Constructors
@@ -166,7 +168,7 @@ public:
      *
      * @param host  Whether the player is host.
      */
-    void start(bool host);
+    void start(bool host, string skinKey);
     
     /**
      * The method called to update the scene.

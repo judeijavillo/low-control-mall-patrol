@@ -194,7 +194,7 @@ void GameScene::dispose() {
  *
  * @param host  Whether the player is host.
  */
-void GameScene::start(bool host) {
+void GameScene::start(bool host, string skinKey) {
     _gameTime = 0;
     _doneTime = 0;
     _isThiefWin = false;
@@ -202,10 +202,11 @@ void GameScene::start(bool host) {
     _audio->playSound(_assets, GAME_MUSIC, false, -1);
     _playerNumber = _network->getPlayerNumber();
     _isThief = (_playerNumber == -1);
+    _skinKey = skinKey;
 
     // Initialize the game
     _game = make_shared<GameModel>();
-    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions);
+    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions, _skinKey);
      
     // Initialize subcontrollers
     _collision.init(_game);
@@ -278,7 +279,7 @@ void GameScene::reset() {
     
     // Make a new game
     _game = make_shared<GameModel>();
-    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions);
+    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions, _skinKey);
     
     // Initialize subcontrollers
     _collision.init(_game);
@@ -418,6 +419,9 @@ void GameScene::stateSettings(float timestep) {
     
     if (!_ui.didPause()) {
         _state = GAME;
+    }
+    if (_ui.didMute()) {
+        _audio->pauseMusic(GAME_MUSIC);
     }
     if (_ui.didQuit()) {
         _quit = true;
