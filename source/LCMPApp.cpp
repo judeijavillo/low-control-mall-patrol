@@ -10,6 +10,7 @@
 //
 
 #include "LCMPApp.h"
+#include "LCMPConstants.h"
 
 using namespace cugl;
 
@@ -57,7 +58,8 @@ void LCMPApp::onStartup() {
     _assets->attach<Sound>(SoundLoader::alloc()->getHook());
     
     // Queue up the other assets
-    _assets->loadDirectoryAsync("json/assets.json",nullptr);
+    _assets->loadDirectoryAsync("json/assets.json", nullptr);
+    _assets->loadDirectoryAsync(WALL_ASSETS_FILE, nullptr);
     
     // Create a "loading" screen
     _scene = State::LOAD;

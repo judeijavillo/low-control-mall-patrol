@@ -23,12 +23,14 @@ void GameModel::dispose() {
  * initializes a Game Model
  */
 bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
+                     std::shared_ptr<cugl::scene2::SceneNode>& floornode,
                      std::shared_ptr<cugl::scene2::SceneNode>& worldnode,
                      std::shared_ptr<cugl::scene2::SceneNode>& debugnode,
                      const std::shared_ptr<cugl::AssetManager>& assets,
                      float scale, const std::string& file,
                      std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     _world = world;
+    _floornode = floornode;
     _worldnode = worldnode;
     _debugnode = debugnode;
     _gameover = false;
@@ -69,15 +71,21 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     std::shared_ptr<JsonValue> thiefSpawn = layers->get(THIEF_FIELD)->get(OBJECTS_FIELD);
     std::shared_ptr<JsonValue> traps = layers->get(TRAPS_FIELD)->get(OBJECTS_FIELD);
     
+    // Initialize backdrop
+
+    float backdropScale = (scale / _tileSize) * 1.12; // 1.12 is the scale of the floor plan relative to the tiled map
+
+    initBackdrop(backdropScale, 5, 5, assets);
+
     // Initialize thief
     initThief(scale, thiefSpawn, assets, _actions);
     
     // Initialize cops
     for (int i = 0; i < 4; i++) initCop(i, scale, copsSpawn, assets, _actions);
-    
+
     // Initialize walls
     for (int i = 0; i < walls->size(); i++) initWall(walls->get(i), scale);
-    
+
     // Initialize traps
     // TODO: Make this JSON Reading
     //Vec2 traps[] = { Vec2(20, 30), Vec2(50, 30), Vec2(80, 30) };
@@ -142,6 +150,7 @@ void GameModel::update(float timestep) {
  */
 void GameModel::updateThief(cugl::Vec2 acceleration) {
     _thief->applyForce(acceleration);
+    CULog("Thief node pos: (%f, %f)", _thief->getNode()->getPositionX(), _thief->getNode()->getPositionY());
 }
 
 /**
@@ -191,10 +200,37 @@ void GameModel::activateTrap(int trapID) {
 
 //  MARK: - Helpers
 
+void GameModel::initBackdrop(float scale, int rows, int cols,
+                             const shared_ptr<AssetManager>& assets) {
+
+    // Create textured node to store texture for each map chunk
+    std::shared_ptr<cugl::scene2::PolygonNode> chunkNode;
+
+    Vec2 origin = Vec2(0.0f, 0.0f);
+
+    // Cycle through all map chunks
+    for (int y = 1; y <= cols; y++) {
+        for (int x = 1; x <= rows; x++) {
+
+            // Retrieve map chunk from assets
+            string assetName = strtool::format("row-%d-column-%d", y, x);
+            auto mapChunk = assets->get<Texture>(assetName);
+
+            // Create textured node for chunk
+            chunkNode = scene2::PolygonNode::allocWithTexture(mapChunk);
+            chunkNode->setAnchor(0.0f, 0.0f);
+            chunkNode->setScale(scale);
+            chunkNode->setPositionX(origin.x + mapChunk->getWidth() * scale * (x - 1));
+            chunkNode->setPositionY(origin.y + mapChunk->getHeight() * scale * (y - 1));
+            _floornode->addChild(chunkNode);
+        }
+    }
+}
+
 void GameModel::initThief(float scale,
-                          const std::shared_ptr<JsonValue>& spawn,
-                          const std::shared_ptr<cugl::AssetManager>& assets,
-                          std::shared_ptr<cugl::scene2::ActionManager>& actions) {
+                          const shared_ptr<JsonValue>& spawn,
+                          const shared_ptr<AssetManager>& assets,
+                          shared_ptr<scene2::ActionManager>& actions) {
     // Create thief node
     std::shared_ptr<scene2::SceneNode> thiefNode = scene2::SceneNode::alloc();
     thiefNode->setAnchor(Vec2::ANCHOR_CENTER);
@@ -353,7 +389,9 @@ void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
     
     // Add the node to the world node
     node->setColor(Color4::GRAY);
-    _worldnode->addChild(node);
+
+    // Uncomment if you need to see the walls on the map
+    //_worldnode->addChild(node);
 
 }
 

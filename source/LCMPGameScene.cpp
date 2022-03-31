@@ -137,6 +137,11 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _floornode->setPosition(_offset);
     // TODO: Tile this in a better way. This is an expensive shortcut.
     
+    // Create the background node
+    _backgroundnode = scene2::SceneNode::alloc();
+    _backgroundnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _backgroundnode->setPosition(_offset);
+
     // Create the world node
     _worldnode = scene2::SceneNode::alloc();
     _worldnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -156,6 +161,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
 
     // Add the nodes as children
     addChild(_floornode);
+    addChild(_backgroundnode);
     addChild(_worldnode);
     addChild(_debugnode);
     addChild(_uinode);
@@ -199,8 +205,8 @@ void GameScene::start(bool host) {
 
     // Initialize the game
     _game = make_shared<GameModel>();
-    _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions);
-    
+    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions);
+     
     // Initialize subcontrollers
     _collision.init(_game);
     _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset, _assets);
@@ -272,7 +278,7 @@ void GameScene::reset() {
     
     // Make a new game
     _game = make_shared<GameModel>();
-    _game->init(_world, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions);
+    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions);
     
     // Initialize subcontrollers
     _collision.init(_game);
