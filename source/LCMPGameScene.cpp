@@ -210,7 +210,7 @@ void GameScene::start(bool host, string skinKey) {
      
     // Initialize subcontrollers
     _collision.init(_game);
-    _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset, _assets);
+    _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset, _assets, _actions);
     
     // Update the state of the game
     _state = GAME;
@@ -283,7 +283,7 @@ void GameScene::reset() {
     
     // Initialize subcontrollers
     _collision.init(_game);
-    _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset, _assets);
+    _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset, _assets, _actions);
     
     // Update the state of the game
     _state = GAME;

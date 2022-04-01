@@ -68,6 +68,9 @@ void LCMPApp::onStartup() {
     // Create a "loading" screen
     _scene = State::LOAD;
     _loading.init(_assets, _audio, _actions);
+
+    // Initialize fade status
+    _fadeStatus = FadeStatus::FADE_WHITE;
     
     // Call the parent's onStartup
     Application::onStartup();
@@ -386,4 +389,62 @@ void LCMPApp::updateGameScene(float timestep) {
     }
 }
 
+/**
+ * Transition between two scenes.
+ *
+ * This method fades out the previous scene, and fades in the next scene.
+ *
+ * @param timestep  The amount of time (in seconds) since the last frame
+ * @param prevScene The scene we are transitioning from
+ * @param newScene  The scene we are transitioning into
+ */
+bool LCMPApp::transitionScene(float timestep, cugl::Scene2 prevScene, cugl::Scene2 newScene) {
+    float transitionTime = 0.25f;
+    switch (_fadeStatus) {
+    case FadeStatus::FADE_WHITE:
+        _fadingCumTime = 0;
+        _fadeStatus = FadeStatus::FADE_OUT;
+        break;
+    case FadeStatus::FADE_OUT:
+        if (fadeScene(timestep, prevScene, false))
+            _fadeStatus = FadeStatus::FADE_BLACK;
+        break;
+    case FadeStatus::FADE_BLACK:
+        prevScene.setActive(false);
+        newScene.setColor(Color4::BLACK);
+        newScene.setActive(true);
+        _fadingCumTime = 0;
+        _fadeStatus = FADE_IN;
+        break;
+    case FadeStatus::FADE_IN:
+        if (fadeScene(timestep, newScene, true)) {
+            _fadeStatus = FadeStatus::FADE_WHITE;
+            return true;
+        }
+        break;
+    default:
+        _fadeStatus = FadeStatus::FADE_OUT;
+        break;
+    }
+    return false;
+}
 
+/**
+ * Fade out a scene.
+ *
+ * This method fades out the input scene to black.
+ *
+ * @param timestep  The amount of time (in seconds) since the last frame
+ * @param scene The scene we are fading out.
+ */
+bool LCMPApp::fadeScene(float timestep, cugl::Scene2 scene, bool inOut) {
+    float fadeTime = 3.0f;
+    _fadingCumTime += timestep;
+    float fadingAlpha = inOut ? (_fadingCumTime / fadeTime)
+        : (1 - (_fadingCumTime / fadeTime));
+    fadingAlpha = clamp(fadingAlpha, 0.0f, 1.0f);
+    Color4 fadeColor = (255 * fadingAlpha, 255 * fadingAlpha, 255 * fadingAlpha, 255);
+    scene.setColor(fadeColor);
+    bool returnValue = inOut ? fadingAlpha >= 1 : fadingAlpha <= 0;
+    return returnValue;
+}

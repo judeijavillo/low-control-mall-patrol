@@ -17,7 +17,7 @@ using namespace cugl;
 /** How far from the thief the directional indicators appear. */
 #define DIREC_INDICATOR_DIST_SCALAR     250.0f
 /** How long one side of the directional indicator is. */
-#define DIREC_INDICATOR_SIZE            60.0f
+#define DIREC_INDICATOR_SIZE            120.0f
 
 /** The radius of the outer accelerometer visualization. */
 #define OUTER_ACCEL_VIS_RADIUS    75.0f
@@ -26,6 +26,12 @@ using namespace cugl;
 
 /** The key for the settings button texture */
 #define SETTINGS_BUTTON_TEXTURE    "settings_button"
+/** The key for the directional indicator arrow texture */
+#define DIR_IND_ARROW_TEXTURE      "ui_arrow"
+
+/** Define the time settings for animation */
+#define ACT_KEY  "settings animation"
+#define DROP_DURATION 0.3f
 
 /** The resting position of the joystick */
 float JOYSTICK_HOME[]   {200, 200};
@@ -54,7 +60,8 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
                         const shared_ptr<Font> font,
                         Size screenSize,
                         Vec2 offset,
-                        const std::shared_ptr<cugl::AssetManager>& assets) {
+                        const std::shared_ptr<cugl::AssetManager>& assets,
+                        const std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     
     // Save properties
     _worldnode = worldnode;
@@ -64,11 +71,16 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _screenSize = screenSize;
     _offset = offset;
     _font = font;
-    _assets = assets;
+    _actions = actions;
     
     // Initialize booleans
     _didQuit = false;
     _didPause = false;
+
+    // Set up dimen
+    _dimen = _screenSize;
+    _dimen *= SCENE_HEIGHT / _dimen.height;
+
 
     // Create subnodes
     _direcIndicatorsNode = scene2::SceneNode::alloc();
@@ -90,7 +102,7 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _joystickNode->setVisible(false);
     _accelVisNode->setVisible(false);
     _victoryNode->setVisible(false);
-    
+
     // Call helpers to populate sub-level nodes
     initJoystick();
     initAccelVis();
@@ -99,6 +111,14 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     initMessage();
     initTimer();
     initSettings();
+
+
+    // Settings menu movement
+    
+    float settingsMenuYOffset = 0.1;
+    
+    _moveup = scene2::MoveTo::alloc(Vec2(0, _dimen.getIHeight()), DROP_DURATION);
+    _movedn = scene2::MoveTo::alloc(Vec2(0, _dimen.getIHeight() * settingsMenuYOffset), DROP_DURATION);
     
     return true;
 }
@@ -191,17 +211,23 @@ void UIController::initAccelVis() {
  * indicators node.
  */
 void UIController::initDirecIndicators() {
-    // Calculate distances of cops from thief
+    // Set texture for directional indicators
+    _direcIndTexture = _assets->get<Texture>(DIR_IND_ARROW_TEXTURE);
+
     for (int i = 0; i < _game->numberOfCops(); i++) {
         // Create and display directional indicators
-        Poly2 triangle = _pf.makeTriangle(Vec2::ZERO,
+/*        Poly2 triangle = _pf.makeTriangle(Vec2::ZERO,
                                           Vec2(DIREC_INDICATOR_SIZE,
                                                0.0f),
                                           Vec2(DIREC_INDICATOR_SIZE /2,
                                                DIREC_INDICATOR_SIZE * 1.5));
-        _direcIndicators[i] = scene2::PolygonNode::allocWithPoly(triangle);
+        _direcIndicators[i] = scene2::PolygonNode::allocWithPoly(triangle);      */  
+        
+        _direcIndicators[i] = scene2::PolygonNode::allocWithTexture(_direcIndTexture);
+
         _direcIndicators[i]->setAnchor(cugl::Vec2::ANCHOR_CENTER);
-        _direcIndicators[i]->setScale(1.0f);
+        float scale = DIREC_INDICATOR_SIZE / _direcIndicators[i]->getTexture()->getWidth();
+        _direcIndicators[i]->setScale(scale);
         _direcIndicators[i]->setColor(Color4::RED);
         _direcIndicatorsNode->addChild(_direcIndicators[i]);
     }
@@ -265,9 +291,9 @@ void UIController::initSettings() {
     _closeButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("pause_settings_X"));
     
     // Initialize settings button from assets manager
-    _settingsNode = _assets->get<scene2::SceneNode>("game");
-    _settingsNode->setContentSize(_screenSize);
-    _settingsNode->doLayout(); // Repositions the HUD
+    _settingsButtonNode = _assets->get<scene2::SceneNode>("game");
+    _settingsButtonNode->setContentSize(_screenSize);
+    _settingsButtonNode->doLayout(); // Repositions the HUD
     
     // Initialize settings button from assets manager
     _settingsMenu = _assets->get<scene2::SceneNode>("pause");
@@ -283,7 +309,8 @@ void UIController::initSettings() {
     _settingsButton->addListener([this](const std::string& name, bool down) {
         if (down) {
             _didPause = true;
-        }
+            doMove(_movedn);
+;        }
     });
     _soundsButton->addListener([this](const std::string& name, bool down) {
         if (down) {
@@ -298,32 +325,46 @@ void UIController::initSettings() {
     _closeButton->addListener([this](const std::string& name, bool down) {
         if (down) {
             _didPause = false;
+            doMove(_moveup);
         }
     });
     
     // Set visibility
-    _settingsMenu->setVisible(false);
+    _settingsMenu->setVisible(true); 
 
     _uinode->addChild(_settingsMenu);
-    _uinode->addChild(_settingsNode);
+    _uinode->addChild(_settingsButtonNode);
+
+    // Set proper position of settings menu when the game begins
+    _settingsMenu->setPosition(Vec2(0, _dimen.getIHeight()));
 }
 
 /** Updates the settings menu */
 void UIController::updateSettings() {
     // Display and activate correct buttons depending on pause state.
     if (_didPause) {
-        _settingsMenu->setVisible(true);
+        //_settingsMenu->setVisible(true);
         _soundsButton->activate();
         _quitButton->activate();
         _closeButton->activate();
         _settingsButton->deactivate();
     }
     else {
-        _settingsMenu->setVisible(false);
+        //_settingsMenu->setVisible(false);
         _soundsButton->deactivate();
         _quitButton->deactivate();
         _closeButton->deactivate();
         _settingsButton->activate();
+    }
+}
+
+void UIController::doMove(const std::shared_ptr<scene2::MoveTo>& action) {
+    if (_actions->isActive(ACT_KEY)) {
+        CULog("You must wait for the animation to complete first");
+    }
+    else {
+        auto fcn = EasingFunction::alloc(EasingFunction::Type::LINEAR);
+        _actions->activate(ACT_KEY, action, _settingsMenu, fcn);
     }
 }
 
@@ -406,11 +447,12 @@ void UIController::updateDirecIndicators(bool isThief, int copID) {
 void UIController::updateDirecIndicatorHelper(cugl::Vec2 pos1, cugl::Vec2 pos2, 
     cugl::Vec2 screenPos1, cugl::Vec2 screenPos2, bool isThief, int index) {
     // Constants and variables used throughout the code
-    const float size_scalar_min = 0.25;
-    const float size_scalar_max_dist = 90;
-    const int color_opacity = 200;
+    const float size_scalar_min = 0.3;
+    const float size_scalar_max_dist = 100;
+    const int color_opacity = 220;
     const float cop_min_thief_visible_distance = 25.0;
-    const float distance_from_edge = 30;
+    const float distance_from_edge = 20;
+    const float defaultScale = DIREC_INDICATOR_SIZE / _direcIndicators[index]->getTexture()->getWidth();;
     
     // By default, show this indicator
     _direcIndicators[index]->setVisible(true);
@@ -426,12 +468,25 @@ void UIController::updateDirecIndicatorHelper(cugl::Vec2 pos1, cugl::Vec2 pos2,
     float displayDistance = distance.length();
 
     // Set scale directional indicators based on distance
+
     float scale = (size_scalar_max_dist - displayDistance) / size_scalar_max_dist;
     scale = max(scale, size_scalar_min);
 
-    // Set the color based on the distance
-    Color4 color((int)(255 * scale), (int)(255 * (1 - scale)), 0, color_opacity);
+    // We use the direct value of scale for color changing, but we also have to reduce
+    // the size to accomodate the texture. This is why we have both scale and outputScale.
+    // outputScale takes the texture size into account.
+    float outputScale = scale * defaultScale;
 
+    // Set the color based on the distance
+    Color4 closeColor = Color4(255, 0, 0, color_opacity);
+    Color4 farColor = Color4(182, 227, 255, color_opacity);
+    float normalScale = (scale - size_scalar_min) / (1 - size_scalar_min);
+
+    Color4 color((int)(((closeColor.r - farColor.r) * normalScale) + farColor.r), 
+        (int)(((closeColor.g - farColor.g) * normalScale) + farColor.g),
+        (int)(((closeColor.b - farColor.b) * normalScale) + farColor.b),
+        color_opacity);
+   
     // Make the vector's origin at the thief
     distance = distance.getNormalization() * (screenPos2 - screenPos1).length();
     distance.x += screenPos1.x;
@@ -449,7 +504,7 @@ void UIController::updateDirecIndicatorHelper(cugl::Vec2 pos1, cugl::Vec2 pos2,
     // Set up directional indicators
     _direcIndicators[index]->setPosition(distance);
     _direcIndicators[index]->setAngle(angle);
-    _direcIndicators[index]->setScale(scale);
+    _direcIndicators[index]->setScale(outputScale);
     _direcIndicators[index]->setColor(color);
 
     if (!isThief && displayDistance > cop_min_thief_visible_distance) {

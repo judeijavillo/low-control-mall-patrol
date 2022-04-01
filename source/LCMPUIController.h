@@ -37,7 +37,7 @@ class UIController {
     /** Reference to the node containing the settings menu */
     std::shared_ptr<cugl::scene2::SceneNode> _settingsMenu;
     /** Reference to the node containing the settings node */
-    std::shared_ptr<cugl::scene2::SceneNode> _settingsNode;
+    std::shared_ptr<cugl::scene2::SceneNode> _settingsButtonNode;
     /** Reference to the node containing the sounds button */
     std::shared_ptr<cugl::scene2::Button> _soundsButton;
     /** Reference to the node containing the stats button */
@@ -47,7 +47,14 @@ class UIController {
     /** Reference to the node containing the close button */
     std::shared_ptr<cugl::scene2::Button> _closeButton;
 
-        
+    //References for the settings menu animations
+    /** Reference to the settings menu moving up */
+    std::shared_ptr<cugl::scene2::MoveTo> _moveup;
+    /** Reference to the settings menu moving up */
+    std::shared_ptr<cugl::scene2::MoveTo> _movedn;
+    /** Scaled screen dimensions for use in setting position in animations */
+    cugl::Size _dimen;
+
     // Joystick
     /** A view of the part of the joystick indicating what the player is controlling */
     std::shared_ptr<cugl::scene2::PolygonNode> _innerJoystick;
@@ -63,6 +70,7 @@ class UIController {
     // Directional Indicators
     /** The directional indicators for the thief that point to the cops */
     std::unordered_map<int, std::shared_ptr<cugl::scene2::PolygonNode>> _direcIndicators;
+    std::shared_ptr<cugl::Texture> _direcIndTexture;
     
     // Thief Indicators
     /** A reference to the label for displaying thief distance for cop */
@@ -84,6 +92,8 @@ class UIController {
     std::shared_ptr<GameModel> _game;
     /** The asset manager for this game mode */
     std::shared_ptr<cugl::AssetManager> _assets;
+    /** The action manager for the whole game */
+    std::shared_ptr<cugl::scene2::ActionManager> _actions;
     /** A reference to the font style for the UI node */
     std::shared_ptr<cugl::Font> _font;
     /** The actual size of the display. */
@@ -132,7 +142,8 @@ public:
               const std::shared_ptr<cugl::Font> font,
               cugl::Size screenSize,
               cugl::Vec2 offset,
-              const std::shared_ptr<cugl::AssetManager>& assets);
+              const std::shared_ptr<cugl::AssetManager>& assets,
+              const std::shared_ptr<cugl::scene2::ActionManager>& actions);
         
 //  MARK: - Methods
     
@@ -204,6 +215,13 @@ private:
      * Updates the settings nodes
      */
     void updateSettings();
+
+    /**
+     * Performs a move action for the settings menu
+     *
+     * @param action The move action
+     */
+    void doMove(const std::shared_ptr<cugl::scene2::MoveTo>& action);
     
     /**
      * Updates the minute and hour hand nodes

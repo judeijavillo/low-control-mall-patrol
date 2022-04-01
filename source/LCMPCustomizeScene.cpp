@@ -95,7 +95,7 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // Initialize selected skin
     skin = 0;
     skinKey = _keys[skin];
-    _didLeft = nullptr;
+    _didLeft = false;
     _customTime = 0.0;
     _lastChoice = -CHOICE_COOLDOWN;
     
@@ -205,7 +205,7 @@ void CustomizeScene::updateInput(float timestep) {
         
         if (didSwipe) swipe.x < 0 ? skin -= 1 : skin += 1;
         if (didSwipe) swipe.x < 0 ? _didLeft = true : _didLeft = false;
-        if (movement.x == 0) _didLeft = nullptr;
+        if (movement.x == 0) _didLeft = false;
         if (movement.x != 0) movement.x < 0 ? skin -= 1 : skin += 1;
         if (movement.x != 0) movement.x < 0 ? _didLeft = true : _didLeft = false;
         

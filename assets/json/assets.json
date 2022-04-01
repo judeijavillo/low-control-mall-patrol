@@ -213,18 +213,18 @@
         "ss_thief_hatless_right_f": {
             "file": "textures/characters/ss_thief_hatless_right_f.png"
         },
-		"settings_button": {
-			"file": "textures/ui/settings_button2.png"
-		},
-		"settings_base" : {
-			"file" :  "textures/ui/settings_base.png"
-		},
-		"button_blue" 	: {
-			"file" :   "textures/ui/lcmp_buttons_blue.png"
-		},
-		"button_pink" 	: {
-			"file" :   "textures/ui/lcmp_buttons_pink.png"
-		},
+        "settings_button": {
+            "file":    "textures/ui/settings_button2.png"
+        },
+        "settings_background" : {
+            "file" :   "textures/ui/settings_background.png"
+        },
+        "button_blue" 	: {
+            "file" :   "textures/ui/lcmp_buttons_blue.png"
+        },
+        "button_pink" 	: {
+            "file" :   "textures/ui/lcmp_buttons_pink.png"
+        },
         "button_white"     : {
             "file" :   "textures/ui/btn_white.png"
         },
@@ -234,24 +234,27 @@
         "button_yellow"     : {
             "file" :   "textures/ui/btn_yellow.png"
         },
-		"button_x" 	: {
-			"file" :   "textures/ui/close.png"
-		},
-		"join_button" : {
-			"file": "textures/ui/join_button.png"
-		},
-		"create_button" : {
-			"file": "textures/ui/create_button.png"
-		},
-		"menu_background": {
-			"file": "textures/ui/menu_background.png"
-		},
-		"profile": {
-			"file": "textures/ui/profile.png"
-		},
-		"shop": {
-			"file": "textures/ui/shop.png"
-		}
+        "button_x" 	: {
+            "file" :   "textures/ui/close.png"
+        },
+        "join_button" : {
+            "file": "textures/ui/join_button.png"
+        },
+        "create_button" : {
+            "file": "textures/ui/create_button.png"
+        },
+        "menu_background": {
+            "file": "textures/ui/menu_background.png"
+        },
+        "profile": {
+            "file": "textures/ui/profile.png"
+        },
+        "shop": {
+            "file": "textures/ui/shop.png"
+        },
+        "ui_arrow": {
+            "file": "textures/ui/lcmp_arrow.png"
+        }
     },
     "sounds": {
         "trap": {
@@ -317,6 +320,10 @@
         },
 		"futura": {
 			"file": "fonts/futura medium bt.ttf",
+			"size": 48
+		},
+		"futura heavy": {
+			"file": "fonts/Futura Heavy font.ttf",
 			"size": 48
 		}
     },
@@ -604,9 +611,9 @@
 				"settings" : {
 					"type" : "Image",
 					"data" :{
-						"texture":  "settings_base",
+						"texture":  "settings_background",
 						"anchor" : [0.5, 0.5],
-						"size" : [500, 608]
+						"size" : [500, 600]
 					},
 					"layout" : {
 						"x_anchor" : "center",
@@ -616,13 +623,26 @@
 						"absolute" : true
 					},
 					"children" : {
+						"Title" : {
+							"type"		: "label",
+							"data" : {
+								"anchor"  : [0.5,0.5],
+								"scale"    : 0.9,
+								"font"     : "futura heavy",
+								"text"     : "SETTINGS",
+								"halign"   : "center",
+								"valign"   : "middle",
+								"foreground": [38, 84, 124, 255],
+								"position" : [275, 309]
+							}
+						},
 						"Sound" : {
 							"type"      : "Button",
 							"data"   : {
 								"upnode"  : "up",
 								"anchor":   [0.5,0.5],
-								"position" : [225, 400],
-								"scale" : [0.5, 0.5]
+								"position" : [163, 205],
+								"scale" : [0.3, 0.3]
 							},
 							"children": {
 								"up" : {
@@ -636,10 +656,11 @@
 									"data" : {
 										"anchor"  : [0.5,0.5],
 										"scale"    : 1.5,
-										"font"     : "gyparody",
-										"text"     : "Sound",
+										"font"     : "futura heavy",
+										"text"     : "SOUND",
 										"halign"   : "center",
 										"valign"   : "middle",
+										"foreground": [38, 84, 124, 255],
 										"position" : [246, 118]
 									}
 								}
@@ -650,8 +671,8 @@
 							"data"   : {
 								"upnode"  : "up",
 								"anchor":   [0.5,0.5],
-								"position" : [225, 260],
-								"scale" : [0.5, 0.5]
+								"position" : [324, 205],
+								"scale" : [0.3, 0.3]
 							},
 							"children": {
 								"up" : {
@@ -665,10 +686,11 @@
 									"data" : {
 										"anchor"  : [0.5,0.5],
 										"scale"    : 1.5,
-										"font"     : "gyparody",
-										"text"     : "Stats",
+										"font"     : "futura heavy",
+										"text"     : "STATS",
 										"halign"   : "center",
 										"valign"   : "middle",
+										"foreground": [38, 84, 124, 255],
 										"position" : [246, 118]
 									}
 								}
@@ -679,8 +701,8 @@
 							"data"   : {
 								"upnode"  : "up",
 								"anchor":   [0.5,0.5],
-								"position" : [225, 120],
-								"scale" : [0.5, 0.5]
+								"position" : [243, 140],
+								"scale" : [0.2, 0.2]
 							},
 							"children": {
 								"up" : {
@@ -694,10 +716,11 @@
 									"data" : {
 										"anchor"  : [0.5,0.5],
 										"scale"    : 1.5,
-										"font"     : "gyparody",
-										"text"     : "Quit",
+										"font"     : "futura heavy",
+										"text"     : "QUIT",
 										"halign"   : "center",
 										"valign"   : "middle",
+										"foreground": [38, 84, 124, 255],
 										"position" : [246, 118]
 									}
 								}
@@ -708,8 +731,8 @@
 							"data"   : {
 								"upnode"  : "up",
 								"anchor":   [0.5,0.5],
-								"position" : [430, 540],
-								"scale" : [1.0, 1.0]
+								"position" : [440, 283],
+								"scale" : [0.8, 0.8]
 							},
 							"children": {
 								"up" : {
@@ -723,48 +746,6 @@
 					}
 				}
 			}
-		},
-        "customize" : {
-            "type" : "Node",
-            "format" : {
-                "type" : "Anchored"
-            },
-            "children" : {
-                "settings" : {
-                    "type" : "Image",
-                    "data" :{
-                        "texture":  "settings_base",
-                        "anchor" : [0.5, 0.5],
-                        "size" : [500, 608]
-                    },
-                    "layout" : {
-                        "x_anchor" : "center",
-                        "y_anchor" : "middle",
-                        "y_offset" : 0,
-                        "x_offset" : 0,
-                        "absolute" : true
-                    },
-                    "children" : {
-                        "X" : {
-                            "type"      : "Button",
-                            "data"   : {
-                                "upnode"  : "up",
-                                "anchor":   [0.5,0.5],
-                                "position" : [430, 540],
-                                "scale" : [1.0, 1.0]
-                            },
-                            "children": {
-                                "up" : {
-                                    "type": "Image",
-                                    "data": {
-                                        "texture":  "button_x"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+		}
     }
 }

@@ -122,7 +122,7 @@ void HostScene::update(float timestep) {
         case NetworkController::WAIT:
         {
             _status = WAIT;
-            _gameid->setText(strtool::format("Tell your friends this room code: " + _network->getRoomID()), true);
+            _gameid->setText(("Tell your friends this room code: " + _network->getRoomID()), true);
             _gameid->setPosition(600, 500);
             break;
         }
@@ -133,7 +133,7 @@ void HostScene::update(float timestep) {
             _status = ABORT;
             break;
         }
-        _player->setText(strtool::format("Waiting for players: (%d/5)", _network->getNumPlayers()), true);
+        _player->setText(strtool::format("Waiting for players: (%f/5)", ((float)_network->getNumPlayers())), true);
     }
 }
 
