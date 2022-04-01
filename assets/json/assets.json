@@ -521,7 +521,7 @@
                                  "key"     : "textbutton",
                                  "variables" : {
                                      "size": [400,100],
-                                     "text": "Waiting",
+                                     "text": "Start Game",
                                      "color": "#000088"
                                  }
                              },

@@ -23,7 +23,7 @@
 #define OBJECTS_FIELD       "objects"
 #define ELLIPSE_FIELD       "ellipse"
 #define POLYGON_FIELD       "polygon"
-#define PROPS_FIELD         0
+#define PROPS_FIELD         5
 #define TRAPS_FIELD         1
 #define WALLS_FIELD         2
 #define COPS_FIELD          3
@@ -31,8 +31,8 @@
 #define POINT_FIELD			"point"
 #define PROPERTIES_FIELD    "properties"
 #define ID_FIELD			"id"
-// Props.tmj is always second tileset, first tileset is always size 1
-#define PROP_FIRSTGID       2
+
+#define PROP_FIRSTGID       29
 
 /** Flags for tiled */
 #define FLIPPED_HORIZONTALLY_FLAG   0x80000000;
@@ -44,6 +44,7 @@
 /** The global fields for trap properties*/
 enum JsonConstants :int {
 	ACTIVATED,
+    COLLISION_SOUND,
 	COP_COLLIDE,
 	COP_EFFECT,
 	COP_LINGER_DURATION,
@@ -51,9 +52,13 @@ enum JsonConstants :int {
 	EFFECT_AREA,
 	NUM_USAGES,
 	TEXTURE_ACTIVATED, 
+	TEXTURE_ACTIVATED_SCALE,
 	TEXTURE_ACTIVATION_TRIGGER,
+	TEXTURE_ACTIVATION_TRIGGER_SCALE,
 	TEXTURE_DEACTIVATION_TRIGGER,
+	TEXTURE_DEACTIVATION_TRIGGER_SCALE,
 	TEXTURE_UNACTIVATED,
+	TEXTURE_UNACTIVATED_SCALE,
 	THIEF_COLLIDE,
 	THIEF_EFFECT,
 	THIEF_LINGER_DURATION,
@@ -106,9 +111,11 @@ enum JsonConstants :int {
 #define LEVEL_ONE_KEY       "example5"
 
 /** Tileset for props */
-#define PROPS_FILE          "maps/Props.tsj"
+#define PROPS_FILE          "maps/PropsAndTraps.tsj"
 
 //  MARK: - Physics Constants
+
+#define POLYFACTORY_TOLERANCE   0.01
 
 /** Music constants */
 #define THIEF_COLLISION_SFX     "fuck"

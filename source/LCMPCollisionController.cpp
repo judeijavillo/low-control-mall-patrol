@@ -84,6 +84,7 @@ void CollisionController::beginContact(b2Contact* contact) {
                 (thiefBody == body2 && triggerBody == body1)) {
                 _game->getThief()->trapActivationFlag = trap->getTrapID();
             }
+
         }
     }
     

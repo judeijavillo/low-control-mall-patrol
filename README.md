@@ -27,4 +27,4 @@ doesn't recognize the collision (authority issue to be addressed in the next
 sprint).
 
 The host can start the game without other players joined (i.e. the start button
-should be activated), but you will always be playing as the thief.
+should be activated), but you will always be playing as the thief. 

@@ -124,6 +124,9 @@ protected:
     std::shared_ptr<cugl::scene2::PolygonNode> _unactivatedAreaNode;
     /** Reference to the node showing the texture of the activated effect area */
     std::shared_ptr<cugl::scene2::PolygonNode> _effectAreaNode;
+    
+    bool _sfxOn;
+    std::string _sfxKey;
 
 public:
     /** Whether the trap is activated */
@@ -165,7 +168,8 @@ public:
               std::shared_ptr<Effect> copEffect,
               std::shared_ptr<Effect> ThiefEffect,
               std::shared_ptr<Effect> copLingerEffect, 
-              std::shared_ptr<Effect> thiefLingerEffect );
+              std::shared_ptr<Effect> thiefLingerEffect,
+              bool sfxOn, std::string sfxKey);
 
 
 //	MARK: - Methods
@@ -242,7 +246,11 @@ public:
                     const std::shared_ptr<cugl::Texture> activationTriggerTexture,
                     const std::shared_ptr<cugl::Texture> deactivationTriggerTexture,
                     const std::shared_ptr<cugl::Texture> unactivatedAreaTexture,
-                    const std::shared_ptr<cugl::Texture> effectAreaTexture);
+                    const std::shared_ptr<cugl::Texture> effectAreaTexture,
+                    const std::shared_ptr<cugl::Vec2> activationTriggerTextureScale,
+                    const std::shared_ptr<cugl::Vec2> deactivationTriggerTextureScale,
+                    const std::shared_ptr<cugl::Vec2> unactivatedAreaTextureScale,
+                    const std::shared_ptr<cugl::Vec2> effectAreaTextureScale);
     
     /**
      * Sets the debug scene to all of the children nodes

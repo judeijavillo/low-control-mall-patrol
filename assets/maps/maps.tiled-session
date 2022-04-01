@@ -1,135 +1,47 @@
 {
-    "Map/SizeTest": {
-        "height": 4300,
-        "width": 2
-    },
-    "activeFile": "example3.json",
+    "activeFile": "",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
-        "C:/Users/tzhan/OneDrive/Desktop/IMG_4638.tsx": {
-            "scaleInDock": 0.03125,
-            "scaleInEditor": 0.06
-        },
         "Map1Overlay.tsx": {
-            "dynamicWrapping": false,
-            "scaleInDock": 0.33,
-            "scaleInEditor": 0.5
+            "dynamicWrapping": false
         },
-<<<<<<< HEAD
-        "Map3overlay.tsx": {
-            "dynamicWrapping": false,
-            "scaleInDock": 0.0625,
-            "scaleInEditor": 0.125
-=======
         "Props.tsj": {
             "dynamicWrapping": true,
-            "scaleInDock": 0.33,
             "scaleInEditor": 1
->>>>>>> cc3ffb7 (props work)
         },
-        "example1.json": {
-            "scale": 0.125,
-            "selectedLayer": 2,
-            "viewCenter": {
-<<<<<<< HEAD
-                "x": 3820,
-                "y": 644
-=======
-                "x": 3168,
-                "y": 3198
->>>>>>> cc3ffb7 (props work)
-            }
-        },
-        "example2.json": {
-            "scale": 0.0625,
-<<<<<<< HEAD
-            "selectedLayer": -1,
-=======
+        "example3.json": {
+            "scale": 1,
             "selectedLayer": 0,
->>>>>>> cc3ffb7 (props work)
             "viewCenter": {
-                "x": 5432,
-                "y": 3640
+                "x": 5003,
+                "y": 4645
             }
         },
-<<<<<<< HEAD
-        "example4.json": {
-            "scale": 0.03125,
-            "selectedLayer": 5,
+        "example5.json": {
+            "scale": 0.33,
+            "selectedLayer": 1,
             "viewCenter": {
-                "x": 3280,
-                "y": 5296
+                "x": 6578.787878787879,
+                "y": 7534.848484848485
             }
         },
         "mappics.tsx": {
             "dynamicWrapping": true
-        }
-    },
-    "last.exportedFilePath": "C:/Users/tzhan/OneDrive/Desktop",
-    "last.imagePath": "C:/Users/bryce/source/repos/low-control-mall-patrol/assets/textures/environment/map3",
-=======
-        "example3.json": {
-            "scale": 0.75,
-            "selectedLayer": 1,
-            "viewCenter": {
-                "x": 5204,
-                "y": 4401.333333333333
-            }
         },
         "traps.tsj": {
-            "dynamicWrapping": true,
-            "scaleInDock": 0.33,
-            "scaleInEditor": 1
+            "dynamicWrapping": true
         }
     },
-    "last.exportedFilePath": "C:/Users/tzhan/OneDrive/Desktop",
     "last.externalTilesetPath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/maps",
-    "last.imagePath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/textures/environment",
->>>>>>> cc3ffb7 (props work)
-    "last.objectTypesPath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/maps/propertytypes.json",
-    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
-    "map.lastUsedFormat": "json",
-    "map.orientation": null,
-    "map.tileHeight": 64,
-    "map.tileWidth": 64,
     "openFiles": [
-        "example1.json",
-        "example2.json",
-        "example3.json",
-        "traps.tsj",
-        "Props.tsj"
     ],
     "project": "maps.tiled-project",
-    "property.type": "string",
+    "property.type": "Effect",
     "recentFiles": [
-<<<<<<< HEAD
-        "example2.json",
-        "Map3overlay.tsx",
-        "example1.json",
-=======
-        "example3.json",
-        "example1.json",
-        "example2.json",
-        "Props.tsj",
-        "traps.tsj",
->>>>>>> cc3ffb7 (props work)
-        "Map1Overlay.tsx",
-        "C:/Users/tzhan/OneDrive/Desktop/IMG_4638.tsx"
+        "example5.json",
+        "Props.tsj"
     ],
-    "resizeMap.removeObjects": false,
-    "tileset.lastUsedFilter": "JSON tileset files (*.tsj *.json)",
-    "tileset.lastUsedFormat": "json",
-    "tileset.tileSize": {
-        "height": 9999,
-        "width": 9999
-    },
-<<<<<<< HEAD
-    "tileset.transparentColor": "#ff22ed",
-    "tileset.type": 1,
-    "tileset.useTransparentColor": true
-=======
-    "tileset.type": 1
->>>>>>> cc3ffb7 (props work)
+    "tileset.lastUsedFilter": "JSON tileset files (*.tsj *.json)"
 }

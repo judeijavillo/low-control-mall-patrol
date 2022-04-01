@@ -1,2 +1,5 @@
 *.DS_Store
 .vs/*
+assets/maps/maps.tiled-session
+cugl/build*
+assets/maps/maps.tiled-session

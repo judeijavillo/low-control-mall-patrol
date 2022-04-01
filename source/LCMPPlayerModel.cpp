@@ -115,7 +115,7 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
     Vec2 playerVel;
     Vec2 addedVel;
 
-    //iterate through the player effects and execute them
+    // Iterate through the player effects and execute them
     for (auto it = playerEffects.begin(); it != playerEffects.end(); it++) {
         if (playerEffects.count(it->first) > 0 && playerEffects[it->first]->size() > 0) {
             std::tuple<TrapModel::TrapType, shared_ptr<Vec2>> elem = it->second->at(0);
