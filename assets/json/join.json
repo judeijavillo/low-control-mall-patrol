@@ -1,0 +1,601 @@
+{
+    "textures": {
+        "background": {
+            "file": "textures/lobby/background.png"
+        },
+        "button_join": {
+            "file": "textures/lobby/join.png"
+        },
+        "button_create": {
+            "file": "textures/lobby/create.png"
+        },
+        "settings": {
+            "file": "textures/lobby/settings.png"
+        },
+        "profile": {
+            "file": "textures/lobby/profile.png"
+        },
+        "shop": {
+            "file": "textures/lobby/shop.png"
+        },
+        "back": {
+            "file": "textures/lobby/back.png"
+        },
+        "keypad": {
+            "file": "textures/lobby/keypad.png"
+        },
+        "keypad_base": {
+            "file": "textures/lobby/keypad_base.png"
+        },
+        "keypad_button": {
+            "file": "textures/lobby/keypad_button.png"
+        }
+    },
+    "fonts": {
+        "futura": {
+            "file": "fonts/futur.ttf",
+            "size": 36
+        }
+    },
+    "scene2s": {
+        "join": {
+            "type": "Node",
+            "comment": "This is the root node of the scene for the lab",
+            "format": {
+                "type": "Anchored"
+            },
+            "children": {
+                "backdrop": {
+                    "type": "Image",
+                    "data": {
+                        "texture": "background",
+                        "anchor": [0, 0.5],
+                        "scale": [1, 1]
+                    },
+                    "layout": {
+                        "x_anchor": "fill",
+                        "y_anchor": "fill"
+                    },
+                    "children": {
+                        "keypad": {
+                            "type": "Image",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [250, 150],
+                                "scale": [0.5, 0.5]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "keypad_base"
+                                    }
+
+                                },
+                                "roomID": {
+                                    "type": "Label",
+                                    "data": {
+                                        "anchor": [0.5, 0.5],
+                                        "scale": 1.5,
+                                        "font": "futura",
+                                        "text": "",
+                                        "halign": "center",
+                                        "valign": "middle",
+                                        "position": [512, 870]
+
+                                    }
+                                },
+                                "button1": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [300, 650],
+                                        "scale": [1, 1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "keypad_button"
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "Label",
+                                            "data": {
+                                                "anchor": [0.5, 0.5],
+                                                "scale": 1.3,
+                                                "font": "futura",
+                                                "text": "1",
+                                                "halign": "center",
+                                                "valign": "middle",
+                                                "position": [128, 128]
+
+                                            }
+                                        }
+                                    }
+                                },
+                                "button2": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [490, 650],
+                                        "scale": [1, 1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "keypad_button"
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "Label",
+                                            "data": {
+                                                "anchor": [0.5, 0.5],
+                                                "scale": 1.3,
+                                                "font": "futura",
+                                                "text": "2",
+                                                "halign": "center",
+                                                "valign": "middle",
+                                                "position": [128, 128]
+
+                                            }
+                                        }
+
+                                    }
+                                },
+                                "button3": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [680, 650],
+                                        "scale": [1, 1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "keypad_button"
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "Label",
+                                            "data": {
+                                                "anchor": [0.5, 0.5],
+                                                "scale": 1.3,
+                                                "font": "futura",
+                                                "text": "3",
+                                                "halign": "center",
+                                                "valign": "middle",
+                                                "position": [128, 128]
+
+                                            }
+                                        }
+
+                                    }
+                                },
+                                
+                                "button4": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [300, 480],
+                                        "scale": [1, 1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "keypad_button"
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "Label",
+                                            "data": {
+                                                "anchor": [0.5, 0.5],
+                                                "scale": 1.3,
+                                                "font": "futura",
+                                                "text": "4",
+                                                "halign": "center",
+                                                "valign": "middle",
+                                                "position": [128, 128]
+
+                                            }
+                                        }
+
+                                    }
+                                },
+                                "button5": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [490, 480],
+                                        "scale": [1, 1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "keypad_button"
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "Label",
+                                            "data": {
+                                                "anchor": [0.5, 0.5],
+                                                "scale": 1.3,
+                                                "font": "futura",
+                                                "text": "5",
+                                                "halign": "center",
+                                                "valign": "middle",
+                                                "position": [128, 128]
+
+                                            }
+                                        }
+
+                                    }
+                                },
+                                "button6": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [680, 480],
+                                        "scale": [1, 1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "keypad_button"
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "Label",
+                                            "data": {
+                                                "anchor": [0.5, 0.5],
+                                                "scale": 1.3,
+                                                "font": "futura",
+                                                "text": "6",
+                                                "halign": "center",
+                                                "valign": "middle",
+                                                "position": [128, 128]
+
+                                            }
+                                        }
+
+                                    }
+                                },
+                                
+                                "button7": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [300, 310],
+                                        "scale": [1, 1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "keypad_button"
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "Label",
+                                            "data": {
+                                                "anchor": [0.5, 0.5],
+                                                "scale": 1.3,
+                                                "font": "futura",
+                                                "text": "7",
+                                                "halign": "center",
+                                                "valign": "middle",
+                                                "position": [128, 128]
+
+                                            }
+                                        }
+
+                                    }
+                                },
+                                "button8": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [490, 310],
+                                        "scale": [1, 1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "keypad_button"
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "Label",
+                                            "data": {
+                                                "anchor": [0.5, 0.5],
+                                                "scale": 1.3,
+                                                "font": "futura",
+                                                "text": "8",
+                                                "halign": "center",
+                                                "valign": "middle",
+                                                "position": [128, 128]
+
+                                            }
+                                        }
+
+                                    }
+                                },
+                                "button9": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [680, 310],
+                                        "scale": [1, 1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "keypad_button"
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "Label",
+                                            "data": {
+                                                "anchor": [0.5, 0.5],
+                                                "scale": 1.3,
+                                                "font": "futura",
+                                                "text": "9",
+                                                "halign": "center",
+                                                "valign": "middle",
+                                                "position": [128, 128]
+
+                                            }
+                                        }
+
+                                    }
+                                },
+                                
+                                "buttonX": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [300, 140],
+                                        "scale": [1, 1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "keypad_button"
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "Label",
+                                            "data": {
+                                                "anchor": [0.5, 0.5],
+                                                "scale": 1.3,
+                                                "font": "futura",
+                                                "text": "X",
+                                                "halign": "center",
+                                                "valign": "middle",
+                                                "position": [128, 128]
+
+                                            }
+                                        }
+
+                                    }
+                                },
+                                "button0": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [490, 140],
+                                        "scale": [1, 1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "keypad_button"
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "Label",
+                                            "data": {
+                                                "anchor": [0.5, 0.5],
+                                                "scale": 1.3,
+                                                "font": "futura",
+                                                "text": "0",
+                                                "halign": "center",
+                                                "valign": "middle",
+                                                "position": [128, 128]
+
+                                            }
+                                        }
+
+                                    }
+                                },
+                                "buttonDEL": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [680, 140],
+                                        "scale": [1, 1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "keypad_button"
+                                            }
+                                        },
+                                        "label": {
+                                            "type": "Label",
+                                            "data": {
+                                                "anchor": [0.5, 0.5],
+                                                "scale": 1.3,
+                                                "font": "futura",
+                                                "text": "DEL",
+                                                "halign": "center",
+                                                "valign": "middle",
+                                                "position": [128, 128]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "settings": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [1450, 640],
+                                "scale": [1.5, 1.5]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "settings"
+                                    }
+
+                                }
+
+                            }
+                        },
+                        "profile": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [50, 640],
+                                "scale": [1.8, 1.8]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "profile"
+                                    }
+
+                                }
+
+                            }
+                        },
+                        "shop": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [140, 640],
+                                "scale": [1.8, 1.8]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "shop"
+
+                                    }
+
+                                }
+
+                            }
+                        },
+                        "back": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [50, 560],
+                                "scale": [1.8, 1.8]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "back"
+                                    }
+                                }
+                            }
+                        },
+                        "instructions": {
+                            "type": "Label",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "scale": 1.3,
+                                "font": "futura",
+                                "text": "Enter a room code",
+                                "halign": "center",
+                                "valign": "middle",
+                                "position": [950, 500]
+                            }
+                        },
+                        "title1": {
+                            "type": "Label",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "scale": 1.3,
+                                "font": "futura",
+                                "text": "JOIN YOUR",
+                                "halign": "center",
+                                "valign": "middle",
+                                "position": [950, 400]
+
+                            }
+                        },
+                        "title2": {
+                            "type": "Label",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "scale": 1.3,
+                                "font": "futura",
+                                "text": "FRIEND'S GAME",
+                                "halign": "center",
+                                "valign": "middle",
+                                "position": [950, 350]
+
+                            }
+                        },
+                        "join": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [950, 150],
+                                "scale": [1.6, 1.6]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "button_join"
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }                        
+        }
+    }
+}
+
+

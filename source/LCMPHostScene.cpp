@@ -64,10 +64,10 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     scene->doLayout(); // Repositions the HUD
     
     // Get the interactive UI elements that we need to access later
-    _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_center_start"));
-    _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_back"));
-    _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_center_game_field_text"));
-    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_center_players_field_text"));
+    _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_backdrop_create"));
+    _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_backdrop_back"));
+    _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_roomID"));
+    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_players"));
     _status = Status::IDLE;
     
     // Program the buttons
@@ -120,9 +120,12 @@ void HostScene::update(float timestep) {
             _status = IDLE;
             break;
         case NetworkController::WAIT:
+        {
             _status = WAIT;
-            _gameid->setText(_network->getRoomID());
+            _gameid->setText(strtool::format("Tell your friends this room code: " + _network->getRoomID()), true);
+            _gameid->setPosition(600, 500);
             break;
+        }
         case NetworkController::START:
             _status = START;
             break;
@@ -130,9 +133,7 @@ void HostScene::update(float timestep) {
             _status = ABORT;
             break;
         }
-        
-        _player->setText(to_string(_network->getNumPlayers()));
-        configureStartButton();
+        _player->setText(strtool::format("Waiting for players: (%d/5)", _network->getNumPlayers()), true);
     }
 }
 
@@ -151,7 +152,7 @@ void HostScene::setActive(bool value) {
         if (value) {
             _network->disconnect();
             _status = IDLE;
-            configureStartButton();
+            _startgame->activate();
             _backout->activate();
             connect();
         } else {
@@ -178,8 +179,8 @@ void HostScene::setActive(bool value) {
  * @param text      The new text value
  */
 void HostScene::updateText(const std::shared_ptr<scene2::Button>& button, const std::string text) {
-    auto label = std::dynamic_pointer_cast<scene2::Label>(button->getChildByName("up")->getChildByName("label"));
-    label->setText(text);
+//    auto label = std::dynamic_pointer_cast<scene2::Label>(button->getChildByName("up")->getChildByName("label"));
+//    label->setText(text);
 }
 
 /**
@@ -199,9 +200,8 @@ bool HostScene::connect() {
  * networking.
  */
 void HostScene::configureStartButton() {
-    // THIS IS WRONG. FIX ME.
-    updateText(_startgame, _status == IDLE ? "Waiting" : "Start Game");
-    _startgame->activate();
+//    updateText(_startgame, _status == IDLE ? "Waiting" : "Start Game");
+//    _startgame->activate();
 }
 
 /**

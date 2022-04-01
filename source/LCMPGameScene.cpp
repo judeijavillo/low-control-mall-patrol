@@ -305,14 +305,14 @@ void GameScene::stateGame(float timestep) {
     _gameTime += timestep;
     
     // Play last frame's sound effects
-    if (_collision.didHitObstacle) {
-        _audio->playSound(_assets, OBJ_COLLISION_SFX, true, _gameTime);
-        _collision.didHitObstacle = false;
-    }
-    if (_collision.didHitTrap) {
-        _audio->playSound(_assets, TRAP_COLLISION_SFX, true, _gameTime);
-        _collision.didHitTrap = false;
-    }
+//    if (_collision.didHitObstacle) {
+//        _audio->playSound(_assets, OBJ_COLLISION_SFX, true, _gameTime);
+//        _collision.didHitObstacle = false;
+//    }
+//    if (_collision.didHitTrap) {
+//        _audio->playSound(_assets, TRAP_COLLISION_SFX, true, _gameTime);
+//        _collision.didHitTrap = false;
+//    }
     
     // Gather the input commands
     _input.update(timestep);
@@ -326,6 +326,7 @@ void GameScene::stateGame(float timestep) {
     bool toggle = _input.didSwitch();
     movement.y = -movement.y;
     tackle.y = -tackle.y;
+    toggle = false;
     
     // If time surpasses the game length, thief wins
     if (_gameTime > GAME_LENGTH) {
@@ -479,14 +480,14 @@ void GameScene::updateCop(float timestep, int copID, Vec2 movement, bool swipe, 
     Vec2 thiefPosition = _game->getThief()->getPosition();
     
     // Play tackling sounds
-    if (cop->didTackle) {
-        _audio->playSound(_assets, TACKLE_SFX, true, _gameTime);
-        cop->didTackle = false;
-    }
-    if (cop->didLand) {
-        _audio->playSound(_assets, LAND_SFX, true, _gameTime);
-        cop->didLand = false;
-    }
+//    if (cop->didTackle) {
+//        _audio->playSound(_assets, TACKLE_SFX, true, _gameTime);
+//        cop->didTackle = false;
+//    }
+//    if (cop->didLand) {
+//        _audio->playSound(_assets, LAND_SFX, true, _gameTime);
+//        cop->didLand = false;
+//    }
     
     // Update, animate, and network cop movement
     _game->updateCop(movement, thiefPosition, copID, timestep);

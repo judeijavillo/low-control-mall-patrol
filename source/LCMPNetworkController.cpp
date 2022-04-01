@@ -68,6 +68,7 @@ bool NetworkController::connect(const std::string room) {
  * Checks the connection and updates the status accordingly (pre-game)
  */
 void NetworkController::update() {
+    if (_connection == nullptr) return;
     switch (_connection->getStatus()) {
     case NetworkConnection::NetStatus::Pending:
         _status = CONNECTING;

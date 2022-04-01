@@ -56,12 +56,14 @@ protected:
     /** The sound controller for the game */
     std::shared_ptr<AudioController> _audio;
 
+    /** The keypad buttons */
+    unordered_set<std::shared_ptr<cugl::scene2::Button>> _keypadButtons;
     /** The menu button for starting a game */
     std::shared_ptr<cugl::scene2::Button> _startgame;
     /** The back button for the menu scene */
     std::shared_ptr<cugl::scene2::Button> _backout;
     /** The game id label (for updating) */
-    std::shared_ptr<cugl::scene2::TextField> _gameid;
+    std::shared_ptr<cugl::scene2::Label> _gameid;
     /** The players label (for updating) */
     std::shared_ptr<cugl::scene2::Label> _player;
     
@@ -187,6 +189,13 @@ private:
      */
     bool connect(const std::string room);
 
+//  MARK: - Callbacks
+    
+    /**
+     * Helper for keypad button callback
+     */
+    void pressButton(const std::string& name, bool down, int buttonID);
+    
 };
 
 #endif /* __LCMP_GAME_SCENE_H__ */

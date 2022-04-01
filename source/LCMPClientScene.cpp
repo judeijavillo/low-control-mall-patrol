@@ -25,6 +25,10 @@ using namespace std;
 
 /** Regardless of logo, lock the height to this */
 #define SCENE_HEIGHT  720
+/** The longest roomID allowed */
+#define MAX_ROOM_ID_LENGTH 5
+
+Vec2 ROOM_ID_LABEL_HOME = Vec2(512, 870);
 
 //  MARK: - Constructors
 
@@ -56,17 +60,18 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _audio = audio;
     
     // Acquire the scene built by the asset loader and resize it the scene
-    std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("client");
+    std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("join");
     scene->setContentSize(dimen);
     scene->doLayout(); // Repositions the HUD
     
     // Get interactive UI elements
-    _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_center_start"));
-    _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("client_back"));
-    _gameid = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("client_center_game_field_text"));
-    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("client_center_players_field_text"));
+    _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_join"));
+    _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_back"));
+    _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_roomID"));
+    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_instructions"));
     _status = Status::IDLE;
     
+    // Attach listener to back button
     _backout->addListener([this](const std::string& name, bool down) {
         if (down) {
             _status = Status::ABORT;
@@ -74,22 +79,41 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
             _audio->playSound(_assets, BACK_SFX, true, 0);
         }
     });
-
+    
+    // Create all of the numbered buttons
+    for (int i = 0; i < 10; i++) {
+        string name = strtool::format("join_backdrop_keypad_button%d", i);
+        shared_ptr<scene2::Button> button = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>(name));
+        button->addListener([this, i](const std::string& name, bool down) { pressButton(name, down, i); });
+        _keypadButtons.insert(button);
+    }
+    
+    // Create the X button
+    shared_ptr<scene2::Button> buttonX = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_buttonX"));
+    buttonX->addListener([this](const std::string& name, bool down) {
+        _gameid->setText("", true);
+        _gameid->setPosition(ROOM_ID_LABEL_HOME);
+    });
+    _keypadButtons.insert(buttonX);
+    
+    // Create the DEL button
+    shared_ptr<scene2::Button> buttonDEL = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_buttonDEL"));
+    buttonDEL->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            string text = _gameid->getText();
+            _gameid->setText(text.substr(0, text.length() - 1), true);
+            _gameid->setPosition(ROOM_ID_LABEL_HOME);
+        }
+    });
+    _keypadButtons.insert(buttonDEL);
+    
+    // Attach listener to join button
     _startgame->addListener([=](const std::string& name, bool down) {
         if (down) {
             _audio->stopSfx(CLICK_SFX);
             _audio->playSound(_assets, CLICK_SFX, true, 0);
-            // This will call the _gameid listener
-            if (_gameid->hasFocus()) {
-                _gameid->releaseFocus();
-            } else {
-                connect(_gameid->getText());
-            }
+            connect(_gameid->getText());
         }
-    });
-    
-    _gameid->addExitListener([this](const std::string& name, const std::string& value) {
-        connect(value);
     });
     
     addChild(scene);
@@ -135,7 +159,23 @@ void ClientScene::update(float timestep) {
             break;
         }
         
-        _player->setText(to_string(_network->getNumPlayers()));
+        switch (_status) {
+        case IDLE:
+            _player->setText("Enter a room code", true);
+            break;
+        case JOIN:
+            _player->setText("Connecting", true);
+            break;
+        case WAIT:
+        {
+            string message = strtool::format("Waiting for host (%d/5)", _network->getNumPlayers());
+            _player->setText(message, true);
+            break;
+        }
+        default:
+            break;
+        }
+        
         configureStartButton();
     }
 }
@@ -155,14 +195,20 @@ void ClientScene::setActive(bool value) {
         if (value) {
             _status = IDLE;
             _network->disconnect();
-            _gameid->activate();
             _backout->activate();
-            _player->setText("1");
+            for (auto button = _keypadButtons.begin(); button != _keypadButtons.end(); button++) {
+                (*button)->activate();
+            }
+            _gameid->setText("");
+            _player->setText("Enter a room code");
+            
             configureStartButton();
         } else {
-            _gameid->deactivate();
             _startgame->deactivate();
             _backout->deactivate();
+            for (auto button = _keypadButtons.begin(); button != _keypadButtons.end(); button++) {
+                (*button)->deactivate();
+            }
             // If any were pressed, reset them
             _startgame->setDown(false);
             _backout->setDown(false);
@@ -182,8 +228,8 @@ void ClientScene::setActive(bool value) {
  * @return true if the network connection is still active.
  */
 void ClientScene::updateText(const std::shared_ptr<scene2::Button>& button, const std::string text) {
-    auto label = std::dynamic_pointer_cast<scene2::Label>(button->getChildByName("up")->getChildByName("label"));
-    label->setText(text);
+//    auto label = std::dynamic_pointer_cast<scene2::Label>(button->getChildByName("up")->getChildByName("label"));
+//    label->setText(text);
 
 }
 
@@ -210,20 +256,25 @@ bool ClientScene::connect(const std::string room) {
  * networking.
  */
 void ClientScene::configureStartButton() {
-    // THIS IS WRONG. FIX ME
     switch (_status) {
     case IDLE:
         _startgame->setDown(false);
         _startgame->activate();
-        updateText(_startgame,"Start Game");
         break;
     case JOIN:
         _startgame->deactivate();
-        updateText(_startgame,"Connecting");
     case WAIT:
         _startgame->deactivate();
-        updateText(_startgame,"Waiting");
     default:
         break;
+    }
+}
+
+void ClientScene::pressButton(const std::string& name, bool down, int buttonID) {
+    if (down) {
+        if (_gameid->getText().length() < MAX_ROOM_ID_LENGTH) {
+            _gameid->setText(_gameid->getText() + to_string(buttonID), true);
+            _gameid->setPosition(ROOM_ID_LABEL_HOME);   
+        }
     }
 }
