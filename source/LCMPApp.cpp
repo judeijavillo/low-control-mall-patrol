@@ -59,6 +59,8 @@ void LCMPApp::onStartup() {
     
     // Queue up the other assets
     _assets->loadDirectoryAsync("json/assets.json", nullptr);
+    _assets->loadDirectoryAsync("json/host.json",nullptr);
+    _assets->loadDirectoryAsync("json/join.json",nullptr);
     _assets->loadDirectoryAsync(WALL_ASSETS_FILE, nullptr);
     
     // Create a "loading" screen
