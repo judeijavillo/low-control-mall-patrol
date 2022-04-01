@@ -47,7 +47,7 @@
                     "name": "Type",
                     "propertyType": "TrapType",
                     "type": "string",
-                    "value": "Teleport"
+                    "value": "Escalator"
                 }
             ],
             "name": "Effect",

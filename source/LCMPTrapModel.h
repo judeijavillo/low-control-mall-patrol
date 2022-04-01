@@ -98,12 +98,14 @@ protected:
     /** Defining the filter bits for the deactivation area model*/
     b2Filter deactivationFilter;
     
-    /** The texture of the trigger prior to being activated */
-    std::shared_ptr<cugl::Texture> _triggerTexture;
-    /** The texture of the trigger after being activated */
-    std::shared_ptr<cugl::Texture> _triggerActivatedTexture;
+    /** The texture of the activation trigger */
+    //std::shared_ptr<cugl::Texture> _activationTriggerTexture;
+    /** The texture of the deactivation trigger */
+    //std::shared_ptr<cugl::Texture> _deactivationTriggerTexture;
+    /** The texture of the unactivated effect area*/
+    //std::shared_ptr<cugl::Texture> _unactivatedAreaTexture;
     /** The texture of the effect area*/
-    std::shared_ptr<cugl::Texture> _effectAreaTexture;
+    //std::shared_ptr<cugl::Texture> _effectAreaTexture;
     
     /** the lingering duration for the cop linger effect*/
     float copLingerDuration;
@@ -114,11 +116,13 @@ protected:
     std::shared_ptr<cugl::scene2::SceneNode> _node;
     /** Reference to the debug node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _debugnode;
-    /** Reference to the node showing the texture of the trap untriggered */
-    std::shared_ptr<cugl::scene2::PolygonNode> _triggerNode;
-    /** Reference to the node showing the texture of the trap triggered */
-    std::shared_ptr<cugl::scene2::PolygonNode> _triggerActivatedNode;
-    /** Reference to the node showing the texture of the effect area */
+    /** Reference to the node showing the texture of the activation trigger*/
+    std::shared_ptr<cugl::scene2::PolygonNode> _activationTriggerNode;
+    /** Reference to the node showing the texture of the deactivation trigger*/
+    std::shared_ptr<cugl::scene2::PolygonNode> _deactivationTriggerNode;
+    /**  Reference to the node showing the unactivated effect area*/
+    std::shared_ptr<cugl::scene2::PolygonNode> _unactivatedAreaNode;
+    /** Reference to the node showing the texture of the activated effect area */
     std::shared_ptr<cugl::scene2::PolygonNode> _effectAreaNode;
 
 public:
@@ -150,6 +154,7 @@ public:
      * Initializes a Trap Model
      */
     bool init(int trapID,
+              bool activated,
               const std::shared_ptr<cugl::physics2::SimpleObstacle> thiefEffectArea, const std::shared_ptr<cugl::physics2::SimpleObstacle> copEffectArea,
               const std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea, const std::shared_ptr<cugl::physics2::SimpleObstacle> deactivationArea,
               const std::shared_ptr<cugl::Vec2> triggerPosition,
@@ -234,7 +239,10 @@ public:
     void setAssets(float scale,
                     const std::shared_ptr<cugl::scene2::SceneNode>& node,
                     const std::shared_ptr<cugl::AssetManager>& assets,
-                     TrapType type);
+                    const std::shared_ptr<cugl::Texture> activationTriggerTexture,
+                    const std::shared_ptr<cugl::Texture> deactivationTriggerTexture,
+                    const std::shared_ptr<cugl::Texture> unactivatedAreaTexture,
+                    const std::shared_ptr<cugl::Texture> effectAreaTexture);
     
     /**
      * Sets the debug scene to all of the children nodes
