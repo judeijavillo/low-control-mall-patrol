@@ -24,6 +24,9 @@
         "bucket": {
             "file": "textures/environment/bucket.png"
         },
+        "bucket_triggered_w_puddle": {
+            "file": "textures/environment/bucket_triggered_w_puddle.png"
+        },
         "bush": {
             "file": "textures/environment/bush.png"
         },
@@ -36,8 +39,14 @@
         "cleaning_cart": {
             "file": "textures/environment/cleaning_cart.png"
         },
+        "cleaning_cart_triggered_w_banana": {
+            "file": "textures/environment/cleaning_cart_triggered_w_banana.png"
+        },
         "baby_carriage": {
             "file": "textures/environment/baby_carriage.png"
+        },
+        "baby_carriage_triggered_w_baby": {
+            "file": "textures/environment/baby_carriage_triggered_w_baby.png"
         },
         "long_plant_mid": {
             "file": "textures/environment/long_plant_mid.png"
@@ -53,6 +62,12 @@
         },
         "tall_plant": {
             "file": "textures/environment/tall_plant.png"
+        },
+        "teleporttemp": {
+            "file": "textures/environment/teleporttemp.png"
+        },
+        "teleporttemp_triggered": {
+            "file": "textures/environment/teleporttemp_triggered.png"
         },
         "cop_run_back": {
             "file": "textures/characters/lcmp_cop_run_back.png"

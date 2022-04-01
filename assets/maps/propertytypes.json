@@ -2,9 +2,61 @@
     {
         "id": 1,
         "members": [
+            {
+                "name": "Escalator Velocity",
+                "propertyType": "Vec2",
+                "type": "class",
+                "value": {
+                }
+            },
+            {
+                "name": "LingerDuration",
+                "type": "float",
+                "value": 0
+            },
+            {
+                "name": "Speed Modifier",
+                "propertyType": "Vec2",
+                "type": "class",
+                "value": {
+                }
+            },
+            {
+                "name": "Staircase Vector",
+                "propertyType": "Vec2",
+                "type": "class",
+                "value": {
+                }
+            },
+            {
+                "name": "Teleport Location",
+                "propertyType": "Vec2",
+                "type": "class",
+                "value": {
+                }
+            },
+            {
+                "name": "Type",
+                "propertyType": "TrapType",
+                "type": "string",
+                "value": "Escalator"
+            }
         ],
         "name": "Effect",
         "type": "class"
+    },
+    {
+        "id": 4,
+        "name": "TrapType",
+        "storageType": "string",
+        "type": "enum",
+        "values": [
+            "Velocity Modifier",
+            "Escalator",
+            "Teleport",
+            "Stairs"
+        ],
+        "valuesAsFlags": false
     },
     {
         "id": 3,

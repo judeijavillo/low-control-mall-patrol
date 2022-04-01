@@ -13,6 +13,7 @@
 
 /** The global fields of the level model */
 #define LAYERS_FIELD        "layers"
+#define DATA_FIELD          "data"
 #define WIDTH_FIELD         "width"
 #define HEIGHT_FIELD        "height"
 #define T_SIZE_FIELD        "tilewidth"
@@ -22,7 +23,7 @@
 #define OBJECTS_FIELD       "objects"
 #define ELLIPSE_FIELD       "ellipse"
 #define POLYGON_FIELD       "polygon"
-#define FLOOR_FIELD         0
+#define PROPS_FIELD         0
 #define TRAPS_FIELD         1
 #define WALLS_FIELD         2
 #define COPS_FIELD          3
@@ -30,6 +31,15 @@
 #define POINT_FIELD			"point"
 #define PROPERTIES_FIELD    "properties"
 #define ID_FIELD			"id"
+// Props.tmj is always second tileset, first tileset is always size 1
+#define PROP_FIRSTGID       2
+
+/** Flags for tiled */
+#define FLIPPED_HORIZONTALLY_FLAG   0x80000000;
+#define FLIPPED_VERTICALLY_FLAG     0x40000000;
+#define FLIPPED_DIAGONALLY_FLAG     0x20000000;
+#define ROTATED_HEXAGONAL_120_FLAG  0x10000000;
+#define CLEAR_FLAGS_FILTER          0x0FFFFFFF;
 
 /** The global fields for trap properties*/
 enum JsonConstants :int {
@@ -40,6 +50,10 @@ enum JsonConstants :int {
 	COP_LINGER_EFFECT,
 	EFFECT_AREA,
 	NUM_USAGES,
+	TEXTURE_ACTIVATED, 
+	TEXTURE_ACTIVATION_TRIGGER,
+	TEXTURE_DEACTIVATION_TRIGGER,
+	TEXTURE_UNACTIVATED,
 	THIEF_COLLIDE,
 	THIEF_EFFECT,
 	THIEF_LINGER_DURATION,
@@ -82,12 +96,17 @@ enum JsonConstants :int {
 #define DEBUG_COLOR_FIELD   "debugcolor"
 #define DEBUG_OPACITY_FIELD "debugopacity"
 
+#define PROP_SCALE          0.14f
+
 /** The source for our level file */
-#define LEVEL_ONE_FILE      "maps/example4.json"
+#define LEVEL_ONE_FILE      "maps/example5.json"
 /** Assets for our level */
 #define WALL_ASSETS_FILE    "maps/Map3WallAssets.json"
 /** The key for our loaded level */
-#define LEVEL_ONE_KEY       "example4"
+#define LEVEL_ONE_KEY       "example5"
+
+/** Tileset for props */
+#define PROPS_FILE          "maps/Props.tsj"
 
 //  MARK: - Physics Constants
 

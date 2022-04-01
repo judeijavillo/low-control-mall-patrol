@@ -2,12 +2,20 @@
 <objecttypes>
  <objecttype name="Trap" color="#a40514">
   <property name="activated" type="bool" default="false"/>
-  <property name="copCollide" type="bool" default="false"/>
-  <property name="copSpeed" type="float" default="1"/>
+  <property name="copCollide" type="bool" default="true"/>
+  <property name="copEffect" type="class" propertytype="Effect" default=""/>
+  <property name="copLingerDuration" type="float" default="0"/>
+  <property name="copLingerEffect" type="class" propertytype="Effect" default=""/>
   <property name="effectArea" type="object" default="0"/>
   <property name="numUsages" type="int" default="-1"/>
-  <property name="thiefCollide" type="bool" default="false"/>
-  <property name="thiefSpeed" type="float" default="1"/>
+  <property name="textureActivated" type="string"/>
+  <property name="textureActivationTrigger" type="string"/>
+  <property name="textureDeactivationTrigger" type="string"/>
+  <property name="textureUnactivated" type="string"/>
+  <property name="thiefCollide" type="bool" default="true"/>
+  <property name="thiefEffect" type="class" propertytype="Effect" default=""/>
+  <property name="thiefLingerDuration" type="float" default="0"/>
+  <property name="thiefLingerEffect" type="class" propertytype="Effect" default=""/>
   <property name="triggerArea" type="object" default="0"/>
   <property name="triggerDeactivationArea" type="object" default="0"/>
  </objecttype>

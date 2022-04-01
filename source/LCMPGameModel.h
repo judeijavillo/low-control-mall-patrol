@@ -183,6 +183,14 @@ private:
                  const std::shared_ptr<cugl::AssetManager>& assets,
                  std::shared_ptr<cugl::scene2::ActionManager>& actions);
     
+    /**
+     Places all props into the world
+     */
+    void initProps(const std::shared_ptr<cugl::JsonValue>& props,
+                   int props_firstgid,
+                   const std::shared_ptr<cugl::JsonValue>& propTileset,
+                   const std::shared_ptr<cugl::AssetManager>& assets);
+    
     struct ObstacleNode_x_Y_struct{
         std::shared_ptr<cugl::physics2::PolygonObstacle> obstacle;
         std::shared_ptr<cugl::scene2::PolygonNode> node;
