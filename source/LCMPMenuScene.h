@@ -34,7 +34,9 @@ public:
         /** User wants to host a game */
         HOST,
         /** User wants to join a game */
-        JOIN
+        JOIN,
+        /** User wants to find a game */
+        FIND,
     };
 
 protected:
@@ -48,6 +50,8 @@ protected:
     std::shared_ptr<cugl::scene2::Button> _hostbutton;
     /** The menu button for joining a game */
     std::shared_ptr<cugl::scene2::Button> _joinbutton;
+    /** The menu button for finding a game */
+    std::shared_ptr<cugl::scene2::Button> _findbutton;
     /** The player menu choice */
     Choice _choice;
     

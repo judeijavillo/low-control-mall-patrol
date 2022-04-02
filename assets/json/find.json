@@ -1,0 +1,168 @@
+{
+    "textures": {
+        "background": {
+            "file": "textures/lobby/background.png"
+        },
+        "button_join": {
+            "file": "textures/lobby/join.png"
+        },
+        "button_create": {
+            "file": "textures/lobby/create.png"
+        },
+        "settings": {
+            "file": "textures/lobby/settings.png"
+        },
+        "profile": {
+            "file": "textures/lobby/profile.png"
+        },
+        "shop": {
+            "file": "textures/lobby/shop.png"
+        },
+        "back": {
+            "file": "textures/lobby/back.png"
+        },
+        "map": {
+            "file": "textures/lobby/map.png"
+        }
+    },
+    "fonts": {
+        "futura": {
+            "file": "fonts/futur.ttf",
+            "size": 48
+        }
+    },
+    "scene2s": {
+        "find": {
+            "type": "Node",
+            "comment": "This is the root node of the scene for the lab",
+            "format": {
+                "type": "Anchored"
+            },
+            "children": {
+                "backdrop": {
+                    "type": "Image",
+                    "data": {
+                        "texture": "background",
+                        "anchor": [0.5, 0.5],
+                        "scale": [1, 1]
+                    },
+                    "layout": {
+                        "x_anchor": "fill",
+                        "y_anchor": "fill"
+                    },
+                    "children": {
+                        "join": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [600, 150],
+                                "scale": [1.6, 1.6]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "button_join"
+                                    }
+                                }
+                            }
+                        },
+                        "settings": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [1450, 640],
+                                "scale": [1.5, 1.5]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "settings"
+                                    }
+                                }
+                            }
+                        },
+                        "profile": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [50, 640],
+                                "scale": [1.8, 1.8]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "profile"
+                                    }
+                                }
+                            }
+                        },
+                        "shop": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [140, 640],
+                                "scale": [1.8, 1.8]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "shop"
+                                    }
+                                }
+                            }
+                        },
+                        "back": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [50, 560],
+                                "scale": [1.8, 1.8]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "back"
+                                    }
+                                }
+                            }
+                        },
+                        "status": {
+                            "type": "Label",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "scale": 1,
+                                "font": "futura",
+                                "text": "Connecting to server",
+                                "halign": "middle",
+                                "valign": "center",
+                                "position": [600, 500]
+                            }
+                        },
+                        "players": {
+                            "type": "Label",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "scale": 1,
+                                "font": "futura",
+                                "text": "Waiting for players (1/1)",
+                                "halign": "center",
+                                "valign": "middle",
+                                "position": [600, 400]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -45,6 +45,7 @@ void LCMPApp::onStartup() {
     
     // Initialize networking
     _network = make_shared<NetworkController>();
+    _network->init();
     
     // Initialize audio
     _audio = make_shared<AudioController>();
@@ -61,6 +62,7 @@ void LCMPApp::onStartup() {
     _assets->loadDirectoryAsync("json/assets.json", nullptr);
     _assets->loadDirectoryAsync("json/host.json",nullptr);
     _assets->loadDirectoryAsync("json/join.json",nullptr);
+    _assets->loadDirectoryAsync("json/find.json",nullptr);
     _assets->loadDirectoryAsync(WALL_ASSETS_FILE, nullptr);
     
     // Create a "loading" screen
@@ -86,6 +88,7 @@ void LCMPApp::onShutdown() {
     _game.disconnect();
     _host.disconnect();
     _client.disconnect();
+    _find.disconnect();
     
     _loading.dispose();
     _game.dispose();
@@ -133,6 +136,9 @@ void LCMPApp::update(float timestep) {
     case CLIENT:
         updateClientScene(timestep);
         break;
+    case FIND:
+        updateFindScene(timestep);
+        break;
     case GAME:
         updateGameScene(timestep);
         break;
@@ -162,6 +168,9 @@ void LCMPApp::draw() {
     case CLIENT:
         _client.render(_batch);
         break;
+    case FIND:
+        _find.render(_batch);
+        break;
     case GAME:
         _game.render(_batch);
         break;
@@ -188,6 +197,7 @@ void LCMPApp::updateLoadingScene(float timestep) {
         _menu.init(_assets, _audio);
         _host.init(_assets, _network, _audio);
         _client.init(_assets, _network, _audio);
+        _find.init(_assets, _network);
         _game.init(_assets, _network, _audio, _actions);
         _menu.setActive(true);
         _scene = State::MENU;
@@ -217,6 +227,12 @@ void LCMPApp::updateMenuScene(float timestep) {
         _client.setActive(true);
         _network->setHost(false);
         _scene = State::CLIENT;
+        break;
+    case MenuScene::Choice::FIND:
+        _menu.setActive(false);
+        _find.setActive(true);
+        _network->setHost(true);
+        _scene = State::FIND;
         break;
     case MenuScene::Choice::NONE:
         // DO NOTHING
@@ -280,6 +296,37 @@ void LCMPApp::updateClientScene(float timestep) {
     case ClientScene::Status::WAIT:
     case ClientScene::Status::IDLE:
     case ClientScene::Status::JOIN:
+        // DO NOTHING
+        break;
+    }
+}
+
+/**
+ * Inidividualized update method for the room scene.
+ *
+ * This method keeps the primary {@link #update} from being a mess of switch
+ * statements. It also handles the transition logic from the room scene.
+ *
+ * @param timestep  The amount of time (in seconds) since the last frame
+ */
+void LCMPApp::updateFindScene(float timestep) {
+    _find.update(timestep);
+    switch (_find.getStatus()) {
+    case FindScene::Status::ABORT:
+        _find.setActive(false);
+        _menu.setActive(true);
+        _scene = State::MENU;
+        break;
+    case FindScene::Status::START:
+        _find.setActive(false);
+        _game.setActive(true);
+        _scene = State::GAME;
+        _game.start(_network->isHost());
+        break;
+    case FindScene::Status::WAIT:
+    case FindScene::Status::IDLE:
+    case FindScene::Status::HOST:
+    case FindScene::Status::CLIENT:
         // DO NOTHING
         break;
     }

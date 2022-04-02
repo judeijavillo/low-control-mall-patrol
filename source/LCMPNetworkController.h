@@ -9,6 +9,8 @@
 #ifndef __LCMP_NETWORK_CONTROLLER_H__
 #define __LCMP_NETWORK_CONTROLLER_H__
 #include <cugl/cugl.h>
+#include <slikenet/TCPInterface.h>
+#include <slikenet/HTTPConnection2.h>
 #include "LCMPGameModel.h"
 
 /**
@@ -65,6 +67,10 @@ protected:
     cugl::NetworkConnection::ConnectionConfig _config;
     /** The network connection (as made by this scene) */
     std::shared_ptr<cugl::NetworkConnection> _connection;
+    /** A reference to the HTTP Connection */
+    SLNet::HTTPConnection2* _http;
+    /** A reference to the TCP Interface */
+    SLNet::TCPInterface* _tcp;
     
     /** The mapping from player ID to Player struct */
     std::unordered_map<int, Player> _players;
@@ -93,7 +99,17 @@ public:
      */
     void dispose();
     
+    /**
+     * Initializes a Network Controller
+     */
+    bool init();
+    
 //  MARK: - Methods
+    
+    /**
+     * Returns whether or not the player is a host
+     */
+    bool isHost() { return _isHost; }
     
     /**
      * Sets whether or not the connection should be made for a host
@@ -197,6 +213,61 @@ public:
      * Sends a byte vector to indicate game over
      */
     void sendGameOver();
+
+//  MARK: - Server
+    
+    /**
+     * Makes a request for a test endpoint
+     */
+    void getTest();
+    
+    /**
+     * Makes a request to check if the suggested roomID has been assigned a roomID
+     */
+    void getRoom(std::string roomID);
+    
+    /**
+     * Makes a request to post a public room
+     */
+    void postRoom(std::string roomID);
+    
+    /**
+     * Makes a request to delete a public room
+     */
+    void deleteRoom(std::string roomID);
+    
+    /**
+     * Returns the content body of the response of a previously made request as a JsonValue
+     */
+    std::shared_ptr<cugl::JsonValue> readResponse();
+    
+private:
+//  MARK: - Helpers
+    
+    /**
+     * Makes an HTTP request using the given RakString
+     */
+    void makeRequest(SLNet::RakString request);
+    
+    /**
+     * Makes a GET request at a given endpoint
+     */
+    void makeGETrequest(std::string endpoint);
+    
+    /**
+     * Makes a POST request at a given endpoint
+     */
+    void makePOSTrequest(std::string endpoint, std::string body);
+    
+    /**
+     * Makes a PATCH request at a given endpoint
+     */
+    void makePATCHrequest(std::string endpoint, std::string body);
+    
+    /**
+     * Makes a DELETE request at a given endpoint
+     */
+    void makeDELETErequest(std::string endpoint);
     
 };
 
