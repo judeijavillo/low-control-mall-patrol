@@ -51,7 +51,8 @@ protected:
     /** A flag indicating whether the game is over */
     bool _gameover;
 
-
+    /** The chosen customization skin  */
+    string _skinKey;
     
 public:
 //  MARK: - Constructors
@@ -80,7 +81,8 @@ public:
               std::shared_ptr<cugl::scene2::SceneNode>& debugnode,
               const std::shared_ptr<cugl::AssetManager>& assets,
               float scale, const std::string& file,
-              std::shared_ptr<cugl::scene2::ActionManager>& actions);
+              std::shared_ptr<cugl::scene2::ActionManager>& actions,
+              string skinKey);
     
 //  MARK: - Methods
     

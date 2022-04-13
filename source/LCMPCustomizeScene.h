@@ -1,32 +1,22 @@
 //
-//  LCMPHostScene.h
+//  LCMPCustomizeScene.h
 //  Low Control Mall Patrol
 //
-//  This class represents the scene for the host when creating a game. Normally
-//  this class would be combined with the class for the client scene (as both
-//  initialize the network controller).  But we have separated to make the code
-//  a little clearer for this lab.
-//
-//  Originator: Walker White, Aidan Hobler
 //  Author: Kevin Games
-//  Version: 2/18/22
 //
 
-#ifndef __LCMP_HOST_SCENE_H__
-#define __LCMP_HOST_SCENE_H__
+#ifndef LCMPCustomizeScene_h
+#define LCMPCustomizeScene_h
 #include <cugl/cugl.h>
 #include <vector>
 #include "LCMPNetworkController.h"
 #include "LCMPAudioController.h"
+#include "LCMPInputController.h"
+#include <cugl/scene2/actions/CUActionManager.h>
+#include <cugl/scene2/actions/CUAnimateAction.h>
+#include <cugl/scene2/actions/CUMoveAction.h>
 
-/**
- * This class provides the interface to make a new game.
- *
- * Most games have a since "matching" scene whose purpose is to initialize the
- * network controller.  We have separate the host from the client to make the
- * code a little more clear.
- */
-class HostScene : public cugl::Scene2 {
+class CustomizeScene : public cugl::Scene2 {
 public:
 //  MARK: - Enumerations
     
@@ -45,37 +35,58 @@ public:
 protected:
 //  MARK: - Properties
     
+    /** The Input Controller instance */
+    InputController _input;
+    
     /** A reference to the Network Controller instance */
     std::shared_ptr<NetworkController> _network;
     
     /** The asset manager for this scene. */
     std::shared_ptr<cugl::AssetManager> _assets;
     
+    /** A reference to the Action Manager */
+    std::shared_ptr<cugl::scene2::ActionManager> _actions;
+    
     /** The sound controller for the game */
     std::shared_ptr<AudioController> _audio;
-
-    /** The menu button for starting a game */
-    std::shared_ptr<cugl::scene2::Button> _startgame;
+    
+    /** The top-level node for displaying the player */
+//    std::shared_ptr<cugl::scene2::SceneNode> _node;
+    
     /** The back button for the menu scene */
     std::shared_ptr<cugl::scene2::Button> _backout;
-    /** The game id label (for updating) */
-    std::shared_ptr<cugl::scene2::Label> _gameid;
-    /** The players label (for updating) */
-    std::shared_ptr<cugl::scene2::Label> _player;
+    
+    /** The menu button for starting a game */
+    std::shared_ptr<cugl::scene2::Button> _startgame;
+    
+    /** The nodes for the player skins */
+    std::vector<std::shared_ptr<cugl::Texture>> _spriteSheets;
+    std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _spriteNodes;
+    std::vector<std::shared_ptr<cugl::scene2::Animate>> _animations;
+    std::vector<string> _keys;
+    
+    /** The movement actions */
+    std::shared_ptr<cugl::scene2::MoveBy> _moveLeft;
+    std::shared_ptr<cugl::scene2::MoveBy> _moveRight;
+    
+    cugl::Size _dimen;
 
-//    /** Reference to the node containing the customization menu */
-//    std::shared_ptr<cugl::scene2::SceneNode> _customizeMenu;
-//    /** The open button for the customization scene */
-//    std::shared_ptr<cugl::scene2::Button> _customizeButton;
-//    /** The close button for the customization scene */
-//    std::shared_ptr<cugl::scene2::Button> _closeButton;
-//    /** Whether or not the game is being sent to the customize menu. */
-//    bool _didCustomize;
+    bool _didLeft;
+    bool _isThief;
+    float _customTime;
+    float _lastChoice;
+    
+    /** Whether or not the game is being sent to the customize menu. */
+    bool _didStart;
     
     /** The current status */
     Status _status;
-
+    
 public:
+    /** Which texture has been chosen */
+    int skin;
+    string skinKey;
+    
 //  MARK: - Constructors
     
     /**
@@ -84,7 +95,7 @@ public:
      * This constructor does not allocate any objects or start the game.
      * This allows us to use the object without a heap pointer.
      */
-    HostScene() : cugl::Scene2() {}
+    CustomizeScene() : cugl::Scene2() {}
     
     /**
      * Disposes of all (non-static) resources allocated to this mode.
@@ -92,7 +103,7 @@ public:
      * This method is different from dispose() in that it ALSO shuts off any
      * static resources, like the input controller.
      */
-    ~HostScene() { dispose(); }
+    ~CustomizeScene() { dispose(); }
     
     /**
      * Disposes of all (non-static) resources allocated to this mode.
@@ -115,7 +126,8 @@ public:
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets,
               std::shared_ptr<NetworkController>& network,
-              std::shared_ptr<AudioController>& audio);
+              std::shared_ptr<AudioController>& audio,
+              std::shared_ptr<cugl::scene2::ActionManager>& actions);
     
 //  MARK: - Methods
     
@@ -127,6 +139,9 @@ public:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void update(float timestep) override;
+    
+    /** Updates scene based on player input */
+    void updateInput(float timestep);
     
     /**
      * Sets whether the scene is currently active
@@ -157,10 +172,7 @@ public:
      * when ALL scenes have been disconnected.
      */
     void disconnect() { _network = nullptr; }
-
-private:
-//  MARK: - Helpers
-
+    
     /**
      * Updates the text in the given button.
      *
@@ -213,6 +225,8 @@ private:
      */
     void startGame();
     
+    /** Displays the skins */
+    void displaySkins();
 };
 
-#endif /* __LCMP_HOST_SCENE_H__ */
+#endif /* LCMPCustomizeScene_h */

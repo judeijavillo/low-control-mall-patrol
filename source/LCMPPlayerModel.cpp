@@ -189,7 +189,7 @@ bool PlayerModel::removeEffects(int trapID) {
 }
 
 /**
-* applies the effect to the player model
+ * Applies the effect to the player model
 */
 void PlayerModel::act(int trapID, std::shared_ptr<TrapModel::Effect> effect) {
     switch (effect->traptype)
@@ -214,7 +214,7 @@ void PlayerModel::act(int trapID, std::shared_ptr<TrapModel::Effect> effect) {
 
 
 /**
-* reverts player model to default state, adding any linger effects as needed
+ * Reverts player model to default state, adding any linger effects as needed
 */
 void PlayerModel::unact(int trapID, std::shared_ptr<TrapModel::Effect> effect) {
     switch (effect->traptype)

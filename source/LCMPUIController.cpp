@@ -260,6 +260,7 @@ void UIController::initTimer() {
 void UIController::initSettings() {
     // Set button references
     _settingsButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("game_gameUIsettings"));
+    _soundsButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("pause_settings_Sound"));
     _quitButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("pause_settings_Quit"));
     _closeButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("pause_settings_X"));
     
@@ -284,6 +285,11 @@ void UIController::initSettings() {
             _didPause = true;
         }
     });
+    _soundsButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _didMute = true;
+        }
+    });
     _quitButton->addListener([this](const std::string& name, bool down) {
         if (down) {
             _didQuit = true;
@@ -302,16 +308,19 @@ void UIController::initSettings() {
     _uinode->addChild(_settingsNode);
 }
 
+/** Updates the settings menu */
 void UIController::updateSettings() {
     // Display and activate correct buttons depending on pause state.
     if (_didPause) {
         _settingsMenu->setVisible(true);
+        _soundsButton->activate();
         _quitButton->activate();
         _closeButton->activate();
         _settingsButton->deactivate();
     }
     else {
         _settingsMenu->setVisible(false);
+        _soundsButton->deactivate();
         _quitButton->deactivate();
         _closeButton->deactivate();
         _settingsButton->activate();

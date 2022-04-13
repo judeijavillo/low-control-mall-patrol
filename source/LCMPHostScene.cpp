@@ -74,19 +74,19 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _backout->addListener([this](const std::string& name, bool down) {
         if (down) {
 	    	_status = Status::ABORT;
-            _audio->stopSfx(BACK_SFX);
-            _audio->playSound(_assets, BACK_SFX, true, 0);
-        }
-    });
-
-    _startgame->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            startGame();
             _audio->stopSfx(CLICK_SFX);
             _audio->playSound(_assets, CLICK_SFX, true, 0);
         }
     });
 
+    _startgame->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _status = Status::START;
+            _audio->stopSfx(CLICK_SFX);
+            _audio->playSound(_assets, CLICK_SFX, true, 0);
+        }
+    });
+    
     addChild(scene);
     setActive(false);
     return true;

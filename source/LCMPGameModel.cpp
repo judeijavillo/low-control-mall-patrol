@@ -28,12 +28,14 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
                      std::shared_ptr<cugl::scene2::SceneNode>& debugnode,
                      const std::shared_ptr<cugl::AssetManager>& assets,
                      float scale, const std::string& file,
-                     std::shared_ptr<cugl::scene2::ActionManager>& actions) {
+                     std::shared_ptr<cugl::scene2::ActionManager>& actions,
+                     string skinKey) {
     _world = world;
     _floornode = floornode;
     _worldnode = worldnode;
     _debugnode = debugnode;
     _gameover = false;
+    _skinKey = skinKey;
     
     _actions = actions;
     std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(file);
@@ -251,7 +253,7 @@ void GameModel::initThief(float scale,
     
     // Create thief
     _thief = std::make_shared<ThiefModel>();
-    _thief->init(scale, thiefNode, assets, actions);
+    _thief->init(scale, thiefNode, assets, actions, _skinKey);
     _thief->setDebugScene(_debugnode);
     _thief->setCollisionSound(THIEF_COLLISION_SFX);
     _thief->setObstacleSound(OBJ_COLLISION_SFX);
@@ -273,7 +275,7 @@ void GameModel::initCop(int copID, float scale,
     
     // Create cop
     std::shared_ptr<CopModel> cop = std::make_shared<CopModel>();
-    cop->init(copID, scale, copNode, assets, actions);
+    cop->init(copID, scale, copNode, assets, actions, _skinKey);
     cop->setDebugScene(_debugnode);
     cop->setCollisionSound(COP_COLLISION_SFX);
     cop->setObstacleSound(OBJ_COLLISION_SFX);
