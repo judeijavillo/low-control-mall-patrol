@@ -324,10 +324,10 @@ void GameScene::stateGame(float timestep) {
     bool joystick = _input.didPressJoystick();
     bool activate = _input._spacebarPressed;
     bool swipe = _input.didSwipe();
-    bool toggle = _input.didSwitch();
+    bool dtap = _input.didSwitch();
     movement.y = -movement.y;
     tackle.y = -tackle.y;
-    toggle = false;
+    bool toggle = false;
     
     // If time surpasses the game length, thief wins
     if (_gameTime > GAME_LENGTH) {
@@ -341,11 +341,13 @@ void GameScene::stateGame(float timestep) {
     
     // Toggle updates
     // TODO: Remove this dev command, either here, or in InputController, or both
-    if (toggle) {
-        movement = Vec2::ZERO;
-        _isThief = !_isThief;
-        _playerNumber = _playerNumber == -1 ? 0 : -1;
-    }
+    //if (toggle) {
+    //    movement = Vec2::ZERO;
+    //    _isThief = !_isThief;
+    //    _playerNumber = _playerNumber == -1 ? 0 : -1;
+    //}
+
+
     
     // Update the game in these steps
     updateLocal(timestep, movement, activate, swipe, tackle);
@@ -441,35 +443,35 @@ void GameScene::stateSettings(float timestep) {
 /**
  * Updates local players (own player and non-playing players)
  */
-void GameScene::updateLocal(float timestep, Vec2 movement, bool activate,
+void GameScene::updateLocal(float timestep, Vec2 movement, bool dtap,
                             float swipe, Vec2 tackle) {
     // Update non-playing players if host
     if (_isHost) {
         for (int i = 0; i < 5; i++) {
             int copID = _network->getPlayer(i).playerNumber;
             if (!_network->isPlayerConnected(i) && copID != -1 && copID != _playerNumber) {
-                updateCop(timestep, copID, Vec2::ZERO, false, Vec2::ZERO);
+                updateCop(timestep, copID, Vec2::ZERO, false, Vec2::ZERO, dtap);
             }
         }
     }
     
     // Update own player
-    if (_isThief) updateThief(timestep, movement, activate);
-    else updateCop(timestep, _playerNumber, movement, swipe, tackle);
+    if (_isThief) updateThief(timestep, movement, dtap);
+    else updateCop(timestep, _playerNumber, movement, swipe, tackle, dtap);
     
 }
 
 /**
  * Updates and networks the thief and any actions it can perform
  */
-void GameScene::updateThief(float timestep, Vec2 movement, bool activate) {
+void GameScene::updateThief(float timestep, Vec2 movement, bool dtap) {
     // Update and network thief movement
     _game->updateThief(movement);
     _network->sendThiefMovement(_game, movement);
     
     // Activate and network traps
     int trapID = _game->getThief()->trapActivationFlag;
-    if (activate && trapID != -1) {
+    if (dtap && trapID != -1) {
         _game->activateTrap(trapID);
         _network->sendTrapActivation(trapID);
     }
@@ -478,10 +480,17 @@ void GameScene::updateThief(float timestep, Vec2 movement, bool activate) {
 /**
  * Updates and networks a cop and any actions it can perform
  */
-void GameScene::updateCop(float timestep, int copID, Vec2 movement, bool swipe, Vec2 tackle) {
+void GameScene::updateCop(float timestep, int copID, Vec2 movement, bool swipe, Vec2 tackle, bool dtap) {
     // Get some reusable variables
     shared_ptr<CopModel> cop = _game->getCop(copID);
     Vec2 thiefPosition = _game->getThief()->getPosition();
+
+    int trapID = cop->trapDeactivationFlag;
+    if (dtap && trapID != -1) {
+        _game->deactivateTrap(trapID);
+        //TODO: JUDE PLEASE FIX THIS NETWORK THING IDK HOW - Tony
+        //_network->sendTrapActivation(trapID);
+    }
     
     // Play tackling sounds
 //    if (cop->didTackle) {

@@ -157,6 +157,11 @@ public:
      * Activates a trap
      */
     void activateTrap(int trapID);
+
+    /**
+    * deactivates a trap
+    */
+    void deactivateTrap(int trapID);
     
 private:
 //  MARK: - Helpers
@@ -185,13 +190,33 @@ private:
                  const std::shared_ptr<cugl::AssetManager>& assets,
                  std::shared_ptr<cugl::scene2::ActionManager>& actions);
     
+    struct TileData{
+        string assetName;
+        std::shared_ptr<cugl::JsonValue> hitboxes;
+        bool animated = false;
+        int anim_rows = 0;
+        int anim_cols = 0;
+    };
+    
+    map<int,GameModel::TileData> buildTileDataMap(const shared_ptr<cugl::JsonValue>& propTileset);
+    
     /**
      Places all props into the world
      */
     void initProps(const std::shared_ptr<cugl::JsonValue>& props,
                    int props_firstgid,
-                   const std::shared_ptr<cugl::JsonValue>& propTileset,
-                   const std::shared_ptr<cugl::AssetManager>& assets);
+                   map<int,GameModel::TileData> idToTileData,
+                   const std::shared_ptr<cugl::AssetManager>& assets,
+                   float scale);
+    
+    /**
+     Places a single prop into the world
+     */
+    void initProp(const std::shared_ptr<cugl::JsonValue>& prop,
+                  int props_firstGid,
+                  const std::shared_ptr<cugl::JsonValue>& propTileset,
+                  const std::shared_ptr<cugl::AssetManager>& assets,
+                  float scale);
     
     struct ObstacleNode_x_Y_struct{
         std::shared_ptr<cugl::physics2::PolygonObstacle> obstacle;

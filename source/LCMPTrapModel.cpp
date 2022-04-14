@@ -29,7 +29,8 @@ bool TrapModel::init(int trapID,
                      std::shared_ptr<Effect> copEffect_,
                      std::shared_ptr<Effect> thiefEffect_,
                      std::shared_ptr<Effect> copLingerEffect_,
-                     std::shared_ptr<Effect> thiefLingerEffect_) {
+                     std::shared_ptr<Effect> thiefLingerEffect_,
+                     bool sfxOn, std::string sfxKey) {
     _trapID = trapID;
     activated = activated_;
     thiefEffectArea = thiefArea;
@@ -46,6 +47,8 @@ bool TrapModel::init(int trapID,
     thiefEffect = thiefEffect_;
     copLingerEffect = copLingerEffect_;
     thiefLingerEffect = thiefLingerEffect_;
+    _sfxOn = sfxOn;
+    _sfxKey = sfxKey;
 
     activated = false;
 
@@ -93,7 +96,12 @@ void TrapModel::setAssets(float scale,
                           const std::shared_ptr<cugl::Texture> activationTriggerTexture,
                           const std::shared_ptr<cugl::Texture> deactivationTriggerTexture,
                           const std::shared_ptr<cugl::Texture> unactivatedAreaTexture,
-                          const std::shared_ptr<cugl::Texture> effectAreaTexture ) {
+                          const std::shared_ptr<cugl::Texture> effectAreaTexture, 
+                          const std::shared_ptr<Vec2> activationTriggerTextureScale,
+                          const std::shared_ptr<Vec2> deactivationTriggerTextureScale,
+                          const std::shared_ptr<Vec2> unactivatedAreaTextureScale,
+                          const std::shared_ptr<Vec2> effectAreaTextureScale
+) {
     
     // Create nodes
     _activationTriggerNode = scene2::PolygonNode::allocWithTexture(activationTriggerTexture);
@@ -101,19 +109,29 @@ void TrapModel::setAssets(float scale,
     _unactivatedAreaNode = scene2::PolygonNode::allocWithTexture(unactivatedAreaTexture);
     _effectAreaNode = scene2::PolygonNode::allocWithTexture(effectAreaTexture);
 
+    //Set the nodes' scales
+    Vec2 activationScale_ = Vec2(activationTriggerTextureScale->x / activationTriggerTexture->getWidth(), activationTriggerTextureScale->y / activationTriggerTexture->getHeight());
+    Vec2 deactivationScale_ = Vec2(deactivationTriggerTextureScale->x / deactivationTriggerTexture->getWidth(), deactivationTriggerTextureScale->x / deactivationTriggerTexture->getHeight());
+    Vec2 unactivatedAreaScale_ = Vec2(unactivatedAreaTextureScale->x / unactivatedAreaTexture->getWidth(), unactivatedAreaTextureScale->y / unactivatedAreaTexture->getHeight());
+    Vec2 effectAreaScale_ = Vec2(effectAreaTextureScale->x / effectAreaTexture->getWidth(), effectAreaTextureScale->y / effectAreaTexture->getHeight());
+
     // Set the nodes' positions
-    _activationTriggerNode->setPosition(triggerPos->x * scale, triggerPos->y * scale);
-    _deactivationTriggerNode->setPosition(triggerPos->x * scale, triggerPos->y * scale);
-    _unactivatedAreaNode->setPosition(thiefEffectArea->getPosition() * scale);
-    _effectAreaNode->setPosition(thiefEffectArea->getPosition() * scale);
+    _activationTriggerNode->setPosition((triggerPos->x + activationTriggerTextureScale->x / 2) * scale,
+        (triggerPos->y + activationTriggerTextureScale->y / 2) * scale);
+    _deactivationTriggerNode->setPosition((triggerPos->x + deactivationTriggerTextureScale->x/2) * scale, 
+        (triggerPos->y + deactivationTriggerTextureScale->y / 2) * scale);
+    _unactivatedAreaNode->setPosition((thiefEffectArea->getPosition().x + unactivatedAreaTextureScale->x/2) * scale, 
+        (thiefEffectArea->getPosition().y + unactivatedAreaTextureScale->y/2) * scale);
+    _effectAreaNode->setPosition((thiefEffectArea->getPosition().x + effectAreaTextureScale->x/2) * scale,
+        (thiefEffectArea->getPosition().y + effectAreaTextureScale->y / 2) * scale);
 
     //CULog("%f, %f, %f, %f", triggerPos->x, triggerPos->y, thiefEffectArea->getPosition().x, thiefEffectArea->getPosition().y);
 
     // Set the nodes' scales
-    _activationTriggerNode->setScale(PROP_SCALE);
-    _deactivationTriggerNode->setScale(PROP_SCALE);
-    _unactivatedAreaNode->setScale(PROP_SCALE);
-    _effectAreaNode->setScale(PROP_SCALE);
+    _activationTriggerNode->setScale(PROP_SCALE*2);
+    _deactivationTriggerNode->setScale(PROP_SCALE*2);
+    _unactivatedAreaNode->setScale(PROP_SCALE*2);
+    _effectAreaNode->setScale(PROP_SCALE*2);
 
     
     // TODO: these should really be children of a parent node that isn't the world node
@@ -156,6 +174,7 @@ bool TrapModel::use() {
  * Activates this trap.
  */
 void TrapModel::activate() {
+    //CULog("activating");
     if (activated) return;
     activated = true;
     if (thiefCollide) {

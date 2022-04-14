@@ -79,6 +79,9 @@
     <ClInclude Include="..\..\source\LCMPUIController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\source\LCMPFindScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\LCMPApp.cpp">
@@ -133,6 +136,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\LCMPUIController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\LCMPFindScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

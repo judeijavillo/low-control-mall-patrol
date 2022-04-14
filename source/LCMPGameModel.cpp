@@ -43,9 +43,16 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     
     reader = JsonReader::allocWithAsset(PROPS_FILE);
     shared_ptr<JsonValue> propTileset = reader->readJson();
+    map<int,GameModel::TileData> idToTileData = buildTileDataMap(propTileset);
+//    for(auto it = idToTileData.begin(); it != idToTileData.end(); it++){
+//        int key = it->first;
+//        TileData val = it->second;
+//        CULog("%d:\t%s", key, val.assetName.data());
+//    }
 
     //init the map that converts Json Strings into Json Values
-    constantsMap["activated"] = ACTIVATED; 
+    constantsMap["activated"] = ACTIVATED;
+    constantsMap["collisionSound"] = COLLISION_SOUND;
     constantsMap["copCollide"] = COP_COLLIDE;
     constantsMap["copEffect"] = COP_EFFECT;
     constantsMap["copLingerDuration"] = COP_LINGER_DURATION;
@@ -53,15 +60,20 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     constantsMap["effectArea"] = EFFECT_AREA;
     constantsMap["numUsages"] = NUM_USAGES;
     constantsMap["textureActivated"] = TEXTURE_ACTIVATED;
+    constantsMap["textureActivatedScale"] = TEXTURE_ACTIVATED_SCALE;
     constantsMap["textureActivationTrigger"] = TEXTURE_ACTIVATION_TRIGGER;
+    constantsMap["textureActivationTriggerScale"] = TEXTURE_ACTIVATION_TRIGGER_SCALE;
     constantsMap["textureDeactivationTrigger"] = TEXTURE_DEACTIVATION_TRIGGER;
+    constantsMap["textureDeactivationTriggerScale"] = TEXTURE_DEACTIVATION_TRIGGER_SCALE;
     constantsMap["textureUnactivated"] = TEXTURE_UNACTIVATED;
+    constantsMap["textureUnactivatedScale"] = TEXTURE_UNACTIVATED_SCALE;
     constantsMap["thiefCollide"] = THIEF_COLLIDE;
     constantsMap["thiefEffect"] = THIEF_EFFECT;
     constantsMap["thiefLingerDuration"] = THIEF_LINGER_DURATION;
     constantsMap["thiefLingerEffect"] = THIEF_LINGER_EFFECT;
     constantsMap["triggerArea"] = TRIGGER_AREA;
     constantsMap["triggerDeactivationArea"] = TRIGGER_DEACTIVATION_AREA;
+    
 
 
     constantsMap["Escalator"] = ESCALATOR;
@@ -76,7 +88,7 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     _tileSize = json->getFloat(T_SIZE_FIELD);
     
     std::shared_ptr<JsonValue> layers = json->get(LAYERS_FIELD);
-    std::shared_ptr<JsonValue> props = layers->get(PROPS_FIELD)->get(DATA_FIELD);
+    std::shared_ptr<JsonValue> props = layers->get(PROPS_FIELD)->get(OBJECTS_FIELD);
     std::shared_ptr<JsonValue> walls = layers->get(WALLS_FIELD)->get(OBJECTS_FIELD);
     std::shared_ptr<JsonValue> copsSpawn = layers->get(COPS_FIELD)->get(OBJECTS_FIELD);
     std::shared_ptr<JsonValue> thiefSpawn = layers->get(THIEF_FIELD)->get(OBJECTS_FIELD);
@@ -98,8 +110,21 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     // Initialize walls
     for (int i = 0; i < walls->size(); i++) initWall(walls->get(i), scale);
     
-    // Place props (no corresponding physics body)
-    initProps(props, PROP_FIRSTGID ,propTileset, assets);
+    // Initialize props
+    int prop_firstGid = 0;
+    auto tilesets = json->get("tilesets");
+    for(int i = 0; i < tilesets->size(); i++){
+        //TODO: make these constants
+        if(tilesets->get(i)->getString("source") == "PropsAndTraps.tsj"){
+            prop_firstGid = tilesets->get(i)->getInt("firstgid");
+            break;
+        }
+    }
+    CULog("prop firstgid %d", prop_firstGid);
+    if(prop_firstGid > 0){
+//    for (int i = 0; i < props->size(); i++) initProp(props->get(i), prop_firstGid, propTileset, assets, scale);
+        initProps(props, prop_firstGid, idToTileData, assets, scale);
+    }
     
     // Initialize traps
     // TODO: Make this JSON Reading
@@ -165,7 +190,7 @@ void GameModel::update(float timestep) {
  */
 void GameModel::updateThief(cugl::Vec2 acceleration) {
     _thief->applyForce(acceleration);
-    CULog("Thief node pos: (%f, %f)", _thief->getNode()->getPositionX(), _thief->getNode()->getPositionY());
+//    CULog("Thief node pos: (%f, %f)", _thief->getNode()->getPositionX(), _thief->getNode()->getPositionY());
 }
 
 /**
@@ -211,6 +236,13 @@ void GameModel::updateCop(cugl::Vec2 position, cugl::Vec2 velocity,
  */
 void GameModel::activateTrap(int trapID) {
     _traps[trapID]->activate();
+}
+
+/**
+ * Activates a trap
+ */
+void GameModel::deactivateTrap(int trapID) {
+    _traps[trapID]->deactivate();
 }
 
 //  MARK: - Helpers
@@ -291,57 +323,146 @@ void GameModel::initCop(int copID, float scale,
     _cops[copID] = cop;
 }
 
-void GameModel::initProps(const shared_ptr<JsonValue>& props,
-                          int props_firstgid,
-                          const shared_ptr<JsonValue>& propTileset,
-                          const shared_ptr<AssetManager>& assets){
+void initProps(const std::shared_ptr<cugl::JsonValue>& props,
+               int props_firstgid,
+               const std::shared_ptr<cugl::JsonValue>& propTileset,
+               const std::shared_ptr<cugl::AssetManager>& assets){
+    
+}
+
+map<int,GameModel::TileData> GameModel::buildTileDataMap(const shared_ptr<JsonValue>& propTileset){
     // build map from tile id to asset name
-    map<int, string> idToAssetName {};
+    map<int, GameModel::TileData> idToTileData {};
+    auto tiles = propTileset->get("tiles");
+//    CULog("%s", tiles->toString().data());
     int tilecount = propTileset->getInt("tilecount");
+    CULog("tilecount %d", tilecount);
     for(int i = 0; i < tilecount; i++){
-        auto tile = propTileset->get("tiles")->get(i);
+        auto tile = tiles->get(i);
         int id = tile->get("id")->asInt();
         auto properties = tile->get("properties");
-        // get value of property with name "name"
-        string assetName;
+        // get value of property with matching names
+        // the other way to do this is tony's travesty
+        // and there's only 4 things so if/elif is fine
+        string assetName = "";
+        bool animated = false;
+        int anim_rows = 0;
+        int anim_cols = 0;
         int j = 0;
-        while(true){
+        for(int j = 0; j < properties->size(); j++){
+//        while(true){
             auto p = properties->get(j);
             if(p == nullptr) break;
             auto pname = p->getString("name");
             if(pname == "name") {
                 assetName = p->getString("value");
-                break;
+            } else if(pname == "animated") {
+                animated = p->getBool("value");
+            } else if(pname == "anim_rows") {
+                anim_rows = p->getInt("value");
+            } else if(pname == "anim_cols") {
+                anim_cols = p->getInt("value");
             }
-            ++j;
+//            ++j;
         }
-        idToAssetName[id] = assetName;
+        shared_ptr<JsonValue> hitboxes = tile->get("objectgroup")->get("objects");
+        idToTileData[id] = {assetName, hitboxes, animated, anim_rows, anim_cols};
     }
     
-    for(int i = 0; i < _mapWidth*_mapHeight; i++){
-        float y = (int)(i / _mapWidth);
-        float x = i - _mapWidth * y;
+    return idToTileData;
+}
+
+
+void GameModel::initProps(const shared_ptr<JsonValue>& props,
+                          int props_firstgid,
+                          map<int,GameModel::TileData> idToTileData,
+                          const shared_ptr<AssetManager>& assets,
+                          float scale){
+    for(int i = 0; i < props->size(); i++) {
+        auto prop = props->get(i);
+        
+        float x = prop->getFloat(X_FIELD) / _tileSize;
+        float y = prop->getFloat(Y_FIELD) / _tileSize;
+        float width = prop->getFloat(WIDTH_FIELD) / _tileSize;
+        float height = prop->getFloat(HEIGHT_FIELD) / _tileSize;
         y = _mapHeight - y;
-        x *= _tileSize/2;
-        y *= _tileSize/2;
         
-        int tile = props->get(i)->asInt();
-        if(tile == 0) continue;
-        
+        int gid = prop->getInt("gid");
         //TODO: incorporate rotation/reflection using tiled flags
+        gid &= CLEAR_FLAGS_FILTER;
+        int id = gid - props_firstgid;
         
-        tile &= CLEAR_FLAGS_FILTER;
+        TileData data = idToTileData[id];
         
-        int tileId = tile - props_firstgid;
-        auto assetName = idToAssetName[tileId];
-        auto texture = assets->get<Texture>(assetName);
-        auto node = scene2::PolygonNode::allocWithTexture(texture);
-        node->setAnchor(0,0.5);
+        CULog("%d asset name %s", id, data.assetName.data());
+        auto texture = assets->get<Texture>(data.assetName);
+        //TODO: get this working
+        Vec2 scale_ = Vec2(width/texture->getWidth(), height/texture->getHeight());
+//        Vec2 scale_ = Vec2::ONE;
         
+        
+        // add node to world
+        shared_ptr<scene2::PolygonNode> node;
+        if(data.animated){
+            node = scene2::SpriteNode::alloc(texture, data.anim_rows, data.anim_cols);
+            CULog("prop is animated");
+        } else {
+            node = scene2::PolygonNode::allocWithTexture(texture);
+            CULog("prop is not animated");
+        }
+        node->setScale(scale_.x * scale, scale_.y * scale);
+//        node->setScale(scale);
         _worldnode->addChild(node);
-        node->setPosition(x,y);
-        node->setScale(PROP_SCALE);
+//        node->setPosition(x,y);
+        node->setPosition((x + width / 2) * scale, (y + height / 2) * scale);
+        
+//        CULog("drawing %s at %f %f with scale %f", data.assetName.data(), (x + width / 2) * scale, (y + height / 2) * scale, scale);
+        
+        // add hitboxes to world
+        for(int j = 0; j < data.hitboxes->size(); j++){
+            auto hitbox = data.hitboxes->get(j);
+            auto shape = readJsonShape(hitbox, scale);
+            auto obstacle = shape.obstacle;
+            auto poly = obstacle->getPolygon();
+            poly *= scale_ * _tileSize;
+//            CULog("scale %f %f", (scale_ * _tileSize).x, (scale_ * _tileSize).y);
+            obstacle = physics2::PolygonObstacle::alloc(poly);
+//            obstacle->set
+            obstacle->setDebugScene(_debugnode);
+//            CULog("squoosh factor %f %f", scale_.x, scale_.y);
+            _world->addObstacle(obstacle);
+            obstacle->setPosition(shape.x*scale_.x/_tileSize + x,
+                                  shape.y*scale_.y/_tileSize + y);
+//                                  shape.y/_tileSize - height + y);
+//            obstacle->setPosition((x + width / 2) * scale, (y + height / 2) * scale);
+//            CULog("placing %s at %f %f", data.assetName.data(), shape.x/_tileSize + x, shape.y/_tileSize + y);
+        }
     }
+    
+//    for(int i = 0; i < _mapWidth*_mapHeight; i++){
+//        float y = (int)(i / _mapWidth);
+//        float x = i - _mapWidth * y;
+//        y = _mapHeight - y;
+//        x *= _tileSize/2;
+//        y *= _tileSize/2;
+//
+//        int tile = props->get(i)->asInt();
+//        if(tile == 0) continue;
+//
+//        //TODO: incorporate rotation/reflection using tiled flags
+//
+//        tile &= CLEAR_FLAGS_FILTER;
+//
+//        int tileId = tile - props_firstgid;
+//        auto assetName = idToAssetName[tileId];
+//        auto texture = assets->get<Texture>(assetName);
+//        auto node = scene2::PolygonNode::allocWithTexture(texture);
+//        node->setAnchor(0,0.5);
+//
+//        _worldnode->addChild(node);
+//        node->setPosition(x,y);
+//        node->setScale(PROP_SCALE);
+//    }
 }
 
 /**
@@ -368,7 +489,7 @@ GameModel::ObstacleNode_x_Y_struct GameModel::readJsonShape(const shared_ptr<Jso
         
         // Make a wall and a corresponding node from a polygon
         // TODO: Maybe make this a model or a type of ObstacleModel
-        Poly2 poly = PolyFactory().makeEllipse(Vec2::ZERO, Vec2(width,height));
+        Poly2 poly = PolyFactory(POLYFACTORY_TOLERANCE).makeEllipse(Vec2::ZERO, Vec2(width,height));
         obstacle = physics2::PolygonObstacle::alloc(poly);
         node = scene2::PolygonNode::allocWithPoly(poly);
         node->setPosition(x * scale, y * scale);
@@ -421,7 +542,7 @@ GameModel::ObstacleNode_x_Y_struct GameModel::readJsonShape(const shared_ptr<Jso
         
         // Make a wall and a corresponding node from a polygon
         // TODO: Maybe make this a model or a type of ObstacleModel
-        Poly2 poly = PolyFactory().makeRect(Vec2::ZERO, Vec2(width, height));
+        Poly2 poly = PolyFactory(POLYFACTORY_TOLERANCE).makeRect(Vec2::ZERO, Vec2(width, height));
         obstacle = physics2::PolygonObstacle::alloc(poly);
         node = scene2::PolygonNode::allocWithPoly(poly);
         node->setPosition((x + width / 2) * scale, (y + height / 2) * scale);
@@ -476,7 +597,7 @@ void GameModel::initTrap(int trapID,
     
     // Create the trap from the json
 
-    //init instances
+    //init variables
 
     shared_ptr<TrapModel> trap = std::make_shared<TrapModel>();
     shared_ptr<TrapModel::Effect> copEffect = std::make_shared<TrapModel::Effect>();
@@ -488,6 +609,12 @@ void GameModel::initTrap(int trapID,
     shared_ptr<Texture> deactivationTriggerTexture = std::make_shared<Texture>();
     shared_ptr<Texture> unactivatedAreaTexture = std::make_shared<Texture>();
     shared_ptr<Texture> effectAreaTexture = std::make_shared<Texture>(); 
+
+    shared_ptr<Vec2> activationTriggerTextureScale = std::make_shared<Vec2>();
+    shared_ptr<Vec2> deactivationTriggerTextureScale = std::make_shared<Vec2>();
+    shared_ptr<Vec2> unactivatedAreaTextureScale = std::make_shared<Vec2>();
+    shared_ptr<Vec2> effectAreaTextureScale = std::make_shared<Vec2>();
+
 
     std::shared_ptr<cugl::JsonValue> properties = json->get(PROPERTIES_FIELD);
     vector<std::shared_ptr<cugl::JsonValue>> children = properties->children();
@@ -501,8 +628,11 @@ void GameModel::initTrap(int trapID,
     int numUses = -1;
     int copEffectLingerDur = 0;
     int thiefEffectLingerDur = 0;
+    bool sfxOn = false;
+    std::string sfxKey = "";
 
     //CULog("%s", children.at(3)->get(NAME_FIELD)->asString());
+  
     // read in the JSON values and match it to the proper property
     for (int i = 0; i < children.size(); i++) {
         std::shared_ptr<cugl::JsonValue> elem = children.at(i);
@@ -513,6 +643,10 @@ void GameModel::initTrap(int trapID,
 
         case ACTIVATED:
             activated = elem->getBool(VALUE_FIELD);
+            break;
+                
+        case COLLISION_SOUND:
+            sfxKey = elem->getString(VALUE_FIELD);
             break;
 
         case COP_COLLIDE:
@@ -547,16 +681,36 @@ void GameModel::initTrap(int trapID,
             effectAreaTexture = assets->get<Texture>(elem->getString(VALUE_FIELD));
             break;
 
+        case TEXTURE_ACTIVATED_SCALE:
+            effectAreaTextureScale->x = elem->get(VALUE_FIELD)->getInt(X_FIELD) / _tileSize;
+            effectAreaTextureScale->y = elem->get(VALUE_FIELD)->getInt(Y_FIELD) / _tileSize;
+            break;
+
         case TEXTURE_ACTIVATION_TRIGGER:
             activationTriggerTexture = assets->get<Texture>(elem->getString(VALUE_FIELD));
+            break;
+
+        case TEXTURE_ACTIVATION_TRIGGER_SCALE:
+            activationTriggerTextureScale->x = elem->get(VALUE_FIELD)->getInt(X_FIELD) / _tileSize;
+            activationTriggerTextureScale->y = elem->get(VALUE_FIELD)->getInt(Y_FIELD) / _tileSize;
             break;
 
         case TEXTURE_DEACTIVATION_TRIGGER:
             deactivationTriggerTexture = assets->get<Texture>(elem->getString(VALUE_FIELD));
             break;
 
+        case TEXTURE_DEACTIVATION_TRIGGER_SCALE:
+            activationTriggerTextureScale->x = elem->get(VALUE_FIELD)->getInt(X_FIELD) / _tileSize;
+            activationTriggerTextureScale->y = elem->get(VALUE_FIELD)->getInt(Y_FIELD) / _tileSize;
+            break;
+
         case TEXTURE_UNACTIVATED:
             unactivatedAreaTexture = assets->get<Texture>(elem->getString(VALUE_FIELD));
+            break;
+
+        case TEXTURE_UNACTIVATED_SCALE:
+            unactivatedAreaTextureScale->x = elem->get(VALUE_FIELD)->getInt(X_FIELD) / _tileSize;
+            unactivatedAreaTextureScale->y = elem->get(VALUE_FIELD)->getInt(Y_FIELD) / _tileSize;
             break;
 
         case THIEF_EFFECT:
@@ -618,7 +772,9 @@ void GameModel::initTrap(int trapID,
                 copEffect,
                 thiefEffect,
                 copLingerEffect,
-                thiefLingerEffect);
+                thiefLingerEffect,
+                sfxOn,
+                sfxKey);
     
     // Configure physics
     _world->addObstacle(thiefEffectArea);
@@ -635,7 +791,8 @@ void GameModel::initTrap(int trapID,
     copEffectArea->setSensor(true);
     
     // TODO: fix this once assets are written
-    trap->setAssets(scale, _worldnode, assets, activationTriggerTexture,deactivationTriggerTexture,unactivatedAreaTexture,effectAreaTexture);
+    trap->setAssets(scale, _worldnode, assets, activationTriggerTexture,deactivationTriggerTexture,unactivatedAreaTexture,effectAreaTexture,
+                    activationTriggerTextureScale, deactivationTriggerTextureScale, unactivatedAreaTextureScale, effectAreaTextureScale);
     trap->setDebugScene(_debugnode);
     
     // Add the trap to the vector of traps
@@ -711,7 +868,7 @@ void GameModel::initBorder(float scale) {
             
             // Create the appropriate wall and node using the rectangle polygon
             Rect rect = Rect(x, y, width, height);
-            Poly2 poly = PolyFactory().makeRect(rect);
+            Poly2 poly = PolyFactory(POLYFACTORY_TOLERANCE).makeRect(rect);
             shared_ptr<physics2::PolygonObstacle> wall = physics2::PolygonObstacle::alloc(poly);
             shared_ptr<scene2::PolygonNode> node = scene2::PolygonNode::allocWithPoly(poly);
             

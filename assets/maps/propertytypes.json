@@ -10,11 +10,6 @@
                 }
             },
             {
-                "name": "LingerDuration",
-                "type": "float",
-                "value": 0
-            },
-            {
                 "name": "Speed Modifier",
                 "propertyType": "Vec2",
                 "type": "class",

@@ -239,7 +239,7 @@ private:
     /**
      * Updates local players (own player and non-playing players)
      */
-    void updateLocal(float timestep, cugl::Vec2 movement, bool activate,
+    void updateLocal(float timestep, cugl::Vec2 movement, bool dtap,
                      float swipe, cugl::Vec2 tackle);
     
     /**
@@ -250,7 +250,7 @@ private:
     /**
      * Updates and networks a cop and any actions it can perform
      */
-    void updateCop(float timestep, int copID, cugl::Vec2 movement, bool swipe, cugl::Vec2 tackle);
+    void updateCop(float timestep, int copID, cugl::Vec2 movement, bool swipe, cugl::Vec2 tackle, bool dtap);
     
     /**
      * Updates based on data received over the network
