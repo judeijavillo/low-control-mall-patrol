@@ -237,6 +237,11 @@ private:
 //  MARK: - Helpers
     
     /**
+     * Updates audio
+     */
+    void updateAudio(float timestep);
+    
+    /**
      * Updates local players (own player and non-playing players)
      */
     void updateLocal(float timestep, cugl::Vec2 movement, bool dtap,

@@ -356,7 +356,7 @@ void GameScene::stateGame(float timestep) {
     updateFloor(timestep);
     updateUI(timestep, _isThief, movement, joystick, origin, position, _playerNumber);
     updateOrder(timestep);
-    
+    updateAudio(timestep);
     
     // Update the physics, then move the game nodes accordingly
     _actions->update(timestep);
@@ -441,6 +441,23 @@ void GameScene::stateSettings(float timestep) {
 //  MARK: - Helpers
 
 /**
+ * Updates audio
+ */
+void GameScene::updateAudio(float timestep) {
+    // Update trap sound effects
+//    if (_game->getThief()->didActivate) _audio->playSound(_assets, _game->getThief()->activationSound, true, timestep);
+//    if (_game->getThief()->didDeactivate) _audio->playSound(_assets, _game->getThief()->deactivationSound, true, timestep);
+//    if (_game->getThief()->didHitTrap) _audio->playSound(_assets, _game->getThief()->trapSound, true, timestep);
+//
+//    for (int i = 0; i < 5; i++) {
+//        shared_ptr<CopModel> c = _game->getCop(i);
+//        if (_game->getCop(i)->didActivate) _audio->playSound(_assets, _game->getCop(i)->activationSound, true, timestep);
+//        if (_game->getCop(i)->didDeactivate) _audio->playSound(_assets, _game->getCop(i)->deactivationSound, true, timestep);
+//        if (_game->getCop(i)->didHitTrap) _audio->playSound(_assets, _game->getCop(i)->trapSound, true, timestep);
+//    }
+}
+
+/**
  * Updates local players (own player and non-playing players)
  */
 void GameScene::updateLocal(float timestep, Vec2 movement, bool dtap,
@@ -451,12 +468,35 @@ void GameScene::updateLocal(float timestep, Vec2 movement, bool dtap,
             int copID = _network->getPlayer(i).playerNumber;
             if (!_network->isPlayerConnected(i) && copID != -1 && copID != _playerNumber) {
                 updateCop(timestep, copID, Vec2::ZERO, false, Vec2::ZERO, dtap);
+                if (_game->getCop(copID)->didDeactivate) {
+                    _audio->playSound(_assets, _game->getCop(copID)->deactivationSound, true, _gameTime);
+                    _game->getCop(copID)->didDeactivate = false;
+                }
+                if (_game->getCop(copID)->didHitTrap) {
+                    _audio->playSound(_assets, _game->getCop(copID)->trapSound, true, _gameTime);
+                    _game->getCop(copID)->didHitTrap = false;
+                    _game->getCop(copID)->canHitTrap = true;
+                }
             }
         }
     }
     
     // Update own player
-    if (_isThief) updateThief(timestep, movement, dtap);
+    if (_isThief) {
+        updateThief(timestep, movement, dtap);
+        if (_game->getThief()->didActivate) {
+            _audio->playSound(_assets, _game->getThief()->activationSound, true, _gameTime);
+            _game->getThief()->didActivate = false;
+            for (int i = 0; i < 5; i++) {
+                int copID = _network->getPlayer(i).playerNumber;
+            }
+        }
+        if (_game->getThief()->didHitTrap) {
+            _audio->playSound(_assets, _game->getThief()->trapSound, true, _gameTime);
+            _game->getThief()->didHitTrap = false;
+            _game->getThief()->canHitTrap = true;
+        }
+    }
     else updateCop(timestep, _playerNumber, movement, swipe, tackle, dtap);
     
 }
@@ -493,14 +533,14 @@ void GameScene::updateCop(float timestep, int copID, Vec2 movement, bool swipe, 
     }
     
     // Play tackling sounds
-//    if (cop->didTackle) {
-//        _audio->playSound(_assets, TACKLE_SFX, true, _gameTime);
-//        cop->didTackle = false;
-//    }
-//    if (cop->didLand) {
-//        _audio->playSound(_assets, LAND_SFX, true, _gameTime);
-//        cop->didLand = false;
-//    }
+    if (cop->didTackle) {
+        _audio->playSound(_assets, TACKLE_SFX, true, _gameTime);
+        cop->didTackle = false;
+    }
+    if (cop->didLand) {
+        _audio->playSound(_assets, LAND_SFX, true, _gameTime);
+        cop->didLand = false;
+    }
     
     // Update, animate, and network cop movement
     _game->updateCop(movement, thiefPosition, copID, timestep);

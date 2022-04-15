@@ -227,7 +227,10 @@
 		},
 		"shop": {
 			"file": "textures/ui/shop.png"
-		}
+		},
+        "lock": {
+            "file": "textures/environment/lock.png"
+        }
     },
     "sounds": {
         "trap": {
@@ -267,12 +270,12 @@
         },
         "game": {
             "type":     "sample",
-            "file":     "sounds/pop1.ogg",
+            "file":     "sounds/elevator.ogg",
             "volume":   0.5
         },
         "menu": {
             "type":     "sample",
-            "file":     "sounds/pop1.ogg",
+            "file":     "sounds/menu.ogg",
             "volume":   0.5
         },
         "click": {
@@ -283,6 +286,56 @@
         "back": {
             "type":     "sample",
             "file":     "sounds/back.wav",
+            "volume":   0.5
+        },
+        "baby_activate": {
+            "type":     "sample",
+            "file":     "sounds/baby_activate.wav",
+            "volume":   0.5
+        },
+        "baby_collision": {
+            "type":     "sample",
+            "file":     "sounds/baby_collision.wav",
+            "volume":   0.5
+        },
+        "baby_deactivate": {
+            "type":     "sample",
+            "file":     "sounds/baby_deactivate.wav",
+            "volume":   0.5
+        },
+        "bucket_activate": {
+            "type":     "sample",
+            "file":     "sounds/bucket_activate.wav",
+            "volume":   0.5
+        },
+        "bucket_collision": {
+            "type":     "sample",
+            "file":     "sounds/bucket_collision.wav",
+            "volume":   0.5
+        },
+        "bucket_deactivate": {
+            "type":     "sample",
+            "file":     "sounds/bucket_deactivate.wav",
+            "volume":   0.5
+        },
+        "cart_activate": {
+            "type":     "sample",
+            "file":     "sounds/cart_activate.wav",
+            "volume":   0.5
+        },
+        "cart_collision": {
+            "type":     "sample",
+            "file":     "sounds/cart_collision.wav",
+            "volume":   0.5
+        },
+        "cart_deactivate": {
+            "type":     "sample",
+            "file":     "sounds/cart_deactivate.wav",
+            "volume":   0.5
+        },
+        "elevator_activate": {
+            "type":     "sample",
+            "file":     "sounds/elevator_activate.wav",
             "volume":   0.5
         }
     },

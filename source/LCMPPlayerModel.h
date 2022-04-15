@@ -74,6 +74,15 @@ protected:
 
     
 public:
+    bool didHitObstacle;
+    bool didHitTrap;
+    bool canHitTrap;
+    bool didDeactivate;
+    bool didActivate;
+    std::string trapSound;
+    std::string activationSound;
+    std::string deactivationSound;
+    
     /** A reference to the sprite showing the player running to the back */
     std::shared_ptr<cugl::scene2::SpriteNode> runBack;
     /** A reference to the sprite showing the player running to the front */
@@ -119,13 +128,13 @@ public:
     /**
     * applies the effect to the player model
     */
-    void act(int trapID, std::shared_ptr<TrapModel::Effect> trap);
+    void act(std::shared_ptr<TrapModel> trap, std::shared_ptr<TrapModel::Effect> effect);
 
 
     /**
     * reverts player model to default state, adding any linger effects as needed
     */
-    void unact(int trapID, std::shared_ptr<TrapModel::Effect> trap);
+    void unact(std::shared_ptr<TrapModel> trap, std::shared_ptr<TrapModel::Effect> effect);
 
     /**
      * Adds the effect to the map of current player effects

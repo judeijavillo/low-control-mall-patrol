@@ -13,6 +13,7 @@
 #include "LCMPCopModel.h"
 #include "LCMPTrapModel.h"
 #include "LCMPObstacleModel.h"
+#include "LCMPAudioController.h"
 #include <map>
 
 class GameModel {

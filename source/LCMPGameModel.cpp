@@ -52,11 +52,14 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
 
     //init the map that converts Json Strings into Json Values
     constantsMap["activated"] = ACTIVATED;
+    constantsMap["activationSound"] = ACTIVATION_SOUND;
+    constantsMap["ambientSound"] = AMBIENT_SOUND;
     constantsMap["collisionSound"] = COLLISION_SOUND;
     constantsMap["copCollide"] = COP_COLLIDE;
     constantsMap["copEffect"] = COP_EFFECT;
     constantsMap["copLingerDuration"] = COP_LINGER_DURATION;
     constantsMap["copLingerEffect"] = COP_LINGER_EFFECT;
+    constantsMap["deactivationSound"] = DEACTIVATION_SOUND;
     constantsMap["effectArea"] = EFFECT_AREA;
     constantsMap["numUsages"] = NUM_USAGES;
     constantsMap["textureActivated"] = TEXTURE_ACTIVATED;
@@ -597,7 +600,7 @@ void GameModel::initTrap(int trapID,
     
     // Create the trap from the json
 
-    //init variables
+    // Initialize variables
 
     shared_ptr<TrapModel> trap = std::make_shared<TrapModel>();
     shared_ptr<TrapModel::Effect> copEffect = std::make_shared<TrapModel::Effect>();
@@ -628,8 +631,10 @@ void GameModel::initTrap(int trapID,
     int numUses = -1;
     int copEffectLingerDur = 0;
     int thiefEffectLingerDur = 0;
-    bool sfxOn = false;
-    std::string sfxKey = "";
+    std::string activationKey = "";
+    std::string ambientKey = "";
+    std::string collisionKey = "";
+    std::string deactivationKey = "";
 
     //CULog("%s", children.at(3)->get(NAME_FIELD)->asString());
   
@@ -645,8 +650,16 @@ void GameModel::initTrap(int trapID,
             activated = elem->getBool(VALUE_FIELD);
             break;
                 
+        case ACTIVATION_SOUND:
+            activationKey = elem->getString(VALUE_FIELD);
+            break;
+        
+        case AMBIENT_SOUND:
+            ambientKey = elem->getString(VALUE_FIELD);
+            break;
+                
         case COLLISION_SOUND:
-            sfxKey = elem->getString(VALUE_FIELD);
+            collisionKey = elem->getString(VALUE_FIELD);
             break;
 
         case COP_COLLIDE:
@@ -663,6 +676,10 @@ void GameModel::initTrap(int trapID,
 
         case COP_LINGER_EFFECT:
             copLingerEffect = readJsonEffect(elem);
+            break;
+                
+        case DEACTIVATION_SOUND:
+            deactivationKey = elem->getString(VALUE_FIELD);
             break;
 
         case EFFECT_AREA:
@@ -773,8 +790,10 @@ void GameModel::initTrap(int trapID,
                 thiefEffect,
                 copLingerEffect,
                 thiefLingerEffect,
-                sfxOn,
-                sfxKey);
+                activationKey,
+                ambientKey,
+                collisionKey,
+                deactivationKey);
     
     // Configure physics
     _world->addObstacle(thiefEffectArea);

@@ -41,6 +41,9 @@ bool PlayerModel::init(int playerNumber, const Vec2 pos, const Size size, float 
     
     // Set collision sound
     _collisionSound  = "";
+    activationSound = TRAP_COLLISION_SFX;
+    deactivationSound = TRAP_COLLISION_SFX;
+    trapSound = TRAP_COLLISION_SFX;
     
     // Save the scale (SCREEN UNITS / WORLD UNITS)
     _scale = scale;
@@ -68,6 +71,12 @@ bool PlayerModel::init(int playerNumber, const Vec2 pos, const Size size, float 
         }
         _animations.push_back(scene2::Animate::alloc(vec,DURATION));
     }
+    
+    didHitTrap = false;
+    didHitObstacle = false;
+    canHitTrap = true;
+    didDeactivate = false;
+    didActivate = false;
     
     // We're gonna assume this always works appropriately
     return true;
@@ -111,7 +120,7 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
     // Save the force for animations later
     _movement = force;
 
-    //check for trap effects
+    // Check for trap effects
     Vec2 playerVel;
     Vec2 addedVel;
 
@@ -175,11 +184,12 @@ void PlayerModel::addEffects(int trapID, TrapModel::TrapType type, shared_ptr<cu
  * Removes an instance of the effect with the corresponding trap id from the player effects
  */
 bool PlayerModel::removeEffects(int trapID) {
-    if (playerEffects.count(trapID) ==0) {
+    if (playerEffects.count(trapID) == 0) {
         return false;
     }
 
     if (playerEffects[trapID]->size() == 1) {
+        canHitTrap = true;
         playerEffects.erase(trapID);
         return true;
     }
@@ -191,7 +201,13 @@ bool PlayerModel::removeEffects(int trapID) {
 /**
  * Applies the effect to the player model
 */
-void PlayerModel::act(int trapID, std::shared_ptr<TrapModel::Effect> effect) {
+void PlayerModel::act(std::shared_ptr<TrapModel> trap, std::shared_ptr<TrapModel::Effect> effect) {
+    if (canHitTrap) didHitTrap = true;
+    canHitTrap = false;
+    trapSound = trap->collisionKey;
+    activationSound = trap->activationKey;
+    deactivationSound = trap->deactivationKey;
+    
     switch (effect->traptype)
     {
     case TrapModel::VelMod:
@@ -199,13 +215,13 @@ void PlayerModel::act(int trapID, std::shared_ptr<TrapModel::Effect> effect) {
         setMaxSpeedMultiplier(max(effect->effectVec->x, effect->effectVec->y));
         break;
     case TrapModel::Directional_VelMod:
-        addEffects(trapID, effect->traptype, effect->effectVec);
+        addEffects(trap->getTrapID(), effect->traptype, effect->effectVec);
         break;
     case TrapModel::Moving_Platform:
-        addEffects(trapID, effect->traptype, effect->effectVec);
+        addEffects(trap->getTrapID(), effect->traptype, effect->effectVec);
         break;
     case TrapModel::Teleport:
-        addEffects(trapID, effect->traptype, effect->effectVec);
+        addEffects(trap->getTrapID(), effect->traptype, effect->effectVec);
         break;
     default:
         break;
@@ -216,21 +232,22 @@ void PlayerModel::act(int trapID, std::shared_ptr<TrapModel::Effect> effect) {
 /**
  * Reverts player model to default state, adding any linger effects as needed
 */
-void PlayerModel::unact(int trapID, std::shared_ptr<TrapModel::Effect> effect) {
+void PlayerModel::unact(std::shared_ptr<TrapModel> trap, std::shared_ptr<TrapModel::Effect> effect) {
     switch (effect->traptype)
     {
     case TrapModel::VelMod:
+        canHitTrap = true;
         setAccelerationMultiplier(Vec2(1, 1));
         setMaxSpeedMultiplier(1);
         break;
     case TrapModel::Directional_VelMod:
-        removeEffects(trapID);
+        removeEffects(trap->getTrapID());
         break;
     case TrapModel::Moving_Platform:
-        removeEffects(trapID);
+        removeEffects(trap->getTrapID());
         break;
     case TrapModel::Teleport:
-        removeEffects(trapID);
+        removeEffects(trap->getTrapID());
         break;
     default:
         break;

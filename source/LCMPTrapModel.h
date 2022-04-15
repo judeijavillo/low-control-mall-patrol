@@ -10,6 +10,7 @@
 #define __LCMP_TRAP_MODEL_H__
 #include <cugl/cugl.h>
 #include "LCMPConstants.h"
+#include "LCMPAudioController.h"
 
 class TrapModel {
 public:
@@ -125,16 +126,18 @@ protected:
     /** Reference to the node showing the texture of the activated effect area */
     std::shared_ptr<cugl::scene2::PolygonNode> _effectAreaNode;
     
-    bool _sfxOn;
-    std::string _sfxKey;
-
 public:
     /** Whether the trap is activated */
     bool activated;
     
-
-
-        
+    std::string activationKey;
+    std::string ambientKey;
+    std::string collisionKey;
+    std::string deactivationKey;
+    bool didActivate;
+    bool didCollide;
+    bool didDeactivate;
+    bool canActivate;
 
 //	MARK: - Constructors
 
@@ -169,7 +172,8 @@ public:
               std::shared_ptr<Effect> ThiefEffect,
               std::shared_ptr<Effect> copLingerEffect, 
               std::shared_ptr<Effect> thiefLingerEffect,
-              bool sfxOn, std::string sfxKey);
+              std::string activationKey, std::string ambientKey,
+              std::string collisionKey, std::string deactivationKey);
 
 
 //	MARK: - Methods

@@ -26,6 +26,16 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"activationSound",
+                         "type":"string",
+                         "value":"cart_activate"
+                        }, 
+                        {
+                         "name":"collisionSound",
+                         "type":"string",
+                         "value":"cart_collision"
+                        }, 
+                        {
                          "name":"copCollide",
                          "type":"bool",
                          "value":false
@@ -55,6 +65,11 @@
                             }
                         }, 
                         {
+                         "name":"deactivationSound",
+                         "type":"string",
+                         "value":"cart_deactivate"
+                        }, 
+                        {
                          "name":"effectArea",
                          "type":"object",
                          "value":190
@@ -62,7 +77,7 @@
                         {
                          "name":"textureActivated",
                          "type":"string",
-                         "value":"round_plant"
+                         "value":"cleaning_cart_triggered_w_banana"
                         }, 
                         {
                          "name":"textureActivatedScale",
@@ -77,7 +92,7 @@
                         {
                          "name":"textureUnactivated",
                          "type":"string",
-                         "value":"tall_plant"
+                         "value":"cleaning_cart"
                         }, 
                         {
                          "name":"textureUnactivatedScale",

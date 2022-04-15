@@ -30,7 +30,8 @@ bool TrapModel::init(int trapID,
                      std::shared_ptr<Effect> thiefEffect_,
                      std::shared_ptr<Effect> copLingerEffect_,
                      std::shared_ptr<Effect> thiefLingerEffect_,
-                     bool sfxOn, std::string sfxKey) {
+                     std::string activationKey_, std::string ambientKey_,
+                     std::string collisionKey_, std::string deactivationKey_) {
     _trapID = trapID;
     activated = activated_;
     thiefEffectArea = thiefArea;
@@ -47,8 +48,14 @@ bool TrapModel::init(int trapID,
     thiefEffect = thiefEffect_;
     copLingerEffect = copLingerEffect_;
     thiefLingerEffect = thiefLingerEffect_;
-    _sfxOn = sfxOn;
-    _sfxKey = sfxKey;
+    activationKey = activationKey_;
+    ambientKey = ambientKey_;
+    collisionKey = collisionKey_;
+    deactivationKey = deactivationKey_;
+    didActivate = false;
+    didCollide = false;
+    didDeactivate = false;
+    canActivate = true;
 
     activated = false;
 
@@ -174,16 +181,16 @@ bool TrapModel::use() {
  * Activates this trap.
  */
 void TrapModel::activate() {
-    //CULog("activating");
     if (activated) return;
     activated = true;
+    didActivate = true;
     if (thiefCollide) {
         thiefEffectArea->setSensor(false);
+        
     }
     if (copCollide) {
         copEffectArea->setSensor(false);
     }
-
     
     // Change which nodes are being shown
     _node->removeChild(_activationTriggerNode);
@@ -198,6 +205,7 @@ void TrapModel::activate() {
 void TrapModel::deactivate() {
     if (!activated) return;
     activated = false;
+    didDeactivate = true;
     thiefEffectArea->setSensor(true);
     copEffectArea->setSensor(true);
 
@@ -206,8 +214,6 @@ void TrapModel::deactivate() {
     _node->removeChild(_effectAreaNode);
     _node->addChild(_activationTriggerNode);
     _node->addChild(_unactivatedAreaNode);
-
-   
 }
 
 

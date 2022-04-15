@@ -22,8 +22,6 @@ protected:
     std::shared_ptr<GameModel> _game;
     
 public:
-    bool didHitObstacle;
-    bool didHitTrap;
     
 //  MARK: - Constructors
     
