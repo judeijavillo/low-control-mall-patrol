@@ -1,5 +1,17 @@
 {
     "textures": {
+        "baby_carriage_anim_down": {
+            "file": "textures/environment/animations/baby_carriage_anim_down.png"
+        },
+        "baby_carriage_anim_right": {
+            "file": "textures/environment/animations/baby_carriage_anim_right.png"
+        },
+        "baby_carriage_anim_left": {
+            "file": "textures/environment/animations/baby_carriage_anim_left.png"
+        },
+        "baby_carriage_anim_up": {
+            "file": "textures/environment/animations/baby_carriage_anim_up.png"
+        },
         "button": {
             "file":  "textures/button.png"
         },
@@ -104,6 +116,18 @@
         },
         "cop_land_right": {
             "file": "textures/characters/lcmp_cop_jump_land_right.png"
+        },
+        "mop_anim_down": {
+            "file": "textures/environment/animations/mop_anim_down.png"
+        },
+        "mop_anim_right": {
+            "file": "textures/environment/animations/mop_anim_right.png"
+        },
+        "mop_anim_left": {
+            "file": "textures/environment/animations/mop_anim_left.png"
+        },
+        "mop_anim_up": {
+            "file": "textures/environment/animations/mop_anim_up.png"
         },
         "thief_run_back": {
             "file": "textures/characters/lcmp_thief_run_back.png"

@@ -66,12 +66,12 @@ protected:
     /** Unique id of this trap*/
     int _trapID;
     /** Area affected by trap */
-    std::shared_ptr<cugl::physics2::SimpleObstacle> thiefEffectArea;
-    std::shared_ptr<cugl::physics2::SimpleObstacle> copEffectArea;
+    std::shared_ptr<cugl::physics2::PolygonObstacle> thiefEffectArea;
+    std::shared_ptr<cugl::physics2::PolygonObstacle> copEffectArea;
     /** Area within which thief can activate trap*/
-    std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea;
+    std::shared_ptr<cugl::physics2::PolygonObstacle> triggerArea;
     /** Area within which cop can deactivate trap*/
-    std::shared_ptr<cugl::physics2::SimpleObstacle> deactivationArea;
+    std::shared_ptr<cugl::physics2::PolygonObstacle> deactivationArea;
 	/** Position of the unactivated trap texture */
 	std::shared_ptr<cugl::Vec2> triggerPos;
 	/** Whether cops should collide with this trap*/
@@ -112,6 +112,7 @@ protected:
     /** the lingering duration for the thief linger effect*/
     float thiefLingerDuration; 
 
+
     /** World node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _node;
     /** Reference to the debug node of the scene graph */
@@ -120,11 +121,17 @@ protected:
     std::shared_ptr<cugl::scene2::PolygonNode> _activationTriggerNode;
     /** Reference to the node showing the texture of the deactivation trigger*/
     std::shared_ptr<cugl::scene2::PolygonNode> _deactivationTriggerNode;
-    /**  Reference to the node showing the unactivated effect area*/
-    std::shared_ptr<cugl::scene2::PolygonNode> _unactivatedAreaNode;
-    /** Reference to the node showing the texture of the activated effect area */
-    std::shared_ptr<cugl::scene2::PolygonNode> _effectAreaNode;
-    
+    /** Reference to the node showing the unactivated effect area*/
+    std::shared_ptr<cugl::scene2::SpriteNode> _assetNode;
+    /** whether the trap has an activation animation */
+    bool _hasActivationAnimation;
+    /** Number of frames in the assetNode */
+    int _assetNodeFrameCount;
+    /** whether a trap is in the middle of activating or not, should be used by game scene */
+    bool activating = false;
+    /** amount of time that has passed since the last animation frame was played */
+    float prevTime = 0;
+
     bool _sfxOn;
     std::string _sfxKey;
 
@@ -158,8 +165,8 @@ public:
      */
     bool init(int trapID,
               bool activated,
-              const std::shared_ptr<cugl::physics2::SimpleObstacle> thiefEffectArea, const std::shared_ptr<cugl::physics2::SimpleObstacle> copEffectArea,
-              const std::shared_ptr<cugl::physics2::SimpleObstacle> triggerArea, const std::shared_ptr<cugl::physics2::SimpleObstacle> deactivationArea,
+              const std::shared_ptr<cugl::physics2::PolygonObstacle> thiefEffectArea, const std::shared_ptr<cugl::physics2::PolygonObstacle> copEffectArea,
+              const std::shared_ptr<cugl::physics2::PolygonObstacle> triggerArea, const std::shared_ptr<cugl::physics2::PolygonObstacle> deactivationArea,
               const std::shared_ptr<cugl::Vec2> triggerPosition,
               bool copSolid, bool thiefSolid,
               int numUses,
@@ -245,12 +252,13 @@ public:
                     const std::shared_ptr<cugl::AssetManager>& assets,
                     const std::shared_ptr<cugl::Texture> activationTriggerTexture,
                     const std::shared_ptr<cugl::Texture> deactivationTriggerTexture,
-                    const std::shared_ptr<cugl::Texture> unactivatedAreaTexture,
-                    const std::shared_ptr<cugl::Texture> effectAreaTexture,
-                    const std::shared_ptr<cugl::Vec2> activationTriggerTextureScale,
-                    const std::shared_ptr<cugl::Vec2> deactivationTriggerTextureScale,
-                    const std::shared_ptr<cugl::Vec2> unactivatedAreaTextureScale,
-                    const std::shared_ptr<cugl::Vec2> effectAreaTextureScale);
+                    const tuple <bool, int, int, std::string> assetInfo
+);
+
+    /**
+    * Increments the activation animation until it's actually activated
+    */
+    void updateTrap(float timestep);
     
     /**
      * Sets the debug scene to all of the children nodes
