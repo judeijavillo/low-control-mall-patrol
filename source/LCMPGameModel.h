@@ -218,13 +218,14 @@ private:
                   const std::shared_ptr<cugl::AssetManager>& assets,
                   float scale);
     
-    struct ObstacleNode_x_Y_struct{
+    struct ObstacleNode_x_Y_Gid_struct{
         std::shared_ptr<cugl::physics2::PolygonObstacle> obstacle;
         std::shared_ptr<cugl::scene2::PolygonNode> node;
         float x, y;
+        int gid;
     };
     
-    GameModel::ObstacleNode_x_Y_struct readJsonShape(const std::shared_ptr<cugl::JsonValue>& json, float scale);
+    GameModel::ObstacleNode_x_Y_Gid_struct readJsonShape(const std::shared_ptr<cugl::JsonValue>& json, float scale);
     
     /**
      * Initializes a single wall
@@ -236,10 +237,16 @@ private:
      */
     void initTrap(int trapID,
                   const std::shared_ptr<cugl::JsonValue>& json,
-                  const map<int, ObstacleNode_x_Y_struct>& map1,
-                  const map<int, ObstacleNode_x_Y_struct>& map2,
+                  const map<int, ObstacleNode_x_Y_Gid_struct>& map1,
+                  const map<int, ObstacleNode_x_Y_Gid_struct>& map2,
+                  const map<int, GameModel::TileData> idToTileData, const int prop_firstGid,
                   float scale,
                   const std::shared_ptr<cugl::AssetManager>& assets);
+
+    /**
+    * Checks all the traps and see if they are in the middle of activating. If so, increment their animation.
+    */
+    void updateTraps(float timestep);
 
 
     /**
