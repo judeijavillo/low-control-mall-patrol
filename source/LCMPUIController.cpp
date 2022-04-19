@@ -244,10 +244,10 @@ void UIController::initTimer() {
     _minuteHand = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("minute_hand"));
     _hourHand->setScale(_timer->getScale());
     _minuteHand->setScale(_timer->getScale());
-    _hourHand->setAnchor(_timer->getAnchor());
-    _minuteHand->setAnchor(_timer->getAnchor());
-    _hourHand->setPosition(_timer->getPosition());
-    _minuteHand->setPosition(_timer->getPosition());
+    _hourHand->setAnchor(Vec2(0.5,0));
+    _minuteHand->setAnchor(Vec2(0.5,0));
+    _hourHand->setPosition(_timer->getPosition() - Vec2(0,10));
+    _minuteHand->setPosition(_timer->getPosition() - Vec2(0,10));
     
     _uinode->addChild(_timer);
     _uinode->addChild(_hourHand);
