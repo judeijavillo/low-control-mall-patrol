@@ -1,5 +1,5 @@
 {
-    "activeFile": "",
+    "activeFile": "example5.json",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -11,6 +11,10 @@
             "dynamicWrapping": true,
             "scaleInEditor": 1
         },
+        "PropsAndTraps.tsj": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
         "example3.json": {
             "scale": 1,
             "selectedLayer": 0,
@@ -20,11 +24,11 @@
             }
         },
         "example5.json": {
-            "scale": 0.33,
+            "scale": 0.75,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 6578.787878787879,
-                "y": 7534.848484848485
+                "x": 5259.333333333333,
+                "y": 4992
             }
         },
         "mappics.tsx": {
@@ -35,10 +39,13 @@
         }
     },
     "last.externalTilesetPath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/maps",
+    "last.imagePath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/textures/environment",
+    "last.objectTypesPath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/maps/trapTypeDef.xml",
     "openFiles": [
+        "example5.json"
     ],
     "project": "maps.tiled-project",
-    "property.type": "Effect",
+    "property.type": "object",
     "recentFiles": [
         "example5.json",
         "Props.tsj"

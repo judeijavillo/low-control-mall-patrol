@@ -26,6 +26,11 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"activated",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
                          "name":"copCollide",
                          "type":"bool",
                          "value":false
@@ -60,34 +65,9 @@
                          "value":190
                         }, 
                         {
-                         "name":"textureActivated",
-                         "type":"string",
-                         "value":"round_plant"
-                        }, 
-                        {
-                         "name":"textureActivatedScale",
-                         "propertytype":"Vec2",
-                         "type":"class",
-                         "value":
-                            {
-                             "x":520,
-                             "y":176
-                            }
-                        }, 
-                        {
-                         "name":"textureUnactivated",
-                         "type":"string",
-                         "value":"tall_plant"
-                        }, 
-                        {
-                         "name":"textureUnactivatedScale",
-                         "propertytype":"Vec2",
-                         "type":"class",
-                         "value":
-                            {
-                             "x":520,
-                             "y":176
-                            }
+                         "name":"textureAsset",
+                         "type":"object",
+                         "value":213
                         }, 
                         {
                          "name":"thiefCollide",
@@ -130,15 +110,15 @@
                  "y":4032
                 }, 
                 {
-                 "height":176,
+                 "height":514,
                  "id":190,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":520,
-                 "x":2408,
-                 "y":3912
+                 "width":192,
+                 "x":2560,
+                 "y":3684
                 }, 
                 {
                  "height":48,
@@ -148,7 +128,7 @@
                  "type":"",
                  "visible":true,
                  "width":40,
-                 "x":2408,
+                 "x":2405.33333333333,
                  "y":4100
                 }, 
                 {
@@ -161,6 +141,190 @@
                  "width":40,
                  "x":2460,
                  "y":4100
+                }, 
+                {
+                 "gid":24,
+                 "height":445,
+                 "id":206,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":277,
+                 "x":2511.33333333333,
+                 "y":3793.66666666667
+                }, 
+                {
+                 "gid":25,
+                 "height":445,
+                 "id":207,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":277,
+                 "x":2910,
+                 "y":3816.33333333334
+                }, 
+                {
+                 "gid":23,
+                 "height":445,
+                 "id":208,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":277,
+                 "x":2434,
+                 "y":4627.66666666667
+                }, 
+                {
+                 "gid":26,
+                 "height":445,
+                 "id":209,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":277,
+                 "x":2765.33333333333,
+                 "y":4613
+                }, 
+                {
+                 "gid":20,
+                 "height":428,
+                 "id":210,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":325,
+                 "x":3050.54545454545,
+                 "y":4132.54545454545
+                }, 
+                {
+                 "gid":19,
+                 "height":428,
+                 "id":211,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":325,
+                 "x":3062.24242424242,
+                 "y":4620.06060606061
+                }, 
+                {
+                 "gid":18,
+                 "height":428,
+                 "id":212,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":325,
+                 "x":2116.78787878788,
+                 "y":4547.33333333333
+                }, 
+                {
+                 "gid":17,
+                 "height":428,
+                 "id":213,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":325,
+                 "x":2071.33333333333,
+                 "y":4159.45454545455
+                }, 
+                {
+                 "height":222,
+                 "id":214,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":326,
+                 "x":2364,
+                 "y":1934
+                }, 
+                {
+                 "height":0,
+                 "id":215,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"copCollide",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
+                         "name":"effectArea",
+                         "type":"object",
+                         "value":214
+                        }, 
+                        {
+                         "name":"textureAsset",
+                         "type":"object",
+                         "value":218
+                        }, 
+                        {
+                         "name":"thiefCollide",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"triggerArea",
+                         "type":"object",
+                         "value":216
+                        }, 
+                        {
+                         "name":"triggerDeactivationArea",
+                         "type":"object",
+                         "value":217
+                        }],
+                 "rotation":0,
+                 "type":"Trap",
+                 "visible":true,
+                 "width":0,
+                 "x":2562,
+                 "y":2064
+                }, 
+                {
+                 "height":40,
+                 "id":216,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":42,
+                 "x":2414,
+                 "y":2178
+                }, 
+                {
+                 "height":40,
+                 "id":217,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":38,
+                 "x":2462,
+                 "y":2182
+                }, 
+                {
+                 "gid":15,
+                 "height":512,
+                 "id":218,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":512,
+                 "x":2294,
+                 "y":1950
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1506,7 +1670,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":194,
+ "nextobjectid":219,
  "orientation":"orthogonal",
  "renderorder":"right-up",
  "tiledversion":"1.8.2",
