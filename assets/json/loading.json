@@ -41,7 +41,7 @@
     "sounds": {
         "loading": {
             "type":     "sample",
-            "file":     "sounds/pop1.ogg",
+            "file":     "sounds/loading.ogg",
             "volume":   0.5
         },
         "click": {

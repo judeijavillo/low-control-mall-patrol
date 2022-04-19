@@ -45,6 +45,9 @@ public:
 protected:
 //  MARK: - Properties
     
+    /** The amount to move the world node by to center it in the scene */
+    cugl::Vec2 _offset;
+    
     /** A reference to the Network Controller instance */
     std::shared_ptr<NetworkController> _network;
     

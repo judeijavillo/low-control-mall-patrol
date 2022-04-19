@@ -42,6 +42,8 @@ public:
 protected:
 //  MARK: - Properties
     
+    /** The amount to move the world node by to center it in the scene */
+    cugl::Vec2 _offset;
     /** The asset manager for this scene. */
     std::shared_ptr<cugl::AssetManager> _assets;
     /** The sound controller for the game */

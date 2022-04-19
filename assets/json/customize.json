@@ -1,0 +1,238 @@
+{
+    "textures": {
+        "ss_thief_right": {
+            "file": "textures/characters/ss_thief_right.png"
+        },
+        "ss_thief_right_f": {
+            "file": "textures/characters/ss_thief_right_f.png"
+        },
+        "ss_thief_cat_right": {
+            "file": "textures/characters/ss_thief_cat_right.png"
+        },
+        "ss_thief_cat_right_f": {
+            "file": "textures/characters/ss_thief_cat_right_f.png"
+        },
+        "ss_thief_hatless_right": {
+            "file": "textures/characters/ss_thief_hatless_right.png"
+        },
+        "ss_thief_hatless_right_f": {
+            "file": "textures/characters/ss_thief_hatless_right_f.png"
+        },
+        "background": {
+            "file": "textures/lobby/menu_background.png"
+        },
+        "button_join": {
+            "file": "textures/lobby/join.png"
+        },
+        "back": {
+            "file": "textures/lobby/back.png"
+        },
+        "map": {
+            "file": "textures/lobby/map.png"
+        },
+        "ready": {
+            "file": "textures/lobby/ready.png"
+        },
+        "donut_pink": {
+            "file": "textures/ui/donut_pink.png"
+        },
+        "donut_blue": {
+            "file": "textures/ui/donut_blue.png"
+        }
+    },
+    "fonts": {
+        "futura": {
+            "file": "fonts/futur.ttf",
+            "size": 48
+        }
+    },
+    "scene2s": {
+        "customize": {
+            "type": "Node",
+            "comment": "This is the root node of the scene for the lab",
+            "format": {
+                "type": "Anchored"
+            },
+            "children": {
+                "backdrop": {
+                    "type": "Image",
+                    "data": {
+                        "texture": "background",
+                        "anchor": [0.5, 0.5],
+                        "scale": [1, 1]
+                    },
+                    "layout": {
+                        "x_anchor": "fill",
+                        "y_anchor": "fill"
+                    },
+                    "children": {
+                        "back": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [50, 560],
+                                "scale": [0.3, 0.3]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "back"
+                                    }
+                                }
+                            }
+                        },
+                        "left_button": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": [0.3, 0.3]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "donut_pink"
+                                    }
+                                }
+                            }
+                        },
+                        "right_button": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": [0.3, 0.3]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "donut_blue"
+                                    }
+                                }
+                            }
+
+                        },
+                        "start": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [600, 150],
+                                "scale": [1.6, 1.6]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "ready"
+                                    }
+                                }
+                            }
+                        },
+                        "title": {
+                        "type": "Label",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "scale": 1.5,
+                                "font": "futura",
+                                "text": "CHOOSE YOUR FIGHTER",
+                                "halign": "center",
+                                "valign": "middle",
+                                "position": [775, 600]
+                            }
+                        }
+                    }
+                },
+                "ss_thief_right" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_right",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_thief_right_f" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_right_f",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_thief_cat_right" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_cat_right",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_thief_cat_right_f" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_cat_right_f",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_thief_hatless_right" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_hatless_right",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_thief_hatless_right_f" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_hatless_right_f",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                }
+            }
+        }
+    }
+}
+
