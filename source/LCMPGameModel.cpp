@@ -107,8 +107,6 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     // Initialize walls
     for (int i = 0; i < walls->size(); i++) initWall(walls->get(i), scale);
     
-    //CULog("-3");
-
     // Initialize props
     int prop_firstGid = 0;
     auto tilesets = json->get("tilesets");
@@ -119,12 +117,10 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
             break;
         }
     }
-    //CULog("prop firstgid %d", prop_firstGid);
     if(prop_firstGid > 0){
 //    for (int i = 0; i < props->size(); i++) initProp(props->get(i), prop_firstGid, propTileset, assets, scale);
         initProps(props, prop_firstGid, idToTileData, assets, scale);
     }
-    //CULog("-2");
     // Initialize traps
     // TODO: Make this JSON Reading
     //Vec2 traps[] = { Vec2(20, 30), Vec2(50, 30), Vec2(80, 30) };
@@ -338,9 +334,7 @@ map<int,GameModel::TileData> GameModel::buildTileDataMap(const shared_ptr<JsonVa
     // build map from tile id to asset name
     map<int, GameModel::TileData> idToTileData {};
     auto tiles = propTileset->get("tiles");
-//    CULog("%s", tiles->toString().data());
     int tilecount = propTileset->getInt("tilecount");
-    //CULog("tilecount %d", tilecount);
     for(int i = 0; i < tilecount; i++){
         auto tile = tiles->get(i);
         int id = tile->get("id")->asInt();
@@ -353,9 +347,7 @@ map<int,GameModel::TileData> GameModel::buildTileDataMap(const shared_ptr<JsonVa
         bool animated = false;
         int anim_rows = 0;
         int anim_cols = 0;
-        int j = 0;
         for(int j = 0; j < properties->size(); j++){
-//        while(true){
             auto p = properties->get(j);
             if(p == nullptr) break;
             auto pname = p->getString("name");
@@ -368,19 +360,12 @@ map<int,GameModel::TileData> GameModel::buildTileDataMap(const shared_ptr<JsonVa
             } else if(pname == "anim_cols") {
                 anim_cols = p->getInt("value");
             }
-//            ++j;
         }
-        
-        shared_ptr<JsonValue> hitboxes;
-        if (tile->get("objectgroup") != nullptr) {
-            hitboxes = tile->get("objectgroup")->get("objects");
-        }
-        
-        
-        
+        shared_ptr<JsonValue> hitboxes = tile->get("objectgroup")->get("objects");
         idToTileData[id] = {assetName, hitboxes, animated, anim_rows, anim_cols};
+//        CULog("%s has hitboxes %s", assetName.data(), hitboxes->toString().data());
+        // this is correct
     }
-    //CULog("-5");
     
     return idToTileData;
 }
@@ -407,7 +392,7 @@ void GameModel::initProps(const shared_ptr<JsonValue>& props,
         
         TileData data = idToTileData[id];
         
-        //CULog("%d asset name %s", id, data.assetName.data());
+        CULog("%d asset name %s", id, data.assetName.data());
         auto texture = assets->get<Texture>(data.assetName);
         //TODO: get this working
         Vec2 scale_ = Vec2(width/texture->getWidth(), height/texture->getHeight());
@@ -418,10 +403,10 @@ void GameModel::initProps(const shared_ptr<JsonValue>& props,
         shared_ptr<scene2::PolygonNode> node;
         if(data.animated){
             node = scene2::SpriteNode::alloc(texture, data.anim_rows, data.anim_cols);
-            //CULog("prop is animated");
+            CULog("prop is animated");
         } else {
             node = scene2::PolygonNode::allocWithTexture(texture);
-            //CULog("prop is not animated");
+            CULog("prop is not animated");
         }
         node->setScale(scale_.x * scale, scale_.y * scale);
 //        node->setScale(scale);
@@ -435,47 +420,33 @@ void GameModel::initProps(const shared_ptr<JsonValue>& props,
         for(int j = 0; j < data.hitboxes->size(); j++){
             auto hitbox = data.hitboxes->get(j);
             auto shape = readJsonShape(hitbox, scale);
+            shape.y -= _mapHeight;
             auto obstacle = shape.obstacle;
             auto poly = obstacle->getPolygon();
             poly *= scale_ * _tileSize;
+            
+
+//            Rect bounds = poly.getBounds();
+//            Vec2 range(bounds.getMaxX() + abs(bounds.getMinX()),
+//                       bounds.getMaxY() + abs(bounds.getMinY()));
+//            Vec2 anchor(abs(bounds.getMinX()) / range.x,
+//                        abs(bounds.getMinY()) / range.y);
+            
 //            CULog("scale %f %f", (scale_ * _tileSize).x, (scale_ * _tileSize).y);
             obstacle = physics2::PolygonObstacle::alloc(poly);
 //            obstacle->set
             obstacle->setDebugScene(_debugnode);
 //            CULog("squoosh factor %f %f", scale_.x, scale_.y);
             _world->addObstacle(obstacle);
-            obstacle->setPosition(shape.x*scale_.x/_tileSize + x,
-                                  shape.y*scale_.y/_tileSize + y);
+            obstacle->setPosition(shape.x*scale_.x*_tileSize + x,
+                                  shape.y*scale_.y*_tileSize + y
+                                    + height);
+            CULog("%s x dx y dy %f %f %f %f", data.assetName.data(), x, shape.x*scale_.x*_tileSize, y, shape.y*scale_.y*_tileSize);
 //                                  shape.y/_tileSize - height + y);
 //            obstacle->setPosition((x + width / 2) * scale, (y + height / 2) * scale);
 //            CULog("placing %s at %f %f", data.assetName.data(), shape.x/_tileSize + x, shape.y/_tileSize + y);
         }
     }
-    
-//    for(int i = 0; i < _mapWidth*_mapHeight; i++){
-//        float y = (int)(i / _mapWidth);
-//        float x = i - _mapWidth * y;
-//        y = _mapHeight - y;
-//        x *= _tileSize/2;
-//        y *= _tileSize/2;
-//
-//        int tile = props->get(i)->asInt();
-//        if(tile == 0) continue;
-//
-//        //TODO: incorporate rotation/reflection using tiled flags
-//
-//        tile &= CLEAR_FLAGS_FILTER;
-//
-//        int tileId = tile - props_firstgid;
-//        auto assetName = idToAssetName[tileId];
-//        auto texture = assets->get<Texture>(assetName);
-//        auto node = scene2::PolygonNode::allocWithTexture(texture);
-//        node->setAnchor(0,0.5);
-//
-//        _worldnode->addChild(node);
-//        node->setPosition(x,y);
-//        node->setScale(PROP_SCALE);
-//    }
 }
 
 /**
@@ -487,6 +458,7 @@ GameModel::ObstacleNode_x_Y_Gid_struct GameModel::readJsonShape(const shared_ptr
     bool ellipse = json->getBool(ELLIPSE_FIELD);
     float x = json->getFloat(X_FIELD) / _tileSize;
     float y = json->getFloat(Y_FIELD) / _tileSize;
+//    CULog("x,y %f %f", x*_tileSize, y*_tileSize);
     float width = json->getFloat(WIDTH_FIELD) / _tileSize;
     float height = json->getFloat(HEIGHT_FIELD) / _tileSize;
     int gid = json->getInt(GID_FIELD);
