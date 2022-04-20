@@ -196,6 +196,7 @@
     <Lib>
       <OutputFile>$(OutDir)box2d.lib</OutputFile>
       <TargetMachine>MachineX64</TargetMachine>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
     </Lib>
     <Link>
       <SubSystem>Windows</SubSystem>

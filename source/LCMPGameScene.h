@@ -33,6 +33,8 @@ class GameScene : public cugl::Scene2 {
     enum State {
         /** The state when the game has not begun, and the game is being initialized */
         INIT,
+        /** The state when the game is counting down to start */
+        COUNTDOWN,
         /** The state when main gameplay occurs */
         GAME,
         /** The state where the game is over and we wait for reseting */
