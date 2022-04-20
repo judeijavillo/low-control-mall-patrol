@@ -147,6 +147,8 @@ void NetworkController::sendStartGame(bool randomThief, int thiefChoice) {
             count++;
         }
     }
+    
+    CULog("now");
     _serializer.writeFloatVector(data);
     _connection->send(_serializer.serialize());
     _serializer.reset();

@@ -322,7 +322,7 @@ void GameScene::stateGame(float timestep) {
     Vec2 movement = _input.getMovementVector(_isThief);
     Vec2 tackle = _input.getSwipe();
     bool joystick = _input.didPressJoystick();
-    bool activate = _input._spacebarPressed;
+    bool activate = _input.didSwitch();
     bool swipe = _input.didSwipe();
     movement.y = -movement.y;
     tackle.y = -tackle.y;

@@ -10,6 +10,8 @@
 		4212F24527E79701008679C8 /* LCMPUIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4212F24427E79701008679C8 /* LCMPUIController.cpp */; };
 		4212F24627E79701008679C8 /* LCMPUIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4212F24427E79701008679C8 /* LCMPUIController.cpp */; };
 		4212F24727E79701008679C8 /* LCMPUIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4212F24427E79701008679C8 /* LCMPUIController.cpp */; };
+		4226A7E228101EDD00A7B339 /* LCMPCustomizeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */; };
+		4226A7E628101EDE00A7B339 /* LCMPCustomizeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */; };
 		4298946B27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */; };
 		4298946C27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */; };
 		4298946D27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */; };
@@ -695,6 +697,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4226A7E628101EDE00A7B339 /* LCMPCustomizeScene.cpp in Sources */,
 				EB9CDA3925D0EAB100EE1A09 /* main.cpp in Sources */,
 				4212F24727E79701008679C8 /* LCMPUIController.cpp in Sources */,
 				EB13B3B627B2C0DF0032BF19 /* LCMPLoadingScene.cpp in Sources */,
@@ -721,6 +724,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4226A7E228101EDD00A7B339 /* LCMPCustomizeScene.cpp in Sources */,
 				EB7454AE1D74D891002FBAE6 /* main.cpp in Sources */,
 				4212F24627E79701008679C8 /* LCMPUIController.cpp in Sources */,
 				EB13B3B527B2C0DF0032BF19 /* LCMPLoadingScene.cpp in Sources */,

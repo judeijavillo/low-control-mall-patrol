@@ -224,6 +224,5 @@ void HostScene::configureStartButton() {
 void HostScene::startGame() {
     if (_network->isConnected()) {
         _status = Status::START;
-        _network->sendStartGame();
     }
 }
