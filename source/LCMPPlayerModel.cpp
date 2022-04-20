@@ -132,6 +132,7 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
                 break;
             case TrapModel::TrapType::Moving_Platform:
                 _realbody->SetLinearVelocity(b2Vec2(b2velocity.x + std::get<1>(elem)->x, b2velocity.y + std::get<1>(elem)->y));
+                //CULog("escalator!%d:%d", std::get<1>(elem)->x, std::get<1>(elem)->y);
                 break;
             default:
                 break;

@@ -361,7 +361,10 @@ map<int,GameModel::TileData> GameModel::buildTileDataMap(const shared_ptr<JsonVa
                 anim_cols = p->getInt("value");
             }
         }
-        shared_ptr<JsonValue> hitboxes = tile->get("objectgroup")->get("objects");
+        shared_ptr<JsonValue> hitboxes;
+        if (tile->get("objectgroup") != nullptr) {
+            hitboxes = tile->get("objectgroup")->get("objects");
+        }
         idToTileData[id] = {assetName, hitboxes, animated, anim_rows, anim_cols};
 //        CULog("%s has hitboxes %s", assetName.data(), hitboxes->toString().data());
         // this is correct
@@ -800,8 +803,10 @@ shared_ptr<TrapModel::Effect> GameModel::readJsonEffect(shared_ptr<JsonValue> ef
 
         case ESCALATOR:
             effectType = TrapModel::TrapType::Moving_Platform;
-            effectx = effect->get(VALUE_FIELD)->get(ESCALATOR_VELOCITY)->getFloat(X_FIELD, 0);
-            effecty = effect->get(VALUE_FIELD)->get(ESCALATOR_VELOCITY)->getFloat(Y_FIELD, 0);
+            if (effect->get(VALUE_FIELD)->get(ESCALATOR_VELOCITY) != nullptr) {
+                effectx = effect->get(VALUE_FIELD)->get(ESCALATOR_VELOCITY)->getFloat(X_FIELD, 0);
+                effecty = effect->get(VALUE_FIELD)->get(ESCALATOR_VELOCITY)->getFloat(Y_FIELD, 0);
+            }
             effectVec = make_shared<cugl::Vec2>(effectx, effecty);
             break;
 
