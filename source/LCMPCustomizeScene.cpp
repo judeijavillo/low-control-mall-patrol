@@ -214,13 +214,11 @@ void CustomizeScene::setActive(bool value) {
     if (isActive() != value) {
         Scene2::setActive(value);
         if (value) {
-            _network->disconnect();
             _status = IDLE;
             _backout->activate();
             _startgame->activate();
             _leftButton->activate();
             _rightButton->activate();
-            connect();
         } else {
             _startgame->deactivate();
             _backout->deactivate();

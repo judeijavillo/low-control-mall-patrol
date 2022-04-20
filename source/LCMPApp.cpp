@@ -300,8 +300,9 @@ void LCMPApp::updateClientScene(float timestep) {
         break;
     case ClientScene::Status::START:
         _client.setActive(false);
-        _customize.setActive(true);
-        _scene = State::CUSTOM;
+        _game.setActive(true);
+        _scene = State::GAME;
+        _game.start(false, _customize.skinKey);
         break;
     case ClientScene::Status::WAIT:
     case ClientScene::Status::IDLE:

@@ -21,6 +21,10 @@ using namespace cugl;
 /** The deadzone of the accelerometer. */
 #define ACCEL_DEADZONE 0.05f
 
+/** The portion of the screen used for the left zone */
+#define LEFT_ZONE       0.5f
+/** The portion of the screen used for the right zone */
+#define RIGHT_ZONE      0.5f
 
 //  MARK: - Constructors
 
@@ -32,7 +36,6 @@ _isActive(false),
 _didSwitch(false),
 _didSwipe(false),
 _joystickPressed(false),
-_spacebarPressed(false),
 _joystickOrigin(0,0),
 _joystickPosition(0,0),
 _acceleration(0,0),
@@ -61,10 +64,12 @@ void InputController::dispose() {
  * Initializes an Input Controller
  */
 bool InputController::init(const cugl::Rect bounds) {
-    clearTouchInstance(_mtouch);
+    clearTouchInstance(_ltouch);
+    clearTouchInstance(_rtouch);
 #ifdef CU_TOUCH_SCREEN
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
+    initZones();
     
     Touchscreen* touch = Input::get<Touchscreen>();
     touch->addBeginListener(LISTENER_KEY,
@@ -170,48 +175,82 @@ cugl::Vec2 const InputController::getMovementVector(bool isThief) const {
  * Callback for detecting that the player has pressed the touchscreen
  */
 void InputController::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
-    if (_mtouch.touchids.empty()) {
-        // Left is the floating joystick
-        _mtouch.position = event.position;
-        if ((int)event.timestamp.ellapsedMillis(_mtouch.timestamp) < TAP_THRESHOLD) {
-            _didSwitch = !_didSwitch;
-        }
-        _mtouch.timestamp.mark();
-        _mtouch.touchids.insert(event.touch);
+    Vec2 pos = event.position;
+    Zone zone = getZone(pos);
+    switch (zone) {
+        case InputController::Zone::LEFT:
+            if (_ltouch.touchids.empty()) {
+                // Left is the floating joystick
+                _ltouch.position = event.position;
+                _ltouch.timestamp.mark();
+                _ltouch.touchids.insert(event.touch);
+            }
+            _joystickPressed = true;
+            _joystickID = event.touch;
+            _joystickOrigin = event.position;
+            _joystickPosition = event.position;
+            _didSwipe = false;
+            break;
+        case InputController::Zone::RIGHT:
+            if ((int)event.timestamp.ellapsedMillis(_rtouch.timestamp) < TAP_THRESHOLD) {
+                _didSwitch = !_didSwitch;
+            }
+            _rtouch.timestamp.mark();
+            break;
+        default:
+            break;
     }
-    _joystickPressed = true;
-    _joystickID = event.touch;
-    _joystickOrigin = event.position;
-    _joystickPosition = event.position;
-    _didSwipe = false;
 }
 
 /**
  * Callback for detecting that the player has released the touchscreen
  */
 void InputController::touchEndedCB(const cugl::TouchEvent& event, bool focus) {
-    // Remove joystick touch
-    if (!_mtouch.touchids.empty()) {
-        _mtouch.touchids.clear();
+    Vec2 pos = event.position;
+    Zone zone = getZone(pos);
+    if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
+        _ltouch.touchids.clear();
+        _joystickPressed = false;
+        _joystickOrigin = Vec2::ZERO;
+        _joystickPosition = Vec2::ZERO;
+        _didSwipe = false;
     }
-    _joystickPressed = false;
-    _joystickOrigin = Vec2::ZERO;
-    _joystickPosition = Vec2::ZERO;
-    _didSwipe = false;
 }
 
 /**
  * Callback for detecting that the player has dragged accross the touchscreen
  */
 void InputController::touchMovedCB(const cugl::TouchEvent& event, const cugl::Vec2& previous, bool focus) {
-    _joystickPosition = event.position;
-    
-    Vec2 pos = event.position;
     // Only check for swipes in the main zone if there is more than one finger.
-    if (!_mtouch.touchids.empty()) {
-        if ((_mtouch.position - pos).lengthSquared() > EVENT_SWIPE_LENGTH * EVENT_SWIPE_LENGTH) {
-            _swipe = (pos - _mtouch.position);
+    if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
+        _joystickPosition = event.position;
+        Vec2 pos = event.position;
+        // Only check for swipes in the main zone if there is more than one finger.
+        if ((_ltouch.position - pos).lengthSquared() > EVENT_SWIPE_LENGTH * EVENT_SWIPE_LENGTH) {
+            _swipe = (pos - _ltouch.position);
             _didSwipe = true;
         } else _didSwipe = false;
     }
+}
+
+//  MARK: - Helpers
+
+/**
+ * Initializes zones for inputs
+ */
+void InputController::initZones() {
+    _lzone = _tbounds;
+    _lzone.size.width *= LEFT_ZONE;
+    _rzone = _tbounds;
+    _rzone.size.width *= RIGHT_ZONE;
+    _rzone.origin.x = _tbounds.origin.x+_tbounds.size.width-_rzone.size.width;
+}
+
+/**
+ * Returns the correct zone for the given position.
+ */
+InputController::Zone InputController::getZone(const cugl::Vec2 pos) const {
+    if (_lzone.contains(pos)) return Zone::LEFT;
+    else if (_rzone.contains(pos)) return Zone::RIGHT;
+    return Zone::UNDEFINED;
 }

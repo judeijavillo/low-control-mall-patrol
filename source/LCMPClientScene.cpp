@@ -67,15 +67,9 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Get interactive UI elements
     _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_join"));
-    _startgame->setPositionX(SCENE_WIDTH/2 + _offset.x);
-    _startgame->setAnchor(Vec2(0.5,0.5));
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_back"));
     _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_roomID"));
-    _gameid->setPositionX(SCENE_WIDTH/2 + _offset.x);
-    _gameid->setAnchor(Vec2(0.5,0.5));
     _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_instructions"));
-    _player->setPositionX(SCENE_WIDTH/2 + _offset.x);
-    _player->setAnchor(Vec2(0.5,0.5));
     _status = Status::IDLE;
     
     // Attach listener to back button
@@ -117,7 +111,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // Attach listener to join button
     _startgame->addListener([=](const std::string& name, bool down) {
         if (down) {
-            _status = Status::START;
+            _status = Status::WAIT;
             _audio->stopSfx(CLICK_SFX);
             _audio->playSound(_assets, CLICK_SFX, true, 0);
             connect(_gameid->getText());
@@ -166,26 +160,26 @@ void ClientScene::update(float timestep) {
             _status = ABORT;
             break;
         }
-        
-        switch (_status) {
-        case IDLE:
-            _player->setText("Enter a room code", true);
-            break;
-        case JOIN:
-            _player->setText("Connecting", true);
-            break;
-        case WAIT:
-        {
-            string message = strtool::format("Waiting for host (%d/5)", _network->getNumPlayers());
-            _player->setText(message, true);
-            break;
-        }
-        default:
-            break;
-        }
-        
-        configureStartButton();
     }
+    
+    switch (_status) {
+    case IDLE:
+        _player->setText("Enter a room code", true);
+        break;
+    case JOIN:
+        _player->setText("Connecting", true);
+        break;
+    case WAIT:
+    {
+        string message = strtool::format("Waiting for host (%d/5)", _network->getNumPlayers());
+        _player->setText(message, true);
+        break;
+    }
+    default:
+        break;
+    }
+    
+    configureStartButton();
 }
 
 /**
