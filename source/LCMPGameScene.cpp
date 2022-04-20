@@ -324,10 +324,8 @@ void GameScene::stateGame(float timestep) {
     bool joystick = _input.didPressJoystick();
     bool activate = _input._spacebarPressed;
     bool swipe = _input.didSwipe();
-    bool dtap = _input.didSwitch();
     movement.y = -movement.y;
     tackle.y = -tackle.y;
-    bool toggle = false;
     
     // If time surpasses the game length, thief wins
     if (_gameTime > GAME_LENGTH) {

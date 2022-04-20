@@ -35,9 +35,6 @@ public:
 protected:
 //  MARK: - Properties
     
-    /** The Input Controller instance */
-    InputController _input;
-    
     /** A reference to the Network Controller instance */
     std::shared_ptr<NetworkController> _network;
     
@@ -50,26 +47,31 @@ protected:
     /** The sound controller for the game */
     std::shared_ptr<AudioController> _audio;
     
-    /** The top-level node for displaying the player */
-//    std::shared_ptr<cugl::scene2::SceneNode> _node;
-    
     /** The back button for the menu scene */
     std::shared_ptr<cugl::scene2::Button> _backout;
+    
+    /** The players label (for updating) */
+    std::shared_ptr<cugl::scene2::Label> _player;
     
     /** The menu button for starting a game */
     std::shared_ptr<cugl::scene2::Button> _startgame;
     
+    std::shared_ptr<cugl::scene2::Label> _title;
+    
     /** The nodes for the player skins */
     std::vector<std::shared_ptr<cugl::Texture>> _spriteSheets;
     std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _spriteNodes;
-    std::vector<std::shared_ptr<cugl::scene2::Animate>> _animations;
     std::vector<string> _keys;
-    
-    /** The movement actions */
-    std::shared_ptr<cugl::scene2::MoveBy> _moveLeft;
-    std::shared_ptr<cugl::scene2::MoveBy> _moveRight;
+    std::shared_ptr<cugl::scene2::Button> _leftButton;
+    std::shared_ptr<cugl::scene2::Button> _rightButton;
+    /** The current animation frame */
+    int _aniFrame;
+    /** The previous timestep. */
+    float _prevTime;
     
     cugl::Size _dimen;
+    /** The amount to move the world node by to center it in the scene */
+    cugl::Vec2 _offset;
 
     bool _didLeft;
     bool _isThief;
@@ -140,9 +142,6 @@ public:
      */
     void update(float timestep) override;
     
-    /** Updates scene based on player input */
-    void updateInput(float timestep);
-    
     /**
      * Sets whether the scene is currently active
      *
@@ -172,27 +171,6 @@ public:
      * when ALL scenes have been disconnected.
      */
     void disconnect() { _network = nullptr; }
-    
-    /**
-     * Updates the text in the given button.
-     *
-     * Techincally a button does not contain text. A button is simply a scene graph
-     * node with one child for the up state and another for the down state. So to
-     * change the text in one of our buttons, we have to descend the scene graph.
-     * This method simplifies this process for you.
-     *
-     * @param button    The button to modify
-     * @param text      The new text value
-     */
-    void updateText(const std::shared_ptr<cugl::scene2::Button>& button, const std::string text);
-    
-    /**
-     * Reconfigures the start button for this scene
-     *
-     * This is necessary because what the buttons do depends on the state of the
-     * networking.
-     */
-    void configureStartButton();
     
     /**
      * Connects to the game server as specified in the assets file
@@ -226,7 +204,7 @@ public:
     void startGame();
     
     /** Displays the skins */
-    void displaySkins();
+    void displaySkins(float timestep);
 };
 
 #endif /* LCMPCustomizeScene_h */

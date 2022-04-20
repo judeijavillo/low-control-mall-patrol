@@ -62,8 +62,6 @@ protected:
     std::shared_ptr<cugl::Texture> _spriteSheet;
     /** The current animation frame */
     int _aniFrame;
-    /** The number of animation frames per player animation */
-    std::vector<int> _animFrames;
     /** The previous timestep. */
     float _prevTime;
 

@@ -48,6 +48,7 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     dimen *= SCENE_HEIGHT/dimen.height;
+    _offset = Vec2((dimen.width-SCENE_WIDTH)/2.0f,(dimen.height-SCENE_HEIGHT)/2.0f);
     
     // Give up if initialization fails early
     if (assets == nullptr) return false;
@@ -65,9 +66,15 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Get the interactive UI elements that we need to access later
     _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_backdrop_create"));
+    _startgame->setPositionX(SCENE_WIDTH/2);
+    _startgame->setAnchor(Vec2(0.5,0.5));
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_backdrop_back"));
     _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_roomID"));
+    _gameid->setPositionX(SCENE_WIDTH/2);
+    _gameid->setAnchor(Vec2(0.5,0.5));
     _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_players"));
+    _player->setPositionX(SCENE_WIDTH/2);
+    _player->setAnchor(Vec2(0.5,0.5));
     _status = Status::IDLE;
     
     // Program the buttons
@@ -115,25 +122,28 @@ void HostScene::update(float timestep) {
     if (_network->isConnected() && _status != START && _status != ABORT) {
         _network->update();
         switch (_network->getStatus()) {
-        case NetworkController::Status::IDLE:
-        case NetworkController::CONNECTING:
-            _status = IDLE;
-            break;
-        case NetworkController::WAIT:
-        {
-            _status = WAIT;
-            _gameid->setText(("Tell your friends this room code: " + _network->getRoomID()), true);
-            _gameid->setPosition(600, 500);
-            break;
+            case NetworkController::Status::IDLE:
+            case NetworkController::CONNECTING:
+                _status = IDLE;
+                break;
+            case NetworkController::WAIT:
+            {
+                _status = WAIT;
+                _gameid->setText(strtool::format("Tell your friends this room code: " + _network->getRoomID()), true);
+                _gameid->setPosition(Vec2(SCENE_WIDTH/2, 3*SCENE_HEIGHT/4) + _offset);
+                _gameid->setAnchor(Vec2(0.5,0.5));
+                break;
+            }
+            case NetworkController::START:
+                _status = START;
+                break;
+            case NetworkController::ABORT:
+                _status = ABORT;
+                break;
         }
-        case NetworkController::START:
-            _status = START;
-            break;
-        case NetworkController::ABORT:
-            _status = ABORT;
-            break;
-        }
-        _player->setText(strtool::format("Waiting for players: (%f/5)", ((float)_network->getNumPlayers())), true);
+        _player->setText(strtool::format("Waiting for players: (%d/5)", _network->getNumPlayers()), true);
+        _player->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) + _offset);
+        _player->setAnchor(Vec2(0.5,0.5));
     }
 }
 

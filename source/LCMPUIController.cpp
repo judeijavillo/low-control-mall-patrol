@@ -262,7 +262,7 @@ void UIController::initTimer() {
     // Create clock
     _timer = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("clock"));
     _timer->setAnchor(Vec2::ANCHOR_CENTER);
-    _timer->setPosition(Vec2(SCENE_WIDTH_ADJUST,SCENE_HEIGHT-SCENE_HEIGHT_ADJUST) + _offset);
+    _timer->setPosition(Vec2(SCENE_WIDTH_ADJUST,SCENE_HEIGHT-SCENE_HEIGHT_ADJUST));
     _timer->setScale(0.3f);
     
     // Create hour and minute hands

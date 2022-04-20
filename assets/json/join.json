@@ -466,7 +466,7 @@
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
                                 "position": [1450, 640],
-                                "scale": [1.5, 1.5]
+                                "scale": [0.3, 0.3]
                             },
                             "children": {
                                 "up": {
@@ -485,7 +485,7 @@
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
                                 "position": [50, 640],
-                                "scale": [1.8, 1.8]
+                                "scale": [0.3, 0.3]
                             },
                             "children": {
                                 "up": {
@@ -504,7 +504,7 @@
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
                                 "position": [140, 640],
-                                "scale": [1.8, 1.8]
+                                "scale": [0.3, 0.3]
                             },
                             "children": {
                                 "up": {
@@ -524,7 +524,7 @@
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
                                 "position": [50, 560],
-                                "scale": [1.8, 1.8]
+                                "scale": [0.3, 0.3]
                             },
                             "children": {
                                 "up": {

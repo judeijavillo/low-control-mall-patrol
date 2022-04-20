@@ -49,6 +49,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     dimen *= SCENE_HEIGHT/dimen.height;
+    _offset = Vec2((dimen.width-SCENE_WIDTH)/2.0f,(dimen.height-SCENE_HEIGHT)/2.0f);
     
     // Give up if initialization fails early
     if (assets == nullptr) return false;
@@ -66,9 +67,15 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Get interactive UI elements
     _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_join"));
+    _startgame->setPositionX(SCENE_WIDTH/2 + _offset.x);
+    _startgame->setAnchor(Vec2(0.5,0.5));
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_back"));
     _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_roomID"));
+    _gameid->setPositionX(SCENE_WIDTH/2 + _offset.x);
+    _gameid->setAnchor(Vec2(0.5,0.5));
     _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_instructions"));
+    _player->setPositionX(SCENE_WIDTH/2 + _offset.x);
+    _player->setAnchor(Vec2(0.5,0.5));
     _status = Status::IDLE;
     
     // Attach listener to back button

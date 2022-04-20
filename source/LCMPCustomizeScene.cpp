@@ -61,6 +61,7 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     Size dimen = Application::get()->getDisplaySize();
     dimen *= SCENE_HEIGHT/dimen.height;
     _dimen = dimen;
+    _offset = Vec2((_dimen.width-SCENE_WIDTH)/2.0f,(_dimen.height-SCENE_HEIGHT)/2.0f);
     
     // Give up if initialization fails early
     if (assets == nullptr) return false;
@@ -71,9 +72,6 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _network = network;
     _audio = audio;
     _actions = actions;
-
-    // Initialize the input controller
-    _input.init(getBounds());
     
     // Acquire the scene built by the asset loader and resize it the scene
     std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("customize");
@@ -81,9 +79,14 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     scene->doLayout(); // Repositions the HUD
     
     // Get the interactive UI elements that we need to access later
-    _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("customize_center_start"));
-    _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("customize_back"));
-
+    _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("customize_backdrop_start"));
+    _startgame->setPositionX(SCENE_WIDTH/2 + _offset.x);
+    _startgame->setAnchor(Vec2(0.5,0.5));
+    _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("customize_backdrop_back"));
+    _title = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("customize_backdrop_title"));
+    _title->setPositionX(SCENE_WIDTH/2 + _offset.x);
+    _title->setAnchor(Vec2(0.5,0.5));
+    
     _status = Status::IDLE;
     
     // Initialize custom assets
@@ -103,28 +106,24 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         _spriteSheets.push_back(assets->get<Texture>(_keys[i]));
     }
     
-    std::vector<int> vec;
-    for (int ii = 0; ii < 8; ii++) {
-        vec.push_back(ii);
-        for (int i = 0; i <_spriteSheets.size(); i++) {
-            _animations.push_back(scene2::Animate::alloc(vec,DURATION));
-        }
-    }
+    _leftButton = std::dynamic_pointer_cast<scene2::Button>(assets->get<scene2::SceneNode>("customize_backdrop_left_button"));
+    _leftButton->setPosition(Vec2(0, SCENE_HEIGHT/2) + _offset);
+    _leftButton->setAnchor(Vec2(0.5,0.5));
+    _rightButton = std::dynamic_pointer_cast<scene2::Button>(assets->get<scene2::SceneNode>("customize_backdrop_right_button"));
+    _rightButton->setPosition(Vec2(SCENE_WIDTH, SCENE_HEIGHT/2) + _offset);
+    _rightButton->setAnchor(Vec2(0.5,0.5));
+    _aniFrame = 0;
+    _prevTime = 0;
     
     for (int i = 0; i < _keys.size(); i++) {
-        _spriteNodes.push_back(scene2::SpriteNode::alloc(_spriteSheets[i], 1, 8));
+        std::string key = "customize_" + _keys[i];
+        _spriteNodes.push_back(std::dynamic_pointer_cast<scene2::SpriteNode>(assets->get<scene2::SceneNode>(key)));
         _spriteNodes[i]->setAnchor(Vec2::ANCHOR_CENTER);
         _spriteNodes[i]->setScale(0.5);
-        _spriteNodes[i]->setPosition(Vec2(dimen.width/2, dimen.width/4));
         _spriteNodes[i]->setVisible(false);
-        addChild(_spriteNodes[i]);
-        _actions->activate(_keys[i], _animations[i], _spriteNodes[i]);
     }
     
-//    _moveRight = cugl::scene2::MoveBy::alloc(Vec2(WALKPACE,0),DURATION);
-//    _moveLeft = cugl::scene2::MoveBy::alloc(Vec2(WALKPACE,0),DURATION);
-    
-    displaySkins();
+    displaySkins(0);
     
     // Program the buttons
     _backout->addListener([this](const std::string& name, bool down) {
@@ -143,6 +142,18 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         }
     });
     
+    _leftButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            skin -= 1;
+        }
+    });
+    
+    _rightButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            skin += 1;
+        }
+    });
+    
     addChild(scene);
     setActive(false);
     return true;
@@ -153,7 +164,6 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
  */
 void CustomizeScene::dispose() {
     if (_active) {
-        _input.clear();
         removeAllChildren();
         _active = false;
     }
@@ -172,13 +182,13 @@ void CustomizeScene::update(float timestep) {
     if (_network->isConnected() && _status != START && _status != ABORT) {
         _network->update();
         switch (_network->getStatus()) {
-        case NetworkController::Status::IDLE:
+        case NetworkController::IDLE:
         case NetworkController::CONNECTING:
-            updateInput(timestep);
+            displaySkins(timestep);
             _status = IDLE;
             break;
         case NetworkController::WAIT:
-            updateInput(timestep);
+            displaySkins(timestep);
             _status = WAIT;
             break;
         case NetworkController::START:
@@ -188,32 +198,7 @@ void CustomizeScene::update(float timestep) {
             _status = ABORT;
             break;
         }
-        configureStartButton();
     }
-}
-
-/** Updates scene based on player input */
-void CustomizeScene::updateInput(float timestep) {
-    _customTime += timestep;
-    if (_customTime >= _lastChoice + CHOICE_COOLDOWN) {
-        _lastChoice = _customTime;
-        
-        _input.update(timestep);
-        Vec2 swipe = _input.getSwipe();
-        Vec2 movement = _input.getMovementVector(_isThief);
-        bool didSwipe = _input.didSwipe();
-        
-        if (didSwipe) swipe.x < 0 ? skin -= 1 : skin += 1;
-        if (didSwipe) swipe.x < 0 ? _didLeft = true : _didLeft = false;
-        if (movement.x == 0) _didLeft = false;
-        if (movement.x != 0) movement.x < 0 ? skin -= 1 : skin += 1;
-        if (movement.x != 0) movement.x < 0 ? _didLeft = true : _didLeft = false;
-        
-        skin %= _keys.size();
-        skinKey = _keys[skin];
-        displaySkins();
-    }
-    _actions->update(timestep);
 }
 
 /**
@@ -231,36 +216,26 @@ void CustomizeScene::setActive(bool value) {
         if (value) {
             _network->disconnect();
             _status = IDLE;
-            configureStartButton();
             _backout->activate();
+            _startgame->activate();
+            _leftButton->activate();
+            _rightButton->activate();
             connect();
         } else {
             _startgame->deactivate();
             _backout->deactivate();
+            _leftButton->deactivate();
+            _rightButton->deactivate();
             // If any were pressed, reset them
             _startgame->setDown(false);
             _backout->setDown(false);
+            _leftButton->setDown(false);
+            _rightButton->setDown(false);
         }
     }
 }
 
 //  MARK: - Helpers
-
-/**
- * Updates the text in the given button.
- *
- * Techincally a button does not contain text. A button is simply a scene graph
- * node with one child for the up state and another for the down state. So to
- * change the text in one of our buttons, we have to descend the scene graph.
- * This method simplifies this process for you.
- *
- * @param button    The button to modify
- * @param text      The new text value
- */
-void CustomizeScene::updateText(const std::shared_ptr<scene2::Button>& button, const std::string text) {
-    auto label = std::dynamic_pointer_cast<scene2::Label>(button->getChildByName("up")->getChildByName("label"));
-    label->setText(text);
-}
 
 /**
  * Connects to the game server
@@ -270,18 +245,6 @@ void CustomizeScene::updateText(const std::shared_ptr<scene2::Button>& button, c
 bool CustomizeScene::connect() {
     _network->connect();
     return true;
-}
-
-/**
- * Reconfigures the start button for this scene
- *
- * This is necessary because what the buttons do depends on the state of the
- * networking.
- */
-void CustomizeScene::configureStartButton() {
-    // THIS IS WRONG. FIX ME.
-    updateText(_startgame, _status == IDLE ? "Waiting" : "Start Game");
-    _startgame->activate();
 }
 
 /**
@@ -299,54 +262,43 @@ void CustomizeScene::startGame() {
 }
 
 /** Displays the skins */
-void CustomizeScene::displaySkins() {
+void CustomizeScene::displaySkins(float timestep) {
+    skin %= _keys.size();
+    skinKey = _keys[skin];
+    
     for (int i = 0; i < _keys.size(); i++) {
         _spriteNodes[i]->setScale(0.5);
-        _spriteNodes[i]->setPosition(Vec2(_dimen.width/2, _dimen.width/4));
         _spriteNodes[i]->setVisible(false);
     }
     
-//    std::shared_ptr<cugl::scene2::MoveBy> move;
-//    _didLeft ? move = _moveLeft : move = _moveRight;
-    
-    _spriteNodes[skin]->setScale(1.0);
     _spriteNodes[skin]->setVisible(true);
-//    if (_actions->isActive(_keys[skin])) {
-//        _actions->activate(_keys[skin], _animations[skin], _spriteNodes[skin]);
-//        _actions->activate(_keys[skin], move,  _spriteNodes[skin]);
-//    }
-    
+    _spriteNodes[skin]->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) + _offset);
+
     if (skin - 1 < 0) {
         _spriteNodes[_keys.size()-1]->setVisible(true);
-        _spriteNodes[_keys.size()-1]->setPosition(Vec2(_dimen.width/4, _dimen.width/4));
-//        if (_actions->isActive(_keys[_keys.size()-1])) {
-//            _actions->activate(_keys[_keys.size()-1], _animations[_keys.size()-1], _spriteNodes[_keys.size()-1]);
-//        }
-//        _actions->activate(_keys[_keys.size()-1], move,  _spriteNodes[_keys.size()-1]);
+        _spriteNodes[_keys.size()-1]->setPosition(Vec2(SCENE_WIDTH/4, SCENE_HEIGHT/2) + _offset);
     }
     else {
         _spriteNodes[skin-1]->setVisible(true);
-        _spriteNodes[skin-1]->setPosition(Vec2(_dimen.width/4, _dimen.width/4));
-//        if (_actions->isActive(_keys[skin-1])) {
-//            _actions->activate(_keys[skin-1], _animations[skin-1], _spriteNodes[skin-1]);
-//        }
-//        _actions->activate(_keys[skin-1], move,  _spriteNodes[skin-1]);
+        _spriteNodes[skin-1]->setPosition(Vec2(SCENE_WIDTH/4, SCENE_HEIGHT/2) + _offset);
     }
     
     if (skin + 1 == _keys.size()) {
         _spriteNodes[0]->setVisible(true);
-        _spriteNodes[0]->setPosition(Vec2(3*_dimen.width/4, _dimen.width/4));
-//        if (_actions->isActive(_keys[0])) {
-//            _actions->activate(_keys[0], _animations[0], _spriteNodes[0]);
-//        }
-//        _actions->activate(_keys[0], move,  _spriteNodes[0]);
+        _spriteNodes[0]->setPosition(Vec2(3*SCENE_WIDTH/4, SCENE_HEIGHT/2) + _offset);
     }
     else {
         _spriteNodes[skin+1]->setVisible(true);
-        _spriteNodes[skin+1]->setPosition(Vec2(3*_dimen.width/4, _dimen.width/4));
-//        if (_actions->isActive(_keys[skin+1])) {
-//            _actions->activate(_keys[skin+1], _animations[skin+1], _spriteNodes[skin+1]);
-//        }
-//        _actions->activate(_keys[skin+1], move,  _spriteNodes[skin+1]);
+        _spriteNodes[skin+1]->setPosition(Vec2(3*SCENE_WIDTH/4, SCENE_HEIGHT/2) + _offset);
+    }
+    
+    _prevTime += timestep;
+    if (_prevTime >= 0.1) {
+        _prevTime = 0;
+        int frame = _spriteNodes[skin]->getFrame();
+        frame >= 7 ? frame = 0 : frame++;
+        _spriteNodes[skin]->setFrame(frame);
+        skin - 1 < 0 ? _spriteNodes[_keys.size()-1]->setFrame(frame) : _spriteNodes[skin-1]->setFrame(frame);
+        skin + 1 == _keys.size() ? _spriteNodes[0]->setFrame(frame) : _spriteNodes[skin+1]->setFrame(frame);
     }
 }

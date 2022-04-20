@@ -46,6 +46,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     dimen *= SCENE_HEIGHT/dimen.height;
+    _offset = Vec2((dimen.width-SCENE_WIDTH)/2.0f,(dimen.height-SCENE_HEIGHT)/2.0f);
     
     // Give up if initialization fails early
     if (assets == nullptr) return false;

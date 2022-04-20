@@ -214,7 +214,7 @@
             "file": "textures/characters/ss_thief_hatless_right_f.png"
         },
         "settings_button": {
-            "file":    "textures/ui/settings_button2.png"
+            "file":    "textures/ui/settings.png"
         },
         "settings_background" : {
             "file" :   "textures/ui/settings_background.png"
@@ -294,12 +294,12 @@
         },
         "game": {
             "type":     "sample",
-            "file":     "sounds/pop1.ogg",
+            "file":     "sounds/elevator.ogg",
             "volume":   0.5
         },
         "menu": {
             "type":     "sample",
-            "file":     "sounds/pop1.ogg",
+            "file":     "sounds/menu.ogg",
             "volume":   0.5
         },
         "click": {
@@ -414,7 +414,7 @@
 								"upnode": "up",
 								"anchor": [0.5, 0.5],
 								"position": [1450, 640],
-								"scale": [1.5, 1.5]
+								"scale": [0.3, 0.3]
 							},
 							"children": {
 								"up": {
@@ -431,7 +431,7 @@
 								"upnode": "up",
 								"anchor": [0.5, 0.5],
 								"position": [50, 640],
-								"scale": [1.8, 1.8]
+								"scale": [0.3, 0.3]
 							},
 							"children": {
 								"up": {
@@ -448,7 +448,7 @@
 								"upnode": "up",
 								"anchor": [0.5, 0.5],
 								"position": [140, 640],
-								"scale": [1.8, 1.8]
+								"scale": [0.3,0.3]
 							},
 							"children": {
 								"up": {
@@ -489,86 +489,6 @@
 				}
 			}
 		},
-        "customize": {
-            "type"      : "Node",
-            "format"    : {
-                "type"        : "Anchored"
-            },
-            "children" : {
-                "title" : {
-                    "type"      : "Label",
-                    "data" : {
-                        "anchor"  : [0.5,1.0],
-                        "scale"    : 1.5,
-                        "font"     : "gyparody",
-                        "text"     : "Choose Your Fighter",
-                        "padding"  : [20, 20, 20, 20],
-                        "halign"   : "center",
-                        "valign"   : "middle"
-                    },
-                    "layout" : {
-                        "x_anchor" : "center",
-                        "y_anchor" : "top"
-                    }
-                },
-                "back" : {
-                    "type"      : "Button",
-                    "data"   : {
-                        "upnode"  : "up",
-                        "anchor":   [0.0,0.0]
-                    },
-                    "children": {
-                        "up" : {
-                            "type": "Image",
-                            "data": {
-                                "texture":  "left"
-                            }
-                        }
-                    },
-                    "layout" : {
-                        "x_anchor" : "left",
-                        "y_anchor" : "bottom",
-                        "y_offset" : 10,
-                        "x_offset" : 10,
-                        "absolute" : true
-                    }
-                },
-                "center" : {
-                    "type"      : "Node",
-                    "format"    : {
-                        "type"        : "Float",
-                        "orientation" : "vertical",
-                        "x_alignment" : "center",
-                        "y_alignment" : "bottom"
-                    },
-                    "data" : {
-                        "anchor"  : [0.5,0.0],
-                        "size" : [500,500]
-                    },
-                    "children":  {
-                        "start": {
-                             "type"   : "Widget",
-                             "data"   : {
-                                 "key"     : "textbutton",
-                                 "variables" : {
-                                     "size": [400,100],
-                                     "text": "Start Game",
-                                     "color": "#000088"
-                                 }
-                             },
-                             "layout" : {
-                                 "priority" : 3,
-                                 "padding"  : [0,50,0,0]
-                             }
-                        }
-                    },
-                    "layout" : {
-                        "x_anchor" : "center",
-                        "y_anchor" : "bottom"
-                    }
-                }
-            }
-        },
         "game": {
             "type"      : "Node",
             "format"    : {
@@ -582,7 +502,8 @@
                     "type"      : "Button",
                     "data"   : {
                         "upnode"  : "up",
-                        "anchor":   [0.0,0.0]
+                        "anchor":   [0.0,0.0],
+                        "scale" : [0.2, 0.2]
                     },
                     "children": {
                         "up" : {
@@ -732,7 +653,7 @@
 								"upnode"  : "up",
 								"anchor":   [0.5,0.5],
 								"position" : [440, 283],
-								"scale" : [0.8, 0.8]
+								"scale" : [0.15, 0.15]
 							},
 							"children": {
 								"up" : {
@@ -749,3 +670,4 @@
 		}
     }
 }
+    }
