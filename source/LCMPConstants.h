@@ -111,7 +111,10 @@ enum JsonConstants :int {
 
 //  MARK: - Physics Constants
 
-#define POLYFACTORY_TOLERANCE   0.01
+#define POLYFACTORY_TOLERANCE   0.1
+
+/** size of grid squares for collision optimization */
+#define GRID_SIZE               5
 
 /** Music constants */
 #define THIEF_COLLISION_SFX     "fuck"
@@ -126,7 +129,7 @@ enum JsonConstants :int {
 #define LOADING_MUSIC           "loading"
 #define MENU_MUSIC              "menu"
 #define SFX_COOLDOWN            2.0f
-#define MUSIC_VOLUME            0.5f
+#define MUSIC_VOLUME            0.f
 #define SFX_VOLUME              0.5f
 
 /** Player constants */
