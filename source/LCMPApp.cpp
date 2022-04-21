@@ -64,6 +64,8 @@ void LCMPApp::onStartup() {
     _assets->loadDirectoryAsync("json/join.json",nullptr);
     _assets->loadDirectoryAsync("json/find.json",nullptr);
     _assets->loadDirectoryAsync("json/customize.json",nullptr);
+    _assets->loadDirectoryAsync("json/levelselect.json", nullptr);
+    _assets->loadDirectoryAsync("json/skins.json",nullptr);
     _assets->loadDirectoryAsync(WALL_ASSETS_FILE, nullptr);
     
     // Create a "loading" screen
@@ -146,6 +148,9 @@ void LCMPApp::update(float timestep) {
     case CUSTOM:
         updateCustomizeScene(timestep);
         break;
+    case LEVEL:
+        updateLevelSelectScene(timestep);
+        break;
     case GAME:
         updateGameScene(timestep);
         break;
@@ -181,6 +186,9 @@ void LCMPApp::draw() {
     case CUSTOM:
         _customize.render(_batch);
         break;
+    case LEVEL:
+        _levelselect.render(_batch);
+        break;
     case GAME:
         _game.render(_batch);
         break;
@@ -209,6 +217,7 @@ void LCMPApp::updateLoadingScene(float timestep) {
         _client.init(_assets, _network, _audio);
         _find.init(_assets, _network);
         _customize.init(_assets, _network, _audio, _actions);
+        _levelselect.init(_assets, _audio);
         _game.init(_assets, _network, _audio, _actions);
         _menu.setActive(true);
         _scene = State::MENU;
@@ -250,6 +259,57 @@ void LCMPApp::updateMenuScene(float timestep) {
         break;
     }
 }
+
+/**
+ * Individualized update method for the level select scene.
+ *
+ * This method keeps the primary {@link #update} from being a mess of switch
+ * statements. It also handles the transition logic from the menu scene.
+ *
+ * @param timestep  The amount of time (in seconds) since the last frame
+ */
+void LCMPApp::updateLevelSelectScene(float timestep) {
+    _levelselect.update(timestep);
+    switch (_levelselect.getChoice()) {
+    case LevelSelectScene::Choice::ONE:
+        _levelKey = LEVEL_ONE_FILE;
+        _levelselect.setActive(false);
+        _game.setActive(true);
+        _scene = State::GAME;
+        _game.start(false, _customize.skinKey, _levelKey);
+        break;
+    case LevelSelectScene::Choice::TWO:
+        _levelKey = LEVEL_ONE_FILE;
+        _levelselect.setActive(false);
+        _game.setActive(true);
+        _scene = State::GAME;
+        _game.start(false, _customize.skinKey, _levelKey);
+        break;
+    case LevelSelectScene::Choice::THREE:
+        _levelKey = LEVEL_ONE_FILE;
+        _levelselect.setActive(false);
+        _game.setActive(true);
+        _scene = State::GAME;
+        _game.start(false, _customize.skinKey, _levelKey);
+        break;
+    case LevelSelectScene::Choice::FOUR:
+        _levelKey = LEVEL_ONE_FILE;
+        _levelselect.setActive(false);
+        _game.setActive(true);
+        _scene = State::GAME;
+        _game.start(false, _customize.skinKey, _levelKey);
+        break;
+    case LevelSelectScene::Choice::BACK:
+        _levelselect.setActive(false);
+        _menu.setActive(true);
+        _scene = State::MENU;
+        break;
+    case MenuScene::Choice::NONE:
+        // DO NOTHING
+        break;
+    }
+}
+
 
 /**
  * Individualized update method for the host scene.
@@ -333,7 +393,7 @@ void LCMPApp::updateFindScene(float timestep) {
         _find.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _game.start(true, _customize.skinKey);
+        _game.start(true, _customize.skinKey, _levelKey);
 //        _customize.setActive(true);
 //        _scene = State::CUSTOM;
         break;
@@ -365,9 +425,8 @@ void LCMPApp::updateCustomizeScene(float timestep) {
         break;
     case CustomizeScene::Status::START:
         _customize.setActive(false, true);
-        _game.setActive(true);
-        _scene = State::GAME;
-        _game.start(true, _customize.skinKey);
+        _levelselect.setActive(true);
+        _scene = State::LEVEL;
         break;
     case CustomizeScene::Status::WAIT:
     case CustomizeScene::Status::IDLE:

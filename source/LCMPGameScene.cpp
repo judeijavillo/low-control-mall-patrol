@@ -26,7 +26,7 @@ using namespace std;
 //  MARK: - Constants
 
 /** Whether or not to show the debug node */
-#define DEBUG_ON        1
+#define DEBUG_ON        0
 
 /** Width of the game world in Box2d units */
 #define DEFAULT_WIDTH   32.0f
@@ -44,11 +44,11 @@ using namespace std;
 #define TILE_SIZE       64
 
 /** A coefficient for how much the camera tracks ahead of the player */
-#define COP_LEAD_FACTOR     1.75f
+#define COP_LEAD_FACTOR     0.2f
 /** A coefficient for how much the camera tracks ahead of the player */
-#define THIEF_LEAD_FACTOR     1.75f
+#define THIEF_LEAD_FACTOR     0.2f
 /** A coefficient for how much the camera interpolates between translations */
-#define LERP_FACTOR     1.0f
+#define LERP_FACTOR     3.25f
 
 /** A coefficient for how much smaller the text font should be */
 #define TEXT_SCALAR         0.3f
@@ -93,7 +93,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _actions = actions;
     
     // Create the font
-    _font = _assets->get<Font>("gyparody");
+    _font = _assets->get<Font>("futura heavy");
     
     // Initialize the input controller
     _input.init(getBounds());
@@ -194,7 +194,7 @@ void GameScene::dispose() {
  *
  * @param host  Whether the player is host.
  */
-void GameScene::start(bool host, string skinKey) {
+void GameScene::start(bool host, string skinKey, string levelKey) {
     _gameTime = 0;
     _doneTime = 0;
     _isThiefWin = false;
@@ -206,7 +206,7 @@ void GameScene::start(bool host, string skinKey) {
 
     // Initialize the game
     _game = make_shared<GameModel>();
-    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions, _skinKey);
+    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, levelKey, _actions, _skinKey);
      
     // Initialize subcontrollers
     _collision.init(_game);

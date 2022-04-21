@@ -76,6 +76,9 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _didQuit = false;
     _didPause = false;
 
+    // Initialize transparency
+    _transparent = Color4(255, 255, 255, (int)(255 * 0.75));
+
     // Set up dimen
     _dimen = _screenSize;
     _dimen *= SCENE_HEIGHT / _dimen.height;
@@ -226,10 +229,19 @@ void UIController::initDirecIndicators() {
  * thief indicator node.
  */
 void UIController::initThiefIndicator() {
+    
+    shared_ptr<Font> borderFont = _assets->get<Font>("futura heavy border");
+    _thiefIndicatorBorder = scene2::Label::allocWithText("Thief Distance: 0", borderFont);
+    _thiefIndicatorBorder->setAnchor(Vec2::ANCHOR_CENTER); 
+    _thiefIndicatorBorder->setPosition(Vec2((SCENE_WIDTH / 2) + 35, SCENE_HEIGHT - SCENE_HEIGHT_ADJUST) + _offset);
+    _thiefIndicatorBorder->setForeground(Color4::WHITE);
+
     // Create and show distance on screen
     _thiefIndicator = scene2::Label::allocWithText("Thief Distance: 0", _font);
     _thiefIndicator->setAnchor(Vec2::ANCHOR_CENTER);
     _thiefIndicator->setPosition(Vec2(SCENE_WIDTH/2,SCENE_HEIGHT-SCENE_HEIGHT_ADJUST) + _offset);
+
+    _thiefIndicatorNode->addChild(_thiefIndicatorBorder);
     _thiefIndicatorNode->addChild(_thiefIndicator);
 }
 
@@ -263,6 +275,11 @@ void UIController::initTimer() {
     _hourHand->setPosition(_timer->getPosition() - Vec2(0,10));
     _minuteHand->setPosition(_timer->getPosition() - Vec2(0,10));
     
+    //Make timer transparent
+    _timer->setColor(_transparent);
+    _hourHand->setColor(_transparent);
+    _minuteHand->setColor(_transparent);
+
     _uinode->addChild(_timer);
     _uinode->addChild(_hourHand);
     _uinode->addChild(_minuteHand);
@@ -281,8 +298,11 @@ void UIController::initSettings() {
     // Initialize settings button from assets manager
     _settingsButtonNode = _assets->get<scene2::SceneNode>("game");
     _settingsButtonNode->setContentSize(_screenSize);
+    Vec2 settingsButtonPos = _settingsButtonNode->getContentSize();
+    settingsButtonPos *= SCENE_HEIGHT / _screenSize.height;
+    _settingsButtonNode->setContentSize(settingsButtonPos);
     _settingsButtonNode->doLayout(); // Repositions the HUD
-    
+
     // Initialize settings button from assets manager
     _settingsMenu = _assets->get<scene2::SceneNode>("pause");
     _settingsMenu->setContentSize(_screenSize);
@@ -318,7 +338,10 @@ void UIController::initSettings() {
     });
     
     // Set visibility
-    _settingsMenu->setVisible(true); 
+    _settingsMenu->setVisible(true);
+
+    // Make settings button transparent
+    _settingsButtonNode->setColor(_transparent);
 
     _uinode->addChild(_settingsMenu);
     _uinode->addChild(_settingsButtonNode);
@@ -506,7 +529,11 @@ void UIController::updateDirecIndicatorHelper(cugl::Vec2 pos1, cugl::Vec2 pos2,
  */
 void UIController::updateThiefIndicator(int copID) {
     float distance = _game->getThief()->getPosition().distance(_game->getCop(copID)->getPosition());
-    _thiefIndicator->setText("Thief Distance: " + to_string((int) distance), true);
+    //_thiefIndicatorBorder->setText("Thief Distance: " + to_string((int) distance), true);
+    //_thiefIndicator->setText("Thief Distance: " + to_string((int)distance), true);
+    _thiefIndicatorBorder->setText(to_string((int)distance), true);
+    _thiefIndicator->setText(to_string((int)distance), true);
+
 }
 
 /**

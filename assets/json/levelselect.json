@@ -1,0 +1,246 @@
+{
+    "textures": {
+        "background": {
+            "file": "textures/ui/menu_background.png"
+        },
+        "button_blue": {
+            "file": "textures/ui/join_button.png"
+        },
+        "button_pink": {
+            "file": "textures/ui/create_button.png"
+        },
+        "settings": {
+            "file": "textures/ui/settings.png"
+        },
+        "profile": {
+            "file": "textures/ui/profile.png"
+        },
+        "shop": {
+            "file": "textures/ui/shop.png"
+        },
+        "back": {
+            "file": "textures/ui/back.png"
+        },
+        "directory": {
+            "file": "textures/ui/blank_menu.png"
+        },
+        "map1": {
+            "file": "textures/ui/map1.png"
+        },
+        "map2": {
+            "file": "textures/ui/map2.png"
+        },
+        "map3": {
+            "file": "textures/ui/map3.png"
+        },
+        "map4": {
+            "file": "textures/ui/map4.png"
+        }
+    },
+    "fonts": {
+        "futura": {
+            "file": "fonts/futura medium bt.ttf",
+            "size": 48
+        }
+    },
+    "scene2s": {
+        "levelselect": {
+            "type": "Node",
+            "comment": "This is the root node of the scene for the lab",
+            "format": {
+                "type": "Anchored"
+            },
+            "children": {
+                "backdrop": {
+                    "type": "Image",
+                    "data": {
+                        "texture": "background",
+                        "anchor": [0.5, 0.5],
+                        "scale": [1, 1]
+                    },
+                    "layout": {
+                        "x_anchor": "fill",
+                        "y_anchor": "fill"
+                    },
+                    "children": {
+                        "back": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [50, 540],
+                                "scale": [0.3, 0.3]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "back"
+
+                                    }
+
+                                }
+
+                            }
+
+                        },
+                        "directory": {
+                            "type": "Image",
+                            "format": {
+                                "type": "Anchored"
+                            },
+                            "data": {
+                                "texture": "directory",
+                                "anchor": [0.5, 0],
+                                "scale": [1.8, 1.8],
+                                "position": [700, 40],
+								"size": [286, 331]
+
+                            },
+                            "children": {
+                                "map1": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [135, 218],
+                                        "scale": [1.1, 1.1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "map1"
+
+
+                                            }
+                                        }
+                                    }
+                                },
+                                "map2": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [135, 95],
+                                        "scale": [1.1, 1.1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "map2"
+
+
+                                            }
+                                        }
+                                    }
+                                },
+                                "map3": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [135, 218],
+                                        "scale": [1.1, 1.1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "map3"
+
+
+                                            }
+                                        }
+                                    }
+                                },
+                                "map4": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [135, 95],
+                                        "scale": [1.1, 1.1]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "map4"
+
+
+                                            }
+                                        }
+                                    }
+                                },
+                                "next": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [240, 155],
+                                        "scale": [0.15, 0.15],
+										"angle": 180
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "back"
+
+
+                                            }
+                                        }
+                                    }
+                                },
+								"prev": {
+                                    "type": "Button",
+                                    "data": {
+                                        "upnode": "up",
+                                        "anchor": [0.5, 0.5],
+                                        "position": [20, 150],
+                                        "scale": [0.15, 0.15]
+                                    },
+                                    "children": {
+                                        "up": {
+                                            "type": "Image",
+                                            "data": {
+                                                "texture": "back"
+
+
+                                            }
+                                        }
+                                    }
+                                }
+                            },
+							"title1": {
+                                "type": "Label",
+                                "data": {
+                                    "anchor": [0.5, 0.5],
+                                    "scale": 1.5,
+                                    "font": "futura",
+                                    "text": "CHOOSE A MALL",
+									"position": [1000,1000]
+                                }
+                            },
+							"title2": {
+								"type": "Label",
+								"data": {
+									"anchor": [0.5, 0.5],
+									"scale": 1.5,
+									"font": "futura",
+									"text": "FOR YOUR GAME",
+									"halign": "center",
+									"valign": "middle",
+									"position": [600, 450]
+								}
+							}
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+}

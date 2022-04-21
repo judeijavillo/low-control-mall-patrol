@@ -129,7 +129,7 @@ void HostScene::update(float timestep) {
             case NetworkController::WAIT:
             {
                 _status = WAIT;
-                _gameid->setText(strtool::format("Tell your friends this room code: " + _network->getRoomID()), true);
+                _gameid->setText(("Tell your friends this room code: " + _network->getRoomID()), true);
                 _gameid->setPosition(Vec2(SCENE_WIDTH/2, 3*SCENE_HEIGHT/4) + _offset);
                 _gameid->setAnchor(Vec2(0.5,0.5));
                 break;

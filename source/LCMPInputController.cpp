@@ -17,7 +17,7 @@ using namespace cugl;
 #define LISTENER_KEY      1
 
 /** The max range of the accelerometer input. */
-#define ACCEL_MAX 0.4f
+#define ACCEL_MAX 0.35f
 /** The deadzone of the accelerometer. */
 #define ACCEL_DEADZONE 0.05f
 
@@ -66,6 +66,8 @@ void InputController::dispose() {
 bool InputController::init(const cugl::Rect bounds) {
     clearTouchInstance(_ltouch);
     clearTouchInstance(_rtouch);
+    //default accelerometer offset
+    _accelOffset = Vec2(0.0, -0.45);
 #ifdef CU_TOUCH_SCREEN
     _sbounds = bounds;
     _tbounds = Application::get()->getDisplayBounds();
@@ -105,7 +107,7 @@ void InputController::clearTouchInstance(TouchInstance& touchInstance) {
  */
 void InputController::update(float timestep) {
 #ifdef CU_TOUCH_SCREEN
-    _acceleration = Input::get<Accelerometer>()->getAcceleration();
+    _acceleration = Input::get<Accelerometer>()->getAcceleration() + _accelOffset;
     if (_acceleration.length() < ACCEL_DEADZONE) {
         _acceleration = Vec2::ZERO;
     }
@@ -116,7 +118,6 @@ void InputController::update(float timestep) {
     if (keys->keyDown(KeyCode::ARROW_RIGHT)) _acceleration.x += 1.0f;
     if (keys->keyDown(KeyCode::ARROW_DOWN)) _acceleration.y += 1.0f;
     if (keys->keyDown(KeyCode::ARROW_UP)) _acceleration.y -= 1.0f;
-//    _spacebarPressed = keys->keyDown(KeyCode::SPACE);
 
 #endif
 }

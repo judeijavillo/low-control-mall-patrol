@@ -49,7 +49,9 @@ protected:
     cugl::Vec2 _acceleration;
     /** The direction vector of the swipe */
     cugl::Vec2 _swipe;
-    
+    /** The offset for the accelerometer */
+    cugl::Vec2 _accelOffset;
+
     /** Information representing a single "touch" (possibly multi-finger) */
     struct TouchInstance {
         /** The anchor touch position (on start) */

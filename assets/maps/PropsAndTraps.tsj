@@ -8,7 +8,7 @@
  "margin":0,
  "name":"Props",
  "spacing":0,
- "tilecount":19,
+ "tilecount":20,
  "tiledversion":"1.8.2",
  "tileheight":763,
  "tiles":[
@@ -796,6 +796,56 @@
                  "name":"name",
                  "type":"string",
                  "value":"teleporttemp"
+                }]
+        }, 
+        {
+         "id":28,
+         "image":"..\/..\/..\/..\/..\/Pictures\/3100\/hw8\/box.png",
+         "imageheight":185,
+         "imagewidth":191,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":185.5,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":192,
+                     "x":-1,
+                     "y":0.5
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"box"
                 }]
         }],
  "tilewidth":1122,
