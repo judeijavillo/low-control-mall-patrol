@@ -21,7 +21,7 @@ public:
         /** A long bush */
         BUSH,
         /** A ferris wheel */
-        FARIS
+        FERRIS
     };
 
     /** Defining the filter bits for the obstacle model*/

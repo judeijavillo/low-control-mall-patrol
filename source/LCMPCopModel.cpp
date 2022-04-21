@@ -71,7 +71,7 @@ bool CopModel::init(int copID, float scale,
     
     // Set up the textures for all directions
     bool female;
-    skinKey == "THIEF_RUN_RIGHT_F" ? female = true : female = false;
+    skinKey == "COP_RUN_RIGHT_F" ? female = true : female = false;
     
     !female ? _spriteSheets.push_back(assets->get<Texture>(COP_RUN_RIGHT)) : _spriteSheets.push_back(assets->get<Texture>(COP_RUN_RIGHT_F));
     _spriteSheets.push_back(assets->get<Texture>(COP_RUN_BACK));

@@ -25,14 +25,12 @@ using namespace cugl;
 
 /** This is the ideal size of the logo */
 #define SCENE_SIZE  1024
-/** Key for texture in json */
-#define TEXTURE_KEY         "ss_load_animation"
-/** Key for loading animation */
-#define ANIMATION_KEY        "ss_loading"
+
+/** The keys for the loading animation */
+#define LOADING           "load_animation"
+
 /** Number of frames in animation */
-#define ANIMATION_NUM_FRAMES    53
-/** How long the animation takes to play */
-#define ANIMATION_LENGTH    5.0f
+#define ANIMATION_NUM_FRAMES    52
 
 //  MARK: - Constructors
 
@@ -72,12 +70,8 @@ bool LoadingScene::init(const std::shared_ptr<AssetManager>& assets,
     // Start loading music
     _audio = audio;
     _audio->playSound(_assets, LOADING_MUSIC, false, -1);
-
-    // Save action manager
-    _actions = actions;
     
     // Save the SceneNodes that we'll need to access later
-    _bar = std::dynamic_pointer_cast<scene2::ProgressBar>(assets->get<scene2::SceneNode>("load_bar"));
     _brand = assets->get<scene2::SceneNode>("load_name");
     _button = std::dynamic_pointer_cast<scene2::Button>(assets->get<scene2::SceneNode>("load_play"));
     _button->addListener([=](const std::string& name, bool down) {
@@ -86,9 +80,8 @@ bool LoadingScene::init(const std::shared_ptr<AssetManager>& assets,
     });
 
     // Loading screen animation initalization
-    _aniSpriteNode = std::dynamic_pointer_cast<scene2::SpriteNode>(assets->get<scene2::SceneNode>("load_animation"));
+    _aniSpriteNode = std::dynamic_pointer_cast<scene2::SpriteNode>(assets->get<scene2::SceneNode>(LOADING));
     _aniFrame = 0;
-    _spriteSheet = assets->get<Texture>(TEXTURE_KEY);
     _prevTime = 0;
     
     // Set the background color and add the LoadingScene to the screen
@@ -107,7 +100,6 @@ void LoadingScene::dispose() {
     }
     _button = nullptr;
     _brand = nullptr;
-    _bar = nullptr;
     _assets = nullptr;
     _progress = 0.0f;
 }
@@ -127,12 +119,10 @@ void LoadingScene::update(float timestep) {
         _progress = _assets->progress();
         if (_progress >= 1) {
             _progress = 1.0f;
-            _bar->setVisible(false);
             _brand->setVisible(false);
             _button->setVisible(true);
             _button->activate();
         }
-        _bar->setProgress(_progress);
     }
     playAnimation(timestep);
 }
@@ -151,11 +141,11 @@ bool LoadingScene::isPending() const {
  */
 void LoadingScene::playAnimation(float timestep) {
     _prevTime += timestep;
+    int f = (int) (_progress * ANIMATION_NUM_FRAMES);
     
-    if (_prevTime >= 0.1) {
+    if (_prevTime >= 0.1 && f > _aniFrame) {
         _prevTime = 0;
-        int frame = _aniSpriteNode->getFrame();
-        frame >= (ANIMATION_NUM_FRAMES - 1) ? frame = 0 : frame++;
-        _aniSpriteNode->setFrame(frame);
+        _aniFrame++;
+        _aniSpriteNode->setFrame(_aniFrame);
     }
 }

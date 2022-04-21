@@ -40,7 +40,8 @@ class GameScene : public cugl::Scene2 {
         /** The state where the game is over and we wait for reseting */
         DONE,
         /** The state where the gae has the settings menu open */
-        SETTINGS
+        SETTINGS,
+        SHOP
     };
     
 protected:

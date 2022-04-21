@@ -18,8 +18,14 @@
         "ss_thief_hatless_right_f": {
             "file": "textures/characters/ss_thief_hatless_right_f.png"
         },
+        "ss_cop_right": {
+            "file": "textures/characters/ss_cop_right.png"
+        },
+        "ss_cop_right_f": {
+            "file": "textures/characters/ss_cop_right_f.png"
+        },
         "background": {
-            "file": "textures/lobby/menu_background.png"
+            "file": "textures/lobby/background.png"
         },
         "button_join": {
             "file": "textures/lobby/join.png"
@@ -222,6 +228,34 @@
                     "data"    : {
                         "anchor"    : [0.5, 0.5],
                         "texture"    : "ss_thief_hatless_right_f",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_cop_right" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_cop_right",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_cop_right_f" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_cop_right_f",
                         "cols"         : 8,
                         "frame"        : 0
                     },

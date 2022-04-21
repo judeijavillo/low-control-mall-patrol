@@ -64,7 +64,6 @@ void LCMPApp::onStartup() {
     _assets->loadDirectoryAsync("json/join.json",nullptr);
     _assets->loadDirectoryAsync("json/find.json",nullptr);
     _assets->loadDirectoryAsync("json/customize.json",nullptr);
-    _assets->loadDirectoryAsync("json/skins.json",nullptr);
     _assets->loadDirectoryAsync(WALL_ASSETS_FILE, nullptr);
     
     // Create a "loading" screen
@@ -205,7 +204,7 @@ void LCMPApp::updateLoadingScene(float timestep) {
         // Leave loading for good, initialize all other scenes
         _loading.dispose();
         _audio->stopMusic(LOADING_MUSIC);
-        _menu.init(_assets, _audio);
+        _menu.init(_assets, _audio, _actions);
         _host.init(_assets, _network, _audio);
         _client.init(_assets, _network, _audio);
         _find.init(_assets, _network);
@@ -271,7 +270,7 @@ void LCMPApp::updateHostScene(float timestep) {
         break;
     case HostScene::Status::START:
         _host.setActive(false);
-        _customize.setActive(true);
+        _customize.setActive(true, true);
         _scene = State::CUSTOM;
         break;
     case HostScene::Status::WAIT:
@@ -300,9 +299,11 @@ void LCMPApp::updateClientScene(float timestep) {
         break;
     case ClientScene::Status::START:
         _client.setActive(false);
-        _game.setActive(true);
-        _scene = State::GAME;
-        _game.start(false, _customize.skinKey);
+        _customize.setActive(true, false);
+        _scene = State::CUSTOM;
+//        _game.setActive(true);
+//        _scene = State::GAME;
+//        _game.start(false, _customize.skinKey);
         break;
     case ClientScene::Status::WAIT:
     case ClientScene::Status::IDLE:
@@ -330,8 +331,11 @@ void LCMPApp::updateFindScene(float timestep) {
         break;
     case FindScene::Status::START:
         _find.setActive(false);
-        _customize.setActive(true);
-        _scene = State::CUSTOM;
+        _game.setActive(true);
+        _scene = State::GAME;
+        _game.start(true, _customize.skinKey);
+//        _customize.setActive(true);
+//        _scene = State::CUSTOM;
         break;
     case FindScene::Status::WAIT:
     case FindScene::Status::IDLE:
@@ -355,12 +359,12 @@ void LCMPApp::updateCustomizeScene(float timestep) {
     // TODO: Make changes with factored out Network Controller
     switch (_customize.getStatus()) {
     case CustomizeScene::Status::ABORT:
-        _customize.setActive(false);
+        _customize.setActive(false, true);
         _menu.setActive(true);
         _scene = State::MENU;
         break;
     case CustomizeScene::Status::START:
-        _customize.setActive(false);
+        _customize.setActive(false, true);
         _game.setActive(true);
         _scene = State::GAME;
         _game.start(true, _customize.skinKey);
