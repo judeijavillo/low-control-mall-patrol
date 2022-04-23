@@ -15,6 +15,11 @@
 #include <cugl/cugl.h>
 #include <vector>
 #include "LCMPAudioController.h"
+#include <cugl/scene2/actions/CUActionManager.h>
+#include <cugl/scene2/actions/CUMoveAction.h>
+#include <cugl/scene2/actions/CUScaleAction.h>
+#include <cugl/scene2/actions/CUAnimateAction.h>
+#include <cugl/math/CUEasingBezier.h>
 
 /**
  * This class presents the menu to the player.
@@ -48,6 +53,7 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     /** The sound controller for the game */
     std::shared_ptr<AudioController> _audio;
+    std::shared_ptr<cugl::scene2::ActionManager> _actions;
     /** The menu button for hosting a game */
     std::shared_ptr<cugl::scene2::Button> _hostbutton;
     /** The menu button for joining a game */
@@ -56,6 +62,20 @@ protected:
     std::shared_ptr<cugl::scene2::Button> _findbutton;
     /** The player menu choice */
     Choice _choice;
+    
+    // References to the shop menu
+    std::shared_ptr<cugl::scene2::SceneNode> _shopMenu;
+    std::shared_ptr<cugl::scene2::Button> _shopButton;
+    std::shared_ptr<cugl::scene2::Button> _police;
+    std::shared_ptr<cugl::scene2::Button> _propeller;
+    std::shared_ptr<cugl::scene2::Button> _cat;
+    std::shared_ptr<cugl::scene2::Button> _halo;
+    std::shared_ptr<cugl::scene2::Button> _plant;
+    std::shared_ptr<cugl::scene2::Button> _shopCloseButton;
+    bool _didShop;
+    cugl::Size _dimen;
+    std::shared_ptr<cugl::scene2::MoveTo> _moveup;
+    std::shared_ptr<cugl::scene2::MoveTo> _movedn;
     
 public:
 //  MARK: - Constructors
@@ -80,6 +100,8 @@ public:
      */
     void dispose() override;
     
+    void update(float timestep) override;
+    
     /**
      * Initializes the controller contents.
      *
@@ -95,9 +117,12 @@ public:
      * @return true if the controller is initialized properly, false otherwise.
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets,
-              std::shared_ptr<AudioController>& audio);
+              std::shared_ptr<AudioController>& audio,
+              std::shared_ptr<cugl::scene2::ActionManager>& actions);
 
 //  MARK: - Methods
+    
+    void initShop();
     
     /**
      * Sets whether the scene is currently active
@@ -118,6 +143,8 @@ public:
      * @return the user's menu choice.
      */
     Choice getChoice() const { return _choice; }
+    
+    void doMove(const std::shared_ptr<cugl::scene2::MoveTo>& action);
 
 };
 

@@ -215,6 +215,9 @@ private:
      * Updates the settings nodes
      */
     void updateSettings();
+    
+    void initShop();
+    void updateShop();
 
     /**
      * Performs a move action for the settings menu

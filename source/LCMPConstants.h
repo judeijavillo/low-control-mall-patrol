@@ -97,7 +97,7 @@ enum JsonConstants :int {
 #define DEBUG_COLOR_FIELD   "debugcolor"
 #define DEBUG_OPACITY_FIELD "debugopacity"
 
-#define PROP_SCALE          0.14f
+#define PROP_SCALE          0.2f
 
 /** The source for our level file */
 #define LEVEL_ONE_FILE      "maps/example5.json"
@@ -173,6 +173,10 @@ enum JsonConstants :int {
 #define SCENE_HEIGHT_ADJUST 80
 /** Amount UI elements should be shifted left or right to remain on screen */
 #define SCENE_WIDTH_ADJUST 80
+
+#define MENU_OFFSET 0.1
+
+#define DROP_DURATION 0.3f
 
 /** The radius of the joystick*/
 #define JOYSTICK_RADIUS     100

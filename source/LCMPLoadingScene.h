@@ -47,7 +47,7 @@ protected:
     
     // VIEW
     /** The animated progress bar */
-    std::shared_ptr<cugl::scene2::ProgressBar>  _bar;
+//    std::shared_ptr<cugl::scene2::ProgressBar>  _bar;
     /** The engine name */
     std::shared_ptr<cugl::scene2::SceneNode>  _brand;
     /** The "play" button */
@@ -56,10 +56,6 @@ protected:
 
     /** The child node for displaying the loading texture */
     std::shared_ptr<cugl::scene2::SpriteNode> _aniSpriteNode;
-    /** The loading screen animation */
-    std::shared_ptr<cugl::scene2::Animate> _animation;
-    /** The loading screen sprite sheet */
-    std::shared_ptr<cugl::Texture> _spriteSheet;
     /** The current animation frame */
     int _aniFrame;
     /** The previous timestep. */

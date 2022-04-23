@@ -59,9 +59,12 @@ protected:
     std::shared_ptr<cugl::scene2::Label> _title;
     
     /** The nodes for the player skins */
-    std::vector<std::shared_ptr<cugl::Texture>> _spriteSheets;
     std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _spriteNodes;
+    std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _thiefSpriteNodes;
+    std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _copSpriteNodes;
     std::vector<string> _keys;
+    std::vector<string> _thiefKeys;
+    std::vector<string> _copKeys;
     std::shared_ptr<cugl::scene2::Button> _leftButton;
     std::shared_ptr<cugl::scene2::Button> _rightButton;
     /** The current animation frame */
@@ -151,7 +154,7 @@ public:
      *
      * @param value whether the scene is currently active
      */
-    virtual void setActive(bool value) override;
+    virtual void setActive(bool value, bool isThief);
 
     /**
      * Returns the scene status.

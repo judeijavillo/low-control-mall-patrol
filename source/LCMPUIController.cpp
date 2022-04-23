@@ -31,7 +31,6 @@ using namespace cugl;
 
 /** Define the time settings for animation */
 #define ACT_KEY  "settings animation"
-#define DROP_DURATION 0.3f
 
 /** The resting position of the joystick */
 float JOYSTICK_HOME[]   {200, 200};
@@ -112,13 +111,9 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     initTimer();
     initSettings();
 
-
     // Settings menu movement
-    
-    float settingsMenuYOffset = 0.1;
-    
-    _moveup = scene2::MoveTo::alloc(Vec2(0, _dimen.getIHeight()), DROP_DURATION);
-    _movedn = scene2::MoveTo::alloc(Vec2(0, _dimen.getIHeight() * settingsMenuYOffset), DROP_DURATION);
+    _moveup = scene2::MoveTo::alloc(Vec2(0, _dimen.height), DROP_DURATION);
+    _movedn = scene2::MoveTo::alloc(Vec2(0, _dimen.height * MENU_OFFSET), DROP_DURATION);
     
     return true;
 }
@@ -216,13 +211,6 @@ void UIController::initDirecIndicators() {
 
     for (int i = 0; i < _game->numberOfCops(); i++) {
         // Create and display directional indicators
-/*        Poly2 triangle = _pf.makeTriangle(Vec2::ZERO,
-                                          Vec2(DIREC_INDICATOR_SIZE,
-                                               0.0f),
-                                          Vec2(DIREC_INDICATOR_SIZE /2,
-                                               DIREC_INDICATOR_SIZE * 1.5));
-        _direcIndicators[i] = scene2::PolygonNode::allocWithPoly(triangle);      */  
-        
         _direcIndicators[i] = scene2::PolygonNode::allocWithTexture(_direcIndTexture);
 
         _direcIndicators[i]->setAnchor(cugl::Vec2::ANCHOR_CENTER);
@@ -310,7 +298,7 @@ void UIController::initSettings() {
         if (down) {
             _didPause = true;
             doMove(_movedn);
-;        }
+        }
     });
     _soundsButton->addListener([this](const std::string& name, bool down) {
         if (down) {
@@ -336,21 +324,21 @@ void UIController::initSettings() {
     _uinode->addChild(_settingsButtonNode);
 
     // Set proper position of settings menu when the game begins
-    _settingsMenu->setPosition(Vec2(0, _dimen.getIHeight()));
+    _settingsMenu->setPosition(Vec2(0, _dimen.height));
 }
 
 /** Updates the settings menu */
 void UIController::updateSettings() {
     // Display and activate correct buttons depending on pause state.
     if (_didPause) {
-        //_settingsMenu->setVisible(true);
+        _settingsMenu->setVisible(true);
         _soundsButton->activate();
         _quitButton->activate();
         _closeButton->activate();
         _settingsButton->deactivate();
     }
     else {
-        //_settingsMenu->setVisible(false);
+        _settingsMenu->setVisible(false);
         _soundsButton->deactivate();
         _quitButton->deactivate();
         _closeButton->deactivate();

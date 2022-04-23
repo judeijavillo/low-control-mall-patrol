@@ -19,10 +19,8 @@ using namespace std;
 
 /** Regardless of logo, lock the height to this */
 #define SCENE_HEIGHT  720
-#define MALE_COP                "ss_cop_idle_right"
-#define FEMALE_COP              "ss_cop_idle_right_f"
-#define MALE_COP_SELECT         "ss_cop_right"
-#define FEMALE_COP_SELECT       "ss_cop_right_f"
+#define COP_RUN_RIGHT           "ss_cop_right"
+#define COP_RUN_RIGHT_F         "ss_cop_right_f"
 
 #define THIEF_RUN_RIGHT         "ss_thief_right"
 #define THIEF_RUN_RIGHT_F       "ss_thief_right_f"
@@ -80,8 +78,8 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Get the interactive UI elements that we need to access later
     _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("customize_backdrop_start"));
-    _startgame->setPositionX(SCENE_WIDTH/2 + _offset.x);
-    _startgame->setAnchor(Vec2(0.5,0.5));
+    _startgame->setPosition(Vec2(SCENE_WIDTH/2 + _offset.x, SCENE_HEIGHT_ADJUST + _offset.y));
+    _startgame->setAnchor(Vec2(0.5,0));
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("customize_backdrop_back"));
     _title = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("customize_backdrop_title"));
     _title->setPositionX(SCENE_WIDTH/2 + _offset.x);
@@ -89,22 +87,16 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     _status = Status::IDLE;
     
-    // Initialize custom assets
-    _network->getPlayerNumber() == -1 ? _isThief = true : _isThief = false;
-    
     // Initialize animation assets
-    _keys = {THIEF_RUN_RIGHT, THIEF_RUN_RIGHT_F, MALE_CAT, FEMALE_CAT, MALE_HATLESS, FEMALE_HATLESS};
+    _thiefKeys = {THIEF_RUN_RIGHT, THIEF_RUN_RIGHT_F, MALE_CAT, FEMALE_CAT, MALE_HATLESS, FEMALE_HATLESS};
+    _copKeys = {COP_RUN_RIGHT, COP_RUN_RIGHT_F};
     
-    // Initialize selected skin
     skin = 0;
-    skinKey = _keys[skin];
+    skinKey = "";
+//    skinKey = _isThief ? _thiefKeys[skin] : _copKeys[skin];
     _didLeft = false;
     _customTime = 0.0;
     _lastChoice = -CHOICE_COOLDOWN;
-    
-    for (int i = 0; i < _keys.size(); i++) {
-        _spriteSheets.push_back(assets->get<Texture>(_keys[i]));
-    }
     
     _leftButton = std::dynamic_pointer_cast<scene2::Button>(assets->get<scene2::SceneNode>("customize_backdrop_left_button"));
     _leftButton->setPosition(Vec2(0, SCENE_HEIGHT/2) + _offset);
@@ -115,12 +107,19 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _aniFrame = 0;
     _prevTime = 0;
     
-    for (int i = 0; i < _keys.size(); i++) {
-        std::string key = "customize_" + _keys[i];
-        _spriteNodes.push_back(std::dynamic_pointer_cast<scene2::SpriteNode>(assets->get<scene2::SceneNode>(key)));
-        _spriteNodes[i]->setAnchor(Vec2::ANCHOR_CENTER);
-        _spriteNodes[i]->setScale(0.5);
-        _spriteNodes[i]->setVisible(false);
+    for (int i = 0; i < _thiefKeys.size(); i++) {
+        std::string key = "customize_" + _thiefKeys[i];
+        _thiefSpriteNodes.push_back(std::dynamic_pointer_cast<scene2::SpriteNode>(assets->get<scene2::SceneNode>(key)));
+        _thiefSpriteNodes[i]->setAnchor(Vec2::ANCHOR_CENTER);
+        _thiefSpriteNodes[i]->setScale(0.5);
+        _thiefSpriteNodes[i]->setVisible(false);
+    }
+    for (int i = 0; i < _copKeys.size(); i++) {
+        std::string key = "customize_" + _copKeys[i];
+        _copSpriteNodes.push_back(std::dynamic_pointer_cast<scene2::SpriteNode>(assets->get<scene2::SceneNode>(key)));
+        _copSpriteNodes[i]->setAnchor(Vec2::ANCHOR_CENTER);
+        _copSpriteNodes[i]->setScale(0.5);
+        _copSpriteNodes[i]->setVisible(false);
     }
     
     displaySkins(0);
@@ -155,7 +154,7 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     });
     
     addChild(scene);
-    setActive(false);
+    setActive(false, true);
     return true;
 }
 
@@ -210,7 +209,8 @@ void CustomizeScene::update(float timestep) {
  *
  * @param value whether the scene is currently active
  */
-void CustomizeScene::setActive(bool value) {
+void CustomizeScene::setActive(bool value, bool isThief) {
+    _isThief = isThief;
     if (isActive() != value) {
         Scene2::setActive(value);
         if (value) {
@@ -231,6 +231,7 @@ void CustomizeScene::setActive(bool value) {
             _rightButton->setDown(false);
         }
     }
+    Scene2::setActive(value);
 }
 
 //  MARK: - Helpers
@@ -261,16 +262,25 @@ void CustomizeScene::startGame() {
 
 /** Displays the skins */
 void CustomizeScene::displaySkins(float timestep) {
+    // Initialize selected skin
+    _keys = _isThief ? _thiefKeys : _copKeys;
+    _spriteNodes = _isThief ? _thiefSpriteNodes : _copSpriteNodes;
+    
     skin %= _keys.size();
     skinKey = _keys[skin];
     
-    for (int i = 0; i < _keys.size(); i++) {
-        _spriteNodes[i]->setScale(0.5);
-        _spriteNodes[i]->setVisible(false);
+    for (int i = 0; i < _thiefKeys.size(); i++) {
+        _thiefSpriteNodes[i]->setScale(0.5);
+        _thiefSpriteNodes[i]->setVisible(false);
+    }
+    for (int i = 0; i < _copKeys.size(); i++) {
+        _copSpriteNodes[i]->setScale(0.5);
+        _copSpriteNodes[i]->setVisible(false);
     }
     
     _spriteNodes[skin]->setVisible(true);
-    _spriteNodes[skin]->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) + _offset);
+    _spriteNodes[skin]->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2 + 20) + _offset);
+    _spriteNodes[skin]->setScale(0.7);
 
     if (skin - 1 < 0) {
         _spriteNodes[_keys.size()-1]->setVisible(true);
