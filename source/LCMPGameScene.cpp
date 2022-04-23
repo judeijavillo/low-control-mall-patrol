@@ -180,6 +180,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
 void GameScene::dispose() {
     if (_active) {
         _audio->stopMusic(GAME_MUSIC);
+        _uinode->removeAllChildren();
         removeAllChildren();
         _active = false;
     }
@@ -370,7 +371,7 @@ void GameScene::stateGame(float timestep) {
     // Detect transition to DONE
     for (int i = 0; i < _game->numberOfCops(); i++) {
         if (_game->getCop(i)->getCaughtThief()) {
-            _audio->playSound(_assets, THIEF_COLLISION_SFX, true, _gameTime);
+//            _audio->playSound(_assets, THIEF_COLLISION_SFX, true, _gameTime);
             if (_isHost) _game->setGameOver(true);
         }
     }

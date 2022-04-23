@@ -20,6 +20,7 @@
 #include "LCMPCustomizeScene.h"
 #include "LCMPLevelSelectScene.h"
 #include "LCMPGameScene.h"
+#include "LCMPVictoryScene.h"
 
 /**
  * This class represents the application root for Low Control Mall Patrol
@@ -45,7 +46,9 @@ protected:
         /** The scene to choose a level */
         LEVEL,
         /** The scene to play the game */
-        GAME
+        GAME,
+        /** The scene to show the victory scene */
+        VICTORY
     };
 
     /** Fade status */
@@ -89,6 +92,8 @@ protected:
     LevelSelectScene _levelselect;
     /** The primary controller for the game world */
     GameScene _game;
+    /** The scene to show win / loss messages */
+    VictoryScene _victory;
 
     /** The key for which level the game will take place in */
     string _levelKey;
@@ -100,7 +105,6 @@ protected:
 
     /** The cumulative time for fading */
     float _fadingCumTime;
-    // #c-u-m
 
     /** The current fade status of the application */
     FadeStatus _fadeStatus;
@@ -262,6 +266,16 @@ private:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void updateGameScene(float timestep);
+    
+    /**
+     * Individualized update method for the victory scene.
+     *
+     * This method keeps the primary {@link #update} from being a mess of switch
+     * statements. It also handles the transition logic from the game scene.
+     *
+     * @param timestep  The amount of time (in seconds) since the last frame
+     */
+    void updateVictoryScene(float timestep);
 
     /**
      * Transition between two scenes.

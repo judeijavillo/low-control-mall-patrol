@@ -66,6 +66,7 @@ void LCMPApp::onStartup() {
     _assets->loadDirectoryAsync("json/customize.json",nullptr);
     _assets->loadDirectoryAsync("json/levelselect.json", nullptr);
     _assets->loadDirectoryAsync("json/skins.json",nullptr);
+    _assets->loadDirectoryAsync("json/victory.json",nullptr);
     _assets->loadDirectoryAsync(WALL_ASSETS_FILE, nullptr);
     
     // Create a "loading" screen
@@ -154,6 +155,9 @@ void LCMPApp::update(float timestep) {
     case GAME:
         updateGameScene(timestep);
         break;
+    case VICTORY:
+        updateVictoryScene(timestep);
+        break;
     }
 }
 
@@ -192,6 +196,9 @@ void LCMPApp::draw() {
     case GAME:
         _game.render(_batch);
         break;
+    case VICTORY:
+        _victory.render(_batch);
+        break;
     }
 }
 
@@ -219,6 +226,7 @@ void LCMPApp::updateLoadingScene(float timestep) {
         _customize.init(_assets, _network, _audio, _actions);
         _levelselect.init(_assets, _audio);
         _game.init(_assets, _network, _audio, _actions);
+        _victory.init(_assets, _network, _audio, _actions, true);
         _menu.setActive(true);
         _scene = State::MENU;
     }
@@ -276,35 +284,39 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
         _levelselect.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _game.start(false, _customize.skinKey, _levelKey);
+        _network->sendStartGame();
+        _game.start(true, _customize.skinKey, _levelKey);
         break;
     case LevelSelectScene::Choice::TWO:
         _levelKey = LEVEL_ONE_FILE;
         _levelselect.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _game.start(false, _customize.skinKey, _levelKey);
+        _network->sendStartGame();
+        _game.start(true, _customize.skinKey, _levelKey);
         break;
     case LevelSelectScene::Choice::THREE:
         _levelKey = LEVEL_ONE_FILE;
         _levelselect.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _game.start(false, _customize.skinKey, _levelKey);
+        _network->sendStartGame();
+        _game.start(true, _customize.skinKey, _levelKey);
         break;
     case LevelSelectScene::Choice::FOUR:
         _levelKey = LEVEL_ONE_FILE;
         _levelselect.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _game.start(false, _customize.skinKey, _levelKey);
+        _network->sendStartGame();
+        _game.start(true, _customize.skinKey, _levelKey);
         break;
     case LevelSelectScene::Choice::BACK:
         _levelselect.setActive(false);
         _menu.setActive(true);
         _scene = State::MENU;
         break;
-    case MenuScene::Choice::NONE:
+    case LevelSelectScene::Choice::NONE:
         // DO NOTHING
         break;
     }
@@ -359,11 +371,9 @@ void LCMPApp::updateClientScene(float timestep) {
         break;
     case ClientScene::Status::START:
         _client.setActive(false);
-        _customize.setActive(true, false);
-        _scene = State::CUSTOM;
-//        _game.setActive(true);
-//        _scene = State::GAME;
-//        _game.start(false, _customize.skinKey);
+        _game.setActive(true);
+        _scene = State::GAME;
+        _game.start(false, _customize.skinKey, LEVEL_ONE_FILE);
         break;
     case ClientScene::Status::WAIT:
     case ClientScene::Status::IDLE:
@@ -425,8 +435,10 @@ void LCMPApp::updateCustomizeScene(float timestep) {
         break;
     case CustomizeScene::Status::START:
         _customize.setActive(false, true);
-        _levelselect.setActive(true);
-        _scene = State::LEVEL;
+        if (_network->isHost()) {
+            _levelselect.setActive(true);
+            _scene = State::LEVEL;
+        }
         break;
     case CustomizeScene::Status::WAIT:
     case CustomizeScene::Status::IDLE:
@@ -452,6 +464,40 @@ void LCMPApp::updateGameScene(float timestep) {
         
         _audio->stopMusic(GAME_MUSIC);
         _audio->playSound(_assets, MENU_MUSIC, false, -1);
+    }
+    if (_game.getState() == GameScene::State::DONE) {
+        _game.setActive(false);
+        _scene = State::VICTORY;
+        _victory.setActive(true, _game.isThief(), _game.isThiefWin());
+    }
+}
+
+/**
+ * Individualized update method for the victory scene.
+ *
+ * This method keeps the primary {@link #update} from being a mess of switch
+ * statements. It also handles the transition logic from the game scene.
+ *
+ * @param timestep  The amount of time (in seconds) since the last frame
+ */
+void LCMPApp::updateVictoryScene(float timestep) {
+    _victory.update(timestep);
+    switch (_victory.getStatus()) {
+        case VictoryScene::Status::ABORT:
+            _victory.setActive(false, false, false);
+            _game.dispose(); // bug where settings menu is not removed
+            _menu.setActive(true);
+            _scene = State::MENU;
+            break;
+        case VictoryScene::Status::START:
+            _victory.setActive(false, false, false);
+            _game.reset();
+            _game.setActive(true);
+            _scene = State::GAME;
+            break;
+        case VictoryScene::Status::WAIT:
+        case VictoryScene::Status::IDLE:
+            break;
     }
 }
 

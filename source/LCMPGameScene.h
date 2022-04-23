@@ -28,7 +28,7 @@
  */
 class GameScene : public cugl::Scene2 {
 //  MARK: - Enumerations
-    
+public:
     /** The different states to represent logic in GameScene as a Finite State Machine */
     enum State {
         /** The state when the game has not begun, and the game is being initialized */
@@ -41,6 +41,7 @@ class GameScene : public cugl::Scene2 {
         DONE,
         /** The state where the gae has the settings menu open */
         SETTINGS,
+        
         SHOP
     };
     
@@ -163,6 +164,12 @@ public:
               std::shared_ptr<cugl::scene2::ActionManager>& actions);
 
 //  MARK: - Methods
+    
+    bool isThief() { return _isThief; }
+    
+    bool isThiefWin() { return _isThiefWin; }
+    
+    GameScene::State getState() { return _state; }
 
     /**
      * Sets whether the player is host.
