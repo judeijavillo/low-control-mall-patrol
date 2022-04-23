@@ -36,6 +36,9 @@
         "tree": {
             "file": "textures/environment/tree.png"
         },
+	"box" : {
+	    "file": "textures/environment/box.png"
+	},
         "bucket": {
             "file": "textures/environment/bucket.png"
         },
@@ -358,6 +361,14 @@
 		"futura heavy": {
 			"file": "fonts/Futura Heavy font.ttf",
 			"size": 48
+		},
+		"futura heavy border": {
+			"file": "fonts/Futura Heavy font.ttf",
+			"size": 60
+		},
+		"tooneynoodle":{
+			"file":"fonts/TooneyNoodleNF.ttf",
+			"size": 48
 		}
     },
     "jsons": {
@@ -534,7 +545,7 @@
                     "type"      : "Button",
                     "data"   : {
                         "upnode"  : "up",
-                        "anchor":   [0.0,0.0],
+                        "anchor":   [1.0,1.0],
                         "scale" : [0.2, 0.2]
                     },
                     "children": {
@@ -546,10 +557,10 @@
                         }
                     },
                     "layout" : {
-                        "x_anchor" : "left",
-                        "y_anchor" : "bottom",
-                        "y_offset" : 10,
-                        "x_offset" : 10,
+                        "x_anchor" : "right",
+                        "y_anchor" : "top",
+                        "y_offset" : -10,
+                        "x_offset" : -10,
                         "absolute" : true
                     }
                 }

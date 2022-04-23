@@ -18,6 +18,7 @@
 #include "LCMPClientScene.h"
 #include "LCMPFindScene.h"
 #include "LCMPCustomizeScene.h"
+#include "LCMPLevelSelectScene.h"
 #include "LCMPGameScene.h"
 
 /**
@@ -41,6 +42,8 @@ protected:
         FIND,
         /** The scene to customize characters */
         CUSTOM,
+        /** The scene to choose a level */
+        LEVEL,
         /** The scene to play the game */
         GAME
     };
@@ -82,8 +85,13 @@ protected:
     FindScene _find;
     /** The scene to customize characters */
     CustomizeScene _customize;
+    /** The scene to choose a level */
+    LevelSelectScene _levelselect;
     /** The primary controller for the game world */
     GameScene _game;
+
+    /** The key for which level the game will take place in */
+    string _levelKey;
 
     /** The current active scene */
     State _scene;
@@ -233,6 +241,17 @@ private:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void updateCustomizeScene(float timestep);
+
+    /**
+     * Individualized update method for the client scene.
+     *
+     * This method keeps the primary {@link #update} from being a mess of switch
+     * statements. It also handles the transition logic from the client scene.
+     *
+     * @param timestep  The amount of time (in seconds) since the last frame
+     */
+    void updateLevelSelectScene(float timestep);
+
 
     /**
      * Individualized update method for the game scene.

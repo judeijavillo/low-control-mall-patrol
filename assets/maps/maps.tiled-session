@@ -5,7 +5,11 @@
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "Map1Overlay.tsx": {
-            "dynamicWrapping": false
+            "dynamicWrapping": false,
+            "scaleInDock": 1
+        },
+        "Map3overlay.tsx": {
+            "scaleInDock": 1
         },
         "Props.tsj": {
             "dynamicWrapping": true,
@@ -23,30 +27,41 @@
                 "y": 4645
             }
         },
-        "example5.json": {
-            "scale": 0.75,
-            "selectedLayer": 1,
+        "example4.json": {
+            "scale": 0.07345535714285714,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 5259.333333333333,
-                "y": 4992
+                "x": 5574.814634739273,
+                "y": 7303.755925610793
+            }
+        },
+        "example5.json": {
+            "scale": 0.25,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 2806,
+                "y": 6286
             }
         },
         "mappics.tsx": {
-            "dynamicWrapping": true
+            "dynamicWrapping": true,
+            "scaleInDock": 1
         },
         "traps.tsj": {
             "dynamicWrapping": true
         }
     },
     "last.externalTilesetPath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/maps",
-    "last.imagePath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/textures/environment",
+    "last.imagePath": "C:/Users/bryce/Pictures/3100/hw8",
     "last.objectTypesPath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/maps/trapTypeDef.xml",
+    "map.lastUsedFormat": "json",
     "openFiles": [
         "example5.json"
     ],
     "project": "maps.tiled-project",
     "property.type": "object",
     "recentFiles": [
+        "example4.json",
         "example5.json",
         "Props.tsj"
     ],

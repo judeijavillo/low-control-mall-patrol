@@ -151,9 +151,10 @@ void CopModel::attemptTackle(Vec2 thiefPosition, Vec2 tackle) {
 void CopModel::applyTackle(float timestep, Vec2 thiefPosition) {
     didTackle = true;
     _tackleTime += timestep;
-    _tackleSuccessful
-        ? applyTackleSuccess(thiefPosition)
-        : applyTackleFailure();
+    applyTackleFailure();
+    //_tackleSuccessful
+    //    ? applyTackleSuccess(thiefPosition)
+    //    : applyTackleFailure();
 }
 
 /**

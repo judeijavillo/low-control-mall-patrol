@@ -75,6 +75,8 @@ class UIController {
     // Thief Indicators
     /** A reference to the label for displaying thief distance for cop */
     std::shared_ptr<cugl::scene2::Label> _thiefIndicator;
+    /** A reference to the border of the text displaying thief distance for cop */
+    std::shared_ptr<cugl::scene2::Label> _thiefIndicatorBorder;
     
     // Victory/Defeat Message
     /** A reference to the label for displaying the vicory/defeat meesage */
@@ -111,6 +113,8 @@ class UIController {
     /** Whether or not the game is muted */
     bool _didMute;
 
+    // The transparent color for certain UI elements
+    cugl::Color4 _transparent;
 
 public:
 //  MARK: - Constructors

@@ -45,6 +45,9 @@
 		42C6F58A27F1F22800E61CBE /* LCMPFindScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42C6F58927F1F22800E61CBE /* LCMPFindScene.cpp */; };
 		42C6F58B27F1F22800E61CBE /* LCMPFindScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42C6F58927F1F22800E61CBE /* LCMPFindScene.cpp */; };
 		42C6F58C27F1F22800E61CBE /* LCMPFindScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42C6F58927F1F22800E61CBE /* LCMPFindScene.cpp */; };
+		42C7BE2D28149F6300A89FFE /* LCMPLevelSelectScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42C7BE2828149F6300A89FFE /* LCMPLevelSelectScene.cpp */; };
+		42C7BE2E28149F6300A89FFE /* LCMPLevelSelectScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42C7BE2828149F6300A89FFE /* LCMPLevelSelectScene.cpp */; };
+		42C7BE2F28149F6300A89FFE /* LCMPLevelSelectScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42C7BE2828149F6300A89FFE /* LCMPLevelSelectScene.cpp */; };
 		42ED6B8227C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42ED6B8127C3761F00EC1EF4 /* LCMPPlayerModel.cpp */; };
 		42ED6B8327C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42ED6B8127C3761F00EC1EF4 /* LCMPPlayerModel.cpp */; };
 		42ED6B8427C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 42ED6B8127C3761F00EC1EF4 /* LCMPPlayerModel.cpp */; };
@@ -191,6 +194,8 @@
 		42BFB6C727DE719900D04240 /* LCMPAudioController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPAudioController.h; sourceTree = "<group>"; };
 		42C6F58327F1F02900E61CBE /* LCMPFindScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LCMPFindScene.h; sourceTree = "<group>"; };
 		42C6F58927F1F22800E61CBE /* LCMPFindScene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPFindScene.cpp; sourceTree = "<group>"; };
+		42C7BE2828149F6300A89FFE /* LCMPLevelSelectScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPLevelSelectScene.cpp; sourceTree = "<group>"; };
+		42C7BE2C28149F6300A89FFE /* LCMPLevelSelectScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPLevelSelectScene.h; sourceTree = "<group>"; };
 		42ED6B7D27C375EA00EC1EF4 /* LCMPPlayerModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LCMPPlayerModel.h; sourceTree = "<group>"; };
 		42ED6B8127C3761F00EC1EF4 /* LCMPPlayerModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPPlayerModel.cpp; sourceTree = "<group>"; };
 		42F2D4A827DE80FC00B5FCBA /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
@@ -333,6 +338,8 @@
 			children = (
 				B140973127F67252005C7F11 /* LCMPCustomizeScene.h */,
 				B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */,
+				42C7BE2C28149F6300A89FFE /* LCMPLevelSelectScene.h */,
+				42C7BE2828149F6300A89FFE /* LCMPLevelSelectScene.cpp */,
 				EB13B3B027B2C0DF0032BF19 /* LCMPLoadingScene.h */,
 				EB13B3A927B2C0DF0032BF19 /* LCMPLoadingScene.cpp */,
 				EB13B3B227B2C0DF0032BF19 /* LCMPMenuScene.h */,
@@ -712,6 +719,7 @@
 				42C6F58C27F1F22800E61CBE /* LCMPFindScene.cpp in Sources */,
 				42B26D8427C2BD360019E6FB /* LCMPInputController.cpp in Sources */,
 				42B26D7427C2BC410019E6FB /* LCMPGameModel.cpp in Sources */,
+				42C7BE2F28149F6300A89FFE /* LCMPLevelSelectScene.cpp in Sources */,
 				EB13B3C227B2C0DF0032BF19 /* LCMPClientScene.cpp in Sources */,
 				EB13B3BF27B2C0DF0032BF19 /* LCMPHostScene.cpp in Sources */,
 				42ED6B8427C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */,
@@ -739,6 +747,7 @@
 				42C6F58B27F1F22800E61CBE /* LCMPFindScene.cpp in Sources */,
 				42B26D8327C2BD360019E6FB /* LCMPInputController.cpp in Sources */,
 				42B26D7327C2BC410019E6FB /* LCMPGameModel.cpp in Sources */,
+				42C7BE2E28149F6300A89FFE /* LCMPLevelSelectScene.cpp in Sources */,
 				EB13B3C127B2C0DF0032BF19 /* LCMPClientScene.cpp in Sources */,
 				EB13B3BE27B2C0DF0032BF19 /* LCMPHostScene.cpp in Sources */,
 				42ED6B8327C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */,
@@ -766,6 +775,7 @@
 				42C6F58A27F1F22800E61CBE /* LCMPFindScene.cpp in Sources */,
 				42B26D7227C2BC410019E6FB /* LCMPGameModel.cpp in Sources */,
 				EB13B3C027B2C0DF0032BF19 /* LCMPClientScene.cpp in Sources */,
+				42C7BE2D28149F6300A89FFE /* LCMPLevelSelectScene.cpp in Sources */,
 				EB13B3BD27B2C0DF0032BF19 /* LCMPHostScene.cpp in Sources */,
 				42ED6B8227C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */,
 				EB13B3B727B2C0DF0032BF19 /* LCMPMenuScene.cpp in Sources */,

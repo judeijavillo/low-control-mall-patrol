@@ -100,11 +100,11 @@ enum JsonConstants :int {
 #define PROP_SCALE          0.2f
 
 /** The source for our level file */
-#define LEVEL_ONE_FILE      "maps/example5.json"
+#define LEVEL_ONE_FILE      "maps/example6.json"
 /** Assets for our level */
 #define WALL_ASSETS_FILE    "maps/Map3WallAssets.json"
 /** The key for our loaded level */
-#define LEVEL_ONE_KEY       "example5"
+#define LEVEL_ONE_KEY       "example6"
 
 /** Tileset for props */
 #define PROPS_FILE          "maps/PropsAndTraps.tsj"
@@ -135,20 +135,19 @@ enum JsonConstants :int {
 /** Player constants */
 // Thief Physics Constants
 /** The thief's damping coefficient */
-#define THIEF_DAMPING_DEFAULT 30.0f
+#define THIEF_DAMPING_DEFAULT 150.0f
 /** The thief's maximum speed of this player */
 #define THIEF_MAX_SPEED_DEFAULT 10.0f
 /** The thief's acceleration of this player */
-#define THIEF_ACCELERATION_DEFAULT 300.0f
+#define THIEF_ACCELERATION_DEFAULT 1500.0f
 
 // Cop Physics Constants
 /** The cop's damping coefficient */
-#define COP_DAMPING_DEFAULT 7.5f
+#define COP_DAMPING_DEFAULT 22.5f
 /** The cop's maximum speed of this player */
-#define COP_MAX_SPEED_DEFAULT 10.0f
+#define COP_MAX_SPEED_DEFAULT 12.5f
 /** The cops's acceleration of this player */
-#define COP_ACCELERATION_DEFAULT 75.0f
-
+#define COP_ACCELERATION_DEFAULT 300.0f
 // Tackle Physics Constants
 /** The amount of time that the cop will be in the air while in a successful tackle */
 #define TACKLE_AIR_TIME 0.25f
@@ -157,7 +156,7 @@ enum JsonConstants :int {
 /** The movement multiplier for the cop during tackle */
 #define TACKLE_MOVEMENT_MULT 2.0f
 /** The damping multiplier for the cop during tackle */
-#define TACKLE_DAMPING_MULT 5.0f
+#define TACKLE_DAMPING_MULT 6.0f
 /** The distance the cop's successful tackle spans in Box2D units */
 #define TACKLE_HIT_RADIUS 6.0f
 /** The margin of error allowed by a ocp's tackle */
