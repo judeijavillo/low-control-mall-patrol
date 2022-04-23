@@ -10,6 +10,8 @@
 #include "LCMPConstants.h"
 #include <map>
 
+#include <time.h>
+
 using namespace cugl;
 
 /**
@@ -30,6 +32,11 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
                      float scale, const std::string& file,
                      std::shared_ptr<cugl::scene2::ActionManager>& actions,
                      string skinKey) {
+    
+    time_t timer = time(NULL);
+    struct tm * timeinfo = localtime (&timer);
+    CULog("starting initialization %s", asctime(timeinfo));
+    
     _world = world;
     _floornode = floornode;
     _worldnode = worldnode;
@@ -41,9 +48,18 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(file);
     std::shared_ptr<JsonValue> json = reader->readJson();
     
+    _mapWidth = json->getFloat(WIDTH_FIELD);
+    _mapHeight = json->getFloat(HEIGHT_FIELD);
+    _tileSize = json->getFloat(T_SIZE_FIELD);
+    
     reader = JsonReader::allocWithAsset(PROPS_FILE);
     shared_ptr<JsonValue> propTileset = reader->readJson();
-    map<int,GameModel::TileData> idToTileData = buildTileDataMap(propTileset);
+    map<int,GameModel::TileData> idToTileData = buildTileDataMap(propTileset, scale);
+    
+    timer = time(NULL);
+    timeinfo = localtime (&timer);
+    CULog("done reading tileset %s", asctime(timeinfo));
+    
 //    for(auto it = idToTileData.begin(); it != idToTileData.end(); it++){
 //        int key = it->first;
 //        TileData val = it->second;
@@ -71,18 +87,12 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     constantsMap["triggerArea"] = TRIGGER_AREA;
     constantsMap["triggerDeactivationArea"] = TRIGGER_DEACTIVATION_AREA;
     
-
-
     constantsMap["Escalator"] = ESCALATOR;
     constantsMap["Teleport"] = TELEPORT;
     constantsMap["Stairs"] = STAIRS;
     constantsMap["Velocity Modifier"] = VELOCITY_MODIFIER;
 
     constantsMap["NULL"] = NIL;
-    
-    _mapWidth = json->getFloat(WIDTH_FIELD);
-    _mapHeight = json->getFloat(HEIGHT_FIELD);
-    _tileSize = json->getFloat(T_SIZE_FIELD);
     
     std::shared_ptr<JsonValue> layers = json->get(LAYERS_FIELD);
     std::shared_ptr<JsonValue> props = layers->get(PROPS_FIELD)->get(OBJECTS_FIELD);
@@ -104,6 +114,8 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     // Initialize cops
     for (int i = 0; i < 4; i++) initCop(i, scale, copsSpawn, assets, _actions);
 
+    _obstacles = std::vector<std::shared_ptr<physics2::PolygonObstacle>>();
+    
     // Initialize walls
     for (int i = 0; i < walls->size(); i++) initWall(walls->get(i), scale);
     
@@ -121,9 +133,46 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
 //    for (int i = 0; i < props->size(); i++) initProp(props->get(i), prop_firstGid, propTileset, assets, scale);
         initProps(props, prop_firstGid, idToTileData, assets, scale);
     }
+    
+    timer = time(NULL);
+    timeinfo = localtime (&timer);
+    CULog("done initializing backdrop, players, walls, and props %s", asctime(timeinfo));
+
+    obstaclesInGrid = map<int, set<shared_ptr<physics2::PolygonObstacle>>>();
+
+    for(auto ob : _obstacles){
+        auto boundingbox = ob->getPolygon().getBounds();
+        for(int i = (boundingbox.getMinX()+ob->getX())/GRID_SIZE-1; i <= (boundingbox.getMaxX()+ob->getX())/GRID_SIZE+2; i++)
+            for(int j = (boundingbox.getMinY()+ob->getY())/GRID_SIZE-1; j <= (boundingbox.getMaxY()+ob->getY())/GRID_SIZE+2; j++){
+                obstaclesInGrid[hash(i,j)].insert(ob);
+            }
+//        ob->setEnabled(false);
+    }
+    for(auto it = obstaclesInGrid.begin(); it != obstaclesInGrid.end(); it++)
+        CULog("grid hash %d has %d obstacles", it->first, it->second.size());
+    
+//    shared_ptr<PlayerModel> player = _thief;
+//    auto gridcell = player->getPosition();
+//    for(int d1 = -1; d1 <= 1; d1++)
+//        for(int d2 = -1; d2 <= 1; d2++){
+//            CULog("enabling for hash %d", hash(gridcell+Vec2(d1,d2)));
+//            for(auto ob : obstaclesInGrid[hash(gridcell+Vec2(d1,d2))]){
+//                ob->setEnabled(true);
+//                CULog("enabled obstacle for thief");
+//            }
+//        }
+//    for(auto it = _cops.begin(); it != _cops.end(); it++){
+//        player = it->second;
+//        gridcell = player->getPosition();
+//        for(int d1 = -1; d1 <= 1; d1++)
+//            for(int d2 = -1; d2 <= 1; d2++)
+//                for(auto ob : obstaclesInGrid[hash(gridcell+Vec2(d1,d2))]){
+//                    ob->setEnabled(true);
+//                    CULog("enabled obstacle for cop");
+//                }
+//    }
+    
     // Initialize traps
-    // TODO: Make this JSON Reading
-    //Vec2 traps[] = { Vec2(20, 30), Vec2(50, 30), Vec2(80, 30) };
 
     vector<shared_ptr<JsonValue>> trapsJson = vector<shared_ptr<JsonValue>>();
     vector<shared_ptr<JsonValue>> trapsObstaclesJson = vector<shared_ptr<JsonValue>>();
@@ -147,7 +196,9 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     map<int, ObstacleNode_x_Y_Gid_struct> obstacleMap;
     map<int, ObstacleNode_x_Y_Gid_struct> obstacleMap2; // This is extremely scuff but we're not sure how to copy an obstacle so we are making all the obstacles twice.
     for (int i = 0; i < trapsObstaclesJson.size(); i++) { // On the bright side it gets only called once a game
-
+        
+//        CULog("calling readJsonShape twice in traps");
+        
         ObstacleNode_x_Y_Gid_struct trapObstacle = readJsonShape(trapsObstaclesJson.at(i), scale);
         obstacleMap.insert(pair<int, ObstacleNode_x_Y_Gid_struct>(trapsObstaclesJson.at(i)->getInt(ID_FIELD), trapObstacle));
 
@@ -157,12 +208,23 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
         //obstacleMap[trapsObstaclesJson.at(i)->getInt(ID_FIELD)] = trapObstacle.obstacle;
 
     }
-
+    
+    timer = time(NULL);
+    timeinfo = localtime (&timer);
+    CULog("done reading trap info %s", asctime(timeinfo));
 
     for (int i = 0; i < trapsJson.size(); i++) initTrap(i, trapsJson[i], obstacleMap, obstacleMap2, idToTileData, prop_firstGid,scale, assets);
     
+    timer = time(NULL);
+    timeinfo = localtime (&timer);
+    CULog("done initializing traps %s", asctime(timeinfo));
+    
     // Initialize borders
     initBorder(scale);
+    
+    timer = time(NULL);
+    timeinfo = localtime (&timer);
+    CULog("done with initialization %s", asctime(timeinfo));
     
     return true;
 }
@@ -171,6 +233,7 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
  * Updates all game objects
  */
 void GameModel::update(float timestep) {
+    
     // Update the thief
     _thief->update(timestep);
     _thief->playAnimation();
@@ -179,6 +242,27 @@ void GameModel::update(float timestep) {
     for (auto entry = _cops.begin(); entry != _cops.end(); entry++) {
         entry->second->update(timestep);
         entry->second->playAnimation();
+    }
+    
+    for (auto ob : _obstacles)
+        ob->setEnabled(false);
+    
+    shared_ptr<PlayerModel> player = _thief;
+    auto gridcell = player->getPosition()/GRID_SIZE;
+//            if(obstaclesInGrid[hash(gridcell)].size() > 0)
+            CULog("enabling %d obs for hash %d", obstaclesInGrid[hash(gridcell)].size(), hash(gridcell));
+            for(auto ob : obstaclesInGrid[hash(gridcell)])
+                ob->setEnabled(true);
+//                CULog("enabled obstacle for thief");
+        
+    for(auto it = _cops.begin(); it != _cops.end(); it++){
+        player = it->second;
+        gridcell = player->getPosition()/GRID_SIZE;
+                if(obstaclesInGrid[hash(gridcell)].size() > 0)
+//                CULog("enabling %d obs for hash %d", obstaclesInGrid[hash(gridcell)].size(), hash(gridcell));
+                for(auto ob : obstaclesInGrid[hash(gridcell)])
+                    ob->setEnabled(true);
+
     }
 
     // update the traps
@@ -330,7 +414,7 @@ void initProps(const std::shared_ptr<cugl::JsonValue>& props,
     
 }
 
-map<int,GameModel::TileData> GameModel::buildTileDataMap(const shared_ptr<JsonValue>& propTileset){
+map<int,GameModel::TileData> GameModel::buildTileDataMap(const shared_ptr<JsonValue>& propTileset, float scale){
     // build map from tile id to asset name
     map<int, GameModel::TileData> idToTileData {};
     auto tiles = propTileset->get("tiles");
@@ -361,10 +445,19 @@ map<int,GameModel::TileData> GameModel::buildTileDataMap(const shared_ptr<JsonVa
                 anim_cols = p->getInt("value");
             }
         }
-        shared_ptr<JsonValue> hitboxes;
+        CULog("reading tile %s", assetName.data());
+        vector<shared_ptr<ObstacleNode_x_Y_Gid_struct>> hitboxes;
         if (tile->get("objectgroup") != nullptr) {
-            hitboxes = tile->get("objectgroup")->get("objects");
+            auto hitbox_jsons = tile->get("objectgroup")->get("objects");
+            for(int j = 0; j < hitbox_jsons->size(); j++){
+                auto hb_json = hitbox_jsons->get(j);
+//                CULog("contents %s", hb_json->toString().data());
+//                CULog("calling readJsonShape in buildTileDataMap");
+                auto s = make_shared<ObstacleNode_x_Y_Gid_struct>(readJsonShape(hb_json, scale));
+                hitboxes.push_back(s);
+            }
         }
+        
         idToTileData[id] = {assetName, hitboxes, animated, anim_rows, anim_cols};
 //        CULog("%s has hitboxes %s", assetName.data(), hitboxes->toString().data());
         // this is correct
@@ -395,7 +488,7 @@ void GameModel::initProps(const shared_ptr<JsonValue>& props,
         
         TileData data = idToTileData[id];
         
-        CULog("%d asset name %s", id, data.assetName.data());
+//        CULog("%d asset name %s", id, data.assetName.data());
         auto texture = assets->get<Texture>(data.assetName);
         //TODO: get this working
         Vec2 scale_ = Vec2(width/texture->getWidth(), height/texture->getHeight());
@@ -406,10 +499,10 @@ void GameModel::initProps(const shared_ptr<JsonValue>& props,
         shared_ptr<scene2::PolygonNode> node;
         if(data.animated){
             node = scene2::SpriteNode::alloc(texture, data.anim_rows, data.anim_cols);
-            CULog("prop is animated");
+//            CULog("prop is animated");
         } else {
             node = scene2::PolygonNode::allocWithTexture(texture);
-            CULog("prop is not animated");
+//            CULog("prop is not animated");
         }
         node->setScale(scale_.x * scale, scale_.y * scale);
 //        node->setScale(scale);
@@ -420,14 +513,19 @@ void GameModel::initProps(const shared_ptr<JsonValue>& props,
 //        CULog("drawing %s at %f %f with scale %f", data.assetName.data(), (x + width / 2) * scale, (y + height / 2) * scale, scale);
         
         // add hitboxes to world
-        for(int j = 0; j < data.hitboxes->size(); j++){
-            auto hitbox = data.hitboxes->get(j);
-            auto shape = readJsonShape(hitbox, scale);
-            shape.y -= _mapHeight;
-            auto obstacle = shape.obstacle;
-            auto poly = obstacle->getPolygon();
-            poly *= scale_ * _tileSize;
+        auto size = data.hitboxes.size();
+        for(int j = 0; j < size; j++){
+//            auto hitbox = data.hitboxes->get(j);
+//            auto shape = readJsonShape(hitbox, scale);
+            auto shape = data.hitboxes[j];
             
+            auto x_ = shape->x;
+            auto y_ = shape->y;
+            y_ -= _mapHeight;
+            
+            auto reference_obstacle = shape->obstacle;
+            auto poly = Poly2(reference_obstacle->getPolygon());
+            poly *= scale_ * _tileSize;
 
 //            Rect bounds = poly.getBounds();
 //            Vec2 range(bounds.getMaxX() + abs(bounds.getMinX()),
@@ -436,15 +534,18 @@ void GameModel::initProps(const shared_ptr<JsonValue>& props,
 //                        abs(bounds.getMinY()) / range.y);
             
 //            CULog("scale %f %f", (scale_ * _tileSize).x, (scale_ * _tileSize).y);
-            obstacle = physics2::PolygonObstacle::alloc(poly);
+            auto obstacle = physics2::PolygonObstacle::alloc(poly);
 //            obstacle->set
             obstacle->setDebugScene(_debugnode);
 //            CULog("squoosh factor %f %f", scale_.x, scale_.y);
             _world->addObstacle(obstacle);
-            obstacle->setPosition(shape.x*scale_.x*_tileSize + x,
-                                  shape.y*scale_.y*_tileSize + y
+            obstacle->setPosition(x_*scale_.x*_tileSize + x,
+                                  y_*scale_.y*_tileSize + y
                                     + height);
-            CULog("%s x dx y dy %f %f %f %f", data.assetName.data(), x, shape.x*scale_.x*_tileSize, y, shape.y*scale_.y*_tileSize);
+            
+            _obstacles.push_back(obstacle);
+//            obstacle->setEnabled(false);
+//            CULog("%s x dx y dy %f %f %f %f", data.assetName.data(), x, shape->x*scale_.x*_tileSize, y, shape->y*scale_.y*_tileSize);
 //                                  shape.y/_tileSize - height + y);
 //            obstacle->setPosition((x + width / 2) * scale, (y + height / 2) * scale);
 //            CULog("placing %s at %f %f", data.assetName.data(), shape.x/_tileSize + x, shape.y/_tileSize + y);
@@ -550,6 +651,7 @@ void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
 //    float x = json->getFloat(X_FIELD) / _tileSize;
 //    float y = json->getFloat(Y_FIELD) / _tileSize;
     
+//    CULog("calling readJsonShape in initWall");
     auto shape = readJsonShape(json, scale);
     
     auto wall = shape.obstacle;
@@ -568,6 +670,9 @@ void GameModel::initWall(const std::shared_ptr<JsonValue>& json, float scale) {
     // Add the node to the world node
     node->setColor(Color4::GRAY);
 
+    
+    _obstacles.push_back(wall);
+    
     // Uncomment if you need to see the walls on the map
     //_worldnode->addChild(node);
 

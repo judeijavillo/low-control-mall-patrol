@@ -26,7 +26,7 @@ protected:
     /** A vector of references to the traps */
     std::vector<std::shared_ptr<TrapModel>> _traps;
     /** A vector of references to obstacles */
-    std::vector<std::shared_ptr<ObstacleModel>> _obstacles;
+    std::vector<std::shared_ptr<cugl::physics2::PolygonObstacle>> _obstacles;
     /** A vector of references to the nodes holding the map textures */
     std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _mapChunks;
     /** Reference to the Action Manager */
@@ -41,6 +41,14 @@ protected:
     std::shared_ptr<cugl::physics2::ObstacleWorld> _world;
     // Map to associate the json strings with the json enum values
     std::map<std::string, JsonConstants> constantsMap;
+    
+    int hash(cugl::Vec2 v){
+        return hash(int(v.x),int(v.y));
+    };
+    int hash(int x, int y){
+        return 100*x+y;
+    };
+    std::map<int, std::set<std::shared_ptr<cugl::physics2::PolygonObstacle>>> obstaclesInGrid;
     
     /** The width of the map in Box2D coordinates */
     float _mapWidth;
@@ -190,15 +198,24 @@ private:
                  const std::shared_ptr<cugl::AssetManager>& assets,
                  std::shared_ptr<cugl::scene2::ActionManager>& actions);
     
+    struct ObstacleNode_x_Y_Gid_struct{
+        std::shared_ptr<cugl::physics2::PolygonObstacle> obstacle;
+        std::shared_ptr<cugl::scene2::PolygonNode> node;
+        float x, y;
+        int gid;
+    };
+    
+    GameModel::ObstacleNode_x_Y_Gid_struct readJsonShape(const std::shared_ptr<cugl::JsonValue>& json, float scale);
+    
     struct TileData{
         string assetName;
-        std::shared_ptr<cugl::JsonValue> hitboxes;
+        std::vector<std::shared_ptr<GameModel::ObstacleNode_x_Y_Gid_struct>> hitboxes;
         bool animated = false;
         int anim_rows = 0;
         int anim_cols = 0;
     };
     
-    map<int,GameModel::TileData> buildTileDataMap(const shared_ptr<cugl::JsonValue>& propTileset);
+    map<int,GameModel::TileData> buildTileDataMap(const shared_ptr<cugl::JsonValue>& propTileset, float scale);
     
     /**
      Places all props into the world
@@ -217,15 +234,6 @@ private:
                   const std::shared_ptr<cugl::JsonValue>& propTileset,
                   const std::shared_ptr<cugl::AssetManager>& assets,
                   float scale);
-    
-    struct ObstacleNode_x_Y_Gid_struct{
-        std::shared_ptr<cugl::physics2::PolygonObstacle> obstacle;
-        std::shared_ptr<cugl::scene2::PolygonNode> node;
-        float x, y;
-        int gid;
-    };
-    
-    GameModel::ObstacleNode_x_Y_Gid_struct readJsonShape(const std::shared_ptr<cugl::JsonValue>& json, float scale);
     
     /**
      * Initializes a single wall
