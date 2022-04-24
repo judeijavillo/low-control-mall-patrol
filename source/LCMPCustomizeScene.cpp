@@ -93,7 +93,6 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     skin = 0;
     skinKey = "";
-//    skinKey = _isThief ? _thiefKeys[skin] : _copKeys[skin];
     _didLeft = false;
     _customTime = 0.0;
     _lastChoice = -CHOICE_COOLDOWN;
@@ -256,7 +255,6 @@ bool CustomizeScene::connect() {
 void CustomizeScene::startGame() {
     if (_network->isConnected()) {
         _status = Status::START;
-        _network->sendStartGame();
     }
 }
 

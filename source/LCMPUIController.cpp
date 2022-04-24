@@ -47,7 +47,8 @@ float OUTER_ACCEL_VIS_POS[2]{ 0.1f, 0.1f };
  * Disposes of all resources in this instance of UI Controller
  */
 void UIController::dispose() {
-    _settingsButton->deactivate();
+    _settingsMenu->dispose();
+    _uinode->removeAllChildren();
 }
 
 /**
@@ -89,12 +90,12 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _thiefIndicatorNode = scene2::SceneNode::alloc();
     _joystickNode = scene2::SceneNode::alloc();
     _accelVisNode = scene2::SceneNode::alloc();
-    _victoryNode = scene2::SceneNode::alloc();
+//    _victoryNode = scene2::SceneNode::alloc();
     
     // Add nodes to the top-level nodes
     _uinode->addChild(_direcIndicatorsNode);
     _uinode->addChild(_thiefIndicatorNode);
-    _uinode->addChild(_victoryNode);
+//    _uinode->addChild(_victoryNode);
     _uinode->addChild(_joystickNode);
     _uinode->addChild(_accelVisNode);
     
@@ -103,14 +104,14 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _thiefIndicatorNode->setVisible(false);
     _joystickNode->setVisible(false);
     _accelVisNode->setVisible(false);
-    _victoryNode->setVisible(false);
+//    _victoryNode->setVisible(false);
 
     // Call helpers to populate sub-level nodes
     initJoystick();
     initAccelVis();
     initDirecIndicators();
     initThiefIndicator();
-    initMessage();
+//    initMessage();
     initTimer();
     initSettings();
 
@@ -153,7 +154,7 @@ void UIController::update(float timestep, bool isThief, Vec2 movement,
    
     updateDirecIndicators(isThief, copID);
     updateSettings();
-    updateMessage(isThief, isThiefWin);
+//    updateMessage(isThief, isThiefWin);
     updateTimer(gameTime);
 }
 
@@ -248,12 +249,12 @@ void UIController::initThiefIndicator() {
 /**
  * Creates the message label and adds it the UI node
  */
-void UIController::initMessage() {
-    _victoryText = scene2::Label::allocWithText("should be replaced", _font);
-    _victoryText->setAnchor(Vec2::ANCHOR_CENTER);
-    _victoryText->setPosition(Vec2(SCENE_WIDTH/2,SCENE_HEIGHT/2) + _offset);
-    _victoryNode->addChild(_victoryText);
-}
+//void UIController::initMessage() {
+//    _victoryText = scene2::Label::allocWithText("should be replaced", _font);
+//    _victoryText->setAnchor(Vec2::ANCHOR_CENTER);
+//    _victoryText->setPosition(Vec2(SCENE_WIDTH/2,SCENE_HEIGHT/2) + _offset);
+//    _victoryNode->addChild(_victoryText);
+//}
 
 /**
  * Creates the timer texture and adds it the UI node
@@ -539,24 +540,24 @@ void UIController::updateThiefIndicator(int copID) {
 /**
  * Updates the message label
  */
-void UIController::updateMessage(bool isThief, bool isThiefWin) {
-    if (! _game->isGameOver()) return;
-    
-    if (isThief) {
-        if (isThiefWin) {
-            _victoryText->setText("Thief Wins!", true);
-        }
-        else {
-            _victoryText->setText("Thief Loses!", true);
-        }
-    }
-    else {
-        if (isThiefWin) {
-            _victoryText->setText("Cops Lose!", true);
-        }
-        else {
-            _victoryText->setText("Cops Win!", true);
-        }
-    }
-    _victoryNode->setVisible(_game->isGameOver());
-}
+//void UIController::updateMessage(bool isThief, bool isThiefWin) {
+//    if (! _game->isGameOver()) return;
+//
+//    if (isThief) {
+//        if (isThiefWin) {
+//            _victoryText->setText("Thief Wins!", true);
+//        }
+//        else {
+//            _victoryText->setText("Thief Loses!", true);
+//        }
+//    }
+//    else {
+//        if (isThiefWin) {
+//            _victoryText->setText("Cops Lose!", true);
+//        }
+//        else {
+//            _victoryText->setText("Cops Win!", true);
+//        }
+//    }
+//    _victoryNode->setVisible(_game->isGameOver());
+//}

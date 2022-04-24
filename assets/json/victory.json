@@ -1,0 +1,92 @@
+{
+    "textures": {
+        "victory_background" : {
+            "file": "textures/ui/menu_background.png"
+        },
+        "replay" : {
+            "file" :   "textures/ui/replay.png"
+        },
+        "leave" : {
+            "file" :   "textures/ui/leave.png"
+        }
+    },
+    "sounds": {
+    },
+    "fonts": {
+        "futura": {
+            "file": "fonts/futur.ttf",
+            "size": 48
+        }
+    },
+    "scene2s": {
+        "victory": {
+            "type": "Node",
+            "comment": "This is the root node of the scene for the lab",
+            "format": {
+                "type": "Anchored"
+            },
+            "children": {
+                "backdrop": {
+                    "type": "Image",
+                    "data": {
+                        "texture": "victory_background",
+                        "anchor": [0.5, 0.5],
+                        "scale": [1, 1]
+                    },
+                    "layout": {
+                        "x_anchor": "fill",
+                        "y_anchor": "fill"
+                    },
+                    "children": {
+                        "replay": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [400, 150],
+                                "scale": [1,1]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "replay"
+                                    }
+                                }
+                            }
+                        },
+                        "leave": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "position": [1100, 150],
+                                "scale": [1,1]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "leave"
+                                    }
+                                }
+                            }
+                        },
+                        "text": {
+                            "type": "Label",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "scale": 1,
+                                "font": "futura",
+                                "text": "Please Change This Text To Something Else",
+                                "halign": "center",
+                                "valign": "middle",
+                                "position": [600, 400]
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

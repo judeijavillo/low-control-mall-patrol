@@ -80,8 +80,8 @@ class UIController {
     
     // Victory/Defeat Message
     /** A reference to the label for displaying the vicory/defeat meesage */
-    std::shared_ptr<cugl::scene2::SceneNode> _victoryNode;
-    std::shared_ptr<cugl::scene2::Label> _victoryText;
+//    std::shared_ptr<cugl::scene2::SceneNode> _victoryNode;
+//    std::shared_ptr<cugl::scene2::Label> _victoryText;
     
     /** A reference to the node for displaying time remaining */
     std::shared_ptr<cugl::scene2::PolygonNode> _timer;
@@ -203,7 +203,7 @@ private:
     /**
      * Creates the message label and adds it the UI node
      */
-    void initMessage();
+//    void initMessage();
     
     /**
      * Creates the timer nodes and adds them the UI node
@@ -266,7 +266,7 @@ private:
     /**
      * Updates the victory label
      */
-    void updateMessage(bool isThief, bool isThiefWin);
+//    void updateMessage(bool isThief, bool isThiefWin);
         
 };
 
