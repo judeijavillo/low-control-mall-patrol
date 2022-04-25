@@ -15,9 +15,9 @@ class AudioController {
 protected:
     std::shared_ptr<cugl::AudioQueue> _queue;
     std::vector<pair<float, std::string>> _heap;
+    std::unordered_map<string, std::shared_ptr<cugl::audio::AudioPlayer>> _audioPlayers;
 
 public:
-    std::unordered_map<string, std::shared_ptr<cugl::audio::AudioPlayer>> audioPlayers;
 
 //  MARK: - Constructors
     
@@ -40,8 +40,11 @@ public:
     
     std::shared_ptr<cugl::AudioQueue> getQueue() { return _queue; }
     
-    /** Plays a sound effect or music track */
-    void playSound(const std::shared_ptr<cugl::AssetManager>& assets, std::string key, bool isSfx, float gameTime);
+    /** Plays a sound effect */
+    void playSfx(const std::shared_ptr<cugl::AssetManager>& assets, std::string key, float gameTime);
+    
+    /** Plays music */
+    void playMusic(const std::shared_ptr<cugl::AssetManager>& assets, std::string key);
     
     /** Pauses a music track */
     void pauseMusic(string key);

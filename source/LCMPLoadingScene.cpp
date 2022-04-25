@@ -69,14 +69,14 @@ bool LoadingScene::init(const std::shared_ptr<AssetManager>& assets,
     
     // Start loading music
     _audio = audio;
-    _audio->playSound(_assets, LOADING_MUSIC, false, -1);
+    _audio->playMusic(_assets, LOADING_MUSIC);
     
     // Save the SceneNodes that we'll need to access later
     _brand = assets->get<scene2::SceneNode>("load_name");
     _button = std::dynamic_pointer_cast<scene2::Button>(assets->get<scene2::SceneNode>("load_play"));
     _button->addListener([=](const std::string& name, bool down) {
         this->_active = down;
-        if (down) _audio->playSound(_assets, CLICK_SFX, true, 0);
+        if (down) _audio->playSfx(_assets, CLICK_SFX, 0);
     });
 
     // Loading screen animation initalization

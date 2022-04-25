@@ -60,7 +60,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _audio = audio;
     _actions = actions;
     
-    _audio->playSound(_assets, MENU_MUSIC, false, -1);
+    _audio->playMusic(_assets, MENU_MUSIC);
     
     // Acquire the scene built by the asset loader and resize it the scene
     std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("menu");
@@ -77,14 +77,14 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         if (down) {
             _choice = Choice::HOST;
             _audio->stopSfx(CLICK_SFX);
-            _audio->playSound(_assets, CLICK_SFX, true, 0);
+            _audio->playSfx(_assets, CLICK_SFX, 0);
         }
     });
     _joinbutton->addListener([this](const std::string& name, bool down) {
         if (down) {
             _choice = Choice::JOIN;
             _audio->stopSfx(CLICK_SFX);
-            _audio->playSound(_assets, CLICK_SFX, true, 0);
+            _audio->playSfx(_assets, CLICK_SFX, 0);
         }
     });
     _findbutton->addListener([this](const std::string& name, bool down) {

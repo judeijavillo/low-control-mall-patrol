@@ -463,7 +463,7 @@ void LCMPApp::updateGameScene(float timestep) {
         _scene = State::MENU;
         
         _audio->stopMusic(GAME_MUSIC);
-        _audio->playSound(_assets, MENU_MUSIC, false, -1);
+        _audio->playMusic(_assets, MENU_MUSIC);
     }
     if (_game.getState() == GameScene::State::DONE) {
         _game.setActive(false);

@@ -200,7 +200,7 @@ void GameScene::start(bool host, string skinKey, string levelKey) {
     _doneTime = 0;
     _isThiefWin = false;
     _isHost = host;
-    _audio->playSound(_assets, GAME_MUSIC, false, -1);
+    _audio->playMusic(_assets, GAME_MUSIC);
     _playerNumber = _network->getPlayerNumber();
     _isThief = (_playerNumber == -1);
     _skinKey = skinKey;

@@ -77,7 +77,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         if (down) {
             _status = Status::ABORT;
             _audio->stopSfx(CLICK_SFX);
-            _audio->playSound(_assets, CLICK_SFX, true, 0);
+            _audio->playSfx(_assets, CLICK_SFX, 0);
         }
     });
     
@@ -113,7 +113,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         if (down) {
             _status = Status::WAIT;
             _audio->stopSfx(CLICK_SFX);
-            _audio->playSound(_assets, CLICK_SFX, true, 0);
+            _audio->playSfx(_assets, CLICK_SFX, 0);
             connect(_gameid->getText());
         }
     });
