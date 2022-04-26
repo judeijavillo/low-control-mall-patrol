@@ -6,12 +6,6 @@
         "ss_thief_right_f": {
             "file": "textures/characters/ss_thief_right_f.png"
         },
-        "ss_thief_cat_right": {
-            "file": "textures/characters/ss_thief_cat_right.png"
-        },
-        "ss_thief_cat_right_f": {
-            "file": "textures/characters/ss_thief_cat_right_f.png"
-        },
         "ss_thief_hatless_right": {
             "file": "textures/characters/ss_thief_hatless_right.png"
         },
@@ -44,6 +38,39 @@
         },
         "donut_blue": {
             "file": "textures/ui/donut_blue.png"
+        },
+        "lock": {
+            "file": "textures/ui/lock.png"
+        },
+        "cat_ears": {
+            "file":  "textures/accessories/cat_ears.png"
+        },
+        "cat_ears_left": {
+            "file":  "textures/accessories/cat_ears_left.png"
+        },
+        "halo": {
+            "file":  "textures/accessories/halo.png"
+        },
+        "halo_left": {
+            "file":  "textures/accessories/halo_left.png"
+        },
+        "plant": {
+            "file":  "textures/accessories/plant.png"
+        },
+        "plant_left": {
+            "file":  "textures/accessories/plant_left.png"
+        },
+        "police_hat": {
+            "file":  "textures/accessories/police_hat.png"
+        },
+        "police_hat_left": {
+            "file":  "textures/accessories/police_hat_left.png"
+        },
+        "propeller_hat": {
+            "file":  "textures/accessories/propeller_hat.png"
+        },
+        "propeller_hat_left": {
+            "file":  "textures/accessories/propeller_hat_left.png"
         }
     },
     "fonts": {
@@ -181,35 +208,7 @@
                         "absolute" : true
                     }
                 },
-                "ss_thief_cat_right" : {
-                    "type"    : "Sprite",
-                    "data"    : {
-                        "anchor"    : [0.5, 0.5],
-                        "texture"    : "ss_thief_cat_right",
-                        "cols"         : 8,
-                        "frame"        : 0
-                    },
-                        "layout" : {
-                        "x_anchor" : "center",
-                        "y_anchor" : "middle",
-                        "absolute" : true
-                    }
-                },
-                "ss_thief_cat_right_f" : {
-                    "type"    : "Sprite",
-                    "data"    : {
-                        "anchor"    : [0.5, 0.5],
-                        "texture"    : "ss_thief_cat_right_f",
-                        "cols"         : 8,
-                        "frame"        : 0
-                    },
-                        "layout" : {
-                        "x_anchor" : "center",
-                        "y_anchor" : "middle",
-                        "absolute" : true
-                    }
-                },
-                "ss_thief_hatless_right" : {
+                "ss_thief_cat_ears" : {
                     "type"    : "Sprite",
                     "data"    : {
                         "anchor"    : [0.5, 0.5],
@@ -223,7 +222,119 @@
                         "absolute" : true
                     }
                 },
-                "ss_thief_hatless_right_f" : {
+                "ss_thief_cat_ears_f" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_hatless_right_f",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_thief_propeller_hat" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_hatless_right",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_thief_propeller_hat_f" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_hatless_right_f",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_thief_police_hat" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_hatless_right",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_thief_police_hat_f" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_hatless_right_f",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_thief_halo" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_hatless_right",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_thief_halo_f" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_hatless_right_f",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_thief_plant" : {
+                    "type"    : "Sprite",
+                    "data"    : {
+                        "anchor"    : [0.5, 0.5],
+                        "texture"    : "ss_thief_hatless_right",
+                        "cols"         : 8,
+                        "frame"        : 0
+                    },
+                        "layout" : {
+                        "x_anchor" : "center",
+                        "y_anchor" : "middle",
+                        "absolute" : true
+                    }
+                },
+                "ss_thief_plant_f" : {
                     "type"    : "Sprite",
                     "data"    : {
                         "anchor"    : [0.5, 0.5],
@@ -263,6 +374,216 @@
                         "x_anchor" : "center",
                         "y_anchor" : "middle",
                         "absolute" : true
+                    }
+                },
+                "right_lock": {
+                    "type": "Image",
+                    "data": {
+                        "upnode": "up",
+                        "anchor": [0.5, 0.5],
+                        "scale": [0.3, 0.3]
+                    },
+                    "children": {
+                        "up": {
+                            "type": "Image",
+                            "data": {
+                                "texture": "lock"
+                            }
+                        }
+                    }
+
+                },
+                "center_lock": {
+                    "type": "Image",
+                    "data": {
+                        "upnode": "up",
+                        "anchor": [0.5, 0.5],
+                        "scale": [0.3, 0.3]
+                    },
+                    "children": {
+                        "up": {
+                            "type": "Image",
+                            "data": {
+                                "texture": "lock"
+                            }
+                        }
+                    }
+
+                },
+                "left_lock": {
+                    "type": "Image",
+                    "data": {
+                        "upnode": "up",
+                        "anchor": [0.5, 0.5],
+                        "scale": [0.3, 0.3]
+                    },
+                    "children": {
+                        "up": {
+                            "type": "Image",
+                            "data": {
+                                "texture": "lock"
+                            }
+                        }
+                    }
+                },
+                "cat_ears": {
+                    "type": "Image",
+                    "data": {
+                        "upnode": "up",
+                        "anchor": [0.5, 0.5],
+                        "scale": [0.3, 0.3]
+                    },
+                    "children": {
+                        "up": {
+                            "type": "Image",
+                            "data": {
+                                "texture": "cat_ears"
+                            }
+                        }
+                    }
+                },
+                "propeller_hat": {
+                    "type": "Image",
+                    "data": {
+                        "upnode": "up",
+                        "anchor": [0.5, 0.5],
+                        "scale": [0.3, 0.3]
+                    },
+                    "children": {
+                        "up": {
+                            "type": "Image",
+                            "data": {
+                                "texture": "propeller_hat"
+                            }
+                        }
+                    }
+                },
+                "police_hat": {
+                    "type": "Image",
+                    "data": {
+                        "upnode": "up",
+                        "anchor": [0.5, 0.5],
+                        "scale": [0.3, 0.3]
+                    },
+                    "children": {
+                        "up": {
+                            "type": "Image",
+                            "data": {
+                                "texture": "police_hat"
+                            }
+                        }
+                    }
+                },
+                "plant": {
+                    "type": "Image",
+                    "data": {
+                        "upnode": "up",
+                        "anchor": [0.5, 0.5],
+                        "scale": [0.3, 0.3]
+                    },
+                    "children": {
+                        "up": {
+                            "type": "Image",
+                            "data": {
+                                "texture": "plant"
+                            }
+                        }
+                    }
+                },
+                "halo": {
+                    "type": "Image",
+                    "data": {
+                        "upnode": "up",
+                        "anchor": [0.5, 0.5],
+                        "scale": [0.3, 0.3]
+                    },
+                    "children": {
+                        "up": {
+                            "type": "Image",
+                            "data": {
+                                "texture": "halo"
+                            }
+                        }
+                    }
+                },
+                "cat_ears_f": {
+                    "type": "Image",
+                    "data": {
+                        "upnode": "up",
+                        "anchor": [0.5, 0.5],
+                        "scale": [0.3, 0.3]
+                    },
+                    "children": {
+                        "up": {
+                            "type": "Image",
+                            "data": {
+                                "texture": "cat_ears"
+                            }
+                        }
+                    }
+                },
+                "propeller_hat_f": {
+                    "type": "Image",
+                    "data": {
+                        "upnode": "up",
+                        "anchor": [0.5, 0.5],
+                        "scale": [0.3, 0.3]
+                    },
+                    "children": {
+                        "up": {
+                            "type": "Image",
+                            "data": {
+                                "texture": "propeller_hat"
+                            }
+                        }
+                    }
+                },
+                "police_hat_f": {
+                    "type": "Image",
+                    "data": {
+                        "upnode": "up",
+                        "anchor": [0.5, 0.5],
+                        "scale": [0.3, 0.3]
+                    },
+                    "children": {
+                        "up": {
+                            "type": "Image",
+                            "data": {
+                                "texture": "police_hat"
+                            }
+                        }
+                    }
+                },
+                "plant_f": {
+                    "type": "Image",
+                    "data": {
+                        "upnode": "up",
+                        "anchor": [0.5, 0.5],
+                        "scale": [0.3, 0.3]
+                    },
+                    "children": {
+                        "up": {
+                            "type": "Image",
+                            "data": {
+                                "texture": "plant"
+                            }
+                        }
+                    }
+                },
+                "halo_f": {
+                    "type": "Image",
+                    "data": {
+                        "upnode": "up",
+                        "anchor": [0.5, 0.5],
+                        "scale": [0.3, 0.3]
+                    },
+                    "children": {
+                        "up": {
+                            "type": "Image",
+                            "data": {
+                                "texture": "halo"
+                            }
+                        }
                     }
                 }
             }

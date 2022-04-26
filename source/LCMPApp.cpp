@@ -71,10 +71,7 @@ void LCMPApp::onStartup() {
     
     // Create a "loading" screen
     _scene = State::LOAD;
-    _loading.init(_assets, _audio, _actions);
-
-    // Initialize fade status
-    _fadeStatus = FadeStatus::FADE_WHITE;
+    _loading.init(_assets, _audio);
     
     // Call the parent's onStartup
     Application::onStartup();
@@ -158,6 +155,12 @@ void LCMPApp::update(float timestep) {
     case VICTORY:
         updateVictoryScene(timestep);
         break;
+    case SHOP:
+        updateShopScene(timestep);
+        break;
+    case GACHA:
+        updateGachaScene(timestep);
+        break;
     }
 }
 
@@ -199,13 +202,19 @@ void LCMPApp::draw() {
     case VICTORY:
         _victory.render(_batch);
         break;
+    case SHOP:
+        _shop.render(_batch);
+        break;
+    case GACHA:
+        _gacha.render(_batch);
+        break;
     }
 }
 
 //  MARK: - Helpers
 
 /**
- * Inidividualized update method for the loading scene.
+ * Individualized update method for the loading scene.
  *
  * This method keeps the primary {@link #update} from being a mess of switch
  * statements. It also handles the transition logic from the loading scene.
@@ -227,6 +236,8 @@ void LCMPApp::updateLoadingScene(float timestep) {
         _levelselect.init(_assets, _audio);
         _game.init(_assets, _network, _audio, _actions);
         _victory.init(_assets, _network, _audio, _actions, true);
+        _shop.init(_assets, _audio);
+        _gacha.init(_assets, _audio);
         _menu.setActive(true);
         _scene = State::MENU;
     }
@@ -262,8 +273,50 @@ void LCMPApp::updateMenuScene(float timestep) {
         _network->setHost(true);
         _scene = State::FIND;
         break;
+    case MenuScene::Choice::SHOP:
+        _menu.setActive(false);
+        _shop.setActive(true);
+        _scene = State::SHOP;
+        break;
+    case MenuScene::Choice::GACHA:
+        _menu.setActive(false);
+        _gacha.setActive(true);
+        _scene = State::GACHA;
+        break;
     case MenuScene::Choice::NONE:
         // DO NOTHING
+        break;
+    }
+}
+
+void LCMPApp::updateShopScene(float timestep) {
+    _shop.update(timestep);
+    switch (_shop.getChoice()) {
+    case ShopScene::Choice::BUY:
+        break;
+    case ShopScene::Choice::BACK:
+        _shop.setActive(false);
+        _menu.setActive(true);
+        _shop.dispose();
+        _scene = State::MENU;
+        break;
+    case ShopScene::Choice::NONE:
+        break;
+    }
+}
+
+void LCMPApp::updateGachaScene(float timestep) {
+    _gacha.update(timestep);
+    switch (_gacha.getChoice()) {
+    case GachaScene::Choice::GACHA:
+        break;
+    case GachaScene::Choice::BACK:
+        _gacha.setActive(false);
+        _menu.setActive(true);
+        _gacha.dispose();
+        _scene = State::MENU;
+        break;
+    case GachaScene::Choice::NONE:
         break;
     }
 }
@@ -499,64 +552,4 @@ void LCMPApp::updateVictoryScene(float timestep) {
         case VictoryScene::Status::IDLE:
             break;
     }
-}
-
-/**
- * Transition between two scenes.
- *
- * This method fades out the previous scene, and fades in the next scene.
- *
- * @param timestep  The amount of time (in seconds) since the last frame
- * @param prevScene The scene we are transitioning from
- * @param newScene  The scene we are transitioning into
- */
-bool LCMPApp::transitionScene(float timestep, cugl::Scene2 prevScene, cugl::Scene2 newScene) {
-    float transitionTime = 0.25f;
-    switch (_fadeStatus) {
-    case FadeStatus::FADE_WHITE:
-        _fadingCumTime = 0;
-        _fadeStatus = FadeStatus::FADE_OUT;
-        break;
-    case FadeStatus::FADE_OUT:
-        if (fadeScene(timestep, prevScene, false))
-            _fadeStatus = FadeStatus::FADE_BLACK;
-        break;
-    case FadeStatus::FADE_BLACK:
-        prevScene.setActive(false);
-        newScene.setColor(Color4::BLACK);
-        newScene.setActive(true);
-        _fadingCumTime = 0;
-        _fadeStatus = FADE_IN;
-        break;
-    case FadeStatus::FADE_IN:
-        if (fadeScene(timestep, newScene, true)) {
-            _fadeStatus = FadeStatus::FADE_WHITE;
-            return true;
-        }
-        break;
-    default:
-        _fadeStatus = FadeStatus::FADE_OUT;
-        break;
-    }
-    return false;
-}
-
-/**
- * Fade out a scene.
- *
- * This method fades out the input scene to black.
- *
- * @param timestep  The amount of time (in seconds) since the last frame
- * @param scene The scene we are fading out.
- */
-bool LCMPApp::fadeScene(float timestep, cugl::Scene2 scene, bool inOut) {
-    float fadeTime = 3.0f;
-    _fadingCumTime += timestep;
-    float fadingAlpha = inOut ? (_fadingCumTime / fadeTime)
-        : (1 - (_fadingCumTime / fadeTime));
-    fadingAlpha = clamp(fadingAlpha, 0.0f, 1.0f);
-    Color4 fadeColor = (255 * fadingAlpha, 255 * fadingAlpha, 255 * fadingAlpha, 255);
-    scene.setColor(fadeColor);
-    bool returnValue = inOut ? fadingAlpha >= 1 : fadingAlpha <= 0;
-    return returnValue;
 }

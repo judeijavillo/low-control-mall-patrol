@@ -17,10 +17,10 @@
 #include "LCMPAudioController.h"
 #include "LCMPSettingsController.h"
 #include <cugl/scene2/actions/CUActionManager.h>
-#include <cugl/scene2/actions/CUMoveAction.h>
-#include <cugl/scene2/actions/CUScaleAction.h>
-#include <cugl/scene2/actions/CUAnimateAction.h>
-#include <cugl/math/CUEasingBezier.h>
+//#include <cugl/scene2/actions/CUMoveAction.h>
+//#include <cugl/scene2/actions/CUScaleAction.h>
+//#include <cugl/scene2/actions/CUAnimateAction.h>
+//#include <cugl/math/CUEasingBezier.h>
 
 /**
  * This class presents the menu to the player.
@@ -43,6 +43,10 @@ public:
         JOIN,
         /** User wants to find a game */
         FIND,
+        /** User wants to shop */
+        SHOP,
+        /** User wants to roll gacha */
+        GACHA
     };
 
 protected:
@@ -69,22 +73,17 @@ protected:
     std::shared_ptr<cugl::scene2::Button> _findbutton;
     /** The button to open the settings menu */
     std::shared_ptr<cugl::scene2::Button> _settingsButton;
+    /** The menu button for entering the shop */
+    std::shared_ptr<cugl::scene2::Button> _shopButton;
+    /** The menu button for rolling the gacha */
+    std::shared_ptr<cugl::scene2::Button> _gachaButton;
+    
+    std::shared_ptr<cugl::scene2::PolygonNode> _title;
+
     /** The player menu choice */
     Choice _choice;
     
-    // References to the shop menu
-    std::shared_ptr<cugl::scene2::SceneNode> _shopMenu;
-    std::shared_ptr<cugl::scene2::Button> _shopButton;
-    std::shared_ptr<cugl::scene2::Button> _police;
-    std::shared_ptr<cugl::scene2::Button> _propeller;
-    std::shared_ptr<cugl::scene2::Button> _cat;
-    std::shared_ptr<cugl::scene2::Button> _halo;
-    std::shared_ptr<cugl::scene2::Button> _plant;
-    std::shared_ptr<cugl::scene2::Button> _shopCloseButton;
-    bool _didShop;
     cugl::Size _dimen;
-    std::shared_ptr<cugl::scene2::MoveTo> _moveup;
-    std::shared_ptr<cugl::scene2::MoveTo> _movedn;
     
 public:
 //  MARK: - Constructors
@@ -108,9 +107,7 @@ public:
      * Disposes of all (non-static) resources allocated to this mode.
      */
     void dispose() override;
-    
-    void update(float timestep) override;
-    
+        
     /**
      * Initializes the controller contents.
      *
@@ -130,11 +127,6 @@ public:
               std::shared_ptr<cugl::scene2::ActionManager>& actions);
 
 //  MARK: - Methods
-    
-    void initShop();
-    
-    void initSettingsButton();
-    
     /**
      * Sets whether the scene is currently active
      *
@@ -155,9 +147,6 @@ public:
      */
     Choice getChoice() const { return _choice; }
     
-    void doMove(const std::shared_ptr<cugl::scene2::MoveTo>& action);
-
-    void updateShop();
 };
 
 #endif /* __LCMP_MENU_SCENE_H__ */

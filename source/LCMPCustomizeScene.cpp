@@ -24,10 +24,6 @@ using namespace std;
 
 #define THIEF_RUN_RIGHT         "ss_thief_right"
 #define THIEF_RUN_RIGHT_F       "ss_thief_right_f"
-#define MALE_CAT                "ss_thief_cat_right"
-#define FEMALE_CAT              "ss_thief_cat_right_f"
-#define MALE_HATLESS            "ss_thief_hatless_right"
-#define FEMALE_HATLESS          "ss_thief_hatless_right_f"
 
 #define DURATION 3.0f
 #define DISTANCE 200
@@ -76,6 +72,20 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     scene->setContentSize(dimen);
     scene->doLayout(); // Repositions the HUD
     
+    _skinKeys = {"cat_ears", "propeller_hat", "police_hat", "halo", "plant"};
+    
+    for (string key : _skinKeys) {
+        _accessoriesM[key] = std::dynamic_pointer_cast<scene2::PolygonNode>(assets->get<scene2::SceneNode>("customize_" + key));
+        _accessoriesM[key]->setAnchor(Vec2::ANCHOR_CENTER);
+        _accessoriesM[key]->setScale(0.5);
+        _accessoriesM[key]->setVisible(false);
+        _accessoriesF[key] = std::dynamic_pointer_cast<scene2::PolygonNode>(assets->get<scene2::SceneNode>("customize_" + key + "_f"));
+        _accessoriesF[key]->setAnchor(Vec2::ANCHOR_CENTER);
+        _accessoriesF[key]->setScale(0.5);
+        _accessoriesF[key]->setVisible(false);
+        _savedPurchases[key] = false;
+    }
+    
     // Get the interactive UI elements that we need to access later
     _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("customize_backdrop_start"));
     _startgame->setPosition(Vec2(SCENE_WIDTH/2 + _offset.x, SCENE_HEIGHT_ADJUST + _offset.y));
@@ -85,10 +95,23 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _title->setPositionX(SCENE_WIDTH/2 + _offset.x);
     _title->setAnchor(Vec2(0.5,0.5));
     
+//    if (filetool::file_exists(Application::get()->getSaveDirectory() + "purchases.json")) {
+//        std::shared_ptr<JsonReader> reader = JsonReader::alloc(Application::get()->getSaveDirectory() + "purchases.json");
+//        std::shared_ptr<JsonValue> readValue = reader->readJson();
+//        for (string key : _skinKeys) {
+//            _savedPurchases[key] = readValue->get(key)->asBool();
+//        }
+//    }
+
     _status = Status::IDLE;
     
     // Initialize animation assets
-    _thiefKeys = {THIEF_RUN_RIGHT, THIEF_RUN_RIGHT_F, MALE_CAT, FEMALE_CAT, MALE_HATLESS, FEMALE_HATLESS};
+    _thiefKeys = {THIEF_RUN_RIGHT, THIEF_RUN_RIGHT_F};
+    for (string key : _skinKeys) {
+        _thiefKeys.push_back("ss_thief_" + key);
+        _thiefKeys.push_back("ss_thief_" + key + "_f");
+        _savedPurchases[key] = false;
+    }
     _copKeys = {COP_RUN_RIGHT, COP_RUN_RIGHT_F};
     
     skin = 0;
@@ -105,6 +128,16 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _rightButton->setAnchor(Vec2(0.5,0.5));
     _aniFrame = 0;
     _prevTime = 0;
+
+    _lockLeft = std::dynamic_pointer_cast<scene2::PolygonNode>(assets->get<scene2::SceneNode>("customize_left_lock"));
+    _lockLeft->setPosition(Vec2(SCENE_WIDTH/4, SCENE_HEIGHT/2) + _offset - Vec2(256 * 0.3, 256 * 0.3));
+    _lockLeft->setVisible(true);
+    _lockCenter = std::dynamic_pointer_cast<scene2::PolygonNode>(assets->get<scene2::SceneNode>("customize_center_lock"));
+    _lockCenter->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2 + 20) + _offset - Vec2(256 * 0.3, 256 * 0.3));
+    _lockCenter->setVisible(true);
+    _lockRight = std::dynamic_pointer_cast<scene2::PolygonNode>(assets->get<scene2::SceneNode>("customize_right_lock"));
+    _lockRight->setPosition(Vec2(3*SCENE_WIDTH/4, SCENE_HEIGHT/2) + _offset - Vec2(256 * 0.3, 256 * 0.3));
+    _lockRight->setVisible(true);
     
     for (int i = 0; i < _thiefKeys.size(); i++) {
         std::string key = "customize_" + _thiefKeys[i];
@@ -264,8 +297,8 @@ void CustomizeScene::displaySkins(float timestep) {
     _keys = _isThief ? _thiefKeys : _copKeys;
     _spriteNodes = _isThief ? _thiefSpriteNodes : _copSpriteNodes;
     
-    skin %= _keys.size();
-    skinKey = _keys[skin];
+    skin %= _skinKeys.size();
+    skinKey = skin < 2 ? _keys[skin] : _skinKeys[(skin - 2)%_skinKeys.size()];
     
     for (int i = 0; i < _thiefKeys.size(); i++) {
         _thiefSpriteNodes[i]->setScale(0.5);
@@ -275,28 +308,39 @@ void CustomizeScene::displaySkins(float timestep) {
         _copSpriteNodes[i]->setScale(0.5);
         _copSpriteNodes[i]->setVisible(false);
     }
+    for (string key : _skinKeys) {
+        _accessoriesF[key]->setVisible(false);
+        _accessoriesM[key]->setVisible(false);
+    }
     
+    skin % 2 == 0 ? _accessories = _accessoriesM : _accessoriesF;
     _spriteNodes[skin]->setVisible(true);
     _spriteNodes[skin]->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2 + 20) + _offset);
     _spriteNodes[skin]->setScale(0.7);
+    bool locked = true;
+    locked = skin < 2 ? true : _savedPurchases[_skinKeys[skin]];
+    locked ? _lockCenter->setVisible(false) : _lockCenter->setVisible(true);
+    _accessories[_skinKeys[skin]]->setVisible(true);
+    _accessories[_skinKeys[skin]]->setPosition(_spriteNodes[skin]->getPosition() + Vec2(0,_spriteNodes[skin]->getHeight()/4));
 
-    if (skin - 1 < 0) {
-        _spriteNodes[_keys.size()-1]->setVisible(true);
-        _spriteNodes[_keys.size()-1]->setPosition(Vec2(SCENE_WIDTH/4, SCENE_HEIGHT/2) + _offset);
-    }
-    else {
-        _spriteNodes[skin-1]->setVisible(true);
-        _spriteNodes[skin-1]->setPosition(Vec2(SCENE_WIDTH/4, SCENE_HEIGHT/2) + _offset);
-    }
+    int idx;
+    idx = skin - 1 < 0 ? _keys.size() - 1 : skin - 1;
+    idx % 2 == 0 ? _accessories = _accessoriesM : _accessoriesF;
+    _spriteNodes[idx]->setVisible(true);
+    _spriteNodes[idx]->setPosition(Vec2(SCENE_WIDTH/4, SCENE_HEIGHT/2) + _offset);
+    locked = idx < 2 ? true : _savedPurchases[_skinKeys[(idx - 2) % _skinKeys.size()]] ;
+    locked ? _lockLeft->setVisible(false) : _lockLeft->setVisible(true);
+    _accessories[_skinKeys[(idx - 2) % _skinKeys.size()]]->setVisible(true);
+    _accessories[_skinKeys[(idx - 2) % _skinKeys.size()]]->setPosition(_spriteNodes[idx]->getPosition() + Vec2(0,_spriteNodes[idx]->getHeight()/4));
     
-    if (skin + 1 == _keys.size()) {
-        _spriteNodes[0]->setVisible(true);
-        _spriteNodes[0]->setPosition(Vec2(3*SCENE_WIDTH/4, SCENE_HEIGHT/2) + _offset);
-    }
-    else {
-        _spriteNodes[skin+1]->setVisible(true);
-        _spriteNodes[skin+1]->setPosition(Vec2(3*SCENE_WIDTH/4, SCENE_HEIGHT/2) + _offset);
-    }
+    idx = skin + 1 == _keys.size() ? 0 : skin + 1;
+    idx % 2 == 0 ? _accessories = _accessoriesM : _accessoriesF;
+    _spriteNodes[idx]->setVisible(true);
+    _spriteNodes[idx]->setPosition(Vec2(3*SCENE_WIDTH/4, SCENE_HEIGHT/2) + _offset);
+    locked = idx < 2 ? true : _savedPurchases[_skinKeys[(idx - 2) % _skinKeys.size()]] ;
+    locked ? _lockRight->setVisible(false) : _lockRight->setVisible(true);
+    _accessories[_skinKeys[(idx - 2) % _skinKeys.size()]]->setVisible(true);
+    _accessories[_skinKeys[(idx - 2) % _skinKeys.size()]]->setPosition(_spriteNodes[idx]->getPosition() + Vec2(0,_spriteNodes[idx]->getHeight()/4));
     
     _prevTime += timestep;
     if (_prevTime >= 0.1) {

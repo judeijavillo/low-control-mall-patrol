@@ -62,11 +62,24 @@ protected:
     std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _spriteNodes;
     std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _thiefSpriteNodes;
     std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _copSpriteNodes;
+    std::vector<bool> _unlocked;
+    std::vector<bool> _unlockedThief;
+    std::vector<bool> _unlockedCop;
     std::vector<string> _keys;
     std::vector<string> _thiefKeys;
     std::vector<string> _copKeys;
+    std::vector<string> _skinKeys;
+    std::string _purchase;
+    std::unordered_map<std::string, bool> _savedPurchases;
+    std::unordered_map<std::string, std::shared_ptr<cugl::scene2::PolygonNode>> _accessories;
+    std::unordered_map<std::string, std::shared_ptr<cugl::scene2::PolygonNode>> _accessoriesM;
+    std::unordered_map<std::string, std::shared_ptr<cugl::scene2::PolygonNode>> _accessoriesF;
     std::shared_ptr<cugl::scene2::Button> _leftButton;
     std::shared_ptr<cugl::scene2::Button> _rightButton;
+    std::shared_ptr<cugl::scene2::PolygonNode> _lockLeft;
+    std::shared_ptr<cugl::scene2::PolygonNode> _lockCenter;
+    std::shared_ptr<cugl::scene2::PolygonNode> _lockRight;
+    
     /** The current animation frame */
     int _aniFrame;
     /** The previous timestep. */

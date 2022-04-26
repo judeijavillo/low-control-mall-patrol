@@ -21,6 +21,8 @@
 #include "LCMPLevelSelectScene.h"
 #include "LCMPGameScene.h"
 #include "LCMPVictoryScene.h"
+#include "LCMPShopScene.h"
+#include "LCMPGachaScene.h"
 
 /**
  * This class represents the application root for Low Control Mall Patrol
@@ -47,20 +49,12 @@ protected:
         LEVEL,
         /** The scene to play the game */
         GAME,
-        /** The scene to show the victory scene */
-        VICTORY
-    };
-
-    /** Fade status */
-    enum FadeStatus {
-        /** Scene is fading out */
-        FADE_OUT,
-        /** Scene has faded out */
-        FADE_BLACK,
-        /** Scene is fading in */
-        FADE_IN,
-        /** Scene has faded in */
-        FADE_WHITE
+        /** The scene to show the victory screen */
+        VICTORY,
+        /** The scene to show the shop */
+        SHOP,
+        /** The scene to show the gacha */
+        GACHA
     };
     
 //  MARK: - Properties
@@ -94,6 +88,10 @@ protected:
     GameScene _game;
     /** The scene to show win / loss messages */
     VictoryScene _victory;
+    /** The scene to show the shop */
+    ShopScene _shop;
+    /** The scene to show the gacha game */
+    GachaScene _gacha;
 
     /** The key for which level the game will take place in */
     string _levelKey;
@@ -102,12 +100,6 @@ protected:
     State _scene;
     /** The previous frame's active scene */
     State _prevScene;
-
-    /** The cumulative time for fading */
-    float _fadingCumTime;
-
-    /** The current fade status of the application */
-    FadeStatus _fadeStatus;
     
 public:
 //  MARK: - Constructors
@@ -205,6 +197,10 @@ private:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void updateMenuScene(float timestep);
+    
+    void updateShopScene(float timestep);
+    
+    void updateGachaScene(float timestep);
 
     /**
      * Individualized update method for the host scene.
@@ -256,7 +252,6 @@ private:
      */
     void updateLevelSelectScene(float timestep);
 
-
     /**
      * Individualized update method for the game scene.
      *
@@ -276,31 +271,7 @@ private:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void updateVictoryScene(float timestep);
-
-    /**
-     * Transition between two scenes.
-     * 
-     * This method fades out the previous scene, and fades in the next scene.
-     * 
-     * @param timestep  The amount of time (in seconds) since the last frame
-     * @param prevScene The scene we are transitioning from
-     * @param newScene  The scene we are transitioning into
-     */
-    bool transitionScene(float timestep, cugl::Scene2 prevScene, cugl::Scene2 newScene);
-
-    /**
-     * Fade in or out a scene.
-     *
-     * This method fades out the input scene to black.
-     *
-     * @param timestep  The amount of time (in seconds) since the last frame
-     * @param scene The scene we are fading out.
-     * @param inOut Whether we are fading the scene in or out.
-     * in = true, out = false.
-     *  
-     * @return true if the scene has fully faded out.
-     */
-    bool fadeScene(float timestep, cugl::Scene2 scene, bool inOut);
+    
 };
 
 #endif /* __LCMP_APP_H__ */
