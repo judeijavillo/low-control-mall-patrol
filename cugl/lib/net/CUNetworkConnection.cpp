@@ -69,12 +69,15 @@ typedef SOCKET socket_t;
 
 using namespace cugl;
 
-// TODO: Reconfigure these as assignable attributes
-/** How long to block on shutdown */
-constexpr unsigned int SHUTDOWN_BLOCK = 10;
+/** The maximum byte vector size.  1430 (VPN Max) - 40 (IP HEADER) - 6 (CUGL HEADER) */
+constexpr unsigned int MAX_PACKET = 1384;
 
 /** Length of room IDs */
 constexpr uint8_t ROOM_LENGTH = 5;
+
+// TODO: Reconfigure these as assignable attributes
+/** How long to block on shutdown */
+constexpr unsigned int SHUTDOWN_BLOCK = 10;
 
 /** How long to wait before considering ourselves disconnected (ms) */
 constexpr size_t DISCONN_TIME = 5000;
@@ -85,7 +88,6 @@ constexpr size_t RECONN_GAP = 3;
 /** How long to wait before giving up on reconnection (seconds) */
 constexpr size_t RECONN_TIMEOUT = 15;
 
-
 #pragma mark -
 #pragma mark Vistor Utilities
 /** Templates for the visitor pattern */
@@ -95,24 +97,24 @@ struct overload;
 template <class F0, class... Frest>
 struct overload<F0, Frest...> : F0, overload<Frest...>
 {
-	overload(F0 f0, Frest... rest) : F0(f0), overload<Frest...>(rest...) {}
+    overload(F0 f0, Frest... rest) : F0(f0), overload<Frest...>(rest...) {}
 
-	using F0::operator();
-	using overload<Frest...>::operator();
+    using F0::operator();
+    using overload<Frest...>::operator();
 };
 
 template <class F0>
 struct overload<F0> : F0
 {
-	overload(F0 f0) : F0(f0) {}
+    overload(F0 f0) : F0(f0) {}
 
-	using F0::operator();
+    using F0::operator();
 };
 
 template <class... Fs>
 auto make_visitor(Fs... fs)
 {
-	return overload<Fs...>(fs...);
+    return overload<Fs...>(fs...);
 }
 
 
@@ -132,7 +134,7 @@ _apiVer(0),
 _numPlayers(1),
 _maxPlayers(1) {
     _status = NetStatus::GenericError;
-
+    _reliability = RELIABLE_ORDERED;
 }
 
 /**
@@ -179,7 +181,7 @@ bool NetworkConnection::init(ConnectionConfig config) {
     _playerID = 0;
     _config = config;
     c0StartupConn();
-	_remotePeer = HostPeers(config.maxNumPlayers);
+    _remotePeer = HostPeers(config.maxNumPlayers);
     return _peer != nullptr;
 }
 
@@ -216,6 +218,57 @@ bool NetworkConnection::init(ConnectionConfig config, std::string roomID) {
     return false;
 }
 
+/**
+ * Sets the packet reliablity for this network connection.
+ *
+ * While all Slikenet values are accepted, you should restrict yourself
+ * to one of RELIABLE, RELIABLE_ORDERED, or RELIABLE_SEQUENCED. The
+ * value RELIABLE_ORDERED is the default. Note that changing this
+ * value will only effect future calls to {@link #send} and
+ * {@link #sendOnlyToHost}.
+ *
+ * RELIABLE: Packets are all received, but not necessarily in order.
+ * So if A is sent before B, B may come first, with A coming after.
+ * This works best when all messages have a message-response pattern,
+ * and no one client sends multiple messages without a response.
+ *
+ * RELIABLE_ORDERED: Packets are all received, and in order. So if
+ * A is sent before B and B is sent before C, all of these will be
+ * received in the order A,B,C. But this means that a sequence of
+ * packets could all be delayed by a single packet. So while this is
+ * the easiest mode to program for, it can cause lag on congested
+ * networks.
+ *
+ * RELIABLE_SEQUENCED: Despite the name, this is actually weaker
+ * than RELIABLE, in that packets are ordered, but they are not all
+ * guaranteed to arrive. Instead, a failed packet will retry until
+ * either it OR a more recent packet is delivered. Suppose A is sent
+ * before B. If A fails, it will try again. But if B arrives first,
+ * then it will stop retrying (and indeed packet A will be discarded
+ * even if it finally arrives). So only the last packet sent is
+ * every truly guaranteed. This approach is best when there is a single
+ * message per frame, and old frame updates can be lost.
+ *
+ * @param reliability the packet reliablity for this network connection.
+ */
+void NetworkConnection::setReliability(PacketReliability reliability) {
+    switch (reliability) {
+        case RELIABLE:
+        case RELIABLE_SEQUENCED:
+        case RELIABLE_ORDERED:
+            _reliability = reliability;
+            break;
+        case UNRELIABLE:
+        case UNRELIABLE_SEQUENCED:
+            CUAssertLog(_status == NetStatus::Connected, "Unreliable messages are only permitted after initial connection.");
+            _reliability = reliability;
+            break;
+        default:
+            CUAssertLog(false, "Unpermitted message priority");
+            break;
+    }
+}
+
 #pragma mark -
 #pragma mark Connection Handshake
 /**
@@ -229,16 +282,51 @@ bool NetworkConnection::init(ConnectionConfig config, std::string roomID) {
  * @return the corresponding byte vector
  */
 std::vector<uint8_t> readBs(SLNet::BitStream& bts) {
-	uint8_t ignored;
-	bts.Read(ignored);
-	uint8_t length;
-	bts.Read(length);
+    uint8_t ignored;
+    bts.Read(ignored);
+    uint8_t length;
+    bts.Read(length);
+    
+    Uint32 size = length;
+    if (length == 255) {
+        uint8_t* ptr = reinterpret_cast<uint8_t*>(&size);
+        bts.ReadAlignedBytes(ptr,sizeof(Uint32));
+        size = marshall(size); // Fix endianness issues
+    }
 
-	std::vector<uint8_t> msgConverted;
-	msgConverted.resize(length, 0);
+    std::vector<uint8_t> msgConverted;
+    msgConverted.resize(size, 0);
 
-	bts.ReadAlignedBytes(msgConverted.data(), length);
-	return msgConverted;
+    bts.ReadAlignedBytes(msgConverted.data(), size);
+    return msgConverted;
+}
+
+/**
+ * Write a byte vector message to a bitstream.
+ *
+ * This function defines the standard BitStream format for this class.
+ *
+ * @param bts   The data bitstream
+ * @param head  The message header
+ * @param msg   The message to write
+ *
+ * @return the corresponding byte vector
+ */
+void writeBs(SLNet::BitStream& bts, uint8_t head,
+             const std::vector<uint8_t>& msg) {
+    bts.Write(head);
+    Uint32 length = (Uint32)msg.size();
+    CUAssertLog(length < MAX_PACKET, "Message size %d exceeds packet capacity (%d)", length,MAX_PACKET);
+    if (length < 255) {
+        bts.Write(static_cast<uint8_t>(length));
+    } else {
+        uint8_t codept = 255;
+        bts.Write(codept);
+        Uint32 size = marshall(length); // Fix endianness issues
+        const uint8_t* ptr = reinterpret_cast<uint8_t*>(&size);
+        bts.WriteAlignedBytes(ptr, sizeof(Uint32));
+    }
+    bts.WriteAlignedBytes(msg.data(), length);
 }
 
 /**
@@ -247,31 +335,31 @@ std::vector<uint8_t> readBs(SLNet::BitStream& bts) {
  * Connect to punchthrough server (both client and host)
  */
 void NetworkConnection::c0StartupConn() {
-	_peer = std::unique_ptr<SLNet::RakPeerInterface>(SLNet::RakPeerInterface::GetInstance());
+    _peer = std::unique_ptr<SLNet::RakPeerInterface>(SLNet::RakPeerInterface::GetInstance());
 
-	_peer->SetTimeoutTime(DISCONN_TIME, SLNet::UNASSIGNED_SYSTEM_ADDRESS);
+    _peer->SetTimeoutTime(DISCONN_TIME, SLNet::UNASSIGNED_SYSTEM_ADDRESS);
 
-	_peer->AttachPlugin(&(_natPunchthroughClient));
-	_natPunchServerAddress = std::make_unique<SLNet::SystemAddress>(
-		SLNet::SystemAddress(_config.punchthroughServerAddr.c_str(),
+    _peer->AttachPlugin(&(_natPunchthroughClient));
+    _natPunchServerAddress = std::make_unique<SLNet::SystemAddress>(
+        SLNet::SystemAddress(_config.punchthroughServerAddr.c_str(),
                              _config.punchthroughServerPort));
 
-	// Use the default socket descriptor
-	// This will make the OS assign us a random port.
-	SLNet::SocketDescriptor socketDescriptor;
-	// Allow connections for each player and one for the NAT server.
-	_peer->Startup(_config.maxNumPlayers, &socketDescriptor, 1);
+    // Use the default socket descriptor
+    // This will make the OS assign us a random port.
+    SLNet::SocketDescriptor socketDescriptor;
+    // Allow connections for each player and one for the NAT server.
+    _peer->Startup(_config.maxNumPlayers, &socketDescriptor, 1);
 
     if (_debug) {
         CULog("Your GUID is: %s",
             _peer->GetGuidFromSystemAddress(SLNet::UNASSIGNED_SYSTEM_ADDRESS).ToString());
     }
 
-	// Connect to the NAT Punchthrough server
+    // Connect to the NAT Punchthrough server
     if (_debug) {
         CULog("Connecting to punchthrough server");
     }
-	_peer->Connect(_natPunchServerAddress->ToString(false),
+    _peer->Connect(_natPunchServerAddress->ToString(false),
                    _natPunchServerAddress->GetPort(), nullptr, 0);
 }
 
@@ -292,17 +380,17 @@ void NetworkConnection::ch1HostConnServer(HostPeers& h) {
  * Server gave room ID to host; awaiting incoming connections
  */
 void cugl::NetworkConnection::ch2HostGetRoomID(HostPeers& h, SLNet::BitStream& bts) {
-	auto msgConverted = readBs(bts);
-	std::stringstream newRoomId;
-	for (size_t i = 0; i < ROOM_LENGTH; i++) {
-		newRoomId << static_cast<char>(msgConverted[i]);
-	}
-	_connectedPlayers.set(0);
-	_roomID = newRoomId.str();
+    auto msgConverted = readBs(bts);
+    std::stringstream newRoomId;
+    for (size_t i = 0; i < ROOM_LENGTH; i++) {
+        newRoomId << static_cast<char>(msgConverted[i]);
+    }
+    _connectedPlayers.set(0);
+    _roomID = newRoomId.str();
     if (_debug) {
         CULog("Got room ID: %s; Accepting Connections Now", _roomID.c_str());
     }
-	_status = NetStatus::Connected;
+    _status = NetStatus::Connected;
 }
 
 /**
@@ -315,9 +403,9 @@ void NetworkConnection::cc1ClientConnServer(ClientPeer& c) {
         CULog("Connected to punchthrough server");
         CULog("Trying to connect to %s", c.room.c_str());
     }
-	SLNet::RakNetGUID remote;
-	remote.FromString(c.room.c_str());
-	_natPunchthroughClient.OpenNAT(remote, *(_natPunchServerAddress));
+    SLNet::RakNetGUID remote;
+    remote.FromString(c.room.c_str());
+    _natPunchthroughClient.OpenNAT(remote, *(_natPunchServerAddress));
 }
 
 /**
@@ -326,7 +414,7 @@ void NetworkConnection::cc1ClientConnServer(ClientPeer& c) {
  * Client received successful punchthrough from server
  */
 void NetworkConnection::cc2ClientPunchSuccess(ClientPeer& c, SLNet::Packet* packet) {
-	c.addr = std::make_unique<SLNet::SystemAddress>(packet->systemAddress);
+    c.addr = std::make_unique<SLNet::SystemAddress>(packet->systemAddress);
 }
 
 /**
@@ -335,37 +423,37 @@ void NetworkConnection::cc2ClientPunchSuccess(ClientPeer& c, SLNet::Packet* pack
  * Host received successful punchthrough request passed through from server
  */
 void NetworkConnection::cc3HostReceivedPunch(HostPeers& h, SLNet::Packet* packet) {
-	auto p = packet->systemAddress;
+    auto p = packet->systemAddress;
     if (_debug) {
         CULog("Host received punchthrough; curr num players %d",
               _peer->NumberOfConnections());
     }
 
-	bool hasRoom = false;
-	if (!h.started || _numPlayers < _maxPlayers) {
-		for (uint8_t i = 0; i < h.peers.size(); i++) {
-			if (h.peers.at(i) == nullptr) {
-				hasRoom = true;
-				h.peers.at(i) = std::make_unique<SLNet::SystemAddress>(p);
-				break;
-			}
-		}
-	}
+    bool hasRoom = false;
+    if (!h.started || _numPlayers < _maxPlayers) {
+        for (uint8_t i = 0; i < h.peers.size(); i++) {
+            if (h.peers.at(i) == nullptr) {
+                hasRoom = true;
+                h.peers.at(i) = std::make_unique<SLNet::SystemAddress>(p);
+                break;
+            }
+        }
+    }
 
-	if (!hasRoom) {
-		// Client is still waiting for a response at this stage,
-		// so we need to connect to them first before telling them no.
-		// Store address to reject so we know this connection is invalid.
-		h.toReject.insert(p.ToString());
+    if (!hasRoom) {
+        // Client is still waiting for a response at this stage,
+        // so we need to connect to them first before telling them no.
+        // Store address to reject so we know this connection is invalid.
+        h.toReject.insert(p.ToString());
         if (_debug) {
             CULog("Client attempted to join but room was full");
         }
-	}
+    }
 
     if (_debug) {
         CULog("Connecting to client now");
     }
-	_peer->Connect(p.ToString(false), p.GetPort(), nullptr, 0);
+    _peer->Connect(p.ToString(false), p.GetPort(), nullptr, 0);
 }
 
 /**
@@ -374,11 +462,11 @@ void NetworkConnection::cc3HostReceivedPunch(HostPeers& h, SLNet::Packet* packet
  * Client received direct connection request from host
  */
 void NetworkConnection::cc4ClientReceiveHostConnection(ClientPeer& c, SLNet::Packet* packet) {
-	if (packet->systemAddress == *c.addr) {
+    if (packet->systemAddress == *c.addr) {
         if (_debug) {
             CULog("Connected to host :D");
         }
-	}
+    }
 }
 
 /**
@@ -388,43 +476,43 @@ void NetworkConnection::cc4ClientReceiveHostConnection(ClientPeer& c, SLNet::Pac
  */
 void NetworkConnection::cc5HostConfirmClient(HostPeers& h, SLNet::Packet* packet) {
 
-	if (h.toReject.count(packet->systemAddress.ToString()) > 0) {
+    if (h.toReject.count(packet->systemAddress.ToString()) > 0) {
         if (_debug) {
             CULog("Rejecting player connection - bye :(");
         }
 
-		h.toReject.erase(packet->systemAddress.ToString());
+        h.toReject.erase(packet->systemAddress.ToString());
 
-		directSend({}, JoinRoomFail, packet->systemAddress);
+        directSend({}, JoinRoomFail, packet->systemAddress);
 
-		_peer->CloseConnection(packet->systemAddress, true);
-		return;
-	}
+        _peer->CloseConnection(packet->systemAddress, true);
+        return;
+    }
 
-	for (uint8_t i = 0; i < h.peers.size(); i++) {
-		if (*h.peers.at(i) == packet->systemAddress) {
-			uint8_t pID = i + 1;
+    for (uint8_t i = 0; i < h.peers.size(); i++) {
+        if (*h.peers.at(i) == packet->systemAddress) {
+            uint8_t pID = i + 1;
             if (_debug) {
                 CULog("Player %d accepted connection request", pID);
             }
 
-			if (h.started) {
-				// Reconnection attempt
-				directSend({ static_cast<uint8_t>(_numPlayers + 1), _maxPlayers,pID, _apiVer },
+            if (h.started) {
+                // Reconnection attempt
+                directSend({ static_cast<uint8_t>(_numPlayers + 1), _maxPlayers,pID, _apiVer },
                            Reconnect, packet->systemAddress);
-			}
-			else {
-				// New player connection
-				_maxPlayers++;
-				directSend(
-					{ static_cast<uint8_t>(_numPlayers + 1), _maxPlayers, pID, _apiVer },
-					JoinRoom,
-					packet->systemAddress
-				);
-			}
-			break;
-		}
-	}
+            }
+            else {
+                // New player connection
+                _maxPlayers++;
+                directSend(
+                    { static_cast<uint8_t>(_numPlayers + 1), _maxPlayers, pID, _apiVer },
+                    JoinRoom,
+                    packet->systemAddress
+                );
+            }
+            break;
+        }
+    }
 
     if (_debug) {
         CULog("Host confirmed players; curr connections %d",
@@ -439,24 +527,24 @@ void NetworkConnection::cc5HostConfirmClient(HostPeers& h, SLNet::Packet* packet
  */
 void NetworkConnection::cc6ClientAssignedID(ClientPeer& c,
                                             const std::vector<uint8_t>& msgConverted) {
-	bool apiMatch = msgConverted[3] == _apiVer;
-	if (!apiMatch) {
+    bool apiMatch = msgConverted[3] == _apiVer;
+    if (!apiMatch) {
         if (_debug) {
             CULogError("API version mismatch; currently %d but host was %d",
                        _apiVer,
                        msgConverted[3]);
         }
-		_status = NetStatus::ApiMismatch;
-	} else {
-		_numPlayers = msgConverted[0];
-		_maxPlayers = msgConverted[1];
-		_playerID = msgConverted[2];
-		_status = NetStatus::Connected;
-	}
+        _status = NetStatus::ApiMismatch;
+    } else {
+        _numPlayers = msgConverted[0];
+        _maxPlayers = msgConverted[1];
+        _playerID = msgConverted[2];
+        _status = NetStatus::Connected;
+    }
 
-	_peer->CloseConnection(*_natPunchServerAddress, true);
+    _peer->CloseConnection(*_natPunchServerAddress, true);
 
-	directSend({ *_playerID, (uint8_t)(apiMatch ? 1 : 0) }, JoinRoom, *c.addr);
+    directSend({ *_playerID, (uint8_t)(apiMatch ? 1 : 0) }, JoinRoom, *c.addr);
 }
 
 /**
@@ -466,48 +554,48 @@ void NetworkConnection::cc6ClientAssignedID(ClientPeer& c,
  */
 void NetworkConnection::cc7HostGetClientData(HostPeers& h, SLNet::Packet* packet,
                                              const std::vector<uint8_t>& msgConverted) {
-	for (uint8_t i = 0; i < h.peers.size(); i++) {
-		if (*h.peers.at(i) == packet->systemAddress) {
-			uint8_t pID = i + 1;
+    for (uint8_t i = 0; i < h.peers.size(); i++) {
+        if (*h.peers.at(i) == packet->systemAddress) {
+            uint8_t pID = i + 1;
             if (_debug) {
                 CULog("Host verifying player %d connection info", pID);
             }
 
-			if (pID != msgConverted[0]) {
+            if (pID != msgConverted[0]) {
                 if (_debug) {
                     CULog("Player ID mismatch; client reported id %d; disconnecting",
                           msgConverted[0]);
                 }
-				_peer->CloseConnection(packet->systemAddress, true);
-				return;
-			}
+                _peer->CloseConnection(packet->systemAddress, true);
+                return;
+            }
 
-			if (msgConverted[1] == 0) {
+            if (msgConverted[1] == 0) {
                 if (_debug) {
                     CULog("Client %d reported outdated API or other issue; disconnecting", pID);
                 }
-				_peer->CloseConnection(packet->systemAddress, true);
-				return;
-			}
+                _peer->CloseConnection(packet->systemAddress, true);
+                return;
+            }
 
             if (_debug) {
                 CULog("Player id %d was successfully verified; connection handshake complete",
                       pID);
             }
-			_connectedPlayers.set(pID);
-			std::vector<uint8_t> joinMsg = { pID };
-			broadcast(joinMsg, packet->systemAddress, PlayerJoined);
-			_numPlayers++;
+            _connectedPlayers.set(pID);
+            std::vector<uint8_t> joinMsg = { pID };
+            broadcast(joinMsg, packet->systemAddress, PlayerJoined);
+            _numPlayers++;
 
-			return;
-		}
-	}
+            return;
+        }
+    }
 
-	// If we make it here, we somehow got a connection to an unknown address
+    // If we make it here, we somehow got a connection to an unknown address
     if (_debug) {
         CULogError("Unknown connection target; disconnecting");
     }
-	_peer->CloseConnection(packet->systemAddress, true);
+    _peer->CloseConnection(packet->systemAddress, true);
 }
 
 /**
@@ -521,44 +609,44 @@ void cugl::NetworkConnection::cr1ClientReceivedInfo(ClientPeer& c,
         CULog("Reconnection Progress: Received data from host");
     }
 
-	bool success = msgConverted[3] == _apiVer;
-	if (!success) {
+    bool success = msgConverted[3] == _apiVer;
+    if (!success) {
         if (_debug) {
             CULogError("API version mismatch; currently %d but host was %d",
                        _apiVer,
                        msgConverted[3]);
         }
-		_status = NetStatus::ApiMismatch;
-	} else if (_status != NetStatus::Reconnecting) {
+        _status = NetStatus::ApiMismatch;
+    } else if (_status != NetStatus::Reconnecting) {
         if (_debug) {
             CULogError("But we're not trying to reconnect. Failure.");
         }
-		success = false;
-	} else if (_playerID != msgConverted[2]) {
+        success = false;
+    } else if (_playerID != msgConverted[2]) {
         if (_debug) {
             CULogError("Invalid reconnection target; we are player ID %d but host thought we were %d",
                        _playerID.has_value() ? *_playerID : -1, msgConverted[2]);
         }
-		_status = NetStatus::Disconnected;
-		success = false;
-	} else {
+        _status = NetStatus::Disconnected;
+        success = false;
+    } else {
         if (_debug) {
             CULog("Reconnection Progress: Connection OK");
         }
-		_numPlayers = msgConverted[0];
-		_maxPlayers = msgConverted[1];
-		_playerID = msgConverted[2];
-		_status = NetStatus::Connected;
+        _numPlayers = msgConverted[0];
+        _maxPlayers = msgConverted[1];
+        _playerID = msgConverted[2];
+        _status = NetStatus::Connected;
 
-		_lastReconnAttempt.reset();
-		_disconnTime.reset();
-	}
-	_peer->CloseConnection(*_natPunchServerAddress, true);
+        _lastReconnAttempt.reset();
+        _disconnTime.reset();
+    }
+    _peer->CloseConnection(*_natPunchServerAddress, true);
 
-	directSend({ 
-		static_cast<uint8_t>(_playerID.has_value() ? *_playerID : 0),
-		static_cast<uint8_t>(success ? 1 : 0)
-	}, Reconnect, *c.addr);
+    directSend({
+        static_cast<uint8_t>(_playerID.has_value() ? *_playerID : 0),
+        static_cast<uint8_t>(success ? 1 : 0)
+    }, Reconnect, *c.addr);
 }
 
 /**
@@ -571,7 +659,7 @@ void NetworkConnection::cr2HostGetClientResp(HostPeers& h, SLNet::Packet* packet
     if (_debug) {
         CULog("Host processing reconnection response");
     }
-	cc7HostGetClientData(h, packet, msgConverted);
+    cc7HostGetClientData(h, packet, msgConverted);
 }
 
 #pragma mark -
@@ -588,11 +676,9 @@ void NetworkConnection::cr2HostGetClientResp(HostPeers& h, SLNet::Packet* packet
 void NetworkConnection::broadcast(const std::vector<uint8_t>& msg,
                                   SLNet::SystemAddress& ignore,
                                   CustomDataPackets packetType) {
-	SLNet::BitStream bs;
-	bs.Write(static_cast<uint8_t>(ID_USER_PACKET_ENUM + packetType));
-	bs.Write(static_cast<uint8_t>(msg.size()));
-	bs.WriteAlignedBytes(msg.data(), static_cast<unsigned int>(msg.size()));
-	_peer->Send(&bs, MEDIUM_PRIORITY, RELIABLE, 1, ignore, true);
+    SLNet::BitStream bs;
+    writeBs(bs,ID_USER_PACKET_ENUM + packetType,msg);
+    _peer->Send(&bs, MEDIUM_PRIORITY, _reliability, 1, ignore, true);
 }
 
 /**
@@ -604,21 +690,19 @@ void NetworkConnection::broadcast(const std::vector<uint8_t>& msg,
  * @param ignore The address to not send to
  */
 void NetworkConnection::send(const std::vector<uint8_t>& msg, CustomDataPackets packetType) {
-	SLNet::BitStream bs;
-	bs.Write(static_cast<uint8_t>(ID_USER_PACKET_ENUM + packetType));
-	bs.Write(static_cast<uint8_t>(msg.size()));
-	bs.WriteAlignedBytes(msg.data(), static_cast<unsigned int>(msg.size()));
+    SLNet::BitStream bs;
+    writeBs(bs,ID_USER_PACKET_ENUM + packetType,msg);
 
-	std::visit(make_visitor(
-		[&](HostPeers& /*h*/) {
-			_peer->Send(&bs, MEDIUM_PRIORITY, RELIABLE, 1, *_natPunchServerAddress, true);
-		},
-		[&](ClientPeer& c) {
-			if (c.addr == nullptr) {
-				return;
-			}
-			_peer->Send(&bs, MEDIUM_PRIORITY, RELIABLE, 1, *c.addr, false);
-		}), _remotePeer);
+    std::visit(make_visitor(
+        [&](HostPeers& /*h*/) {
+            _peer->Send(&bs, MEDIUM_PRIORITY, _reliability, 1, *_natPunchServerAddress, true);
+        },
+        [&](ClientPeer& c) {
+            if (c.addr == nullptr) {
+                return;
+            }
+            _peer->Send(&bs, MEDIUM_PRIORITY, _reliability, 1, *c.addr, false);
+        }), _remotePeer);
 }
 
 /**
@@ -631,11 +715,9 @@ void NetworkConnection::send(const std::vector<uint8_t>& msg, CustomDataPackets 
 void cugl::NetworkConnection::directSend(const std::vector<uint8_t>& msg,
                                          CustomDataPackets packetType,
                                          SLNet::SystemAddress dest) {
-	SLNet::BitStream bs;
-	bs.Write(static_cast<uint8_t>(ID_USER_PACKET_ENUM + packetType));
-	bs.Write(static_cast<uint8_t>(msg.size()));
-	bs.WriteAlignedBytes(msg.data(), static_cast<unsigned int>(msg.size()));
-	_peer->Send(&bs, MEDIUM_PRIORITY, RELIABLE, 1, dest, false);
+    SLNet::BitStream bs;
+    writeBs(bs,ID_USER_PACKET_ENUM + packetType,msg);
+    _peer->Send(&bs, MEDIUM_PRIORITY, _reliability, 1, dest, false);
 }
 
 /**
@@ -646,36 +728,36 @@ void cugl::NetworkConnection::directSend(const std::vector<uint8_t>& msg,
  * must have previously been established.
  */
 void NetworkConnection::attemptReconnect() {
-	CUAssertLog(_disconnTime.has_value(), "No time for disconnect??");
+    CUAssertLog(_disconnTime.has_value(), "No time for disconnect??");
 
-	time_t now = time(nullptr);
-	if (now - *_disconnTime > RECONN_TIMEOUT) {
+    time_t now = time(nullptr);
+    if (now - *_disconnTime > RECONN_TIMEOUT) {
         if (_debug) {
             CULog("Reconnection timed out; giving up");
         }
-		_status = NetStatus::Disconnected;
-		return;
-	}
+        _status = NetStatus::Disconnected;
+        return;
+    }
 
-	if (_lastReconnAttempt.has_value()) {
-		if (now - *_lastReconnAttempt < RECONN_GAP) {
-			// Too soon after last attempt; abort
-			return;
-		}
-	}
+    if (_lastReconnAttempt.has_value()) {
+        if (now - *_lastReconnAttempt < RECONN_GAP) {
+            // Too soon after last attempt; abort
+            return;
+        }
+    }
 
     if (_debug) {
         CULog("Attempting reconnection");
     }
 
-	_peer->Shutdown(0);
-	SLNet::RakPeerInterface::DestroyInstance(_peer.release());
-	
-	_lastReconnAttempt = now;
-	_peer = nullptr;
+    _peer->Shutdown(0);
+    SLNet::RakPeerInterface::DestroyInstance(_peer.release());
+    
+    _lastReconnAttempt = now;
+    _peer = nullptr;
 
-	c0StartupConn();
-	_peer->SetMaximumIncomingConnections(1);
+    c0StartupConn();
+    _peer->SetMaximumIncomingConnections(1);
 }
 
 #pragma mark -
@@ -716,7 +798,7 @@ void NetworkConnection::send(const std::vector<uint8_t>& msg) {
 void NetworkConnection::sendOnlyToHost(const std::vector<uint8_t>& msg) {
     std::visit(make_visitor(
         [&](HostPeers& /*h*/) {},
-       [&](ClientPeer& c) {
+        [&](ClientPeer& c) {
             send(msg, DirectToHost);
         }), _remotePeer);
 }
@@ -741,162 +823,162 @@ void NetworkConnection::sendOnlyToHost(const std::vector<uint8_t>& msg) {
  * @param dispatcher    The function to process received data
  */
 void NetworkConnection::receive(
-	const std::function<void(const std::vector<uint8_t>&)>& dispatcher) {
+    const std::function<void(const std::vector<uint8_t>&)>& dispatcher) {
 
-	switch (_status) {
-	case NetStatus::Reconnecting:
-		attemptReconnect();
-		if (_peer == nullptr) {
+    switch (_status) {
+    case NetStatus::Reconnecting:
+        attemptReconnect();
+        if (_peer == nullptr) {
             if (_debug) {
                 CULog("Peer null");
             }
-			return;
-		}
-		break;
-	case NetStatus::Disconnected:
-	case NetStatus::GenericError:
-	case NetStatus::ApiMismatch:
-	case NetStatus::RoomNotFound:
-		return;
-	case NetStatus::Connected:
-	case NetStatus::Pending:
-		break;
-	}
+            return;
+        }
+        break;
+    case NetStatus::Disconnected:
+    case NetStatus::GenericError:
+    case NetStatus::ApiMismatch:
+    case NetStatus::RoomNotFound:
+        return;
+    case NetStatus::Connected:
+    case NetStatus::Pending:
+        break;
+    }
 
 
-	SLNet::Packet* packet = nullptr;
-	for (packet = _peer->Receive(); packet != nullptr;
-		_peer->DeallocatePacket(packet), packet = _peer->Receive()) {
-		SLNet::BitStream bts(packet->data, packet->length, false);
+    SLNet::Packet* packet = nullptr;
+    for (packet = _peer->Receive(); packet != nullptr;
+        _peer->DeallocatePacket(packet), packet = _peer->Receive()) {
+        SLNet::BitStream bts(packet->data, packet->length, false);
 
-		switch (packet->data[0]) {
-		case ID_CONNECTION_REQUEST_ACCEPTED:
-			// Connected to some remote server
-			if (packet->systemAddress == *(_natPunchServerAddress)) {
-				// Punchthrough server
-				std::visit(make_visitor(
-					[&](HostPeers& h) { ch1HostConnServer(h); },
-					[&](ClientPeer& c) { cc1ClientConnServer(c); }), _remotePeer);
-			}
-			else {
-				std::visit(make_visitor(
-					[&](HostPeers& h) { cc5HostConfirmClient(h, packet); },
-					[&](ClientPeer& /*c*/) {
-						CULogError(
-							"A connection request you sent was accepted despite being client?");
-					}), _remotePeer);
-			}
-			break;
-		case ID_NEW_INCOMING_CONNECTION: // Someone connected to you
+        switch (packet->data[0]) {
+        case ID_CONNECTION_REQUEST_ACCEPTED:
+            // Connected to some remote server
+            if (packet->systemAddress == *(_natPunchServerAddress)) {
+                // Punchthrough server
+                std::visit(make_visitor(
+                    [&](HostPeers& h) { ch1HostConnServer(h); },
+                    [&](ClientPeer& c) { cc1ClientConnServer(c); }), _remotePeer);
+            }
+            else {
+                std::visit(make_visitor(
+                    [&](HostPeers& h) { cc5HostConfirmClient(h, packet); },
+                    [&](ClientPeer& /*c*/) {
+                        CULogError(
+                            "A connection request you sent was accepted despite being client?");
+                    }), _remotePeer);
+            }
+            break;
+        case ID_NEW_INCOMING_CONNECTION: // Someone connected to you
             if (_debug) {
                 CULog("A peer connected");
             }
-			std::visit(make_visitor(
-				[&](HostPeers& /*h*/) { CULogError("How did that happen? You're the host"); },
-				[&](ClientPeer& c) { cc4ClientReceiveHostConnection(c, packet); }), _remotePeer);
-			break;
-		case ID_NAT_PUNCHTHROUGH_SUCCEEDED: // Punchthrough succeeded
+            std::visit(make_visitor(
+                [&](HostPeers& /*h*/) { CULogError("How did that happen? You're the host"); },
+                [&](ClientPeer& c) { cc4ClientReceiveHostConnection(c, packet); }), _remotePeer);
+            break;
+        case ID_NAT_PUNCHTHROUGH_SUCCEEDED: // Punchthrough succeeded
             if (_debug) {
                 CULog("Punchthrough success");
             }
-			std::visit(make_visitor(
-				[&](HostPeers& h) { cc3HostReceivedPunch(h, packet); },
-				[&](ClientPeer& c) { cc2ClientPunchSuccess(c, packet); }), _remotePeer);
-			break;
-		case ID_NAT_TARGET_NOT_CONNECTED:
-			_status = NetStatus::GenericError;
-			break;
-		case ID_REMOTE_DISCONNECTION_NOTIFICATION:
-		case ID_REMOTE_CONNECTION_LOST:
-		case ID_DISCONNECTION_NOTIFICATION:
-		case ID_CONNECTION_LOST:
+            std::visit(make_visitor(
+                [&](HostPeers& h) { cc3HostReceivedPunch(h, packet); },
+                [&](ClientPeer& c) { cc2ClientPunchSuccess(c, packet); }), _remotePeer);
+            break;
+        case ID_NAT_TARGET_NOT_CONNECTED:
+            _status = NetStatus::GenericError;
+            break;
+        case ID_REMOTE_DISCONNECTION_NOTIFICATION:
+        case ID_REMOTE_CONNECTION_LOST:
+        case ID_DISCONNECTION_NOTIFICATION:
+        case ID_CONNECTION_LOST:
             if (_debug) {
                 CULog("Received disconnect notification");
             }
-			std::visit(make_visitor(
-				[&](HostPeers& h) {
-					for (uint8_t i = 0; i < h.peers.size(); i++) {
-						if (h.peers.at(i) == nullptr) {
-							continue;
-						}
-						if (*h.peers.at(i) == packet->systemAddress) {
-							uint8_t pID = i + 1;
+            std::visit(make_visitor(
+                [&](HostPeers& h) {
+                    for (uint8_t i = 0; i < h.peers.size(); i++) {
+                        if (h.peers.at(i) == nullptr) {
+                            continue;
+                        }
+                        if (*h.peers.at(i) == packet->systemAddress) {
+                            uint8_t pID = i + 1;
                             if (_debug) {
                                 CULog("Lost connection to player %d", pID);
                             }
-							std::vector<uint8_t> disconnMsg{ pID };
-							h.peers.at(i) = nullptr;
-							if (_connectedPlayers.test(pID)) {
-								_numPlayers--;
-								_connectedPlayers.reset(pID);
-							}
-							send(disconnMsg, PlayerLeft);
+                            std::vector<uint8_t> disconnMsg{ pID };
+                            h.peers.at(i) = nullptr;
+                            if (_connectedPlayers.test(pID)) {
+                                _numPlayers--;
+                                _connectedPlayers.reset(pID);
+                            }
+                            send(disconnMsg, PlayerLeft);
 
-							if (_peer->GetConnectionState(packet->systemAddress) == SLNet::IS_CONNECTED) {
-								_peer->CloseConnection(packet->systemAddress, true);
-							}
-							return;
-						}
-					}
-				},
-				[&](ClientPeer& c) {
-					if (packet->systemAddress == *_natPunchServerAddress) {
+                            if (_peer->GetConnectionState(packet->systemAddress) == SLNet::IS_CONNECTED) {
+                                _peer->CloseConnection(packet->systemAddress, true);
+                            }
+                            return;
+                        }
+                    }
+                },
+                [&](ClientPeer& c) {
+                    if (packet->systemAddress == *_natPunchServerAddress) {
                         if (_debug) {
                             CULog("Successfully disconnected from Punchthrough server");
                         }
-					}
-					if (packet->systemAddress == *c.addr) {
+                    }
+                    if (packet->systemAddress == *c.addr) {
                         if (_debug) {
                             CULog("Lost connection to host");
                         }
-						_connectedPlayers.reset(0);
-						switch (_status) {
-						case NetStatus::Pending:
-							_status = NetStatus::GenericError;
-							return;
-						case NetStatus::Connected:
-							_status = NetStatus::Reconnecting;
-							_disconnTime = time(nullptr);
-							return;
-						case NetStatus::Reconnecting:
-						case NetStatus::Disconnected:
-						case NetStatus::RoomNotFound:
-						case NetStatus::ApiMismatch:
-						case NetStatus::GenericError:
-							return;
-						}
-					}
-				}), _remotePeer);
+                        _connectedPlayers.reset(0);
+                        switch (_status) {
+                        case NetStatus::Pending:
+                            _status = NetStatus::GenericError;
+                            return;
+                        case NetStatus::Connected:
+                            _status = NetStatus::Reconnecting;
+                            _disconnTime = time(nullptr);
+                            return;
+                        case NetStatus::Reconnecting:
+                        case NetStatus::Disconnected:
+                        case NetStatus::RoomNotFound:
+                        case NetStatus::ApiMismatch:
+                        case NetStatus::GenericError:
+                            return;
+                        }
+                    }
+                }), _remotePeer);
 
-			break;
-		case ID_NAT_PUNCHTHROUGH_FAILED:
-		case ID_CONNECTION_ATTEMPT_FAILED:
-		case ID_NAT_TARGET_UNRESPONSIVE: {
-			CULogError("Punchthrough failure %d", packet->data[0]);
+            break;
+        case ID_NAT_PUNCHTHROUGH_FAILED:
+        case ID_CONNECTION_ATTEMPT_FAILED:
+        case ID_NAT_TARGET_UNRESPONSIVE: {
+            CULogError("Punchthrough failure %d", packet->data[0]);
 
-			_status = NetStatus::GenericError;
-			bts.IgnoreBytes(sizeof(SLNet::MessageID));
-			SLNet::RakNetGUID recipientGuid;
-			bts.Read(recipientGuid);
+            _status = NetStatus::GenericError;
+            bts.IgnoreBytes(sizeof(SLNet::MessageID));
+            SLNet::RakNetGUID recipientGuid;
+            bts.Read(recipientGuid);
 
-			CULogError("Attempted punchthrough to GUID %s failed", recipientGuid.ToString());
-			break;
-		}
-		case ID_NO_FREE_INCOMING_CONNECTIONS:
-			_status = NetStatus::RoomNotFound;
-			break;
+            CULogError("Attempted punchthrough to GUID %s failed", recipientGuid.ToString());
+            break;
+        }
+        case ID_NO_FREE_INCOMING_CONNECTIONS:
+            _status = NetStatus::RoomNotFound;
+            break;
 
-		// Begin Non-SLikeNet Reported Codes
-		case ID_USER_PACKET_ENUM + Standard: {
-			auto msgConverted = readBs(bts);
-			dispatcher(msgConverted);
+        // Begin Non-SLikeNet Reported Codes
+        case ID_USER_PACKET_ENUM + Standard: {
+            auto msgConverted = readBs(bts);
+            dispatcher(msgConverted);
 
-			std::visit(make_visitor(
-				[&](HostPeers& /*h*/) { broadcast(msgConverted, packet->systemAddress); },
-				[&](ClientPeer& c) {}), _remotePeer);
+            std::visit(make_visitor(
+                [&](HostPeers& /*h*/) { broadcast(msgConverted, packet->systemAddress); },
+                [&](ClientPeer& c) {}), _remotePeer);
 
-			break;
-		}
+            break;
+        }
         case ID_USER_PACKET_ENUM + DirectToHost: {
             auto msgConverted = readBs(bts);
 
@@ -912,77 +994,77 @@ void NetworkConnection::receive(
         }
         case ID_USER_PACKET_ENUM + AssignedRoom: {
 
-			std::visit(make_visitor(
-				[&](HostPeers& h) { ch2HostGetRoomID(h, bts); },
-				[&](ClientPeer& c) {
+            std::visit(make_visitor(
+                [&](HostPeers& h) { ch2HostGetRoomID(h, bts); },
+                [&](ClientPeer& c) {
                     if (_debug) {
                         CULog("Assigned room ID but ignoring");
                     }
                 }), _remotePeer);
 
-			break;
-		}
-		case ID_USER_PACKET_ENUM + JoinRoom: {
-			auto msgConverted = readBs(bts);
+            break;
+        }
+        case ID_USER_PACKET_ENUM + JoinRoom: {
+            auto msgConverted = readBs(bts);
 
-			std::visit(make_visitor(
-				[&](HostPeers& h) { cc7HostGetClientData(h, packet, msgConverted); },
-				[&](ClientPeer& c) { cc6ClientAssignedID(c, msgConverted); }
-			), _remotePeer);
-			break;
-		}
-		case ID_USER_PACKET_ENUM + JoinRoomFail: {
+            std::visit(make_visitor(
+                [&](HostPeers& h) { cc7HostGetClientData(h, packet, msgConverted); },
+                [&](ClientPeer& c) { cc6ClientAssignedID(c, msgConverted); }
+            ), _remotePeer);
+            break;
+        }
+        case ID_USER_PACKET_ENUM + JoinRoomFail: {
             if (_debug) {
                 CULog("Failed to join room");
             }
-			_status = NetStatus::RoomNotFound;
-			break;
-		}
-		case ID_USER_PACKET_ENUM + Reconnect: {
-			auto msgConverted = readBs(bts);
+            _status = NetStatus::RoomNotFound;
+            break;
+        }
+        case ID_USER_PACKET_ENUM + Reconnect: {
+            auto msgConverted = readBs(bts);
 
-			std::visit(make_visitor(
-				[&](HostPeers& h) { cr2HostGetClientResp(h, packet, msgConverted); },
-				[&](ClientPeer& c) { cr1ClientReceivedInfo(c, msgConverted); }),
+            std::visit(make_visitor(
+                [&](HostPeers& h) { cr2HostGetClientResp(h, packet, msgConverted); },
+                [&](ClientPeer& c) { cr1ClientReceivedInfo(c, msgConverted); }),
                        _remotePeer);
 
-			break;
-		}
-		case ID_USER_PACKET_ENUM + PlayerJoined: {
-			auto msgConverted = readBs(bts);
+            break;
+        }
+        case ID_USER_PACKET_ENUM + PlayerJoined: {
+            auto msgConverted = readBs(bts);
 
-			std::visit(make_visitor(
-				[&](HostPeers& h) { CULogError("Received player joined message as host"); },
-				[&](ClientPeer& c) {
-					_connectedPlayers.set(msgConverted[0]);
-					_numPlayers++;
-					_maxPlayers++;
-				}), _remotePeer);
+            std::visit(make_visitor(
+                [&](HostPeers& h) { CULogError("Received player joined message as host"); },
+                [&](ClientPeer& c) {
+                    _connectedPlayers.set(msgConverted[0]);
+                    _numPlayers++;
+                    _maxPlayers++;
+                }), _remotePeer);
 
-			break;
-		}
-		case ID_USER_PACKET_ENUM + PlayerLeft: {
-			auto msgConverted = readBs(bts);
+            break;
+        }
+        case ID_USER_PACKET_ENUM + PlayerLeft: {
+            auto msgConverted = readBs(bts);
 
-			std::visit(make_visitor(
-				[&](HostPeers& h) { CULogError("Received player left message as host"); },
-				[&](ClientPeer& c) {
-					_connectedPlayers.reset(msgConverted[0]);
-					_numPlayers--;
-				}), _remotePeer);
-			break;
-		}
-		case ID_USER_PACKET_ENUM + StartGame: {
-			startGame();
-			break;
-		}
-		default:
+            std::visit(make_visitor(
+                [&](HostPeers& h) { CULogError("Received player left message as host"); },
+                [&](ClientPeer& c) {
+                    _connectedPlayers.reset(msgConverted[0]);
+                    _numPlayers--;
+                }), _remotePeer);
+            break;
+        }
+        case ID_USER_PACKET_ENUM + StartGame: {
+            startGame();
+            break;
+        }
+        default:
             if (_debug) {
                 CULog("Received unknown message: %d", packet->data[0]);
             }
-			break;
-		}
-	}
+            break;
+        }
+    }
 }
 
 /**
@@ -994,18 +1076,9 @@ void NetworkConnection::startGame() {
     if (_debug) {
         CULog("Starting Game");
     }
-	std::visit(make_visitor([&](HostPeers& h) {
-		h.started = true;
-		broadcast({}, const_cast<SLNet::SystemAddress&>(SLNet::UNASSIGNED_SYSTEM_ADDRESS), StartGame);
-		}, [&](ClientPeer& c) {}), _remotePeer);
-	_maxPlayers = _numPlayers;
-}
-
-/**
- * Returns the current status of this network connection.
- *
- * @return the current status of this network connection.
- */
-NetworkConnection::NetStatus NetworkConnection::getStatus() {
-	return _status;
+    std::visit(make_visitor([&](HostPeers& h) {
+        h.started = true;
+        broadcast({}, const_cast<SLNet::SystemAddress&>(SLNet::UNASSIGNED_SYSTEM_ADDRESS), StartGame);
+        }, [&](ClientPeer& c) {}), _remotePeer);
+    _maxPlayers = _numPlayers;
 }

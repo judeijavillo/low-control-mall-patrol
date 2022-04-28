@@ -6,9 +6,9 @@
 //  It utilizes a simple ad hoc lobby system inspired by Family Style and Sweet Space.
 //  If you use this class, you should create your own lobby using the provided
 //  docker container here:
-//  
+//
 //  https://hub.docker.com/r/mtxing/cugl-nat-punchthrough
-//  
+//
 //  This class uses our standard shared-pointer architecture.
 //
 //  1. The constructor does not perform any initialization; it just sets all
@@ -22,7 +22,7 @@
 //
 // Author: Michael Xing
 // Version: 5/25/2021
-// 
+//
 // Minor compatibility edits by Walker White (2/2/22).
 //
 // With help from onewordstudios:
@@ -33,7 +33,7 @@
 // - Jeffrey Yao
 // - Wendy Zhang
 // https://onewordstudios.com/
-// 
+//
 // With thanks to the students of CS 4152 Spring 2021
 // for beta testing this class.
 //
@@ -65,14 +65,14 @@ namespace cugl {
  * A class to support a connection to other players with a peer-to-peer interface.
  *
  * The premise of this class is to make networking as simple as possible. Simply call
- * {@link #send} with a byte vector, and then all others will receive it when they call 
+ * {@link #send} with a byte vector, and then all others will receive it when they call
  * {@link #receive}.  You can use {@link NetworkSerializer} and {@link NetworkDeserializer}
  * to handle more complex types.
  *
- * This class maintains a networked game using an ad-hoc server setup, but provides an 
- * interface that acts like it is peer-to-peer. The "host" is the server, and is the one 
- * all others are connected to. The "clients" are other players connected to the ad-hoc 
- * server. However, any messages sent are relayed by the host to all other players too, 
+ * This class maintains a networked game using an ad-hoc server setup, but provides an
+ * interface that acts like it is peer-to-peer. The "host" is the server, and is the one
+ * all others are connected to. The "clients" are other players connected to the ad-hoc
+ * server. However, any messages sent are relayed by the host to all other players too,
  * so the interface appears peer-to-peer.
  *
  * You can use this as a true client-server by just checking the player ID. Player ID 0
@@ -264,8 +264,8 @@ private:
          *
          * @param roomID The game room
          */
-        explicit ClientPeer(std::string roomID) { 
-            room = std::move(roomID); 
+        explicit ClientPeer(std::string roomID) {
+            room = std::move(roomID);
         }
     };
 
@@ -287,6 +287,9 @@ private:
         DirectToHost
     };
     
+    /** The default reliability of this connetion */
+    PacketReliability _reliability;
+    
 #pragma mark Constructors
 public:
     /**
@@ -294,7 +297,7 @@ public:
      *
      * The network connection has not yet initialized Slikenet and cannot be used.
      *
-     * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on 
+     * NEVER USE A CONSTRUCTOR WITH NEW. If you want to allocate an object on
      * the heap, use one of the static constructors instead.
      */
     NetworkConnection();
@@ -307,17 +310,17 @@ public:
     /**
      * Disposes all of the resources used by this network connection.
      *
-     * A disposed network connection can be safely reinitialized. 
+     * A disposed network connection can be safely reinitialized.
      */
     void dispose();
 
     /**
      * Initializes a new network connection as host.
      *
-     * This will automatically connect to the NAT punchthrough server and request a 
-     * room ID.  This process is NOT instantaneous and the initializer will return 
-     * true even without a guaranteed connection. Wait for {@link #getStatus} to 
-     * return CONNECTED. Once it does, {@link #getRoomID} will return your assigned 
+     * This will automatically connect to the NAT punchthrough server and request a
+     * room ID.  This process is NOT instantaneous and the initializer will return
+     * true even without a guaranteed connection. Wait for {@link #getStatus} to
+     * return CONNECTED. Once it does, {@link #getRoomID} will return your assigned
      * room ID.
      *
      * This method will return true if the Slikenet subsystem fails to initialize.
@@ -332,9 +335,9 @@ public:
      * Initializes a new network connection as a client.
      *
      * This will automatically connect to the NAT punchthrough server and then try
-     * to connect to the host with the given ID. This process is NOT instantaneous 
+     * to connect to the host with the given ID. This process is NOT instantaneous
      * and the initializer will return true even without a guaranteed connection.
-     * Wait for {@link #getStatus} to return CONNECTED. Once it does, {@link #getPlayerID} 
+     * Wait for {@link #getStatus} to return CONNECTED. Once it does, {@link #getPlayerID}
      * will return your assigned player ID.
      *
      * @param setup     Connection config
@@ -347,10 +350,10 @@ public:
     /**
      * Returns a newly allocated network connection as host.
      *
-     * This will automatically connect to the NAT punchthrough server and request a 
-     * room ID.  This process is NOT instantaneous and the initializer will return 
-     * true even without a guaranteed connection. Wait for {@link #getStatus} to 
-     * return CONNECTED. Once it does, {@link #getRoomID} will return your assigned 
+     * This will automatically connect to the NAT punchthrough server and request a
+     * room ID.  This process is NOT instantaneous and the initializer will return
+     * true even without a guaranteed connection. Wait for {@link #getStatus} to
+     * return CONNECTED. Once it does, {@link #getRoomID} will return your assigned
      * room ID.
      *
      * This method will return true if the Slikenet subsystem fails to initialize.
@@ -368,9 +371,9 @@ public:
      * Returns a newly allocated network connection as a client.
      *
      * This will automatically connect to the NAT punchthrough server and then try
-     * to connect to the host with the given ID. This process is NOT instantaneous 
+     * to connect to the host with the given ID. This process is NOT instantaneous
      * and the initializer will return true even without a guaranteed connection.
-     * Wait for {@link #getStatus} to return CONNECTED. Once it does, {@link #getPlayerID} 
+     * Wait for {@link #getStatus} to return CONNECTED. Once it does, {@link #getPlayerID}
      * will return your assigned player ID.
      *
      * @param setup     Connection config
@@ -388,13 +391,13 @@ public:
     /**
      * Sends a byte array to all other players.
      *
-     * Within a few frames, other players should receive this via a call to 
+     * Within a few frames, other players should receive this via a call to
      * {@link #receive}.
      *
      * This requires a connection be established. Otherwise its behavior is undefined.
      *
-     * You may choose to either send a byte array directly, or you can use the 
-     * {@link NetworkSerializer} and {@link NetworkDeserializer} classes to encode 
+     * You may choose to either send a byte array directly, or you can use the
+     * {@link NetworkSerializer} and {@link NetworkDeserializer} classes to encode
      * more complex data.
      *
      * @param msg The byte array to send.
@@ -424,13 +427,13 @@ public:
      * This method must be called periodically EVEN BEFORE A CONNECTION IS ESTABLISHED.
      * Otherwise, the library has no way to receive and process incoming connections.
      *
-     * When executed, the function `dispatch` willl be called on every received byte 
+     * When executed, the function `dispatch` willl be called on every received byte
      * array since the last call to {@link #receive}. It is up to you to interpret
      * this data on your own or with {@link #NetworkDeserializer}
      *
      * A network frame can, but need not be, the same as a render frame. However,
      * during the network connection phase, before the game starts, this method should
-     * be called every frame. Otherwise, the NAT Punchthrough library may fail. 
+     * be called every frame. Otherwise, the NAT Punchthrough library may fail.
      * Afterwards, you can delay this to every few frames if necessary to relieve
      * congestion.
      *
@@ -447,17 +450,87 @@ public:
 
 #pragma mark Attributes
     /**
+     * Returns the packet reliablity for this network connection.
+     *
+     * While all Slikenet values are accepted, you should restrict yourself
+     * to one of RELIABLE, RELIABLE_ORDERED, or RELIABLE_SEQUENCED. The
+     * value RELIABLE_ORDERED is the default. Note that changing this
+     * value will only effect future calls to {@link #send} and
+     * {@link #sendOnlyToHost}.
+     *
+     * RELIABLE: Packets are all received, but not necessarily in order.
+     * So if A is sent before B, B may come first, with A coming after.
+     * This works best when all messages have a message-response pattern,
+     * and no one client sends multiple messages without a response.
+     *
+     * RELIABLE_ORDERED: Packets are all received, and in order. So if
+     * A is sent before B and B is sent before C, all of these will be
+     * received in the order A,B,C. But this means that a sequence of
+     * packets could all be delayed by a single packet. So while this is
+     * the easiest mode to program for, it can cause lag on congested
+     * networks.
+     *
+     * RELIABLE_SEQUENCED: Despite the name, this is actually weaker
+     * than RELIABLE, in that packets are ordered, but they are not all
+     * guaranteed to arrive. Instead, a failed packet will retry until
+     * either it OR a more recent packet is delivered. Suppose A is sent
+     * before B. If A fails, it will try again. But if B arrives first,
+     * then it will stop retrying (and indeed packet A will be discarded
+     * even if it finally arrives). So only the last packet sent is
+     * every truly guaranteed. This approach is best when there is a single
+     * message per frame, and old frame updates can be lost.
+     *
+     * @return the packet reliablity for this network connection.
+     */
+    PacketReliability getReliability() const { return _reliability; }
+    
+    /**
+     * Sets the packet reliablity for this network connection.
+     *
+     * While all Slikenet values are accepted, you should restrict yourself
+     * to one of RELIABLE, RELIABLE_ORDERED, or RELIABLE_SEQUENCED. The
+     * value RELIABLE_ORDERED is the default. Note that changing this
+     * value will only effect future calls to {@link #send} and
+     * {@link #sendOnlyToHost}.
+     *
+     * RELIABLE: Packets are all received, but not necessarily in order.
+     * So if A is sent before B, B may come first, with A coming after.
+     * This works best when all messages have a message-response pattern,
+     * and no one client sends multiple messages without a response.
+     *
+     * RELIABLE_ORDERED: Packets are all received, and in order. So if
+     * A is sent before B and B is sent before C, all of these will be
+     * received in the order A,B,C. But this means that a sequence of
+     * packets could all be delayed by a single packet. So while this is
+     * the easiest mode to program for, it can cause lag on congested
+     * networks.
+     *
+     * RELIABLE_SEQUENCED: Despite the name, this is actually weaker
+     * than RELIABLE, in that packets are ordered, but they are not all
+     * guaranteed to arrive. Instead, a failed packet will retry until
+     * either it OR a more recent packet is delivered. Suppose A is sent
+     * before B. If A fails, it will try again. But if B arrives first,
+     * then it will stop retrying (and indeed packet A will be discarded
+     * even if it finally arrives). So only the last packet sent is
+     * every truly guaranteed. This approach is best when there is a single
+     * message per frame, and old frame updates can be lost.
+     *
+     * @param reliability the packet reliablity for this network connection.
+     */
+     void setReliability(PacketReliability reliability);
+
+    /**
      * Returns the current status of this network connection.
      *
      * @return the current status of this network connection.
      */
-    NetStatus getStatus();
+    NetStatus getStatus() const { return _status; }
 
     /**
      * Returns the player ID or empty.
      *
-     * If this player is the host, this is guaranteed to be 0, even before a connection 
-     * is established. Otherwise, as client, this will return empty until connected to 
+     * If this player is the host, this is guaranteed to be 0, even before a connection
+     * is established. Otherwise, as client, this will return empty until connected to
      * host and a player ID is assigned.
      *
      * @return the player ID or empty.
@@ -467,8 +540,8 @@ public:
     /**
      * Returns the room ID or empty string.
      *
-     * If this player is a client, this will return the room ID this object was 
-     * constructed with. Otherwise, as host, this will return the empty string until 
+     * If this player is a client, this will return the room ID this object was
+     * constructed with. Otherwise, as host, this will return the empty string until
      * connected to the punchthrough server and a room ID once it is assigned.
      *
      * @returns the room ID or empty string.
@@ -491,11 +564,11 @@ public:
     }
 
     /**
-     * Returns the number of players currently connected to this game 
+     * Returns the number of players currently connected to this game
      *
      * This does not include any players that have been disconnected.
      *
-     * @return the number of players currently connected to this game 
+     * @return the number of players currently connected to this game
      */
     uint8_t getNumPlayers() const { return _numPlayers; }
 
@@ -541,19 +614,19 @@ private:
      * @param msg The message to send
      * @param ignore The address to not send to
      */
-    void broadcast(const std::vector<uint8_t>& msg, 
+    void broadcast(const std::vector<uint8_t>& msg,
                    SLNet::SystemAddress& ignore,
                    CustomDataPackets packetType = Standard);
 
     /**
      * Sends a message to all connected players
-     * 
+     *
      * This method can be called by either connection.
      *
      * @param msg The message to send
      * @param ignore The address to not send to
      */
-    void send(const std::vector<uint8_t>& msg, 
+    void send(const std::vector<uint8_t>& msg,
               CustomDataPackets packetType);
 
     /**
@@ -563,15 +636,15 @@ private:
      * @param packetType The type of custom data packet
      * @param dest Desination address
      */
-    void directSend(const std::vector<uint8_t>& msg, 
-                    CustomDataPackets packetType, 
+    void directSend(const std::vector<uint8_t>& msg,
+                    CustomDataPackets packetType,
                     SLNet::SystemAddress dest);
 
     /**
      * Attempts to reconnect to the host.
      *
      * This method cannot be called by the host.  This method must be called
-     * by the client when it is in the reconnecting phase. A successful connection 
+     * by the client when it is in the reconnecting phase. A successful connection
      * must have previously been established.
      */
     void attemptReconnect();
@@ -603,74 +676,74 @@ private:
     
     */
 
-    /** 
+    /**
      * Step 0
-     * 
-     * Connect to punchthrough server (both client and host) 
+     *
+     * Connect to punchthrough server (both client and host)
      */
     void c0StartupConn();
-    /** 
+    /**
      * Host Step 1
      *
-     * Server connection established 
+     * Server connection established
      */
     void ch1HostConnServer(HostPeers& h);
     /** Host Step 2: Server gave room ID to host; awaiting incoming connections */
     void ch2HostGetRoomID(HostPeers& h, SLNet::BitStream& bts);
 
-    /** 
+    /**
      * Client Step 1:
-     * 
-     * Server connection established; request punchthrough to host from server 
+     *
+     * Server connection established; request punchthrough to host from server
      */
     void cc1ClientConnServer(ClientPeer& c);
-    /** 
-     * Client Step 2: 
+    /**
+     * Client Step 2:
      *
-     * Client received successful punchthrough from server 
+     * Client received successful punchthrough from server
      */
     void cc2ClientPunchSuccess(ClientPeer& c, SLNet::Packet* packet);
-    /** 
-     * Client Step 3: 
+    /**
+     * Client Step 3:
      *
-     * Host received successful punchthrough request passed through from server 
+     * Host received successful punchthrough request passed through from server
      */
     void cc3HostReceivedPunch(HostPeers& h, SLNet::Packet* packet);
-    /** 
-     * Client Step 4: 
+    /**
+     * Client Step 4:
      *
-     * Client received direct connection request from host 
+     * Client received direct connection request from host
      */
     void cc4ClientReceiveHostConnection(ClientPeer& c, SLNet::Packet* packet);
-    /** 
-     * Client Step 5: 
+    /**
+     * Client Step 5:
      *
-     * Host received confirmation of connection from client 
+     * Host received confirmation of connection from client
      */
     void cc5HostConfirmClient(HostPeers& h, SLNet::Packet* packet);
-    /** 
-     * Client Step 6: 
+    /**
+     * Client Step 6:
      *
-     * Client received player ID from host and API 
+     * Client received player ID from host and API
      */
     void cc6ClientAssignedID(ClientPeer& c, const std::vector<uint8_t>& msgConverted);
-    /** 
-     * Client Step 7: 
-     * 
-     * Host received confirmation of game data from client; connection finished 
+    /**
+     * Client Step 7:
+     *
+     * Host received confirmation of game data from client; connection finished
      */
     void cc7HostGetClientData(HostPeers& h, SLNet::Packet* packet, const std::vector<uint8_t>& msgConverted);
 
-    /** 
-     * Reconnect Step 1: 
+    /**
+     * Reconnect Step 1:
      *
-     * Picks up after client step 5; host sent reconn data to client 
+     * Picks up after client step 5; host sent reconn data to client
      */
     void cr1ClientReceivedInfo(ClientPeer& c, const std::vector<uint8_t>& msgConverted);
-    /** 
-     * Reconnect Step 2: 
-     * 
-     * Host received confirmation of game data from client 
+    /**
+     * Reconnect Step 2:
+     *
+     * Host received confirmation of game data from client
      */
     void cr2HostGetClientResp(HostPeers& h, SLNet::Packet* packet, const std::vector<uint8_t>& msgConverted);
 
