@@ -840,6 +840,7 @@ void NetworkConnection::receive(
     case NetStatus::ApiMismatch:
     case NetStatus::RoomNotFound:
         return;
+    case NetStatus::NatFailure:
     case NetStatus::Connected:
     case NetStatus::Pending:
         break;
@@ -886,7 +887,7 @@ void NetworkConnection::receive(
                 [&](ClientPeer& c) { cc2ClientPunchSuccess(c, packet); }), _remotePeer);
             break;
         case ID_NAT_TARGET_NOT_CONNECTED:
-            _status = NetStatus::GenericError;
+            _status = NetStatus::NatFailure;
             break;
         case ID_REMOTE_DISCONNECTION_NOTIFICATION:
         case ID_REMOTE_CONNECTION_LOST:
@@ -944,6 +945,7 @@ void NetworkConnection::receive(
                         case NetStatus::Disconnected:
                         case NetStatus::RoomNotFound:
                         case NetStatus::ApiMismatch:
+                        case NetStatus::NatFailure:
                         case NetStatus::GenericError:
                             return;
                         }
@@ -956,7 +958,7 @@ void NetworkConnection::receive(
         case ID_NAT_TARGET_UNRESPONSIVE: {
             CULogError("Punchthrough failure %d", packet->data[0]);
 
-            _status = NetStatus::GenericError;
+            _status = NetStatus::NatFailure;
             bts.IgnoreBytes(sizeof(SLNet::MessageID));
             SLNet::RakNetGUID recipientGuid;
             bts.Read(recipientGuid);

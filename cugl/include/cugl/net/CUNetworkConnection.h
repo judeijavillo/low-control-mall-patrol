@@ -182,6 +182,13 @@ public:
          * If you are using the demo server for the game lab, the minimum is 0.
          */
         ApiMismatch,
+        /**
+         * Unsuccessful NAT Punchthrough
+         *
+         * The entire network connection shouldn't give up, but it means that the last pair of clients that
+         * tried to connect failed to have a successful NAT punchthrough
+         */
+        NatFailure,
         /** Something unknown went wrong */
         GenericError
     };
