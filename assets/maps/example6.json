@@ -135,15 +135,15 @@
                 }, 
                 {
                  "gid":44,
-                 "height":445,
+                 "height":529.848484848485,
                  "id":193,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":277,
-                 "x":2460,
-                 "y":3779
+                 "width":383.060606060606,
+                 "x":2560.6895998717,
+                 "y":3458.09623052755
                 }, 
                 {
                  "height":108,
@@ -275,15 +275,15 @@
                  "y":4074.18181818182
                 }, 
                 {
-                 "height":539.393939393941,
+                 "height":675,
                  "id":207,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":145.454545454541,
-                 "x":7287.87878787879,
-                 "y":3939.39393939394
+                 "width":495,
+                 "x":7169.69696969697,
+                 "y":3493.93939393939
                 }, 
                 {
                  "height":66,
@@ -309,15 +309,112 @@
                 }, 
                 {
                  "gid":49,
-                 "height":428,
+                 "height":537.09090909091,
                  "id":210,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":325,
-                 "x":7410,
+                 "width":443.181818181818,
+                 "x":7303.93939393939,
+                 "y":4715.51515151515
+                }, 
+                {
+                 "height":0,
+                 "id":781,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"activated",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"copEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Escalator Velocity":
+                                {
+                                 "y":-2
+                                },
+                             "Type":"Escalator"
+                            }
+                        }, 
+                        {
+                         "name":"idleActivedAnimation",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"textureAsset",
+                         "type":"object",
+                         "value":782
+                        }, 
+                        {
+                         "name":"thiefEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Escalator Velocity":
+                                {
+                                 "y":-2
+                                }
+                            }
+                        }, 
+                        {
+                         "name":"triggerArea",
+                         "type":"object",
+                         "value":784
+                        }, 
+                        {
+                         "name":"triggerDeactivationArea",
+                         "type":"object",
+                         "value":783
+                        }],
+                 "rotation":0,
+                 "type":"Trap",
+                 "visible":true,
+                 "width":0,
+                 "x":2481.33333333333,
                  "y":4164
+                }, 
+                {
+                 "gid":59,
+                 "height":217,
+                 "id":782,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":217,
+                 "x":2480,
+                 "y":4521
+                }, 
+                {
+                 "height":46.6666666666665,
+                 "id":783,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":32,
+                 "x":2054.66666666667,
+                 "y":3936
+                }, 
+                {
+                 "height":41.3333333333335,
+                 "id":784,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":29.3333333333335,
+                 "x":2058.66666666667,
+                 "y":3937.33333333333
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1885,7 +1982,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":780,
+ "nextobjectid":785,
  "orientation":"orthogonal",
  "renderorder":"right-up",
  "tiledversion":"1.8.2",

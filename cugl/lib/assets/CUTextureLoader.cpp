@@ -252,6 +252,7 @@ void TextureLoader::materialize(const std::string& key, SDL_Surface* surface, Lo
  */
 void TextureLoader::materialize(const std::shared_ptr<JsonValue>& json, SDL_Surface* surface, LoaderCallback callback) {
     std::shared_ptr<Texture> texture = Texture::allocWithData(surface->pixels, surface->w, surface->h);
+//    if(texture == nullptr) CULog("initialization failed for %s", json->getString("file").data()); // added by brian
     std::string key = json->key();
 
     bool success = false;
