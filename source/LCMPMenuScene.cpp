@@ -47,6 +47,7 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
                      std::shared_ptr<cugl::scene2::ActionManager>& actions) {
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
+    _screenSize = dimen;
     dimen *= SCENE_HEIGHT/dimen.height;
     _dimen = dimen;
     _offset = Vec2((dimen.width-SCENE_WIDTH)/2.0f,(dimen.height-SCENE_HEIGHT)/2.0f);
@@ -92,6 +93,11 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     });
    
     initShop();
+    
+    std::shared_ptr<scene2::SceneNode> backdrop = _assets->get<scene2::SceneNode>("menu_backdrop");
+    //_settings.init(backdrop, dimen, _offset, _assets, _actions);
+
+    initSettingsButton();
     _didShop = false;
    
     scene->addChild(_shopMenu);
@@ -164,35 +170,8 @@ void MenuScene::setActive(bool value) {
 
 void MenuScene::update(float timestep) {
     _actions->update(timestep);
-    if (_didShop) {
-        _shopMenu->setVisible(true);
-        _shopCloseButton->activate();
-        _shopButton->deactivate();
-        _hostbutton->deactivate();
-        _joinbutton->deactivate();
-        _findbutton->deactivate();
-        _cat->activate();
-        _cat->setVisible(true);
-        _propeller->activate();
-        _propeller->setVisible(true);
-        _police->activate();
-        _police->setVisible(true);
-        _halo->activate();
-        _halo->setVisible(true);
-        _plant->activate();
-        _plant->setVisible(true);
-    }
-    else {
-        _shopCloseButton->deactivate();
-        _shopButton->activate();
-        _hostbutton->activate();
-        _joinbutton->activate();
-        _findbutton->activate();
-        _cat->deactivate();
-        _propeller->deactivate();
-        _police->deactivate();
-        _halo->deactivate();
-        _plant->deactivate();
+    if (!_settings.didPause()) {
+        updateShop();
     }
 }
 
@@ -205,6 +184,19 @@ void MenuScene::doMove(const std::shared_ptr<scene2::MoveTo>& action) {
         auto fcn = EasingFunction::alloc(EasingFunction::Type::LINEAR);
         _actions->activate(ACT_KEY, action, _shopMenu, fcn);
     }
+}
+
+void MenuScene::initSettingsButton() {
+    _settingsButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_settings"));
+    _settingsButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _audio->stopSfx(CLICK_SFX);
+            _audio->playSound(_assets, CLICK_SFX, true, 0);
+            _settings.setDidPause(true);
+        }
+        });
+    _settingsButton->activate();
+
 }
 
 void MenuScene::initShop() {
@@ -286,5 +278,38 @@ void MenuScene::initShop() {
             _didShop = false;
         }
     });
+}
+
+void MenuScene::updateShop() {
+    if (_didShop) {
+        _shopMenu->setVisible(true);
+        _shopCloseButton->activate();
+        _shopButton->deactivate();
+        _hostbutton->deactivate();
+        _joinbutton->deactivate();
+        _findbutton->deactivate();
+        _cat->activate();
+        _cat->setVisible(true);
+        _propeller->activate();
+        _propeller->setVisible(true);
+        _police->activate();
+        _police->setVisible(true);
+        _halo->activate();
+        _halo->setVisible(true);
+        _plant->activate();
+        _plant->setVisible(true);
+    }
+    else {
+        _shopCloseButton->deactivate();
+        _shopButton->activate();
+        _hostbutton->activate();
+        _joinbutton->activate();
+        _findbutton->activate();
+        _cat->deactivate();
+        _propeller->deactivate();
+        _police->deactivate();
+        _halo->deactivate();
+        _plant->deactivate();
+    }
 }
 

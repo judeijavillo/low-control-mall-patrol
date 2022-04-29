@@ -32,6 +32,9 @@ using namespace cugl;
 /** Number of frames in animation */
 #define ANIMATION_NUM_FRAMES    52
 
+/** Time between animation frames */
+#define ANIMATION_SPEED         0.07f
+
 //  MARK: - Constructors
 
 /**
@@ -143,7 +146,7 @@ void LoadingScene::playAnimation(float timestep) {
     _prevTime += timestep;
     int f = (int) (_progress * ANIMATION_NUM_FRAMES);
     
-    if (_prevTime >= 0.1 && f > _aniFrame) {
+    if (_prevTime >= ANIMATION_SPEED && f > _aniFrame) {
         _prevTime = 0;
         _aniFrame++;
         _aniSpriteNode->setFrame(_aniFrame);

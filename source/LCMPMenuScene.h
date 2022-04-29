@@ -15,6 +15,7 @@
 #include <cugl/cugl.h>
 #include <vector>
 #include "LCMPAudioController.h"
+#include "LCMPSettingsController.h"
 #include <cugl/scene2/actions/CUActionManager.h>
 #include <cugl/scene2/actions/CUMoveAction.h>
 #include <cugl/scene2/actions/CUScaleAction.h>
@@ -47,19 +48,27 @@ public:
 protected:
 //  MARK: - Properties
     
+    
+    /** The actual size of the display. */
+    cugl::Size _screenSize;
     /** The amount to move the world node by to center it in the scene */
     cugl::Vec2 _offset;
     /** The asset manager for this scene. */
     std::shared_ptr<cugl::AssetManager> _assets;
     /** The sound controller for the game */
     std::shared_ptr<AudioController> _audio;
+    /** The action manager for the game */
     std::shared_ptr<cugl::scene2::ActionManager> _actions;
+    /** The settings menu for the menu */
+    SettingsController _settings;
     /** The menu button for hosting a game */
     std::shared_ptr<cugl::scene2::Button> _hostbutton;
     /** The menu button for joining a game */
     std::shared_ptr<cugl::scene2::Button> _joinbutton;
     /** The menu button for finding a game */
     std::shared_ptr<cugl::scene2::Button> _findbutton;
+    /** The button to open the settings menu */
+    std::shared_ptr<cugl::scene2::Button> _settingsButton;
     /** The player menu choice */
     Choice _choice;
     
@@ -124,6 +133,8 @@ public:
     
     void initShop();
     
+    void initSettingsButton();
+    
     /**
      * Sets whether the scene is currently active
      *
@@ -146,6 +157,7 @@ public:
     
     void doMove(const std::shared_ptr<cugl::scene2::MoveTo>& action);
 
+    void updateShop();
 };
 
 #endif /* __LCMP_MENU_SCENE_H__ */

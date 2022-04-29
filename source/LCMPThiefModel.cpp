@@ -14,9 +14,9 @@ using namespace std;
 //  MARK: - Constants
 
 /** The width of the thief body (its dropshadow) in world units */
-#define THIEF_WIDTH     1.4f
+#define THIEF_WIDTH     1.6f
 /** The height of the thief body (its dropshadow) in world units */
-#define THIEF_HEIGHT    0.7f
+#define THIEF_HEIGHT    0.8f
 
 /** Keys for thief run textures */
 #define THIEF_RUN_BACK      "ss_thief_up"

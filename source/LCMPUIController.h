@@ -10,6 +10,7 @@
 #define __LCMP_UI_CONTROLLER_H__
 #include <cugl/cugl.h>
 #include "LCMPGameModel.h"
+#include "LCMPSettingsController.h"
 
 class UIController {
 //  MARK: - Properties
@@ -20,6 +21,8 @@ class UIController {
     /** Reference to the debug node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _uinode;
     
+    /** Reference to the settings controller */
+    SettingsController _settings;
 
     // Sub-level nodes
     /** Reference to the node containing the joystick */
@@ -31,27 +34,10 @@ class UIController {
     /** Reference to the node containing the thief indicator */
     std::shared_ptr<cugl::scene2::SceneNode> _thiefIndicatorNode;
     /** Reference to the node containing the settings button */
+    std::shared_ptr<cugl::scene2::SceneNode> _settingsButtonNode;
+    /** Reference to the node containing the settings button */
     std::shared_ptr<cugl::scene2::Button> _settingsButton;
 
-    // References to the settings menu
-    /** Reference to the node containing the settings menu */
-    std::shared_ptr<cugl::scene2::SceneNode> _settingsMenu;
-    /** Reference to the node containing the settings node */
-    std::shared_ptr<cugl::scene2::SceneNode> _settingsButtonNode;
-    /** Reference to the node containing the sounds button */
-    std::shared_ptr<cugl::scene2::Button> _soundsButton;
-    /** Reference to the node containing the stats button */
-    std::shared_ptr<cugl::scene2::Button> _statsButton;
-    /** Reference to the node containing the quit button */
-    std::shared_ptr<cugl::scene2::Button> _quitButton;
-    /** Reference to the node containing the close button */
-    std::shared_ptr<cugl::scene2::Button> _closeButton;
-
-    //References for the settings menu animations
-    /** Reference to the settings menu moving up */
-    std::shared_ptr<cugl::scene2::MoveTo> _moveup;
-    /** Reference to the settings menu moving up */
-    std::shared_ptr<cugl::scene2::MoveTo> _movedn;
     /** Scaled screen dimensions for use in setting position in animations */
     cugl::Size _dimen;
 
@@ -75,8 +61,10 @@ class UIController {
     // Thief Indicators
     /** A reference to the label for displaying thief distance for cop */
     std::shared_ptr<cugl::scene2::Label> _thiefIndicator;
-    /** A reference to the border of the text displaying thief distance for cop */
-    std::shared_ptr<cugl::scene2::Label> _thiefIndicatorBorder;
+    /** A reference to the background of the text displaying thief distance for cop */
+    std::shared_ptr<cugl::scene2::PolygonNode> _thiefIndicatorBackground;
+    /** A reference to the head of the thief on top of the thief indicator */
+    std::shared_ptr<cugl::scene2::PolygonNode> _thiefIndicatorHead;
     
     // Victory/Defeat Message
     /** A reference to the label for displaying the vicory/defeat meesage */
@@ -94,6 +82,8 @@ class UIController {
     std::shared_ptr<GameModel> _game;
     /** The asset manager for this game mode */
     std::shared_ptr<cugl::AssetManager> _assets;
+    /** The audio controller for the whole game */
+    std::shared_ptr<AudioController> _audio;
     /** The action manager for the whole game */
     std::shared_ptr<cugl::scene2::ActionManager> _actions;
     /** A reference to the font style for the UI node */
@@ -110,6 +100,8 @@ class UIController {
     bool _didQuit;
     /** Whether or not the game is being sent to the pause menu. */
     bool _didPause;
+    /** Whether or not the game is paused. */
+    bool _isPaused;
     /** Whether or not the game is muted */
     bool _didMute;
 
@@ -147,7 +139,8 @@ public:
               cugl::Size screenSize,
               cugl::Vec2 offset,
               const std::shared_ptr<cugl::AssetManager>& assets,
-              const std::shared_ptr<cugl::scene2::ActionManager>& actions);
+              const std::shared_ptr<cugl::scene2::ActionManager>& actions,
+              const std::shared_ptr<AudioController> audio);
         
 //  MARK: - Methods
     
@@ -168,6 +161,10 @@ public:
      * Gets whether or not the game is being paused.
      */
     bool didPause() { return _didPause; }
+    /**
+     * Gets whether or not the game is being paused.
+     */
+    bool isPaused() { return _isPaused; }
     /**
      * Gets whether or not the game is being muted.
      */
@@ -211,14 +208,14 @@ private:
     void initTimer();
     
     /**
-     * Initializes the settings nodes
+     * Initializes the settings button
      */
-    void initSettings();
+    void initSettingsButton();
     
     /**
-     * Updates the settings nodes
+     * Updates the settings button 
      */
-    void updateSettings();
+    void updateSettingsButton(float timestep);
     
     void initShop();
     void updateShop();

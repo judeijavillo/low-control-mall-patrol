@@ -12,6 +12,9 @@
 		4212F24727E79701008679C8 /* LCMPUIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4212F24427E79701008679C8 /* LCMPUIController.cpp */; };
 		4226A7E228101EDD00A7B339 /* LCMPCustomizeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */; };
 		4226A7E628101EDE00A7B339 /* LCMPCustomizeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */; };
+		4270BA53281C4D02007F234D /* LCMPSettingsController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4270BA4E281C4D02007F234D /* LCMPSettingsController.cpp */; };
+		4270BA54281C4D02007F234D /* LCMPSettingsController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4270BA4E281C4D02007F234D /* LCMPSettingsController.cpp */; };
+		4270BA55281C4D02007F234D /* LCMPSettingsController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4270BA4E281C4D02007F234D /* LCMPSettingsController.cpp */; };
 		4298946B27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */; };
 		4298946C27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */; };
 		4298946D27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */; };
@@ -176,6 +179,8 @@
 /* Begin PBXFileReference section */
 		4212F24027E796EA008679C8 /* LCMPUIController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LCMPUIController.h; sourceTree = "<group>"; };
 		4212F24427E79701008679C8 /* LCMPUIController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPUIController.cpp; sourceTree = "<group>"; };
+		4270BA4E281C4D02007F234D /* LCMPSettingsController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPSettingsController.cpp; sourceTree = "<group>"; };
+		4270BA52281C4D02007F234D /* LCMPSettingsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPSettingsController.h; sourceTree = "<group>"; };
 		4298946627D426A800142B25 /* LCMPObstacleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPObstacleModel.h; sourceTree = "<group>"; };
 		4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPObstacleModel.cpp; sourceTree = "<group>"; };
 		42B26D6627C1DA830019E6FB /* LCMPNetworkController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LCMPNetworkController.h; sourceTree = "<group>"; };
@@ -366,6 +371,8 @@
 		42B26D6427C1DA310019E6FB /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				4270BA52281C4D02007F234D /* LCMPSettingsController.h */,
+				4270BA4E281C4D02007F234D /* LCMPSettingsController.cpp */,
 				4212F24027E796EA008679C8 /* LCMPUIController.h */,
 				4212F24427E79701008679C8 /* LCMPUIController.cpp */,
 				42BFB6C727DE719900D04240 /* LCMPAudioController.h */,
@@ -733,6 +740,7 @@
 				42ED6B8427C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */,
 				EB13B3B927B2C0DF0032BF19 /* LCMPMenuScene.cpp in Sources */,
 				42BFB6CA27DE719900D04240 /* LCMPAudioController.cpp in Sources */,
+				4270BA55281C4D02007F234D /* LCMPSettingsController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -762,6 +770,7 @@
 				42ED6B8327C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */,
 				EB13B3B827B2C0DF0032BF19 /* LCMPMenuScene.cpp in Sources */,
 				42BFB6C927DE719900D04240 /* LCMPAudioController.cpp in Sources */,
+				4270BA54281C4D02007F234D /* LCMPSettingsController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -791,6 +800,7 @@
 				EB13B3B727B2C0DF0032BF19 /* LCMPMenuScene.cpp in Sources */,
 				42BFB6C327DE701E00D04240 /* LCMPCollisionController.cpp in Sources */,
 				42BFB6C827DE719900D04240 /* LCMPAudioController.cpp in Sources */,
+				4270BA53281C4D02007F234D /* LCMPSettingsController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

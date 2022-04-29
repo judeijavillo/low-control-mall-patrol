@@ -122,28 +122,25 @@ void HostScene::update(float timestep) {
     if (_network->isConnected() && _status != START && _status != ABORT) {
         _network->update();
         switch (_network->getStatus()) {
-            case NetworkController::Status::IDLE:
-            case NetworkController::CONNECTING:
-                _status = IDLE;
-                break;
-            case NetworkController::WAIT:
-            {
-                _status = WAIT;
-                _gameid->setText(("Tell your friends this room code: " + _network->getRoomID()), true);
-                _gameid->setPosition(Vec2(SCENE_WIDTH/2, 3*SCENE_HEIGHT/4) + _offset);
-                _gameid->setAnchor(Vec2(0.5,0.5));
-                break;
-            }
-            case NetworkController::START:
-                _status = START;
-                break;
-            case NetworkController::ABORT:
-                _status = ABORT;
-                break;
+        case NetworkController::Status::IDLE:
+        case NetworkController::CONNECTING:
+            _status = IDLE;
+            break;
+        case NetworkController::WAIT:
+        {
+            _status = WAIT;
+            _gameid->setText(("Tell your friends this room code: " + _network->getRoomID()), true);
+            _gameid->setPosition(600, 500);
+            break;
+        }
+        case NetworkController::START:
+            _status = START;
+            break;
+        case NetworkController::ABORT:
+            _status = ABORT;
+            break;
         }
         _player->setText(strtool::format("Waiting for players: (%d/5)", _network->getNumPlayers()), true);
-        _player->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) + _offset);
-        _player->setAnchor(Vec2(0.5,0.5));
     }
 }
 

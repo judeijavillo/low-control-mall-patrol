@@ -268,6 +268,11 @@ private:
     void updateNetwork(float timestep);
     
     /**
+     * Sets camera position at the start of the game.
+     */
+    void initCamera();
+
+    /**
      * Updates camera based on the position of the controlled player
      */
     void updateCamera(float timestep);

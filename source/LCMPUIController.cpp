@@ -7,7 +7,9 @@
 //
 
 #include "LCMPUIController.h"
+#include "LCMPSettingsController.h"
 #include "LCMPConstants.h"
+#include "LCMPAudioController.h"
 
 using namespace std;
 using namespace cugl;
@@ -47,7 +49,7 @@ float OUTER_ACCEL_VIS_POS[2]{ 0.1f, 0.1f };
  * Disposes of all resources in this instance of UI Controller
  */
 void UIController::dispose() {
-    _settingsMenu->dispose();
+    _settings.dispose();
     _uinode->removeAllChildren();
 }
 
@@ -61,7 +63,8 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
                         Size screenSize,
                         Vec2 offset,
                         const std::shared_ptr<cugl::AssetManager>& assets,
-                        const std::shared_ptr<cugl::scene2::ActionManager>& actions) {
+                        const std::shared_ptr<cugl::scene2::ActionManager>& actions,
+                        const std::shared_ptr<AudioController> audio) {
     
     // Save properties
     _worldnode = worldnode;
@@ -72,6 +75,7 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _offset = offset;
     _font = font;
     _actions = actions;
+    _audio = audio;
     
     // Initialize booleans
     _didQuit = false;
@@ -92,6 +96,8 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _accelVisNode = scene2::SceneNode::alloc();
 //    _victoryNode = scene2::SceneNode::alloc();
     
+    initTimer();
+
     // Add nodes to the top-level nodes
     _uinode->addChild(_direcIndicatorsNode);
     _uinode->addChild(_thiefIndicatorNode);
@@ -112,12 +118,10 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     initDirecIndicators();
     initThiefIndicator();
 //    initMessage();
-    initTimer();
-    initSettings();
+//    initSettings();
+    _settings.init(_uinode, _screenSize, _offset, _assets, _actions, _audio);
 
-    // Settings menu movement
-    _moveup = scene2::MoveTo::alloc(Vec2(0, _dimen.height), DROP_DURATION);
-    _movedn = scene2::MoveTo::alloc(Vec2(0, _dimen.height * MENU_OFFSET), DROP_DURATION);
+    initSettingsButton();
     
     return true;
 }
@@ -153,12 +157,43 @@ void UIController::update(float timestep, bool isThief, Vec2 movement,
     }
    
     updateDirecIndicators(isThief, copID);
-    updateSettings();
+
+    // Update setttings
+    updateSettingsButton(timestep);
+
 //    updateMessage(isThief, isThiefWin);
     updateTimer(gameTime);
 }
 
 //  MARK: - Helpers
+
+/**
+ * Initializes the settings button
+ */
+void UIController::initSettingsButton() {
+    _settingsButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("game_gameUIsettings"));
+
+    // Initialize settings button from assets manager
+    _settingsButtonNode = _assets->get<scene2::SceneNode>("game");
+    _settingsButtonNode->setContentSize(_screenSize);
+    Vec2 settingsButtonPos = _settingsButtonNode->getContentSize();
+    settingsButtonPos *= SCENE_HEIGHT / _screenSize.height;
+    _settingsButtonNode->setContentSize(settingsButtonPos);
+    _settingsButtonNode->doLayout(); // Repositions the HUD
+
+    // Make settings button transparent
+    _settingsButtonNode->setColor(_transparent);
+
+    _settingsButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _settings.setDidPause(true);
+        }
+        });
+
+    _uinode->addChild(_settingsButtonNode);
+    _settingsButton->activate();
+}
+
 
 /**
  * Creates the necessary nodes for showing the joystick and adds them to the joystick node.
@@ -231,18 +266,28 @@ void UIController::initDirecIndicators() {
  */
 void UIController::initThiefIndicator() {
     
-    shared_ptr<Font> borderFont = _assets->get<Font>("futura heavy border");
-    _thiefIndicatorBorder = scene2::Label::allocWithText("Thief Distance: 0", borderFont);
-    _thiefIndicatorBorder->setAnchor(Vec2::ANCHOR_CENTER); 
-    _thiefIndicatorBorder->setPosition(Vec2((SCENE_WIDTH / 2) + 35, SCENE_HEIGHT - SCENE_HEIGHT_ADJUST) + _offset);
-    _thiefIndicatorBorder->setForeground(Color4::WHITE);
+    // Create the background for the thief indicator (white button)
+    _thiefIndicatorBackground = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("button_white"));
+    _thiefIndicatorBackground->setAnchor(Vec2::ANCHOR_CENTER);
+    _thiefIndicatorBackground->setPosition(Vec2(SCENE_WIDTH / 2, SCENE_HEIGHT - SCENE_HEIGHT_ADJUST));
+    _thiefIndicatorBackground->setScale(0.35f);
+    _thiefIndicatorBackground->setColor(_transparent);
+
+    // Create head for the thief indicator
+    _thiefIndicatorHead = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("ui_thief_head"));
+    _thiefIndicatorHead->setAnchor(Vec2::ANCHOR_CENTER);
+    _thiefIndicatorHead->setPosition(Vec2(SCENE_WIDTH / 2 + (_thiefIndicatorBackground->getSize().width * 0.4),
+        SCENE_HEIGHT - SCENE_HEIGHT_ADJUST - (_thiefIndicatorBackground->getSize().height * 0.2)));
+    _thiefIndicatorHead->setScale(0.2f);
+    _thiefIndicatorHead->setColor(_transparent);
 
     // Create and show distance on screen
-    _thiefIndicator = scene2::Label::allocWithText("Thief Distance: 0", _font);
+    _thiefIndicator = scene2::Label::allocWithText("10m", _font);
     _thiefIndicator->setAnchor(Vec2::ANCHOR_CENTER);
     _thiefIndicator->setPosition(Vec2(SCENE_WIDTH/2,SCENE_HEIGHT-SCENE_HEIGHT_ADJUST) + _offset);
 
-    _thiefIndicatorNode->addChild(_thiefIndicatorBorder);
+    _thiefIndicatorNode->addChild(_thiefIndicatorBackground);
+    _thiefIndicatorNode->addChild(_thiefIndicatorHead);
     _thiefIndicatorNode->addChild(_thiefIndicator);
 }
 
@@ -284,100 +329,6 @@ void UIController::initTimer() {
     _uinode->addChild(_timer);
     _uinode->addChild(_hourHand);
     _uinode->addChild(_minuteHand);
-}
-
-/**
- * Initializes the settings nodes
- */
-void UIController::initSettings() {
-    // Set button references
-    _settingsButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("game_gameUIsettings"));
-    _soundsButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("pause_settings_Sound"));
-    _quitButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("pause_settings_Quit"));
-    _closeButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("pause_settings_X"));
-    
-    // Initialize settings button from assets manager
-    _settingsButtonNode = _assets->get<scene2::SceneNode>("game");
-    _settingsButtonNode->setContentSize(_screenSize);
-    Vec2 settingsButtonPos = _settingsButtonNode->getContentSize();
-    settingsButtonPos *= SCENE_HEIGHT / _screenSize.height;
-    _settingsButtonNode->setContentSize(settingsButtonPos);
-    _settingsButtonNode->doLayout(); // Repositions the HUD
-
-    // Initialize settings button from assets manager
-    _settingsMenu = _assets->get<scene2::SceneNode>("pause");
-    _settingsMenu->setContentSize(_screenSize);
-    _settingsMenu->doLayout(); // Repositions the HUD
-    
-    // Properly sets position of the settings menu (by changing content size)
-    Vec2 settingsMenuPos = _settingsMenu->getContentSize();
-    settingsMenuPos *= SCENE_HEIGHT / _screenSize.height;
-    _settingsMenu->setContentSize(settingsMenuPos);
-   
-     // Program the buttons
-    _settingsButton->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _didPause = true;
-            doMove(_movedn);
-        }
-    });
-    _soundsButton->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _didMute = true;
-        }
-    });
-    _quitButton->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _didQuit = true;
-        }
-    });
-    _closeButton->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _didPause = false;
-            doMove(_moveup);
-        }
-    });
-    
-    // Set visibility
-    _settingsMenu->setVisible(true);
-
-    // Make settings button transparent
-    _settingsButtonNode->setColor(_transparent);
-
-    _uinode->addChild(_settingsMenu);
-    _uinode->addChild(_settingsButtonNode);
-
-    // Set proper position of settings menu when the game begins
-    _settingsMenu->setPosition(Vec2(0, _dimen.height));
-}
-
-/** Updates the settings menu */
-void UIController::updateSettings() {
-    // Display and activate correct buttons depending on pause state.
-    if (_didPause) {
-        _settingsMenu->setVisible(true);
-        _soundsButton->activate();
-        _quitButton->activate();
-        _closeButton->activate();
-        _settingsButton->deactivate();
-    }
-    else {
-        _settingsMenu->setVisible(false);
-        _soundsButton->deactivate();
-        _quitButton->deactivate();
-        _closeButton->deactivate();
-        _settingsButton->activate();
-    }
-}
-
-void UIController::doMove(const std::shared_ptr<scene2::MoveTo>& action) {
-    if (_actions->isActive(ACT_KEY)) {
-        CULog("You must wait for the animation to complete first");
-    }
-    else {
-        auto fcn = EasingFunction::alloc(EasingFunction::Type::LINEAR);
-        _actions->activate(ACT_KEY, action, _settingsMenu, fcn);
-    }
 }
 
 /**
@@ -532,9 +483,25 @@ void UIController::updateThiefIndicator(int copID) {
     float distance = _game->getThief()->getPosition().distance(_game->getCop(copID)->getPosition());
     //_thiefIndicatorBorder->setText("Thief Distance: " + to_string((int) distance), true);
     //_thiefIndicator->setText("Thief Distance: " + to_string((int)distance), true);
-    _thiefIndicatorBorder->setText(to_string((int)distance), true);
-    _thiefIndicator->setText(to_string((int)distance), true);
+    _thiefIndicator->setText(to_string((int)distance) + "m", true);
 
+}
+
+/**
+ * Updates the settings button
+ */
+void UIController::updateSettingsButton(float timestep) {
+    _settings.update(timestep);
+    _didPause = _settings.didPause();
+    _isPaused = _settings.isPaused();
+    _didQuit = _settings.didQuit();
+    if (_isPaused || _actions->isActive(SETTINGS_ACT_KEY)) {
+        _settingsButton->deactivate();
+        _settingsButton->setDown(false);
+    }
+    else {
+        _settingsButton->activate();
+    }
 }
 
 /**
