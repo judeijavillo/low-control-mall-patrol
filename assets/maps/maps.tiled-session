@@ -17,7 +17,24 @@
         },
         "PropsAndTraps.tsj": {
             "dynamicWrapping": true,
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 0.11
+        },
+        "donut_room.json": {
+            "scale": 2.3571,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 119.63853888252514,
+                "y": 156.76042594713846
+            }
+        },
+        "donut_room.tmx": {
+            "scale": 0.5445535714285714,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 541.7281521560913,
+                "y": 575.7009345794393
+            }
         },
         "example3.json": {
             "scale": 1,
@@ -27,20 +44,12 @@
                 "y": 4645
             }
         },
-        "example4.json": {
-            "scale": 0.07345535714285714,
+        "example5.json": {
+            "scale": 0.0826,
             "selectedLayer": 2,
             "viewCenter": {
-                "x": 5574.814634739273,
-                "y": 7303.755925610793
-            }
-        },
-        "example5.json": {
-            "scale": 0.25,
-            "selectedLayer": 5,
-            "viewCenter": {
-                "x": 2806,
-                "y": 6286
+                "x": 4951.573849878934,
+                "y": 4981.8401937046
             }
         },
         "mappics.tsx": {
@@ -52,11 +61,13 @@
         }
     },
     "last.externalTilesetPath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/maps",
-    "last.imagePath": "C:/Users/bryce/Pictures/3100/hw8",
+    "last.imagePath": "/Users/june/low-control-mall-patrol/assets/textures/environment",
     "last.objectTypesPath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/maps/trapTypeDef.xml",
     "map.lastUsedFormat": "json",
     "openFiles": [
-        "example5.json"
+        "example5.json",
+        "donut_room.tmx",
+        "PropsAndTraps.tsj"
     ],
     "project": "maps.tiled-project",
     "property.type": "object",
