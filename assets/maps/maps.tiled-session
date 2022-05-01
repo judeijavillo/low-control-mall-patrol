@@ -1,5 +1,5 @@
 {
-    "activeFile": "example5.json",
+    "activeFile": "",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -21,11 +21,11 @@
             "scaleInEditor": 0.11
         },
         "donut_room.json": {
-            "scale": 2.3571,
+            "scale": 0.5842,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 119.63853888252514,
-                "y": 156.76042594713846
+                "x": 439.9178363574117,
+                "y": 690.6881205066757
             }
         },
         "donut_room.tmx": {
@@ -45,11 +45,11 @@
             }
         },
         "example5.json": {
-            "scale": 0.0826,
-            "selectedLayer": 2,
+            "scale": 0.1064,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 4951.573849878934,
-                "y": 4981.8401937046
+                "x": 8054.5112781954895,
+                "y": 4158.834586466166
             }
         },
         "mappics.tsx": {
@@ -72,8 +72,10 @@
     "project": "maps.tiled-project",
     "property.type": "object",
     "recentFiles": [
-        "example4.json",
         "example5.json",
+        "donut_room.json",
+        "donut_room.tmx",
+        "PropsAndTraps.tsj",
         "Props.tsj"
     ],
     "tileset.lastUsedFilter": "JSON tileset files (*.tsj *.json)"

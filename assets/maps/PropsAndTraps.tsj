@@ -246,7 +246,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -872,7 +871,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -920,7 +918,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"table_right"
+                }]
         }, 
         {
          "id":30,
@@ -930,7 +949,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -978,7 +996,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"table_left"
+                }]
         }, 
         {
          "id":31,
@@ -988,7 +1027,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1007,7 +1045,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"table_horizontal"
+                }]
         }, 
         {
          "id":32,
@@ -1017,7 +1076,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1081,7 +1139,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"shopping_bags_together"
+                }]
         }, 
         {
          "id":33,
@@ -1091,7 +1170,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1131,7 +1209,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"shopping_bag_red"
+                }]
         }, 
         {
          "id":34,
@@ -1141,7 +1240,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1185,7 +1283,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"shopping_bag_blue"
+                }]
         }, 
         {
          "id":35,
@@ -1195,7 +1314,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1231,7 +1349,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"shopping_bag_yellow"
+                }]
         }, 
         {
          "id":36,
@@ -1241,7 +1380,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1285,7 +1423,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"palm_tree"
+                }]
         }, 
         {
          "id":37,
@@ -1295,7 +1454,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1314,7 +1472,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"chair_right"
+                }]
         }, 
         {
          "id":38,
@@ -1324,7 +1503,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1368,7 +1546,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"chair_rfront"
+                }]
         }, 
         {
          "id":39,
@@ -1378,7 +1577,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1422,7 +1620,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"chair_lfront"
+                }]
         }, 
         {
          "id":40,
@@ -1432,7 +1651,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1451,7 +1669,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"chair_left"
+                }]
         }, 
         {
          "id":41,
@@ -1461,7 +1700,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1480,7 +1718,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"chair_front"
+                }]
         }, 
         {
          "id":42,
@@ -1490,7 +1749,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1550,7 +1808,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"bench_spineless"
+                }]
         }, 
         {
          "id":43,
@@ -1560,7 +1839,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1620,7 +1898,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"bench_spine"
+                }]
         }, 
         {
          "id":44,
@@ -1630,7 +1929,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":3,
              "name":"",
              "objects":[
                     {
@@ -1649,13 +1947,55 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"arcade_side"
+                }]
         }, 
         {
          "id":45,
          "image":"..\/textures\/environment\/arcade_side_top_cont.png",
          "imageheight":70,
-         "imagewidth":277
+         "imagewidth":277,
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"arcade_side_top_cont"
+                }]
         }, 
         {
          "id":46,
@@ -1665,7 +2005,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1684,7 +2023,28 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"arcade_side_cont"
+                }]
         }, 
         {
          "id":47,
@@ -1694,7 +2054,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1713,19 +2072,82 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"arcade_front"
+                }]
         }, 
         {
          "id":48,
          "image":"..\/textures\/environment\/arcade_front_Rside.png",
          "imageheight":633,
-         "imagewidth":42
+         "imagewidth":42,
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"arcade_front_rside"
+                }]
         }, 
         {
          "id":49,
          "image":"..\/textures\/environment\/arcade_front_Lside.png",
          "imageheight":633,
-         "imagewidth":42
+         "imagewidth":42,
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"arcade_front_lside"
+                }]
         }, 
         {
          "id":50,
@@ -1735,7 +2157,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -1754,19 +2175,82 @@
              "visible":true,
              "x":0,
              "y":0
-            }
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"arcade_back"
+                }]
         }, 
         {
          "id":51,
          "image":"..\/textures\/environment\/arcade_back_Rside.png",
          "imageheight":633,
-         "imagewidth":43
+         "imagewidth":43,
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"arcade_back_rside"
+                }]
         }, 
         {
          "id":52,
          "image":"..\/textures\/environment\/arcade_back_Lside.png",
          "imageheight":633,
-         "imagewidth":43
+         "imagewidth":43,
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"arcade_back_lside"
+                }]
         }],
  "tilewidth":2276,
  "type":"tileset",

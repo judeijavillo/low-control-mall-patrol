@@ -1,5 +1,77 @@
 {
     "textures": {
+        "table_right": {
+            "file": "textures/environment/Table_Rend.png"
+        },
+        "table_left": {
+            "file": "textures/environment/Table_Lend.png"
+        },
+        "table_horizontal": {
+            "file": "textures/environment/Table_Hmiddle.png"
+        },
+        "shopping_bags_together": {
+            "file": "textures/environment/shopping bag tgh.png"
+        },
+        "shopping_bag_red": {
+            "file": "textures/environment/shopping bag 3.png"
+        },
+        "shopping_bag_blue": {
+            "file": "textures/environment/shopping bag 2.png"
+        },
+        "shopping_bag_yellow": {
+            "file": "textures/environment/shopping bag 1.png"
+        },
+        "palm_tree": {
+            "file": "textures/environment/Plamtree.png"
+        },
+        "chair_right": {
+            "file": "textures/environment/Chair_right.png"
+        },
+        "chair_rfront": {
+            "file": "textures/environment/chair_Rfront.png"
+        },
+        "chair_lfront": {
+            "file": "textures/environment/Chair_Lfront.png"
+        },
+        "chair_left": {
+            "file": "textures/environment/Chair_left.png"
+        },
+        "chair_front": {
+            "file": "textures/environment/Chair_front.png"
+        },
+        "bench_spineless": {
+            "file": "textures/environment/bench_spineless.png"
+        },
+        "bench_spine": {
+            "file": "textures/environment/bench_spine.png"
+        },
+        "arcade_side": {
+            "file": "textures/environment/arcade_side.png"
+        },
+        "arcade_side_top_cont": {
+            "file": "textures/environment/arcade_side_top_cont.png"
+        },
+        "arcade_side_cont": {
+            "file": "textures/environment/arcade_side_cont.png"
+        },
+        "arcade_front": {
+            "file": "textures/environment/arcade_front.png"
+        },
+        "arcade_front_rside": {
+            "file": "textures/environment/arcade_front_Rside.png"
+        },
+        "arcade_front_lside": {
+            "file": "textures/environment/arcade_front_Lside.png"
+        },
+        "arcade_back": {
+            "file": "textures/environment/arcade_back.png"
+        },
+        "arcade_back_rside": {
+            "file": "textures/environment/arcade_back_Rside.png"
+        },
+        "arcade_back_lside": {
+            "file": "textures/environment/arcade_back_Lside.png"
+        },
         "settings_background": {
             "file": "textures/ui/settings_background.png"
         },
