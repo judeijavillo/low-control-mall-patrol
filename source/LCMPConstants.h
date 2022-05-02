@@ -50,6 +50,8 @@ enum JsonConstants :int {
 	COP_LINGER_DURATION,
 	COP_LINGER_EFFECT,
 	EFFECT_AREA,
+	IDLE_ACTIVATED_ANIMATION,
+	IDLE_DEACTIVATED_ANIMATION,
 	NUM_USAGES,
 	TEXTURE_ACTIVATION_TRIGGER,
 	TEXTURE_ASSET,
@@ -105,6 +107,8 @@ enum JsonConstants :int {
 #define WALL_ASSETS_FILE    "maps/Map3WallAssets.json"
 /** The key for our loaded level */
 #define LEVEL_ONE_KEY       "example6"
+#define LEVEL_DONUT_KEY		"maps/donut_room.json"
+#define LEVEL_CONVEYOR_KEY		"maps/conveyorlevel.json"
 
 /** Tileset for props */
 #define PROPS_FILE          "maps/PropsAndTraps.tsj"

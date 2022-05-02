@@ -39,9 +39,9 @@
         "tree": {
             "file": "textures/environment/tree.png"
         },
-	"box" : {
-	    "file": "textures/environment/box.png"
-	},
+        "box" : {
+            "file": "textures/environment/box.png"
+        },
         "bucket": {
             "file": "textures/environment/bucket.png"
         },
@@ -50,6 +50,9 @@
         },
         "bush": {
             "file": "textures/environment/bush.png"
+        },
+        "circle" : {
+            "file": "textures/environment/circle.png"
         },
         "faris": {
             "file": "textures/environment/faris.png"
@@ -149,6 +152,42 @@
         },
         "thief_run_right": {
             "file": "textures/characters/lcmp_thief_run_right.png"
+        },
+        "Trav_D_Dend":{
+            "file":"textures/environment/animations/Trav_D_Dend.png"
+        },
+        "Trav_D_Uend":{
+            "file":"textures/environment/animations/Trav_D_Uend.png"
+        },
+        "Trav_down":{
+            "file":"textures/environment/animations/Trav_down.png"
+        },
+        "Trav_L_Lend":{
+            "file":"textures/environment/animations/Trav_L_Lend.png"
+        },
+        "Trav_L_Rend":{
+            "file":"textures/environment/animations/Trav_L_Rend.png"
+        },
+        "Trav_left":{
+            "file":"textures/environment/animations/Trav_left.png"
+        },
+        "Trav_R_Lend":{
+            "file":"textures/environment/animations/Trav_R_Lend.png"
+        },
+        "Trav_R_Rend":{
+            "file":"textures/environment/animations/Trav_R_Rend.png"
+        },
+        "Trav_right":{
+            "file":"textures/environment/animations/Trav_right.png"
+        },
+        "Trav_U_Dend":{
+            "file":"textures/environment/animations/Trav_U_Dend.png"
+        },
+        "Trav_U_Uend":{
+            "file":"textures/environment/animations/Trav_U_Uend.png"
+        },
+        "Trav_up":{
+            "file":"textures/environment/animations/Trav_up.png"
         },
         "ss_cop_up": {
             "file": "textures/characters/ss_cop_up.png"
