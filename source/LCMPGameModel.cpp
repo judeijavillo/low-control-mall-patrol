@@ -250,7 +250,7 @@ void GameModel::update(float timestep) {
     shared_ptr<PlayerModel> player = _thief;
     auto gridcell = player->getPosition()/GRID_SIZE;
 //            if(obstaclesInGrid[hash(gridcell)].size() > 0)
-            CULog("enabling %d obs for hash %d", obstaclesInGrid[hash(gridcell)].size(), hash(gridcell));
+//            CULog("enabling %d obs for hash %d", obstaclesInGrid[hash(gridcell)].size(), hash(gridcell));
             for(auto ob : obstaclesInGrid[hash(gridcell)])
                 ob->setEnabled(true);
 //                CULog("enabled obstacle for thief");

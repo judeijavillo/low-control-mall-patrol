@@ -129,7 +129,7 @@ enum JsonConstants :int {
 #define LOADING_MUSIC           "loading"
 #define MENU_MUSIC              "menu"
 #define SFX_COOLDOWN            2.0f
-#define MUSIC_VOLUME            0.f
+#define MUSIC_VOLUME            0.5f
 #define SFX_VOLUME              0.5f
 
 /** Player constants */
@@ -152,7 +152,7 @@ enum JsonConstants :int {
 /** The amount of time that the cop will be in the air while in a successful tackle */
 #define TACKLE_AIR_TIME 0.25f
 /** The amount of time that the cop will be in the air while in a failed tackle*/
-#define TACKLE_COOLDOWN_TIME 1.5f
+#define TACKLE_COOLDOWN_TIME 1.75f
 /** The movement multiplier for the cop during tackle */
 #define TACKLE_MOVEMENT_MULT 2.0f
 /** The damping multiplier for the cop during tackle */
@@ -176,9 +176,15 @@ enum JsonConstants :int {
 /** Amount UI elements should be shifted left or right to remain on screen */
 #define SCENE_WIDTH_ADJUST 80
 
+
+// UI and settings stuff
+
 #define MENU_OFFSET 0.1
 
 #define DROP_DURATION 0.3f
+
+/** The key for the settings animations */
+#define SETTINGS_ACT_KEY  "settings animation"
 
 /** The radius of the joystick*/
 #define JOYSTICK_RADIUS     100

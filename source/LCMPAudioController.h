@@ -16,6 +16,10 @@ protected:
     std::shared_ptr<cugl::AudioQueue> _queue;
     std::vector<pair<float, std::string>> _heap;
 
+    // Multipliers for the music and SFX volume
+    float _musicMult;
+    float _SFXMult;
+
 public:
     std::unordered_map<string, std::shared_ptr<cugl::audio::AudioPlayer>> audioPlayers;
 
@@ -51,6 +55,19 @@ public:
     
     /** Stops a sound effect */
     void stopSfx(string key);
+
+    /** Gets the music volume */
+    float getMusicMult() { return _musicMult; }
+
+    /** Sets the music volume */
+    void setMusicMult(float value) { _musicMult = value; }
+
+    /** Gets the sfx volume */
+    float getSFXMult() { return _SFXMult; }
+    
+    /** Sets the sfx volume */
+    void setSFXMult(float value) { _SFXMult = value; }
+
     
 };;
 
