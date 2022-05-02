@@ -77,6 +77,9 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     _title->setPosition(Vec2(SCENE_WIDTH/3, SCENE_HEIGHT/2) + _offset);
     _title->setAnchor(Vec2(0.5,0.5));
+    _hostbutton->setPosition(Vec2(7*SCENE_WIDTH/8, 3*SCENE_HEIGHT/4) + _offset);
+    _joinbutton->setPosition(Vec2(7*SCENE_WIDTH/8, SCENE_HEIGHT/2) + _offset);
+    _findbutton->setPosition(Vec2(7*SCENE_WIDTH/8, SCENE_HEIGHT/4) + _offset);
     
     // Program the buttons
     _hostbutton->addListener([this](const std::string& name, bool down) {
