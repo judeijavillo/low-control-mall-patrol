@@ -251,7 +251,8 @@ public:
     /**
      * Sets all of the assets for this trap
      */
-    void setAssets(float scale, float tileSize,
+    void setAssets(cugl::Vec2 position, cugl::Vec2 dims,
+                   float scale, cugl::Vec2 proportion, float tileSize,
                     const std::shared_ptr<cugl::scene2::SceneNode>& node,
                     const std::shared_ptr<cugl::AssetManager>& assets,
                     const std::shared_ptr<cugl::Texture> activationTriggerTexture,

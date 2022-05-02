@@ -133,8 +133,8 @@ enum JsonConstants :int {
 #define LOADING_MUSIC           "loading"
 #define MENU_MUSIC              "menu"
 #define SFX_COOLDOWN            2.0f
-#define MUSIC_VOLUME            0.5f
-#define SFX_VOLUME              0.5f
+#define MUSIC_VOLUME            0.0f
+#define SFX_VOLUME              0.1f
 
 /** Player constants */
 // Thief Physics Constants
