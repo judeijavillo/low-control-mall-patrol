@@ -535,6 +535,55 @@
                                 }
                             }
                         },
+                        "name": {
+                            "type"   : "Node",
+                            "format" : {
+                                   "type"         : "Float",
+                                    "orientation" : "horizontal",
+                                    "x_alignment" : "center",
+                                    "y_alignment" : "middle"
+                            },
+                            "data"   : {
+                                "anchor"  : [0.5,0.5],
+                                "size": [600,100],
+                                "position": [950, 600]
+                            },
+                            "children" : {
+                                "label": {
+                                    "type": "Label",
+                                    "data"   : {
+                                        "anchor"   : [0.5, 0.5],
+                                        "font"     : "futura heavy",
+                                        "text"     : "Name:",
+                                        "padding"  : [20, 20, 40, 20],
+                                        "halign"   : "left",
+                                        "valign"   : "middle"
+                                    },
+                                    "layout" : {
+                                        "priority" : 1
+                                    }
+                                },
+                                "field": {
+                                    "type": "Widget",
+                                    "data"   : {
+                                        "key"     : "textfield",
+                                        "variables" : {
+                                            "size": [300,100],
+                                            "text": "",
+                                            "halign": "center",
+                                            "framecolor": "#000000"
+                                        }
+                                    },
+                                    "layout" : {
+                                        "priority" : 2
+                                    }
+                                }
+                            },
+                            "layout" : {
+                                "priority" : 1,
+                                "padding"  : [0,50,0,0]
+                            }
+                        },
                         "instructions": {
                             "type": "Label",
                             "data": {

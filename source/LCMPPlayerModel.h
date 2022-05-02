@@ -40,6 +40,8 @@ protected:
     std::shared_ptr<cugl::scene2::SceneNode> _node;
     /** The child node for displaying the player's dropshadow */
     std::shared_ptr<cugl::scene2::PolygonNode> _dropshadow;
+    /** The child node for displaying the player's username */
+    std::shared_ptr<cugl::scene2::Label> _username;
     /** The child nodes for displaying the player */
     std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _spriteNodes;
     /** The player animations */
@@ -136,6 +138,11 @@ public:
      * Removes an instance of the effect with the corresponding trap id from the player effects
      */
     bool removeEffects(int trapID);
+
+    /**
+     * Sets the username of this player
+     */
+    void setName(string name, const shared_ptr<cugl::Font>& font);
 
     /**
      * Gets the appropriate key for the sound for collision

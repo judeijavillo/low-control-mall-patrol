@@ -208,6 +208,15 @@ void GameScene::start(bool host, string skinKey, string levelKey) {
     // Initialize the game
     _game = make_shared<GameModel>();
     _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, levelKey, _actions, _skinKey);
+    
+    // Set the player's names
+    for (int i = 0; i < 5; i++) {
+        NetworkController::Player playerData = _network->getPlayer(i);
+        shared_ptr<PlayerModel> player = playerData.playerNumber == -1
+            ? (shared_ptr<PlayerModel>) _game->getThief()
+            : (shared_ptr<PlayerModel>) _game->getCop(playerData.playerNumber);
+        player->setName(playerData.username, _font);
+    }
      
 
     // Initialize subcontrollers
@@ -285,6 +294,15 @@ void GameScene::reset() {
     // Make a new game
     _game = make_shared<GameModel>();
     _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions, _skinKey);
+    
+    // Set the player's names
+    for (int i = 0; i < 5; i++) {
+        NetworkController::Player playerData = _network->getPlayer(i);
+        shared_ptr<PlayerModel> player = playerData.playerNumber == -1
+            ? (shared_ptr<PlayerModel>) _game->getThief()
+            : (shared_ptr<PlayerModel>) _game->getCop(playerData.playerNumber);
+        player->setName(playerData.username, _font);
+    }
     
     // Initialize subcontrollers
     _collision.init(_game);
