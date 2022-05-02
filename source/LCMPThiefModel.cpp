@@ -53,8 +53,10 @@ bool ThiefModel::init(float scale,
     PlayerModel::init(-1, Vec2::ZERO, size, scale, node, actions);
     
     // Set up the textures for all directions
-    bool female;
-    skinKey == "THIEF_RUN_RIGHT_F" ? female = true : female = false;
+    bool female = (skinKey.back() == 'F');
+//    skinKey == "THIEF_RUN_RIGHT_F" ? female = true : female = false;
+//    female = (skinKey.back() == 'F') ? true : false;
+//    skinKey = (skinKey != "THIEF_RUN_RIGHT") ? "MALE_HATLESS" : "THIEF_RUN_RIGHT";
     
     _spriteSheets.push_back(assets->get<Texture>(skinKey));
     _spriteSheets.push_back(assets->get<Texture>(THIEF_RUN_BACK));

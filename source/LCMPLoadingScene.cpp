@@ -49,8 +49,7 @@ using namespace cugl;
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool LoadingScene::init(const std::shared_ptr<AssetManager>& assets,
-                        std::shared_ptr<AudioController>& audio,
-                        std::shared_ptr<cugl::scene2::ActionManager>& actions) {
+                        std::shared_ptr<AudioController>& audio) {
     
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();

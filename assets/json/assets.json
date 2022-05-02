@@ -3,6 +3,9 @@
         "settings_background": {
             "file": "textures/ui/settings_background.png"
         },
+        "back_button": {
+            "file": "textures/ui/back.png"
+        },
         "baby_carriage_anim_down": {
             "file": "textures/environment/animations/baby_carriage_anim_down.png"
         },
@@ -338,6 +341,24 @@
         },
         "propeller_hat_left": {
             "file":  "textures/accessories/propeller_hat_left.png"
+        },
+        "title": {
+            "file": "textures/lobby/title.png"
+        },
+        "buy": {
+            "file": "textures/ui/buy_button.png"
+        },
+        "roll": {
+            "file": "textures/ui/roll_button.png"
+        },
+        "shopping_bag_1": {
+            "file": "textures/environment/shopping_bag_1.png"
+        },
+        "shopping_bag_many": {
+            "file": "textures/environment/shopping_bag_many.png"
+        },
+        "donut": {
+            "file": "textures/ui/donut_brown.png"
         }
     },
     "sounds": {
@@ -464,7 +485,6 @@
 									"type": "Image",
 									"data": {
 										"texture": "create_button"
-
 									}
 								}
 							}
@@ -533,14 +553,14 @@
 								"position": [50, 640],
 								"scale": [0.3, 0.3]
 							},
-							"children": {
-								"up": {
-									"type": "Image",
-									"data": {
-										"texture": "profile"
-									}
-								}
-							}
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "profile"
+                                    }
+                                }
+                            }
 						},
 						"shop": {
 							"type": "Button",
@@ -560,30 +580,13 @@
 							}
 						},
 						"title": {
-							"type": "Label",
+							"type": "Image",
 							"data": {
 								"anchor": [0.5, 0.5],
-								"scale": 1.5,
-								"font": "futura",
-								"text": "LOW CONTROL",
-								"halign": "center",
-								"valign": "middle",
-								"position": [546, 450]
-
+                                "scale": [0.6, 0.6],
+                                "texture": "title"
 							}
 						}
-					}
-				},
-				"title": {
-					"type": "Label",
-					"data": {
-						"anchor": [0.5, 0.5],
-						"scale": 1.5,
-						"font": "futura",
-						"text": "MALL PATROL",
-						"halign": "center",
-						"valign": "middle",
-						"position": [546, 350]
 					}
 				}
 			}
@@ -631,14 +634,12 @@
                 "settings" : {
                     "type" : "Image",
                     "data" :{
-                        "texture":  "settings_background",
-                        "anchor" : [0.5,1]
+                        "texture":  "menu_background",
+                        "anchor" : [0.5,0,5]
                     },
                     "layout" : {
-                        "x_anchor" : "center",
-                        "y_anchor" : "top",
-                        "y_offset" : 0,
-                        "x_offset" : 0
+                        "x_anchor" : "fill",
+                        "y_anchor" : "fill"
                     },
                     "children" : {
                         "Title" : {
@@ -654,7 +655,7 @@
                                 "position" : [275, 309]
                             }
                         },
-                        "Halo" : {
+                        "halo" : {
                             "type"      : "Button",
                             "data"   : {
                                 "upnode"  : "up",
@@ -671,7 +672,7 @@
                                 }
                             }
                         },
-                        "Cat" : {
+                        "cat_ears" : {
                             "type"      : "Button",
                             "data"   : {
                                 "upnode"  : "up",
@@ -688,7 +689,7 @@
                                 }
                             }
                         },
-                        "Plant" : {
+                        "plant" : {
                             "type"      : "Button",
                             "data"   : {
                                 "upnode"  : "up",
@@ -705,7 +706,7 @@
                                 }
                             }
                         },
-                        "Police" : {
+                        "police_hat" : {
                             "type"      : "Button",
                             "data"   : {
                                 "upnode"  : "up",
@@ -722,7 +723,7 @@
                                 }
                             }
                         },
-                        "Propeller" : {
+                        "propeller_hat" : {
                             "type"      : "Button",
                             "data"   : {
                                 "upnode"  : "up",
@@ -739,7 +740,105 @@
                                 }
                             }
                         },
-                        "X" : {
+                        "Back" : {
+                            "type"      : "Button",
+                            "data"   : {
+                                "upnode"  : "up",
+                                "anchor":   [0.5,0.5],
+                                "scale" : [0.2, 0.2]
+                            },
+                            "children": {
+                                "up" : {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture":  "back_button"
+                                    }
+                                }
+                            }
+                        },
+                        "Buy": {
+                            "type": "Button",
+                            "data"   : {
+                                "upnode"  : "up",
+                                "anchor":   [0.5,0.5],
+                                "scale" : [1.5, 1.5]
+                            },
+                            "children": {
+                                "up" : {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture":  "buy"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "gacha" : {
+            "type" : "Node",
+            "format" : {
+                "type" : "Anchored"
+            },
+            "children" : {
+                "settings" : {
+                    "type" : "Image",
+                    "data" :{
+                        "texture":  "menu_background",
+                        "anchor" : [0.5,0,5]
+                    },
+                    "layout" : {
+                        "x_anchor" : "fill",
+                        "y_anchor" : "fill"
+                    },
+                    "children" : {
+                        "Title" : {
+                            "type"        : "label",
+                            "data" : {
+                                "anchor"  : [0.5,0.5],
+                                "scale"    : 0.9,
+                                "font"     : "futura heavy",
+                                "text"     : "ROLL",
+                                "halign"   : "center",
+                                "valign"   : "middle",
+                                "foreground": [38, 84, 124, 255],
+                                "position" : [275, 309]
+                            }
+                        },
+                        "normal": {
+                            "type"      : "Image",
+                            "data"   : {
+                                "upnode"  : "up",
+                                "anchor":   [0.5,0.5],
+                                "scale" : [0.3,0.3]
+                            },
+                            "children": {
+                                "up" : {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture":  "shopping_bag_1"
+                                    }
+                                }
+                            }
+                        },
+                        "rare": {
+                            "type"      : "Image",
+                            "data"   : {
+                                "upnode"  : "up",
+                                "anchor":   [0.5,0.5],
+                                "scale" : [0.3,0.3]
+                            },
+                            "children": {
+                                "up" : {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture":  "shopping_bag_many"
+                                    }
+                                }
+                            }
+                        },
+                        "Back" : {
                             "type"      : "Button",
                             "data"   : {
                                 "upnode"  : "up",
@@ -751,9 +850,61 @@
                                 "up" : {
                                     "type": "Image",
                                     "data": {
-                                        "texture":  "button_x"
+                                        "texture":  "back_button"
                                     }
                                 }
+                            }
+                        },
+                        "Roll": {
+                            "type": "Button",
+                            "data"   : {
+                                "upnode"  : "up",
+                                "anchor":   [0.5,0.5],
+                                "scale" : [1.5, 1.5]
+                            },
+                            "children": {
+                                "up" : {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture":  "roll"
+                                    }
+                                }
+                            }
+                        },
+                        "Donut": {
+                            "type"      : "Image",
+                            "data"   : {
+                                "upnode"  : "up",
+                                "anchor":   [0.5,0.5],
+                                "scale" : [0.2,0.2]
+                            },
+                            "children": {
+                                "up" : {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture":  "donut"
+                                    }
+                                }
+                            }
+                        },
+                        "Cash" : {
+                            "type"        : "label",
+                            "data" : {
+                                "anchor"  : [0.5,0.5],
+                                "scale"    : 0.75,
+                                "font"     : "futura heavy",
+                                "text"     : "1000",
+                                "foreground": [38, 84, 124, 255]
+                            }
+                        },
+                        "None" : {
+                            "type"        : "label",
+                            "data" : {
+                                "anchor"  : [0.5,0.5],
+                                "scale"    : 0.5,
+                                "font"     : "futura heavy",
+                                "text"     : "No More NFDs!",
+                                "foreground": [38, 84, 124, 255]
                             }
                         }
                     }

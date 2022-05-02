@@ -45,14 +45,22 @@ bool VictoryScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Get the interactive UI elements that we need to access later
     _replayButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("victory_backdrop_replay"));
-    _replayButton->setPositionX(SCENE_WIDTH/4);
-    _replayButton->setAnchor(Vec2(0.5,0.5));
+    _replayButton->setPosition(Vec2(SCENE_WIDTH/4, SCENE_HEIGHT_ADJUST) + _offset);
+    _replayButton->setAnchor(Vec2(0.5,0));
     _leaveButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("victory_backdrop_leave"));
-    _leaveButton->setPositionX(3*SCENE_WIDTH/4);
-    _leaveButton->setAnchor(Vec2(0.5,0.5));
+    _leaveButton->setPosition(Vec2(3*SCENE_WIDTH/4, SCENE_HEIGHT_ADJUST) + _offset);
+    _leaveButton->setAnchor(Vec2(0.5,0));
     _text = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("victory_backdrop_text"));
-    _text->setPositionX(SCENE_WIDTH/2);
+    _text->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT - SCENE_HEIGHT_ADJUST) + _offset);
     _text->setAnchor(Vec2(0.5,0.5));
+    _thiefBanner = std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("victory_backdrop_thief_win"));
+    _thiefBanner->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) + _offset);
+    _thiefBanner->setAnchor(Vec2(0.5,0.5));
+    _thiefBanner->setScale(SCENE_WIDTH / _thiefBanner->getWidth());
+    _copBanner = std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("victory_backdrop_cop_win"));
+    _copBanner->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) + _offset);
+    _copBanner->setAnchor(Vec2(0.5,0.5));
+    _copBanner->setScale(SCENE_WIDTH / _copBanner->getWidth());
     _status = Status::IDLE;
     
     // Program the buttons
@@ -88,6 +96,15 @@ void VictoryScene::dispose() {
 }
 
 void VictoryScene::updateMessage() {
+    if (_thiefWin) {
+        _thiefBanner->setVisible(true);
+        _copBanner->setVisible(false);
+    }
+    else {
+        _copBanner->setVisible(true);
+        _thiefBanner->setVisible(false);
+    }
+    
     if (_isThief && _thiefWin) _text->setText("You Made Your Escape!");
     else if (_isThief) _text->setText("You Were Captured...");
     else if (_thiefWin) _text->setText("The Thief Escaped...");

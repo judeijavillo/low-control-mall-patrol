@@ -24,7 +24,6 @@ using namespace std;
 
 /** Regardless of logo, lock the height to this */
 #define SCENE_HEIGHT  720
-#define ACT_KEY       "shop_menu"
 
 //  MARK: - Constructors
 
@@ -72,6 +71,12 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_host"));
     _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_join"));
     _findbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_find"));
+    _title = std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("menu_backdrop_title"));
+    _shopButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_shop"));
+    _gachaButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_profile"));
+    
+    _title->setPosition(Vec2(SCENE_WIDTH/3, SCENE_HEIGHT/2) + _offset);
+    _title->setAnchor(Vec2(0.5,0.5));
     
     // Program the buttons
     _hostbutton->addListener([this](const std::string& name, bool down) {
@@ -89,21 +94,19 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         }
     });
     _findbutton->addListener([this](const std::string& name, bool down) {
-        if (down) _choice = Choice::FIND;
+        if (down) _choice = FIND;
     });
-   
-    initShop();
-    
-    std::shared_ptr<scene2::SceneNode> backdrop = _assets->get<scene2::SceneNode>("menu_backdrop");
-    //_settings.init(backdrop, dimen, _offset, _assets, _actions);
+    _shopButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _choice = SHOP;
+        }
+    });
+    _gachaButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _choice = GACHA;
+        }
+    });
 
-    initSettingsButton();
-    _didShop = false;
-   
-    scene->addChild(_shopMenu);
-    _moveup = scene2::MoveTo::alloc(Vec2(_dimen.width/2, _shopMenu->getParent()->getHeight()*2), DROP_DURATION);
-    _movedn = scene2::MoveTo::alloc(Vec2(_dimen.width/2, _shopMenu->getParent()->getHeight()), DROP_DURATION);
-    _shopMenu->setPosition(Vec2(_dimen.width/2, _dimen.height*2));
     addChild(scene);
     setActive(false);
     return true;
@@ -138,178 +141,20 @@ void MenuScene::setActive(bool value) {
             _hostbutton->activate();
             _joinbutton->activate();
             _findbutton->activate();
-            _cat->deactivate();
-            _propeller->deactivate();
-            _police->deactivate();
-            _halo->deactivate();
-            _plant->deactivate();
             _shopButton->activate();
+            _gachaButton->activate();
         } else {
             _hostbutton->deactivate();
             _joinbutton->deactivate();
             _findbutton->deactivate();
-            _cat->deactivate();
-            _propeller->deactivate();
-            _police->deactivate();
-            _halo->deactivate();
-            _plant->deactivate();
             _shopButton->deactivate();
+            _gachaButton->deactivate();
             // If any were pressed, reset them
             _hostbutton->setDown(false);
             _joinbutton->setDown(false);
             _findbutton->setDown(false);
-            _cat->setDown(false);
-            _propeller->setDown(false);
-            _police->setDown(false);
-            _halo->setDown(false);
-            _plant->setDown(false);
             _shopButton->setDown(false);
+            _gachaButton->setDown(false);
         }
     }
 }
-
-void MenuScene::update(float timestep) {
-    _actions->update(timestep);
-    if (!_settings.didPause()) {
-        updateShop();
-    }
-}
-
-
-void MenuScene::doMove(const std::shared_ptr<scene2::MoveTo>& action) {
-    if (_actions->isActive(ACT_KEY)) {
-        CULog("You must wait for the animation to complete first");
-    }
-    else {
-        auto fcn = EasingFunction::alloc(EasingFunction::Type::LINEAR);
-        _actions->activate(ACT_KEY, action, _shopMenu, fcn);
-    }
-}
-
-void MenuScene::initSettingsButton() {
-    _settingsButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_settings"));
-    _settingsButton->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _audio->stopSfx(CLICK_SFX);
-            _audio->playSound(_assets, CLICK_SFX, true, 0);
-            _settings.setDidPause(true);
-        }
-        });
-    _settingsButton->activate();
-
-}
-
-void MenuScene::initShop() {
-    _cat = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("shop_settings_Cat"));
-    _propeller = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("shop_settings_Propeller"));
-    _police = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("shop_settings_Police"));
-    _halo = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("shop_settings_Halo"));
-    _plant = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("shop_settings_Plant"));
-    _shopCloseButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("shop_settings_X"));
-    _shopButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_shop"));
-    
-    _shopMenu = _assets->get<scene2::SceneNode>("shop");
-    _shopMenu->setContentSize(_dimen);
-    _shopMenu->doLayout(); // Repositions the HUD
-    _shopMenu->setAnchor(0.5, 1);
-    _shopMenu->setVisible(true);
-    
-    _shopButton->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            doMove(_movedn);
-            _didShop = true;
-        }
-    });
-    
-    // Properly sets position of the settings menu (by changing content size)
-    Vec2 shopMenuPos = _shopMenu->getContentSize();
-    shopMenuPos *= SCENE_HEIGHT / _dimen.height;
-    _shopMenu->setContentSize(shopMenuPos);
-   
-     // Program the buttons
-    _cat->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _cat->setScale(0.8);
-            _propeller->setScale(0.7);
-            _police->setScale(0.7);
-            _halo->setScale(0.7);
-            _plant->setScale(0.7);
-        }
-    });
-    _propeller->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _propeller->setScale(0.8);
-            _cat->setScale(0.7);
-            _police->setScale(0.7);
-            _halo->setScale(0.7);
-            _plant->setScale(0.7);
-        }
-    });
-    _police->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _police->setScale(0.8);
-            _cat->setScale(0.7);
-            _propeller->setScale(0.7);
-            _halo->setScale(0.7);
-            _plant->setScale(0.7);
-        }
-    });
-    _halo->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _halo->setScale(0.8);
-            _cat->setScale(0.7);
-            _propeller->setScale(0.7);
-            _police->setScale(0.7);
-            _plant->setScale(0.7);
-        }
-    });
-    _plant->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _plant->setScale(0.8);
-            _cat->setScale(0.7);
-            _propeller->setScale(0.7);
-            _police->setScale(0.7);
-            _halo->setScale(0.7);
-        }
-    });
-    _shopCloseButton->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            doMove(_moveup);
-            _didShop = false;
-        }
-    });
-}
-
-void MenuScene::updateShop() {
-    if (_didShop) {
-        _shopMenu->setVisible(true);
-        _shopCloseButton->activate();
-        _shopButton->deactivate();
-        _hostbutton->deactivate();
-        _joinbutton->deactivate();
-        _findbutton->deactivate();
-        _cat->activate();
-        _cat->setVisible(true);
-        _propeller->activate();
-        _propeller->setVisible(true);
-        _police->activate();
-        _police->setVisible(true);
-        _halo->activate();
-        _halo->setVisible(true);
-        _plant->activate();
-        _plant->setVisible(true);
-    }
-    else {
-        _shopCloseButton->deactivate();
-        _shopButton->activate();
-        _hostbutton->activate();
-        _joinbutton->activate();
-        _findbutton->activate();
-        _cat->deactivate();
-        _propeller->deactivate();
-        _police->deactivate();
-        _halo->deactivate();
-        _plant->deactivate();
-    }
-}
-
