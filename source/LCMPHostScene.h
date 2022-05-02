@@ -65,6 +65,20 @@ protected:
     std::shared_ptr<cugl::scene2::Label> _gameid;
     /** The players label (for updating) */
     std::shared_ptr<cugl::scene2::Label> _player;
+    
+    /** The player 1 label (for updating) */
+    std::shared_ptr<cugl::scene2::Label> _player1;
+    /** The player 2 label (for updating) */
+    std::shared_ptr<cugl::scene2::Label> _player2;
+    /** The player 3 label (for updating) */
+    std::shared_ptr<cugl::scene2::Label> _player3;
+    /** The player 4 label (for updating) */
+    std::shared_ptr<cugl::scene2::Label> _player4;
+    /** The player 5 label (for updating) */
+    std::shared_ptr<cugl::scene2::Label> _player5;
+    /** The name label (for updating) */
+    std::shared_ptr<cugl::scene2::TextField> _name;
+    
 
 //    /** Reference to the node containing the customization menu */
 //    std::shared_ptr<cugl::scene2::SceneNode> _customizeMenu;

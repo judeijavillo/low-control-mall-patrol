@@ -36,16 +36,18 @@ public:
     
     /** The different signals that the Network Controller can send */
     enum Signal {
+        /** Change the display name of a player */
+        DISPLAY_NAME,
         /** It's time to start the game */
-        START_GAME = 0,
+        START_GAME,
         /** What follows is which cop to update, its x and y position, and its x and y velocity */
-        COP_MOVEMENT = 1,
+        COP_MOVEMENT,
         /** What follows is the thief's x and y position, and its x and y velocity */
-        THIEF_MOVEMENT = 2,
+        THIEF_MOVEMENT,
         /** What follows is which trap to activate */
-        TRAP_ACTIVATION = 3,
+        TRAP_ACTIVATION,
         /** This indicates that the game is over (cops won) */
-        GAME_OVER = 4
+        GAME_OVER
     };
 
 //  MARK: - Structs
@@ -54,6 +56,7 @@ public:
     struct Player {
         int playerID;
         int playerNumber;
+        string username;
     };
     
 protected:
@@ -179,8 +182,9 @@ public:
     void update();
     
     /**
-     * Sends a message intended for the host a unique player 
+     * Sends the updated name of a particular player
      */
+    void sendDisplayName(string name);
     
     /**
      * Sends a byte vector to start the game

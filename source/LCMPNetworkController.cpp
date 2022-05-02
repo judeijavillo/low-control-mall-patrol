@@ -67,6 +67,13 @@ bool NetworkController::init() {
  */
 bool NetworkController::connect() {
     _connection = NetworkConnection::alloc(_config);
+    
+    
+    for (int playerID = 0; playerID < 5; playerID++) {
+        _players[playerID] = {playerID, -2, "No Player"};
+    }
+    _players[0].username = "Player 1";
+    
     update();
     return _status != IDLE;
 }
@@ -76,6 +83,11 @@ bool NetworkController::connect() {
  */
 bool NetworkController::connect(const std::string room) {
     _connection = NetworkConnection::alloc(_config, room);
+    
+    for (int playerID = 0; playerID < 5; playerID++) {
+        _players[playerID] = {playerID, -2, "No Player"};
+    }
+    
     update();
     return _status != IDLE;
 }
@@ -105,12 +117,12 @@ void NetworkController::update() {
     
     _connection->receive([this](const std::vector<uint8_t> msg) {
         // TODO: Add more functionality for getting client info, like names
-        if (_isHost) return;
         _deserializer.receive(msg);
         vector<float> data = _deserializer.readFloatVector();
-        _deserializer.reset();
-        
         switch ((int) data.at(0)) {
+        case DISPLAY_NAME:
+            _players[data.at(1)].username = _deserializer.readString();
+            break;
         case START_GAME:
             _status = START;
             int i = 2;
@@ -118,11 +130,31 @@ void NetworkController::update() {
                 int player = (int) data.at(i);
                 int role = (int) data.at(i+1);
                 if (player == this->getPlayerID()) _playerNumber = role;
+                _players[player].playerNumber = role;
                 i += 2;
+            }
+            for (int i = 0; i < 5; i++) {
+                _players[i].username = _deserializer.readString();
             }
             break;
         }
+        _deserializer.reset();
     });
+}
+
+/**
+ * Sends the updated name of a particular player
+ */
+void NetworkController::sendDisplayName(string name) {
+    vector<float> data;
+    data.push_back(DISPLAY_NAME);
+    data.push_back(getPlayerID() ? *getPlayerID() : -1);
+    _players[*getPlayerID()].username = name;
+    
+    _serializer.writeFloatVector(data);
+    _serializer.writeString(name);
+    _connection->send(_serializer.serialize());
+    _serializer.reset();
 }
 
 /**
@@ -136,7 +168,7 @@ void NetworkController::sendStartGame(bool randomThief, int thiefChoice) {
     int count = 0;
     int thief = randomThief ? rand() % getNumPlayers() : thiefChoice;
     for (int playerID = 0; playerID < 5; playerID++) {
-        _players[playerID] = {playerID, playerID == getPlayerID() ? -1 : count};
+        _players[playerID].playerNumber = playerID == getPlayerID() ? -1 : count;
         data.push_back(playerID);
         if (thief == playerID) {
             if (playerID == getPlayerID()) _playerNumber = -1;
@@ -148,8 +180,12 @@ void NetworkController::sendStartGame(bool randomThief, int thiefChoice) {
         }
     }
     
-    CULog("now");
     _serializer.writeFloatVector(data);
+    
+    for (int i = 0; i < 5; i++) {
+        _serializer.writeString(_players[i].username);
+    }
+    
     _connection->send(_serializer.serialize());
     _serializer.reset();
 }

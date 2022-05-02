@@ -70,6 +70,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_back"));
     _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_roomID"));
     _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_instructions"));
+    _name = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join_backdrop_name_field_text"));
     _status = Status::IDLE;
     
     // Attach listener to back button
@@ -118,6 +119,12 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         }
     });
     
+    _name->addExitListener([this](const std::string& name, const std::string& value) {
+        if (_network->isConnected()) {
+            _network->sendDisplayName(value);
+        }
+    });
+    
     addChild(scene);
     setActive(false);
     return true;
@@ -151,6 +158,8 @@ void ClientScene::update(float timestep) {
             _status = IDLE;
             break;
         case NetworkController::WAIT:
+            if (_status == IDLE) _network->sendDisplayName("Player " + (
+                _network->getPlayerID() ? to_string(*(_network->getPlayerID()) + 1) : ""));
             _status = WAIT;
             break;
         case NetworkController::START:
@@ -198,6 +207,7 @@ void ClientScene::setActive(bool value) {
             _status = IDLE;
             _network->disconnect();
             _backout->activate();
+            _name->activate();
             for (auto button = _keypadButtons.begin(); button != _keypadButtons.end(); button++) {
                 (*button)->activate();
             }
@@ -208,6 +218,7 @@ void ClientScene::setActive(bool value) {
         } else {
             _startgame->deactivate();
             _backout->deactivate();
+            _name->deactivate();
             for (auto button = _keypadButtons.begin(); button != _keypadButtons.end(); button++) {
                 (*button)->deactivate();
             }

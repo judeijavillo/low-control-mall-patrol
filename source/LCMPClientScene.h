@@ -69,6 +69,8 @@ protected:
     std::shared_ptr<cugl::scene2::Label> _gameid;
     /** The players label (for updating) */
     std::shared_ptr<cugl::scene2::Label> _player;
+    /** The name label (for updating) */
+    std::shared_ptr<cugl::scene2::TextField> _name;
     
     /** The current status */
     Status _status;

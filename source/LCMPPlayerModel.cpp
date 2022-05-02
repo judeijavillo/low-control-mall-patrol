@@ -88,6 +88,20 @@ void PlayerModel::dispose() {
 
 //  MARK: - Methods
 
+
+/**
+ * Sets the username of this player
+ */
+void PlayerModel::setName(string name, const shared_ptr<Font>& font) {
+    // Add a username node
+    // TODO: clean this up
+    _username = scene2::Label::allocWithText(name, font);
+    _username->setAnchor(Vec2::ANCHOR_CENTER);
+    _username->setPosition(_node->getWidth() / 2, _spriteNodes[0]->getHeight());
+    _username->setColor(Color4::RED);
+    _node->addChild(_username);
+}
+
 /**
  * Applies an acceleration to the player (most likely for local updates)
  */
