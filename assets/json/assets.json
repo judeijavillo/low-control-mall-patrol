@@ -477,7 +477,6 @@
 							"data": {
 								"upnode": "up",
 								"anchor": [0.5, 0.5],
-								"position": [1000, 550],
 								"scale": [1.6, 1.6]
 							},
 							"children": {
@@ -494,7 +493,6 @@
 							"data": {
 								"upnode": "up",
 								"anchor": [0.5, 0.5],
-								"position": [1000, 350],
 								"scale": [1.5, 1.5]
 							},
 							"children": {
@@ -511,7 +509,6 @@
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "position": [1000, 150],
                                 "scale": [1.5, 1.5]
                             },
                             "children": {
