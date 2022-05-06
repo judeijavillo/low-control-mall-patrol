@@ -40,6 +40,9 @@
                         "anchor": [0.5, 0.5],
                         "scale": [1, 1]
                     },
+					"format": {
+						"type" : "anchored"
+					},
                     "layout": {
                         "x_anchor": "fill",
                         "y_anchor": "fill"
@@ -50,9 +53,14 @@
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "position": [600, 150],
                                 "scale": [1.6, 1.6]
                             },
+							"layout" : {
+								"x_anchor": "center",
+								"y_anchor": "bottom",
+								"x_offset": -0.15,
+								"y_offset": 0.25
+							},
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -84,9 +92,14 @@
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "position": [50, 560],
                                 "scale": [0.3, 0.3]
                             },
+							"layout": {
+								"x_anchor": "left",
+								"y_anchor": "top",
+								"x_offset": 0.05,
+								"y_offset": -0.2
+							},
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -105,9 +118,14 @@
                                 "font": "futura",
                                 "text": "Tell your friends this room code: ",
                                 "halign": "middle",
-                                "valign": "center",
-                                "position": [600, 500]
-                            }
+                                "valign": "center"
+                            },
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "top",
+								"x_offset": -0.05,
+								"y_offset": -0.1
+							}
                         },
                         "players": {
                             "type": "Label",
@@ -117,9 +135,14 @@
                                 "font": "futura",
                                 "text": "Waiting for players (1/1)",
                                 "halign": "middle",
-                                "valign": "center",
-                                "position": [600, 450]
-                            }
+                                "valign": "center"
+                            },
+							"layout": {
+								"x_anchor" : "center",
+								"y_anchor" : "top",
+								"x_offset" : 0,
+								"y_offset" : -0.18
+							}
                         },
                         "player1": {
                             "type": "Label",
@@ -129,9 +152,14 @@
                                 "font": "futura",
                                 "text": "No Player",
                                 "halign": "middle",
-                                "valign": "center",
-                                "position": [950, 400]
-                            }
+                                "valign": "center"
+                            },
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "middle",
+								"x_offset": 0.25,
+								"y_offset": 0.05
+							}
                         },
                         "player2": {
                             "type": "Label",
@@ -141,9 +169,14 @@
                                 "font": "futura",
                                 "text": "No Player",
                                 "halign": "middle",
-                                "valign": "center",
-                                "position": [950, 350]
-                            }
+                                "valign": "center"
+                            },
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "middle",
+								"x_offset": 0.25,
+								"y_offset": -0.02
+							}
                         },
                         "player3": {
                             "type": "Label",
@@ -153,9 +186,14 @@
                                 "font": "futura",
                                 "text": "No Player",
                                 "halign": "middle",
-                                "valign": "center",
-                                "position": [950, 300]
-                            }
+                                "valign": "center"
+                            },
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "middle",
+								"x_offset": 0.25,
+								"y_offset": -0.09
+							}
                         },
                         "player4": {
                             "type": "Label",
@@ -165,9 +203,14 @@
                                 "font": "futura",
                                 "text": "No Player",
                                 "halign": "middle",
-                                "valign": "center",
-                                "position": [950, 250]
-                            }
+                                "valign": "center"
+                            },
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "middle",
+								"x_offset": 0.25,
+								"y_offset": -0.16
+							}
                         },
                         "player5": {
                             "type": "Label",
@@ -177,9 +220,14 @@
                                 "font": "futura",
                                 "text": "No Player",
                                 "halign": "middle",
-                                "valign": "center",
-                                "position": [950, 200]
-                            }
+                                "valign": "center"
+                            },
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "middle",
+								"x_offset": 0.25,
+								"y_offset": -0.23
+							}
                         },
                         "name": {
                             "type"   : "Node",
@@ -191,9 +239,14 @@
                             },
                             "data"   : {
                                 "anchor"  : [0.5,0.5],
-                                "size": [600,100],
-                                "position": [600, 600]
+                                "size": [600,100]
                             },
+							"layout" : {
+								"x_anchor": "center",
+								"y_anchor": "top",
+								"x_offset": 0,
+								"y_offset": -0.3
+							},
                             "children" : {
                                 "label": {
                                     "type": "Label",

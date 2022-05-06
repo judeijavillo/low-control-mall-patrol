@@ -1,5 +1,5 @@
 {
-    "activeFile": "example5.json",
+    "activeFile": "conveyorlevel.json",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -22,11 +22,11 @@
             "scaleInEditor": 0.11
         },
         "conveyorlevel.json": {
-            "scale": 0.75,
+            "scale": 0.5,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4731.333333333333,
-                "y": 4879.333333333333
+                "x": 1517,
+                "y": 6295
             }
         },
         "donut_room.json": {
@@ -83,8 +83,7 @@
     "map.lastUsedFormat": "json",
     "openFiles": [
         "example5.json",
-        "donut_room.tmx",
-        "PropsAndTraps.tsj"
+        "conveyorlevel.json"
     ],
     "project": "maps.tiled-project",
     "property.type": "Effect",

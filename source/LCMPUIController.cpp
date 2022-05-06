@@ -7,7 +7,7 @@
 //
 
 #include "LCMPUIController.h"
-#include "LCMPSettingsController.h"
+#include "LCMPPauseController.h"
 #include "LCMPConstants.h"
 #include "LCMPAudioController.h"
 
@@ -95,12 +95,14 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     _joystickNode = scene2::SceneNode::alloc();
     _accelVisNode = scene2::SceneNode::alloc();
 //    _victoryNode = scene2::SceneNode::alloc();
-    
+
     initTimer();
+    initElementsNode();
+
+    initThiefIndicator();
 
     // Add nodes to the top-level nodes
     _uinode->addChild(_direcIndicatorsNode);
-    _uinode->addChild(_thiefIndicatorNode);
 //    _uinode->addChild(_victoryNode);
     _uinode->addChild(_joystickNode);
     _uinode->addChild(_accelVisNode);
@@ -116,7 +118,7 @@ bool UIController::init(const shared_ptr<scene2::SceneNode> worldnode,
     initJoystick();
     initAccelVis();
     initDirecIndicators();
-    initThiefIndicator();
+//    initThiefIndicator();
 //    initMessage();
 //    initSettings();
     _settings.init(_uinode, _screenSize, _offset, _assets, _actions, _audio);
@@ -153,7 +155,7 @@ void UIController::update(float timestep, bool isThief, Vec2 movement,
     // If the player is a cop, update accelerometer visualization and distance
     else {
         updateAccelVis(movement);
-        updateThiefIndicator(copID);
+        updateThiefIndicator(copID, isThief);
     }
    
     updateDirecIndicators(isThief, copID);
@@ -168,21 +170,31 @@ void UIController::update(float timestep, bool isThief, Vec2 movement,
 //  MARK: - Helpers
 
 /**
+ * Initializes the node from JSON that is the parent of various UI elements. 
+ */
+void UIController::initElementsNode() {
+
+    //     Initialize settings button from assets manager
+        _elementsNode = _assets->get<scene2::SceneNode>("game");
+        _elementsNode->setContentSize(_screenSize);
+        Vec2 elementsPos = _elementsNode->getContentSize();
+        elementsPos *= SCENE_HEIGHT / _screenSize.height;
+        _elementsNode->setContentSize(elementsPos);
+        _elementsNode->doLayout(); // Repositions the HUD
+
+        _uinode->addChild(_elementsNode);
+}
+
+/**
  * Initializes the settings button
  */
 void UIController::initSettingsButton() {
     _settingsButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("game_gameUIsettings"));
 
-    // Initialize settings button from assets manager
-    _settingsButtonNode = _assets->get<scene2::SceneNode>("game");
-    _settingsButtonNode->setContentSize(_screenSize);
-    Vec2 settingsButtonPos = _settingsButtonNode->getContentSize();
-    settingsButtonPos *= SCENE_HEIGHT / _screenSize.height;
-    _settingsButtonNode->setContentSize(settingsButtonPos);
-    _settingsButtonNode->doLayout(); // Repositions the HUD
+//     Initialize settings button from assets manager
 
     // Make settings button transparent
-    _settingsButtonNode->setColor(_transparent);
+    _settingsButton->setColor(_transparent);
 
     _settingsButton->addListener([this](const std::string& name, bool down) {
         if (down) {
@@ -190,7 +202,6 @@ void UIController::initSettingsButton() {
         }
         });
 
-    _uinode->addChild(_settingsButtonNode);
     _settingsButton->activate();
 }
 
@@ -261,34 +272,14 @@ void UIController::initDirecIndicators() {
 }
 
 /**
- * Creates a thief indicator for the cops that shows how far they are from the thief and adds it to the
- * thief indicator node.
+ * Sets the references for the thief indicator from the JSON.
  */
 void UIController::initThiefIndicator() {
     
-    // Create the background for the thief indicator (white button)
-    _thiefIndicatorBackground = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("button_white"));
-    _thiefIndicatorBackground->setAnchor(Vec2::ANCHOR_CENTER);
-    _thiefIndicatorBackground->setPosition(Vec2(SCENE_WIDTH / 2, SCENE_HEIGHT - SCENE_HEIGHT_ADJUST));
-    _thiefIndicatorBackground->setScale(0.35f);
-    _thiefIndicatorBackground->setColor(_transparent);
+    _thiefIndicatorNode = std::dynamic_pointer_cast<scene2::SceneNode>(_assets->get<scene2::SceneNode>("game_thiefIndicator"));
+    _thiefIndicator = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("game_thiefIndicator_text"));
+    _thiefIndicatorNode->setColor(_transparent);
 
-    // Create head for the thief indicator
-    _thiefIndicatorHead = scene2::PolygonNode::allocWithTexture(_assets->get<Texture>("ui_thief_head"));
-    _thiefIndicatorHead->setAnchor(Vec2::ANCHOR_CENTER);
-    _thiefIndicatorHead->setPosition(Vec2(SCENE_WIDTH / 2 + (_thiefIndicatorBackground->getSize().width * 0.4),
-        SCENE_HEIGHT - SCENE_HEIGHT_ADJUST - (_thiefIndicatorBackground->getSize().height * 0.2)));
-    _thiefIndicatorHead->setScale(0.2f);
-    _thiefIndicatorHead->setColor(_transparent);
-
-    // Create and show distance on screen
-    _thiefIndicator = scene2::Label::allocWithText("10m", _font);
-    _thiefIndicator->setAnchor(Vec2::ANCHOR_CENTER);
-    _thiefIndicator->setPosition(Vec2(SCENE_WIDTH/2,SCENE_HEIGHT-SCENE_HEIGHT_ADJUST) + _offset);
-
-    _thiefIndicatorNode->addChild(_thiefIndicatorBackground);
-    _thiefIndicatorNode->addChild(_thiefIndicatorHead);
-    _thiefIndicatorNode->addChild(_thiefIndicator);
 }
 
 /**
@@ -479,7 +470,11 @@ void UIController::updateDirecIndicatorHelper(cugl::Vec2 pos1, cugl::Vec2 pos2,
 /**
  * Updates the thief indicator
  */
-void UIController::updateThiefIndicator(int copID) {
+void UIController::updateThiefIndicator(int copID, bool isThief) {
+    if (isThief) {
+        _thiefIndicatorNode->setVisible(false);
+        return;
+    }
     float distance = _game->getThief()->getPosition().distance(_game->getCop(copID)->getPosition());
     //_thiefIndicatorBorder->setText("Thief Distance: " + to_string((int) distance), true);
     //_thiefIndicator->setText("Thief Distance: " + to_string((int)distance), true);

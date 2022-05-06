@@ -1,0 +1,449 @@
+{
+    "textures": {
+        "back_button": {
+            "file": "textures/ui/back.png"
+        },
+        "button": {
+            "file":  "textures/button.png"
+        },
+		"ui_thief_head":{
+			"file": "textures/ui/thief_male_beanie_head.png"
+		},
+        "frame": {
+            "file":  "textures/frame.png"
+        },
+        "left": {
+            "file":  "textures/left_arrow.png"
+        },
+        "settings_button": {
+            "file":    "textures/ui/settings.png"
+        },
+        "settings_background" : {
+            "file" :   "textures/ui/settings_background.png"
+        },
+        "button_blue" 	: {
+            "file" :   "textures/ui/lcmp_buttons_blue.png"
+        },
+        "button_pink" 	: {
+            "file" :   "textures/ui/lcmp_buttons_pink.png"
+        },
+        "button_white"     : {
+            "file" :   "textures/ui/btn_white.png"
+        },
+        "button_brown"     : {
+            "file" :   "textures/ui/btn_brown.png"
+        },
+        "button_yellow"     : {
+            "file" :   "textures/ui/btn_yellow.png"
+        },
+        "button_x" 	: {
+            "file" :   "textures/ui/close.png"
+        },
+		"button_back": {
+			"file" :   "textures/ui/back.png"
+		},
+		"donut_brown": {
+			"file" :   "textures/ui/donut_brown.png"
+		},
+        "join_button" : {
+            "file": "textures/ui/join_button.png"
+        },
+        "create_button" : {
+            "file": "textures/ui/create_button.png"
+        },
+        "menu_background": {
+            "file": "textures/ui/menu_background.png"
+        },
+        "profile": {
+            "file": "textures/ui/profile.png"
+        },
+        "shop": {
+            "file": "textures/ui/shop.png"
+        },
+        "ui_arrow": {
+            "file": "textures/ui/lcmp_arrow.png"
+        },
+        "donut": {
+            "file": "textures/ui/donut_brown.png"
+        }
+    },
+    "fonts": {
+        "gyparody": {
+            "file":     "fonts/gyparody-hv.ttf",
+            "size":     48
+        },
+		"futura": {
+			"file": "fonts/futura medium bt.ttf",
+			"size": 48
+		},
+		"futura heavy": {
+			"file": "fonts/Futura Heavy font.ttf",
+			"size": 48
+		},
+		"futura heavy border": {
+			"file": "fonts/Futura Heavy font.ttf",
+			"size": 60
+		},
+		"tooneynoodle":{
+			"file":"fonts/TooneyNoodleNF.ttf",
+			"size": 48
+		}
+    },
+    "widgets": {
+        "colorbutton" : "widgets/colorbutton.json",
+        "textbutton" : "widgets/textbutton.json",
+        "textfield" : "widgets/textfield.json",
+        "labelbox" : "widgets/labelbox.json"
+    },
+    "scene2s" : {
+		"pause" : {
+			"type" : "Node",
+			"format" : {
+				"type" : "Anchored"
+			},
+			"children" : {
+				"settings" : {
+					"type" : "Image",
+					"data" :{
+						"texture":  "settings_background",
+						"anchor" : [0.5, 0.5],
+						"size" : [500, 600]
+					},
+					"format" : {
+						"type" : "Anchored"
+					},
+					"layout" : {
+						"x_anchor" : "center",
+						"y_anchor" : "middle",
+						"y_offset" : 0,
+						"x_offset" : 0,
+						"absolute" : true
+					},
+					"children" : {
+						"MainMenu" : {
+							"type" : "Node",
+							"format" : {
+								"type" : "Anchored"
+							},
+							"data": {
+								"anchor" : [0, 0],
+								"size" : [500, 600]
+							},
+							"children":{
+								"SettingsTitle" : {
+									"type"		: "label",
+									"data" : {
+										"anchor"  : [0.5,0.5],
+										"scale"    : 0.9,
+										"font"     : "futura heavy",
+										"text"     : "SETTINGS",
+										"halign"   : "center",
+										"valign"   : "middle",
+										"foreground": [38, 84, 124, 255]
+									},
+									"layout": {
+										"x_anchor": "center",
+										"y_anchor": "middle",
+										"x_offset": 0.05,
+										"y_offset": 0.015
+									}
+								},
+								"SoundButton" : {
+									"type"      : "Button",
+									"data"   : {
+										"upnode"  : "up",
+										"anchor":   [0.5,0.5],
+										"scale" : [0.3, 0.3]
+									},
+									"layout": {
+										"x_anchor": "center",
+										"y_anchor": "middle",
+										"x_offset": -0.115,
+										"y_offset": -0.115
+									},
+									"children": {
+										"up" : {
+											"type": "Image",
+											"data": {
+												"texture":  "button_blue"
+											}
+										},
+										"title" : {
+											"type"      : "Label",
+											"data" : {
+												"anchor"  : [0.5,0.5],
+												"scale"    : 1.5,
+												"font"     : "futura heavy",
+												"text"     : "SOUND",
+												"halign"   : "center",
+												"valign"   : "middle",
+												"foreground": [38, 84, 124, 255],
+												"position" : [246, 118]
+											}
+										}
+									}
+								},
+								"StatsButton" : {
+									"type"      : "Button",
+									"data"   : {
+										"upnode"  : "up",
+										"anchor":   [0.5,0.5],
+										"scale" : [0.3, 0.3]
+									},
+									"layout": {
+										"x_anchor": "center",
+										"y_anchor": "middle",
+										"x_offset": 0.195,
+										"y_offset": -0.115
+									},
+									"children": {
+										"up" : {
+											"type": "Image",
+											"data": {
+												"texture":  "button_blue"
+											}
+										},
+										"title" : {
+											"type"      : "Label",
+											"data" : {
+												"anchor"  : [0.5,0.5],
+												"scale"    : 1.5,
+												"font"     : "futura heavy",
+												"text"     : "STATS",
+												"halign"   : "center",
+												"valign"   : "middle",
+												"foreground": [38, 84, 124, 255],
+												"position" : [246, 118]
+											}
+										}
+									}
+								},
+								"QuitButton" : {
+									"type"      : "Button",
+									"data"   : {
+										"upnode"  : "up",
+										"anchor":   [0.5,0.5],
+										"scale" : [0.2, 0.2]
+									},
+									"layout": {
+										"x_anchor": "center",
+										"y_anchor": "middle",
+										"x_offset": 0.038,
+										"y_offset": -0.225
+									},
+									"children": {
+										"up" : {
+											"type": "Image",
+											"data": {
+												"texture":  "button_pink"
+											}
+										},
+										"title" : {
+											"type"      : "Label",
+											"data" : {
+												"anchor"  : [0.5,0.5],
+												"scale"    : 1.5,
+												"font"     : "futura heavy",
+												"text"     : "QUIT",
+												"halign"   : "center",
+												"valign"   : "middle",
+												"foreground": [38, 84, 124, 255],
+												"position" : [246, 118]
+											}
+										}
+									}
+								}
+							}
+						},
+						"SoundMenu": {
+							"type" : "Node",
+							"format" : {
+								"type" : "Anchored"
+							},
+							"data": {
+								"anchor" : [0, 0],
+								"size" : [500, 600]
+							},
+							"children" : {
+								"SoundTitle" : {
+									"type"		: "label",
+									"data" : {
+										"anchor"  : [0.5,0.5],
+										"scale"    : 0.9,
+										"font"     : "futura",
+										"text"     : "SOUND",
+										"halign"   : "center",
+										"valign"   : "middle",
+										"foreground": [38, 84, 124, 255]
+									},
+									"layout": {
+										"x_anchor": "center",
+										"y_anchor": "middle",
+										"x_offset": 0.05,
+										"y_offset": 0.015
+									}
+								},
+								"MusicLabel": {
+									"type"      : "Label",
+									"data" : {
+										"anchor"  : [0.5,0.5],
+										"scale"    : 0.5,
+										"font"     : "futura",
+										"text"     : "MUSIC",
+										"halign"   : "center",
+										"valign"   : "middle",
+										"foreground": [38, 84, 124, 255]
+									},
+									"layout": {
+										"x_anchor": "center",
+										"y_anchor": "middle",
+										"x_offset": 0.05,
+										"y_offset": -0.075
+									}
+								},
+								"MusicSlider" : {
+									"type":		"slider",
+									"format" : {
+										"type" : "Anchored"
+									},
+									"data": {
+										"anchor": [0.5, 0.5],
+										"bounds": [0, 20, 200, 0],
+										"range" : [0, 1],
+										"scale" : [1.0, 1.0],
+										"value" : 1.0,
+										"tick"	: 0.01,
+										"snap"	: false,
+										"knob" : {
+											"type"      : "Button",
+											"data"   : {
+												"upnode"  : "up",
+												"anchor":   [0.5,0.5],
+												"scale" : [0.1, 0.1]
+											},
+											"children": {
+												"up" : {
+													"type": "Image",
+													"data": {
+														"texture":  "donut_brown",
+														"anchor": [0.5,0.5]
+													}
+												}
+											}
+										}
+									},
+									"layout":{
+										"x_anchor": "center",
+										"y_anchor": "middle",
+										"x_offset": 0.05,
+										"y_offset": -0.14
+									}
+								},
+								"SFXLabel": {
+									"type"      : "Label",
+									"data" : {
+										"anchor"  : [0.5,0.5],
+										"scale"    : 0.5,
+										"font"     : "futura",
+										"text"     : "SFX",
+										"halign"   : "center",
+										"valign"   : "middle",
+										"foreground": [38, 84, 124, 255]
+									},
+									"layout": {
+										"x_anchor": "center",
+										"y_anchor": "middle",
+										"x_offset": 0.05,
+										"y_offset": -0.18
+									}
+								},
+								"SFXSlider" : {
+									"type":		"slider",
+									"format" : {
+										"type" : "Anchored"
+									},
+									"data": {
+										"anchor": [0.5, 0.5],
+										"bounds": [0, 20, 200, 0],
+										"range" : [0, 1],
+										"scale" : [1.0, 1.0],
+										"value" : 1.0,
+										"tick"	: 0.01,
+										"snap"	: false,
+										"knob" : {
+											"type"      : "Button",
+											"data"   : {
+												"upnode"  : "up",
+												"anchor":   [0.5,0.5],
+												"scale" : [0.1, 0.1]
+											},
+											"children": {
+												"up" : {
+													"type": "Image",
+													"data": {
+														"texture":  "donut_brown",
+														"anchor": [0.5,0.5]
+													}
+												}
+											}
+										}
+									},
+									"layout":{
+										"x_anchor": "center",
+										"y_anchor": "middle",
+										"x_offset": 0.05,
+										"y_offset": -0.25
+									}
+								}
+							}
+						},
+						"X" : {
+							"type"      : "Button",
+							"data"   : {
+								"upnode"  : "up",
+								"anchor":   [0.5,0.5],
+								"scale" : [0.15, 0.15]
+							},
+							"layout":{
+								"x_anchor": "right",
+								"y_anchor": "middle",
+								"x_offset": -0.09,
+								"y_offset": 0.0125
+							},
+							"children": {
+								"up" : {
+									"type": "Image",
+									"data": {
+										"texture":  "button_x"
+									}
+								}
+							}
+						},
+						"BackButton" : {
+							"type"      : "Button",
+							"data"   : {
+								"upnode"  : "up",
+								"anchor":   [0.5,0.5],
+								"scale" : [0.15, 0.15]
+							},
+							"layout":{
+								"x_anchor": "left",
+								"y_anchor": "middle",
+								"x_offset": 0.15,
+								"y_offset": 0.0125
+							},
+							"children": {
+								"up" : {
+									"type": "Image",
+									"data": {
+										"texture":  "button_back"
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+    }
+}

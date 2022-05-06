@@ -88,8 +88,8 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Get the interactive UI elements that we need to access later
     _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("customize_backdrop_start"));
-    _startgame->setPosition(Vec2(SCENE_WIDTH/2 + _offset.x, SCENE_HEIGHT_ADJUST + _offset.y));
-    _startgame->setAnchor(Vec2(0.5,0));
+    //_startgame->setPosition(Vec2(SCENE_WIDTH/2 + _offset.x, SCENE_HEIGHT_ADJUST + _offset.y));
+    //_startgame->setAnchor(Vec2(0.5,0));
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("customize_backdrop_back"));
     _title = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("customize_backdrop_title"));
     _title->setPositionX(SCENE_WIDTH/2 + _offset.x);
@@ -121,10 +121,10 @@ bool CustomizeScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _lastChoice = -CHOICE_COOLDOWN;
     
     _leftButton = std::dynamic_pointer_cast<scene2::Button>(assets->get<scene2::SceneNode>("customize_backdrop_left_button"));
-    _leftButton->setPosition(Vec2(0, SCENE_HEIGHT/2) + _offset);
+    //_leftButton->setPosition(Vec2(0, SCENE_HEIGHT/2) + _offset);
     _leftButton->setAnchor(Vec2(0.5,0.5));
     _rightButton = std::dynamic_pointer_cast<scene2::Button>(assets->get<scene2::SceneNode>("customize_backdrop_right_button"));
-    _rightButton->setPosition(Vec2(SCENE_WIDTH, SCENE_HEIGHT/2) + _offset);
+    //_rightButton->setPosition(Vec2(SCENE_WIDTH, SCENE_HEIGHT/2) + _offset);
     _rightButton->setAnchor(Vec2(0.5,0.5));
     _aniFrame = 0;
     _prevTime = 0;

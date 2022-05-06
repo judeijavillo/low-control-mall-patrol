@@ -10,7 +10,7 @@
 #define __LCMP_UI_CONTROLLER_H__
 #include <cugl/cugl.h>
 #include "LCMPGameModel.h"
-#include "LCMPSettingsController.h"
+#include "LCMPPauseController.h"
 
 class UIController {
 //  MARK: - Properties
@@ -22,7 +22,7 @@ class UIController {
     std::shared_ptr<cugl::scene2::SceneNode> _uinode;
     
     /** Reference to the settings controller */
-    SettingsController _settings;
+    PauseController _settings;
 
     // Sub-level nodes
     /** Reference to the node containing the joystick */
@@ -33,8 +33,8 @@ class UIController {
     std::shared_ptr<cugl::scene2::SceneNode> _direcIndicatorsNode;
     /** Reference to the node containing the thief indicator */
     std::shared_ptr<cugl::scene2::SceneNode> _thiefIndicatorNode;
-    /** Reference to the node containing the settings button */
-    std::shared_ptr<cugl::scene2::SceneNode> _settingsButtonNode;
+    /** Reference to the node containing UI elements initialized from JSON */
+    std::shared_ptr<cugl::scene2::SceneNode> _elementsNode;
     /** Reference to the node containing the settings button */
     std::shared_ptr<cugl::scene2::Button> _settingsButton;
 
@@ -175,6 +175,11 @@ private:
 //  MARK: - Helpers
     
     /**
+     * Initializes the node from JSON that is the parent of various UI elements.
+     */
+    void initElementsNode();
+
+    /**
      * Creates the necessary nodes for showing the joystick and adds them to the joystick node.
      */
     void initJoystick();
@@ -258,7 +263,7 @@ private:
     /**
      * Updates the thief indicator
      */
-    void updateThiefIndicator(int copID);
+    void updateThiefIndicator(int copID, bool isThief);
 
     /**
      * Updates the victory label
