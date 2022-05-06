@@ -66,8 +66,6 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Get the interactive UI elements that we need to access later
     _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_backdrop_create"));
-    _startgame->setPositionX(SCENE_WIDTH/2);
-    _startgame->setAnchor(Vec2(0.5,0.5));
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_backdrop_back"));
     _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_roomID"));
     _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_players"));

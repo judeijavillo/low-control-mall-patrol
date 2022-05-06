@@ -45,7 +45,8 @@ Vec2 ROOM_ID_LABEL_HOME = Vec2(512, 870);
  */
 bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
                        std::shared_ptr<NetworkController>& network,
-                       std::shared_ptr<AudioController>& audio) {
+                       std::shared_ptr<AudioController>& audio,
+                       bool sixteenNineAspectRatio) {
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     dimen *= SCENE_HEIGHT/dimen.height;
@@ -62,15 +63,29 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Acquire the scene built by the asset loader and resize it the scene
     std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("join");
-    scene->setContentSize(dimen);
-    scene->doLayout(); // Repositions the HUD
-    
-    // Get interactive UI elements
-    _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_join"));
-    _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_back"));
-    _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_roomID"));
-    _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_instructions"));
-    _name = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join_backdrop_name_field_text"));
+
+    if (sixteenNineAspectRatio) {
+        scene->setContentSize(dimen);
+        scene->doLayout(); // Repositions the HUD
+        // Get interactive UI elements
+        _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_join"));
+        _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_back"));
+        _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_roomID"));
+        _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_instructions"));
+        _name = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join_backdrop_name_field_text"));
+    }
+    else {
+        scene = _assets->get<scene2::SceneNode>("join43");
+        scene->setContentSize(dimen);
+        scene->doLayout(); // Repositions the HUD
+
+        // Get interactive UI elements
+        _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_join"));
+        _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_back"));
+        _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join43_backdrop_keypad_roomID"));
+        _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join43_backdrop_instructions"));
+        _name = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join43_backdrop_name_field_text"));
+    }
     _status = Status::IDLE;
     
     // Attach listener to back button
@@ -85,6 +100,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // Create all of the numbered buttons
     for (int i = 0; i < 10; i++) {
         string name = strtool::format("join_backdrop_keypad_button%d", i);
+        if(!sixteenNineAspectRatio) name = strtool::format("join43_backdrop_keypad_button%d", i);
         shared_ptr<scene2::Button> button = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>(name));
         button->addListener([this, i](const std::string& name, bool down) { pressButton(name, down, i); });
         _keypadButtons.insert(button);
@@ -92,6 +108,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Create the X button
     shared_ptr<scene2::Button> buttonX = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_buttonX"));
+    if (!sixteenNineAspectRatio) buttonX = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_keypad_buttonX"));
     buttonX->addListener([this](const std::string& name, bool down) {
         _gameid->setText("", true);
         _gameid->setPosition(ROOM_ID_LABEL_HOME);
@@ -100,6 +117,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Create the DEL button
     shared_ptr<scene2::Button> buttonDEL = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_buttonDEL"));
+    if (!sixteenNineAspectRatio) buttonDEL = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_keypad_buttonDEL"));
     buttonDEL->addListener([this](const std::string& name, bool down) {
         if (down) {
             string text = _gameid->getText();

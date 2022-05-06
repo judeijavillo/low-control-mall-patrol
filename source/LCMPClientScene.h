@@ -114,7 +114,8 @@ public:
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets,
               std::shared_ptr<NetworkController>& network,
-              std::shared_ptr<AudioController>& audio);
+              std::shared_ptr<AudioController>& audio,
+              bool sixteenNineAspectRatio);
     
 //  MARK: - Methods
     

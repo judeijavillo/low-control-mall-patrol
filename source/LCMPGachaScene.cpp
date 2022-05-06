@@ -47,8 +47,8 @@ bool GachaScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     addChild(scene);
     
     _backButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("gacha_settings_Back"));
-    _backButton->setPosition(Vec2(SCENE_WIDTH/16, 14*SCENE_HEIGHT/16) + _offset);
-    _backButton->setAnchor(Vec2(0.5,0.5));
+    //_backButton->setPosition(Vec2(SCENE_WIDTH/16, 14*SCENE_HEIGHT/16) + _offset);
+    //_backButton->setAnchor(Vec2(0.5,0.5));
     _rollButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("gacha_settings_Roll"));
     _rollButton->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT_ADJUST) + _offset);
     _rollButton->setAnchor(Vec2(0.5,0.5));

@@ -1,18 +1,18 @@
 //
-//  LCMPSettingsController.h
+//  LCMPPauseController.h
 //  Low Control Mall Patrol
 //
 //  Author: Kevin Games
 //  Version: 4/28/22
 //
 
-#ifndef __LCMP_SETTINGS_CONTROLLER_H__
-#define __LCMP_SETTINGS_CONTROLLER_H__
+#ifndef __LCMP_PAUSE_CONTROLLER_H__
+#define __LCMP_PAUSE_CONTROLLER_H__
 #include <cugl/cugl.h>
 #include "LCMPGameModel.h"
 #include "LCMPAudioController.h"
 
-class SettingsController {
+class PauseController {
 //  MARK: - Properties
 // 
     // References to the settings menu
@@ -114,12 +114,12 @@ public:
     /**
      * Constructs a UI Controller
      */
-    SettingsController() {};
+    PauseController() {};
     
     /**
      * Destructs a UI Controller
      */
-    ~SettingsController() { dispose(); }
+    ~PauseController() { dispose(); }
     
     /**
      * Disposes of all resources in this instance of UI Controller
@@ -187,4 +187,4 @@ private:
         
 };
 
-#endif /* __LCMP_SETTINGS_CONTROLLER_H__ */
+#endif /* __LCMP_PAUSE_CONTROLLER_H__ */
