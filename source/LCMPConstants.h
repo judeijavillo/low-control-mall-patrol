@@ -169,7 +169,7 @@ enum JsonConstants :int {
 // MARK: - UI Constants
 
 /** This is how long the game will be */
-#define GAME_LENGTH     160
+#define GAME_LENGTH     109
 
 /** This is the size of the active portion of the screen */
 #define SCENE_WIDTH     1024

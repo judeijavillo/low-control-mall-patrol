@@ -399,7 +399,7 @@
         },
         "game": {
             "type":     "sample",
-            "file":     "sounds/elevator.ogg",
+            "file":     "sounds/mall.ogg",
             "volume":   0.5
         },
         "menu": {

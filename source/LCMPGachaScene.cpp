@@ -1,9 +1,11 @@
 //
 //  LCMPGachaScene.cpp
-//  LowControlMallPatrol
+//  Low Control Mall Patrol
 //
-//  Created by Alina Kim on 5/1/22.
-//  Copyright © 2022 Game Design Initiative at Cornell. All rights reserved.
+//  This class provides the gacha logic.
+//
+//  Author: Kevin Games
+//  Version: 5/4/22
 //
 
 #include <stdio.h>
