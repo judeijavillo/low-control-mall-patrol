@@ -1,9 +1,11 @@
 //
 //  LCMPShopScene.cpp
-//  LowControlMallPatrol
+//  Low Control Mall Patrol
 //
-//  Created by Alina Kim on 4/27/22.
-//  Copyright © 2022 Game Design Initiative at Cornell. All rights reserved.
+//  This class provides the shop logic.
+//
+//  Author: Kevin Games
+//  Version: 5/4/22
 //
 
 #include <stdio.h>
