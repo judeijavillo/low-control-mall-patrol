@@ -404,13 +404,6 @@ void GameModel::initCop(int copID, float scale,
     _cops[copID] = cop;
 }
 
-void initProps(const std::shared_ptr<cugl::JsonValue>& props,
-               int props_firstgid,
-               const std::shared_ptr<cugl::JsonValue>& propTileset,
-               const std::shared_ptr<cugl::AssetManager>& assets){
-    
-}
-
 map<int,GameModel::TileData> GameModel::buildTileDataMap(const shared_ptr<JsonValue>& propTileset, float scale){
     // build map from tile id to asset name
     map<int, GameModel::TileData> idToTileData {};
@@ -477,6 +470,8 @@ void GameModel::initProps(const shared_ptr<JsonValue>& props,
         float width = prop->getFloat(WIDTH_FIELD) / _tileSize;
         float height = prop->getFloat(HEIGHT_FIELD) / _tileSize;
         y = _mapHeight - y;
+//        CULog("prop x,y %f %f", x,y);
+//        CULog("prop dims %f %f", width, height);
         
         int gid = prop->getInt("gid");
         //TODO: incorporate rotation/reflection using tiled flags
@@ -505,15 +500,21 @@ void GameModel::initProps(const shared_ptr<JsonValue>& props,
         node->setScale(scale_.x * scale, scale_.y * scale);
         _worldnode->addChild(node);
         node->setPosition((x + width / 2) * scale, (y + height / 2) * scale);
+//        CULog("prop node position %f %f", (x + width / 2) * scale, (y + height / 2) * scale);
         
         // add hitboxes to world
         auto size = data.hitboxes.size();
         for(int j = 0; j < size; j++){
             auto shape = data.hitboxes[j];
             
-            
-            
-            _obstacles.push_back(scaleHitbox(shape, scale_, x, y, height));
+            auto obstacle = scaleHitbox(shape, scale_, x, y, height);
+//            obstacle->setDebugScene(_debugnode);
+//            CULog("prop obst scaleHitbox call\n\t\tscale_ %f %f\n\t\tx %f\n\t\ty %f\n\t\theight %f",
+//                  scale_.x, scale_.y,
+//                  x, y,
+//                  height);
+//            CULog("prop obst position %f %f", obstacle->getX(), obstacle->getY());
+            _obstacles.push_back(obstacle);
 //            obstacle->setEnabled(false);
         }
     }
@@ -530,6 +531,7 @@ std::shared_ptr<cugl::physics2::PolygonObstacle> GameModel::scaleHitbox(std::sha
 
     auto obstacle = physics2::PolygonObstacle::alloc(poly);
     obstacle->setDebugScene(_debugnode);
+//    obstacle->setDebugScene(nullptr);
     _world->addObstacle(obstacle);
     obstacle->setPosition(x_ * scale_.x * _tileSize + x,
         y_ * scale_.y * _tileSize + y
@@ -697,7 +699,7 @@ void GameModel::initTrap(int trapID,
 
     shared_ptr<cugl::physics2::PolygonObstacle> thiefEffectArea = std::make_shared<cugl::physics2::PolygonObstacle>();
     shared_ptr<cugl::physics2::PolygonObstacle> copEffectArea = std::make_shared<cugl::physics2::PolygonObstacle>();
-
+    shared_ptr<cugl::physics2::PolygonObstacle> tempObst;
 
     std::shared_ptr<cugl::JsonValue> properties = json->get(PROPERTIES_FIELD);
     vector<std::shared_ptr<cugl::JsonValue>> children = properties->children();
@@ -724,7 +726,13 @@ void GameModel::initTrap(int trapID,
     int anim_rows = 0;
     int anim_cols = 0;
 
-    Vec2 scale_;
+    Vec2 scale_ = Vec2();
+    
+    float x = 0;
+    float y = 0;
+    
+    float height = 0;
+    float width = 0;
 
     //CULog("%s", children.at(3)->get(NAME_FIELD)->asString());
   
@@ -797,16 +805,43 @@ void GameModel::initTrap(int trapID,
 
             assetTexture = assets->get<Texture>(assetName);
 
-            scale_ = Vec2(map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().width * anim_cols /assetTexture->getWidth(), map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().height * anim_rows/ assetTexture->getHeight());
+            scale_ = Vec2(
+                          map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().width * anim_cols /assetTexture->getWidth(),
+                          map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().height * anim_rows/ assetTexture->getHeight());
+
+            tempObst = scaleHitbox(td.hitboxes[0], scale_, map1.at(elem->getInt(VALUE_FIELD)).x, map1.at(elem->getInt(VALUE_FIELD)).y + map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().height, map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().height);
+                effectAreaX = tempObst->getX();
+                effectAreaY = tempObst->getY();
+                tempObst->setDebugScene(nullptr);
+                _world->removeObstacle(&*tempObst);
+                
+                x = map1.at(elem->getInt(VALUE_FIELD)).x;
+                y = map1.at(elem->getInt(VALUE_FIELD)).y + map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().height;
+                height = map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().height;
+                width = map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().width;
+//                CULog("trap x,y %f %f", x,y);
+//                CULog("trap dims %f %f", width,height);
+                
+//                CULog("trap obst scaleHitbox call\n\t\tscale_ %f %f\n\t\tx %f\n\t\ty %f\n\t\theight %f",
+//                      scale_.x, scale_.y,
+//                      x, y,
+//                      height);
+//                CULog("trap obst position %f %f", effectAreaX, effectAreaY);
+                
+                thiefEffectArea = cugl::physics2::PolygonObstacle::alloc(tempObst->getPolygon());
+//                thiefEffectArea->setDebugScene(_debugnode);
+//                thiefEffectArea = physics2::PolygonObstacle::alloc(PolyFactory().makeRect(0,0,1,1));
+            
+            copEffectArea = cugl::physics2::PolygonObstacle::alloc(tempObst->getPolygon());
+//                copEffectArea = physics2::PolygonObstacle::alloc(PolyFactory().makeRect(0,0,1,1));
+//                copEffectArea->setDebugScene(_debugnode);
 
 
-            thiefEffectArea = scaleHitbox(td.hitboxes[0], scale_, map1.at(elem->getInt(VALUE_FIELD)).x, map1.at(elem->getInt(VALUE_FIELD)).y, map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().height);
-            copEffectArea = cugl::physics2::PolygonObstacle::alloc(thiefEffectArea->getPolygon());
 
-
-
-            effectAreaX = (map1.at(elem->getInt(VALUE_FIELD)).x + map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().width/2);
-            effectAreaY = (map1.at(elem->getInt(VALUE_FIELD)).y + map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().height/2) + assetTexture->getHeight()*scale_.y;
+//            effectAreaX = (map1.at(elem->getInt(VALUE_FIELD)).x + map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().width/2);
+//            effectAreaY = (map1.at(elem->getInt(VALUE_FIELD)).y + map1.at(elem->getInt(VALUE_FIELD)).obstacle->getSize().height/2) + assetTexture->getHeight()*scale_.y;
+                
+                
 //          CULog("scale_ %f %f", scale_.x, scale_.y);
 
             
@@ -885,7 +920,7 @@ void GameModel::initTrap(int trapID,
     //CULog("2");
     
     // Configure physics
-    //_world->addObstacle(thiefEffectArea);
+    _world->addObstacle(thiefEffectArea);
     _world->addObstacle(copEffectArea);
     _world->addObstacle(triggerArea);
     thiefEffectArea->setPosition(Vec2(effectAreaX, effectAreaY));
@@ -904,7 +939,10 @@ void GameModel::initTrap(int trapID,
     // TODO: fix this once assets are written
 
 
-    trap->setAssets(scale, _tileSize, _worldnode, assets, activationTriggerTexture,deactivationTriggerTexture, assetInfo);
+    trap->setAssets(Vec2(x,y), Vec2(width,height),
+                    scale, scale_, _tileSize, _worldnode, assets,
+                    activationTriggerTexture,deactivationTriggerTexture,
+                    assetInfo);
     trap->setDebugScene(_debugnode);
     
     // Add the trap to the vector of traps

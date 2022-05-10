@@ -9,6 +9,7 @@
             "scaleInDock": 1
         },
         "Map3overlay.tsx": {
+            "dynamicWrapping": false,
             "scaleInDock": 1
         },
         "Props.tsj": {
@@ -37,11 +38,11 @@
             }
         },
         "donut_room.tmx": {
-            "scale": 0.5445535714285714,
-            "selectedLayer": 1,
+            "scale": 0.3429,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 704.2465978029186,
-                "y": 529.7917691424824
+                "x": 530.766987459901,
+                "y": 543.8903470399533
             }
         },
         "example3.json": {
@@ -53,11 +54,11 @@
             }
         },
         "example5.json": {
-            "scale": 0.75,
+            "scale": 0.43,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4959.333333333333,
-                "y": 4991.333333333333
+                "x": 5190.697674418605,
+                "y": 5180.232558139534
             }
         },
         "example6.json": {
@@ -76,7 +77,7 @@
             "dynamicWrapping": true
         }
     },
-    "last.externalTilesetPath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/maps",
+    "last.externalTilesetPath": "/Users/june/low-control-mall-patrol/assets/maps",
     "last.imagePath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/textures/environment",
     "last.objectTypesPath": "C:/Users/bryce/source/repos/low-control-mall-patrol/assets/maps/trapTypeDef.xml",
     "map.lastUsedFormat": "json",
@@ -88,9 +89,9 @@
     "project": "maps.tiled-project",
     "property.type": "Effect",
     "recentFiles": [
+        "donut_room.tmx",
         "example6.json",
         "donut_room.json",
-        "donut_room.tmx",
         "PropsAndTraps.tsj",
         "example5.json",
         "Props.tsj"

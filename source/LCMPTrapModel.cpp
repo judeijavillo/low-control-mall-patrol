@@ -93,14 +93,13 @@ bool TrapModel::Effect::init(TrapType type, std::shared_ptr<cugl::Vec2> effect) 
 /**
  * Sets all of the assets for this trap
  */
-void TrapModel::setAssets(float scale, float tileSize,
+void TrapModel::setAssets(Vec2 position, Vec2 dims,
+                          float scale, Vec2 proportion, float tileSize,
     const std::shared_ptr<cugl::scene2::SceneNode>& node,
     const std::shared_ptr<cugl::AssetManager>& assets,
     const std::shared_ptr<cugl::Texture> activationTriggerTexture,
     const std::shared_ptr<cugl::Texture> deactivationTriggerTexture,
-    const tuple <bool, int, int, std::string> assetInfo
-
-) {
+    const tuple <bool, int, int, std::string> assetInfo) {
     
     // Create nodes
     _activationTriggerNode = scene2::PolygonNode::allocWithTexture(activationTriggerTexture);
@@ -116,8 +115,8 @@ void TrapModel::setAssets(float scale, float tileSize,
         
         _assetNode = scene2::SpriteNode::alloc(assetTexture, get<1>(assetInfo), get<2>(assetInfo));
         _hasActivationAnimation = true;
-        Vec2 proportions = Vec2(effectWidth * get<2>(assetInfo) / assetTexture->getWidth(), effectHeight * get<1>(assetInfo) / assetTexture->getHeight()) * scale ;
-        _assetNode->setScale(proportions);
+//        Vec2 proportions = Vec2(effectWidth * get<2>(assetInfo) / assetTexture->getWidth(), effectHeight * get<1>(assetInfo) / assetTexture->getHeight()) * scale ;
+        _assetNode->setScale(proportion * scale);
         //CULog("hello %f", _assetNode->getScale().x);
 
     }
@@ -125,8 +124,8 @@ void TrapModel::setAssets(float scale, float tileSize,
         //texture is static
         _assetNode = scene2::SpriteNode::alloc(assetTexture, 1, 1);
         _hasActivationAnimation = false;
-        Vec2 proportions = Vec2(effectWidth / assetTexture->getWidth(), effectHeight / assetTexture->getHeight()) * scale;
-        _assetNode->setScale(proportions);
+//        Vec2 proportions = Vec2(effectWidth / assetTexture->getWidth(), effectHeight / assetTexture->getHeight()) * scale;
+        _assetNode->setScale(proportion * scale);
     }
 
     //Set the nodes' scales
@@ -140,8 +139,8 @@ void TrapModel::setAssets(float scale, float tileSize,
     _deactivationTriggerNode->setPosition((triggerPos->x /* + deactivationTriggerTextureScale->x/2 */) * scale,
         (triggerPos->y /* + deactivationTriggerTextureScale->y / 2 */) * scale);
 
-    _assetNode->setPosition((thiefEffectArea->getPosition().x /* + thiefEffectArea->getWidth() / 2*/) * scale,
-        (thiefEffectArea->getPosition().y /* + thiefEffectArea->getHeight() / 2 */ ) * scale);
+    _assetNode->setPosition((position.x + dims.x / 2) * scale, (position.y + dims.y / 2) * scale);
+//    CULog("trap asset node placed at %f %f", (position.x + dims.x / 2) * scale, (position.y + dims.y / 2) * scale);
     
 
     //CULog("%f, %f, %f, %f", triggerPos->x, triggerPos->y, thiefEffectArea->getPosition().x, thiefEffectArea->getPosition().y);
