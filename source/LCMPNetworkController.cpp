@@ -136,6 +136,7 @@ void NetworkController::update() {
             for (int i = 0; i < 5; i++) {
                 _players[i].username = _deserializer.readString();
             }
+            _level = _deserializer.readString();
             break;
         }
         _deserializer.reset();
@@ -160,7 +161,7 @@ void NetworkController::sendDisplayName(string name) {
 /**
  * Sends a byte vector to start the game
  */
-void NetworkController::sendStartGame(bool randomThief, int thiefChoice) {
+void NetworkController::sendStartGame(string level, bool randomThief, int thiefChoice) {
     vector<float> data;
     data.push_back(START_GAME);
     data.push_back(getNumPlayers());
@@ -185,6 +186,8 @@ void NetworkController::sendStartGame(bool randomThief, int thiefChoice) {
     for (int i = 0; i < 5; i++) {
         _serializer.writeString(_players[i].username);
     }
+    
+    _serializer.writeString(level);
     
     _connection->send(_serializer.serialize());
     _serializer.reset();

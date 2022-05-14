@@ -77,6 +77,8 @@ protected:
     
     /** The mapping from player ID to Player struct */
     std::unordered_map<int, Player> _players;
+    /** The level for the client to read what map to load */
+    std::string _level;
     /** The current status of the Network Controller */
     Status _status;
     /** Whether the connection being made is for a host or not */
@@ -160,6 +162,11 @@ public:
     Status getStatus() { return _status; }
     
     /**
+     * Returns the level for the client
+     */
+    std::string getLevel() { return _level; }
+    
+    /**
      * Establishes a host connection with the server
      */
     bool connect();
@@ -189,7 +196,7 @@ public:
     /**
      * Sends a byte vector to start the game
      */
-    void sendStartGame(bool randomThief = false, int thiefChoice = 0);
+    void sendStartGame(std::string level, bool randomThief = false, int thiefChoice = 0);
 
     
 //  MARK: - Gameplay

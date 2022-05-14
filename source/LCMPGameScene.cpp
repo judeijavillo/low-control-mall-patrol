@@ -26,7 +26,7 @@ using namespace std;
 //  MARK: - Constants
 
 /** Whether or not to show the debug node */
-#define DEBUG_ON        1
+#define DEBUG_ON        0
 
 /** Width of the game world in Box2d units */
 #define DEFAULT_WIDTH   32.0f
@@ -221,6 +221,7 @@ void GameScene::start(bool host, string skinKey, string levelKey) {
 
     // Initialize subcontrollers
     _collision.init(_game);
+    _uinode->removeAllChildren();
     _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset, _assets, _actions, _audio);
 
     // Initialize camera position
