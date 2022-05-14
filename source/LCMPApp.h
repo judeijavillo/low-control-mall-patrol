@@ -100,6 +100,9 @@ protected:
     State _scene;
     /** The previous frame's active scene */
     State _prevScene;
+
+    /** Whether the game is in 16:9 aspect ratio or not */
+    bool _sixteenNineAspectRatio;
     
 public:
 //  MARK: - Constructors

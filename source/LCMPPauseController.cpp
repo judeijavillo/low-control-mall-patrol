@@ -1,12 +1,12 @@
 //
-//  LCMPSettingsController.cpp
+//  LCMPPauseController.cpp
 //  Low Control Mall Patrol
 //
 //  Author: Kevin Games
 //  Version: 3/20/22
 //
 
-#include "LCMPSettingsController.h"
+#include "LCMPPauseController.h"
 #include "LCMPConstants.h"
 #include "LCMPAudioController.h"
 
@@ -24,14 +24,14 @@ using namespace cugl;
 /**
  * Disposes of all resources in this instance of UI Controller
  */
-void SettingsController::dispose() {
+void PauseController::dispose() {
     _settingsMenu->dispose();
 }
 
 /**
  * Initializes a UI Controller
  */
-bool SettingsController::init(const shared_ptr<scene2::SceneNode> sceneNode,
+bool PauseController::init(const shared_ptr<scene2::SceneNode> sceneNode,
                         Size screenSize,
                         Vec2 offset,
                         const std::shared_ptr<cugl::AssetManager>& assets,
@@ -164,7 +164,7 @@ bool SettingsController::init(const shared_ptr<scene2::SceneNode> sceneNode,
 /**
  * Updates the UI Controller
  */
-void SettingsController::update(float timestep) {
+void PauseController::update(float timestep) {
     
     // Display and activate correct buttons depending on pause state.
     if (_didPause) {
@@ -224,7 +224,7 @@ void SettingsController::update(float timestep) {
 }
 
 
-void SettingsController::doMove(const std::shared_ptr<scene2::MoveTo>& action) {
+void PauseController::doMove(const std::shared_ptr<scene2::MoveTo>& action) {
     if (_actions->isActive(SETTINGS_ACT_KEY)) {
         CULog("You must wait for the animation to complete first");
     }

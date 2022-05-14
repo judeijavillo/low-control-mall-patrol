@@ -91,7 +91,13 @@
     <ClInclude Include="..\..\source\LCMPVictoryScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\LCMPSettingsController.h">
+    <ClInclude Include="..\..\source\LCMPPauseController.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\LCMPShopScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\LCMPGachaScene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -162,7 +168,13 @@
     <ClCompile Include="..\..\source\LCMPVictoryScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\LCMPSettingsController.cpp">
+    <ClCompile Include="..\..\source\LCMPPauseController.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\LCMPShopScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\LCMPGachaScene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

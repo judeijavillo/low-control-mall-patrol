@@ -94,6 +94,9 @@
                         "anchor": [0.5, 0.5],
                         "scale": [1, 1]
                     },
+					"format": {
+						"type": "anchored"
+					},
                     "layout": {
                         "x_anchor": "fill",
                         "y_anchor": "fill"
@@ -104,9 +107,14 @@
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "position": [50, 560],
                                 "scale": [0.3, 0.3]
                             },
+							"layout": {
+								"x_anchor": "left",
+								"y_anchor": "top",
+								"x_offset": 0.05,
+								"y_offset": -0.2
+							},
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -122,7 +130,13 @@
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
                                 "scale": [0.3, 0.3]
-                            },
+                            },							
+							"layout": {
+								"x_anchor": "left",
+								"y_anchor": "middle",
+								"x_offset": 0.1,
+								"y_offset": 0
+							},
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -138,7 +152,13 @@
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
                                 "scale": [0.3, 0.3]
-                            },
+                            },							
+							"layout": {
+								"x_anchor": "right",
+								"y_anchor": "middle",
+								"x_offset": -0.1,
+								"y_offset": 0
+							},
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -154,9 +174,14 @@
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "position": [600, 150],
                                 "scale": [1.6, 1.6]
-                            },
+                            },							
+							"layout": {
+								"x_anchor": "center",
+								"y_anchor": "bottom",
+								"x_offset": 0,
+								"y_offset": 0.15
+							},
                             "children": {
                                 "up": {
                                     "type": "Image",

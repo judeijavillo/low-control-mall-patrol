@@ -43,7 +43,8 @@ using namespace std;
  */
 bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
                      std::shared_ptr<AudioController>& audio,
-                     std::shared_ptr<cugl::scene2::ActionManager>& actions) {
+                     std::shared_ptr<cugl::scene2::ActionManager>& actions,
+                     bool sixteenNineAspectRatio) {
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     _screenSize = dimen;
@@ -62,24 +63,33 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     _audio->playSound(_assets, MENU_MUSIC, false, -1);
     
-    // Acquire the scene built by the asset loader and resize it the scene
     std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("menu");
     scene->setContentSize(_dimen);
     scene->doLayout(); // Repositions the HUD
     _choice = Choice::NONE;
 
-    _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_host"));
-    _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_join"));
-    _findbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_find"));
-    _title = std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("menu_backdrop_title"));
-    _shopButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_shop"));
-    _gachaButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_profile"));
-    
-    _title->setPosition(Vec2(SCENE_WIDTH/3, SCENE_HEIGHT/2) + _offset);
-    _title->setAnchor(Vec2(0.5,0.5));
-    _hostbutton->setPosition(Vec2(7*SCENE_WIDTH/8, 3*SCENE_HEIGHT/4) + _offset);
-    _joinbutton->setPosition(Vec2(7*SCENE_WIDTH/8, SCENE_HEIGHT/2) + _offset);
-    _findbutton->setPosition(Vec2(7*SCENE_WIDTH/8, SCENE_HEIGHT/4) + _offset);
+    // Acquire the scene built by the asset loader and resize it the scene
+    if (sixteenNineAspectRatio) {
+        _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_host"));
+        _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_join"));
+        _findbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_find"));
+        _title = std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("menu_backdrop_title"));
+        _shopButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_shop"));
+        _gachaButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_profile"));
+    }
+    else {
+        scene = _assets->get<scene2::SceneNode>("menu43");
+        scene->setContentSize(_dimen);
+        scene->doLayout(); // Repositions the HUD
+
+        _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu43_backdrop_host"));
+        _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu43_backdrop_join"));
+        _findbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu43_backdrop_find"));
+        _title = std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("menu43_backdrop_title"));
+        _shopButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu43_backdrop_shop"));
+        _gachaButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu43_backdrop_profile"));
+    }
+
     
     // Program the buttons
     _hostbutton->addListener([this](const std::string& name, bool down) {

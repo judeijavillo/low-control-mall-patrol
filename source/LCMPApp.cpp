@@ -67,6 +67,7 @@ void LCMPApp::onStartup() {
     _assets->loadDirectoryAsync("json/levelselect.json", nullptr);
     _assets->loadDirectoryAsync("json/skins.json",nullptr);
     _assets->loadDirectoryAsync("json/victory.json",nullptr);
+    _assets->loadDirectoryAsync("json/pause.json", nullptr);
     _assets->loadDirectoryAsync(WALL_ASSETS_FILE, nullptr);
     
     // Create a "loading" screen
@@ -225,12 +226,17 @@ void LCMPApp::updateLoadingScene(float timestep) {
     if (_loading.isActive()) {
         _loading.update(timestep);
     } else {
+
+        // get aspect ratio
+        float aspectRatio = Application::get()->getDisplaySize().width / Application::get()->getDisplaySize().height;
+        _sixteenNineAspectRatio = (aspectRatio >= 1.5f);
+
         // Leave loading for good, initialize all other scenes
         _loading.dispose();
         _audio->stopMusic(LOADING_MUSIC);
-        _menu.init(_assets, _audio, _actions);
+        _menu.init(_assets, _audio, _actions, _sixteenNineAspectRatio);
         _host.init(_assets, _network, _audio);
-        _client.init(_assets, _network, _audio);
+        _client.init(_assets, _network, _audio, _sixteenNineAspectRatio);
         _find.init(_assets, _network);
         _customize.init(_assets, _network, _audio, _actions);
         _levelselect.init(_assets, _audio);
@@ -350,6 +356,7 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
         break;
     case LevelSelectScene::Choice::THREE:
         _levelKey = LEVEL_ONE_FILE;
+        _levelselect.prevPage();
         _levelselect.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
@@ -359,6 +366,7 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
     case LevelSelectScene::Choice::FOUR:
         _levelKey = LEVEL_ONE_FILE;
         _levelselect.setActive(false);
+        _levelselect.prevPage();
         _game.setActive(true);
         _scene = State::GAME;
         _network->sendStartGame();

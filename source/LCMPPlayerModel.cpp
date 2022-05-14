@@ -96,9 +96,9 @@ void PlayerModel::setName(string name, const shared_ptr<Font>& font) {
     // Add a username node
     // TODO: clean this up
     _username = scene2::Label::allocWithText(name, font);
+    _username->setScale(0.5);
     _username->setAnchor(Vec2::ANCHOR_CENTER);
     _username->setPosition(_node->getWidth() / 2, _spriteNodes[0]->getHeight());
-    _username->setColor(Color4::RED);
     _node->addChild(_username);
 }
 

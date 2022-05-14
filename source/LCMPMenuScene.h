@@ -15,7 +15,7 @@
 #include <cugl/cugl.h>
 #include <vector>
 #include "LCMPAudioController.h"
-#include "LCMPSettingsController.h"
+#include "LCMPPauseController.h"
 #include <cugl/scene2/actions/CUActionManager.h>
 //#include <cugl/scene2/actions/CUMoveAction.h>
 //#include <cugl/scene2/actions/CUScaleAction.h>
@@ -64,7 +64,7 @@ protected:
     /** The action manager for the game */
     std::shared_ptr<cugl::scene2::ActionManager> _actions;
     /** The settings menu for the menu */
-    SettingsController _settings;
+    PauseController _settings;
     /** The menu button for hosting a game */
     std::shared_ptr<cugl::scene2::Button> _hostbutton;
     /** The menu button for joining a game */
@@ -124,7 +124,8 @@ public:
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets,
               std::shared_ptr<AudioController>& audio,
-              std::shared_ptr<cugl::scene2::ActionManager>& actions);
+              std::shared_ptr<cugl::scene2::ActionManager>& actions,
+              bool sixteenNineAspectRatio);
 
 //  MARK: - Methods
     /**
