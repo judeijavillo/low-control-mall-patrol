@@ -269,6 +269,6 @@ void FindScene::startGame() {
     if (_network->isConnected()) {
         _status = Status::START;
         _network->deleteRoom(_network->getRoomID());
-        _network->sendStartGame();
+        _network->sendStartGame(LEVEL_ONE_FILE);
     }
 }

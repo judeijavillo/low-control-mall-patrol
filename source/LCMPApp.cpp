@@ -339,20 +339,20 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
     _levelselect.update(timestep);
     switch (_levelselect.getChoice()) {
     case LevelSelectScene::Choice::ONE:
-        _levelKey = LEVEL_ONE_FILE;
+        _levelKey = LEVEL_DONUT_KEY;
         _levelselect.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _network->sendStartGame();
-        _game.start(true, _customize.skinKey, LEVEL_DONUT_KEY);
+        _network->sendStartGame(_levelKey);
+        _game.start(true, _customize.skinKey, _levelKey);
         break;
     case LevelSelectScene::Choice::TWO:
-        _levelKey = LEVEL_ONE_FILE;
+        _levelKey = LEVEL_CONVEYOR_KEY;
         _levelselect.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _network->sendStartGame();
-        _game.start(true, _customize.skinKey, LEVEL_CONVEYOR_KEY);
+        _network->sendStartGame(_levelKey);
+        _game.start(true, _customize.skinKey, _levelKey);
         break;
     case LevelSelectScene::Choice::THREE:
         _levelKey = LEVEL_ONE_FILE;
@@ -360,7 +360,7 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
         _levelselect.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _network->sendStartGame();
+        _network->sendStartGame(_levelKey);
         _game.start(true, _customize.skinKey, _levelKey);
         break;
     case LevelSelectScene::Choice::FOUR:
@@ -369,7 +369,7 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
         _levelselect.prevPage();
         _game.setActive(true);
         _scene = State::GAME;
-        _network->sendStartGame();
+        _network->sendStartGame(_levelKey);
         _game.start(true, _customize.skinKey, _levelKey);
         break;
     case LevelSelectScene::Choice::BACK:
@@ -434,7 +434,7 @@ void LCMPApp::updateClientScene(float timestep) {
         _client.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _game.start(false, _customize.skinKey, LEVEL_ONE_FILE);
+        _game.start(false, _customize.skinKey, _network->getLevel());
         break;
     case ClientScene::Status::WAIT:
     case ClientScene::Status::IDLE:
