@@ -124,6 +124,9 @@ void ShopScene::buttonListener(std::shared_ptr<cugl::scene2::Button> button, str
  */
 void ShopScene::setActive(bool value) {
     if (isActive() != value) {
+        if (value) {
+            _choice = NONE;
+        }
         Scene2::setActive(value);
         if (value) {
             for (string key : _keys) {

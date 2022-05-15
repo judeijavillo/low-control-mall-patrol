@@ -106,6 +106,9 @@ bool GachaScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
  */
 void GachaScene::setActive(bool value) {
     if (isActive() != value) {
+        if (value) {
+            _choice = NONE;
+        }
         Scene2::setActive(value);
         if (value) {
             _rollButton->activate();
