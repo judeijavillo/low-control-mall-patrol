@@ -4,32 +4,77 @@
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "/Users/june/assets/maps/Map1Overlay.tsx": {
+            "scaleInDock": 1
+        },
+        "/Users/june/assets/maps/Map3overlay.tsx": {
+            "scaleInDock": 1
+        },
         "/Users/june/assets/maps/PropsAndTraps.tsj": {
             "dynamicWrapping": true,
+            "scaleInDock": 0.0685,
             "scaleInEditor": 0.03
         },
         "/Users/june/assets/maps/example5.json": {
-            "scale": 0.2,
-            "selectedLayer": 0,
+            "scale": 1.04,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 5715,
-                "y": 5182.5
+                "x": 6925.480769230769,
+                "y": 8125.480769230769
             }
         },
         "/Users/june/assets/maps/example6.json": {
-            "scale": 0.04614883814102564,
-            "selectedLayer": 0,
+            "scale": 0.0681,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 4962.205100379815,
-                "y": 4994.7086272381985
+                "x": 4236.417033773862,
+                "y": 2254.038179148312
+            }
+        },
+        "/Users/june/assets/maps/mappics.tsx": {
+            "scaleInDock": 1
+        },
+        "Map3overlay.tsx": {
+            "dynamicWrapping": false
+        },
+        "PropsAndTraps.tsj": {
+            "dynamicWrapping": true
+        },
+        "donut_room.json": {
+            "scale": 0.4397,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 697.0661814873778,
+                "y": 562.8837843984535
+            }
+        },
+        "example5.json": {
+            "scale": 0.136,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 5091.911764705883,
+                "y": 5393.382352941177
+            }
+        },
+        "example6.json": {
+            "scale": 0.04614883814102564,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 2307.750406945198,
+                "y": 8938.469886055344
             }
         }
     },
+    "last.externalTilesetPath": "/Users/june/low-control-mall-patrol/assets/maps",
     "last.imagePath": "/Users/june/low-control-mall-patrol/assets/textures/environment",
     "openFiles": [
     ],
     "project": "",
     "recentFiles": [
+        "/Users/june/assets/maps/example5.json",
+        "donut_room.json",
+        "/Users/june/assets/maps/example6.json",
         "/Users/june/assets/maps/PropsAndTraps.tsj"
-    ]
+    ],
+    "tileset.lastUsedFilter": "All Files (*)"
 }

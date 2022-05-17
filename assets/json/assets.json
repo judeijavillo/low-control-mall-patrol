@@ -1,5 +1,14 @@
 {
     "textures": {
+        "2chair": {
+            "file": "textures/environment/2chair.png"
+        },
+        "3chair": {
+            "file": "textures/environment/3chair.png"
+        },
+        "4chair": {
+            "file": "textures/environment/4chair.png"
+        },
         "whiteboard_donut": {
             "file": "textures/environment/Whiteboard_do_nut.png"
         },
@@ -60,14 +69,20 @@
         "bench_spine": {
             "file": "textures/environment/bench_spine.png"
         },
-        "arcade_side": {
-            "file": "textures/environment/arcade_side.png"
+        "arcade_side_right": {
+            "file": "textures/environment/arcade_side_right.png"
+        },
+        "arcade_side_left": {
+            "file": "textures/environment/arcade_side_left.png"
         },
         "arcade_side_top_cont": {
             "file": "textures/environment/arcade_side_top_cont.png"
         },
-        "arcade_side_cont": {
-            "file": "textures/environment/arcade_side_cont.png"
+        "arcade_side_Lcont": {
+            "file": "textures/environment/arcade_side_Lcont.png"
+        },
+        "arcade_side_Rcont": {
+            "file": "textures/environment/arcade_side_Rcont.png"
         },
         "arcade_front": {
             "file": "textures/environment/arcade_front.png"

@@ -8,7 +8,7 @@
  "margin":0,
  "name":"Props",
  "spacing":0,
- "tilecount":49,
+ "tilecount":54,
  "tiledversion":"1.8.2",
  "tileheight":2805,
  "tiles":[
@@ -3253,16 +3253,17 @@
         }, 
         {
          "id":44,
-         "image":"..\/textures\/environment\/arcade_side.png",
+         "image":"..\/textures\/environment\/arcade_side_left.png",
          "imageheight":626,
          "imagewidth":277,
          "objectgroup":
             {
              "draworder":"index",
+             "id":2,
              "name":"",
              "objects":[
                     {
-                     "height":61.652281134402,
+                     "height":553.689623254116,
                      "id":2,
                      "name":"",
                      "rotation":0,
@@ -3270,7 +3271,7 @@
                      "visible":true,
                      "width":277.435265104809,
                      "x":0,
-                     "y":564.35
+                     "y":72.3126578802855
                     }],
              "opacity":1,
              "type":"objectgroup",
@@ -3297,7 +3298,7 @@
                 {
                  "name":"name",
                  "type":"string",
-                 "value":"arcade_side"
+                 "value":"arcade_side_left"
                 }]
         }, 
         {
@@ -3329,24 +3330,25 @@
         }, 
         {
          "id":46,
-         "image":"..\/textures\/environment\/arcade_side_cont.png",
+         "image":"..\/textures\/environment\/arcade_side_Lcont.png",
          "imageheight":697,
          "imagewidth":277,
          "objectgroup":
             {
              "draworder":"index",
+             "id":3,
              "name":"",
              "objects":[
                     {
-                     "height":132.65,
-                     "id":1,
+                     "height":623.981048874245,
+                     "id":3,
                      "name":"",
                      "rotation":0,
                      "type":"",
                      "visible":true,
                      "width":277.435,
                      "x":0,
-                     "y":564.35
+                     "y":72.3127
                     }],
              "opacity":1,
              "type":"objectgroup",
@@ -3373,7 +3375,7 @@
                 {
                  "name":"name",
                  "type":"string",
-                 "value":"arcade_side_cont"
+                 "value":"arcade_side_Lcont"
                 }]
         }, 
         {
@@ -3384,10 +3386,11 @@
          "objectgroup":
             {
              "draworder":"index",
+             "id":2,
              "name":"",
              "objects":[
                     {
-                     "height":90.4753804834378,
+                     "height":550.66209108201,
                      "id":1,
                      "name":"",
                      "rotation":0,
@@ -3395,7 +3398,7 @@
                      "visible":true,
                      "width":336.615935541629,
                      "x":0,
-                     "y":542.524619516562
+                     "y":82.3379089179898
                     }],
              "opacity":1,
              "type":"objectgroup",
@@ -3487,10 +3490,11 @@
          "objectgroup":
             {
              "draworder":"index",
+             "id":2,
              "name":"",
              "objects":[
                     {
-                     "height":90.4754,
+                     "height":552.858705875892,
                      "id":1,
                      "name":"",
                      "rotation":0,
@@ -3498,7 +3502,7 @@
                      "visible":true,
                      "width":336.616,
                      "x":0,
-                     "y":542.525
+                     "y":80.1416941241075
                     }],
              "opacity":1,
              "type":"objectgroup",
@@ -3715,6 +3719,256 @@
                  "name":"name",
                  "type":"string",
                  "value":"chalk_sign_blank"
+                }]
+        }, 
+        {
+         "id":58,
+         "image":"..\/textures\/environment\/arcade_side_right.png",
+         "imageheight":626,
+         "imagewidth":277,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":553.69,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":277.435,
+                     "x":0,
+                     "y":72.3127
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"arcade_side_right"
+                }]
+        }, 
+        {
+         "id":59,
+         "image":"..\/textures\/environment\/arcade_side_Rcont.png",
+         "imageheight":697,
+         "imagewidth":277,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":624.6873,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":277.435,
+                     "x":0,
+                     "y":72.3127
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"arcade_side_Rcont"
+                }]
+        }, 
+        {
+         "id":60,
+         "image":"..\/textures\/environment\/2chair.png",
+         "imageheight":264,
+         "imagewidth":536,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":168.449,
+                     "id":2,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":536,
+                     "x":0,
+                     "y":95.5519
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"2chair"
+                }]
+        }, 
+        {
+         "id":61,
+         "image":"..\/textures\/environment\/4chair.png",
+         "imageheight":260,
+         "imagewidth":995,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":168.448559033498,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":995,
+                     "x":0,
+                     "y":95.5519409665019
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"4chair"
+                }]
+        }, 
+        {
+         "id":62,
+         "image":"..\/textures\/environment\/3chair.png",
+         "imageheight":264,
+         "imagewidth":767,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":168.449,
+                     "id":2,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":767,
+                     "x":0,
+                     "y":95.5519
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"3chair"
                 }]
         }],
  "tilewidth":2276,

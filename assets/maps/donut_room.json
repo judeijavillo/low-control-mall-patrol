@@ -32,7 +32,6 @@
                         }, 
                         {
                          "name":"copEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -56,7 +55,6 @@
                         }, 
                         {
                          "name":"thiefEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -234,7 +232,6 @@
                         }, 
                         {
                          "name":"copEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -253,7 +250,6 @@
                         }, 
                         {
                          "name":"thiefEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -307,7 +303,6 @@
                         }, 
                         {
                          "name":"copEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -330,7 +325,6 @@
                         }, 
                         {
                          "name":"thiefEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -384,7 +378,6 @@
                         }, 
                         {
                          "name":"copEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -408,7 +401,6 @@
                         }, 
                         {
                          "name":"thiefEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -562,7 +554,6 @@
                         }, 
                         {
                          "name":"copEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -575,7 +566,6 @@
                         }, 
                         {
                          "name":"copLingerEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -594,7 +584,6 @@
                         }, 
                         {
                          "name":"thiefEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -635,7 +624,6 @@
                         }, 
                         {
                          "name":"copEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -658,7 +646,6 @@
                         }, 
                         {
                          "name":"thiefEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -699,7 +686,6 @@
                         }, 
                         {
                          "name":"copEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {
@@ -722,7 +708,6 @@
                         }, 
                         {
                          "name":"thiefEffect",
-                         "propertytype":"Effect",
                          "type":"class",
                          "value":
                             {

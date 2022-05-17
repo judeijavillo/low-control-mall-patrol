@@ -18,404 +18,7 @@
          "draworder":"topdown",
          "id":5,
          "name":"Traps",
-         "objects":[
-                {
-                 "height":0,
-                 "id":189,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"activationSound",
-                         "type":"string",
-                         "value":"bucket_activate"
-                        }, 
-                        {
-                         "name":"collisionSound",
-                         "type":"string",
-                         "value":"bucket_collision"
-                        }, 
-                        {
-                         "name":"copEffect",
-                         "propertytype":"Effect",
-                         "type":"class",
-                         "value":
-                            {
-                             "Speed Modifier":
-                                {
-                                 "x":0.5,
-                                 "y":0.5
-                                },
-                             "Type":"Velocity Modifier"
-                            }
-                        }, 
-                        {
-                         "name":"deactivationSound",
-                         "type":"string",
-                         "value":"bucket_deactivate"
-                        }, 
-                        {
-                         "name":"effectArea",
-                         "type":"object",
-                         "value":190
-                        }, 
-                        {
-                         "name":"textureAsset",
-                         "type":"object",
-                         "value":193
-                        }, 
-                        {
-                         "name":"thiefEffect",
-                         "propertytype":"Effect",
-                         "type":"class",
-                         "value":
-                            {
-                             "Escalator Velocity":
-                                {
-                                 "x":0.5,
-                                 "y":0.5
-                                },
-                             "Speed Modifier":
-                                {
-                                 "x":0.5,
-                                 "y":0.5
-                                },
-                             "Type":"Velocity Modifier"
-                            }
-                        }, 
-                        {
-                         "name":"triggerArea",
-                         "type":"object",
-                         "value":191
-                        }, 
-                        {
-                         "name":"triggerDeactivationArea",
-                         "type":"object",
-                         "value":192
-                        }],
-                 "rotation":0,
-                 "type":"Trap",
-                 "visible":true,
-                 "width":0,
-                 "x":2834,
-                 "y":3618
-                }, 
-                {
-                 "height":326,
-                 "id":190,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":258,
-                 "x":2712,
-                 "y":3596
-                }, 
-                {
-                 "height":74,
-                 "id":191,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":56,
-                 "x":2556,
-                 "y":3840
-                }, 
-                {
-                 "height":72,
-                 "id":192,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":58,
-                 "x":2632,
-                 "y":3842
-                }, 
-                {
-                 "gid":44,
-                 "height":529.848484848485,
-                 "id":193,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":383.060606060606,
-                 "x":2560.6895998717,
-                 "y":3458.09623052755
-                }, 
-                {
-                 "height":108,
-                 "id":195,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":76,
-                 "x":848,
-                 "y":284
-                }, 
-                {
-                 "height":120,
-                 "id":196,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":60,
-                 "x":988,
-                 "y":276
-                }, 
-                {
-                 "height":116,
-                 "id":197,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":84,
-                 "x":1084,
-                 "y":272
-                }, 
-                {
-                 "height":124,
-                 "id":198,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":76,
-                 "x":1212,
-                 "y":260
-                }, 
-                {
-                 "height":0,
-                 "id":206,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"activationSound",
-                         "type":"string",
-                         "value":"baby_activate"
-                        }, 
-                        {
-                         "name":"collisionSound",
-                         "type":"string",
-                         "value":"baby_collision"
-                        }, 
-                        {
-                         "name":"copEffect",
-                         "propertytype":"Effect",
-                         "type":"class",
-                         "value":
-                            {
-                             "Escalator Velocity":
-                                {
-                                 "x":0,
-                                 "y":1.2
-                                },
-                             "Type":"Escalator"
-                            }
-                        }, 
-                        {
-                         "name":"copLingerEffect",
-                         "propertytype":"Effect",
-                         "type":"class",
-                         "value":
-                            {
-                             "Type":"Escalator"
-                            }
-                        }, 
-                        {
-                         "name":"deactivationSound",
-                         "type":"string",
-                         "value":"baby_deactivate"
-                        }, 
-                        {
-                         "name":"effectArea",
-                         "type":"object",
-                         "value":207
-                        }, 
-                        {
-                         "name":"textureAsset",
-                         "type":"object",
-                         "value":210
-                        }, 
-                        {
-                         "name":"thiefEffect",
-                         "propertytype":"Effect",
-                         "type":"class",
-                         "value":
-                            {
-                             "Escalator Velocity":
-                                {
-                                 "x":0,
-                                 "y":1.2
-                                },
-                             "Type":"Escalator"
-                            }
-                        }, 
-                        {
-                         "name":"triggerArea",
-                         "type":"object",
-                         "value":208
-                        }, 
-                        {
-                         "name":"triggerDeactivationArea",
-                         "type":"object",
-                         "value":209
-                        }],
-                 "rotation":0,
-                 "type":"Trap",
-                 "visible":true,
-                 "width":0,
-                 "x":7269.69696969697,
-                 "y":4074.18181818182
-                }, 
-                {
-                 "height":675,
-                 "id":207,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":495,
-                 "x":7169.69696969697,
-                 "y":3493.93939393939
-                }, 
-                {
-                 "height":66,
-                 "id":208,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":44,
-                 "x":7154,
-                 "y":4248
-                }, 
-                {
-                 "height":62,
-                 "id":209,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":44,
-                 "x":7214,
-                 "y":4250
-                }, 
-                {
-                 "gid":49,
-                 "height":537.09090909091,
-                 "id":210,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":443.181818181818,
-                 "x":7303.93939393939,
-                 "y":4715.51515151515
-                }, 
-                {
-                 "height":0,
-                 "id":781,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"activated",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"copEffect",
-                         "propertytype":"Effect",
-                         "type":"class",
-                         "value":
-                            {
-                             "Escalator Velocity":
-                                {
-                                 "y":-2
-                                },
-                             "Type":"Escalator"
-                            }
-                        }, 
-                        {
-                         "name":"idleActivedAnimation",
-                         "type":"bool",
-                         "value":true
-                        }, 
-                        {
-                         "name":"textureAsset",
-                         "type":"object",
-                         "value":782
-                        }, 
-                        {
-                         "name":"thiefEffect",
-                         "propertytype":"Effect",
-                         "type":"class",
-                         "value":
-                            {
-                             "Escalator Velocity":
-                                {
-                                 "y":-2
-                                }
-                            }
-                        }, 
-                        {
-                         "name":"triggerArea",
-                         "type":"object",
-                         "value":784
-                        }, 
-                        {
-                         "name":"triggerDeactivationArea",
-                         "type":"object",
-                         "value":783
-                        }],
-                 "rotation":0,
-                 "type":"Trap",
-                 "visible":true,
-                 "width":0,
-                 "x":2481.33333333333,
-                 "y":4164
-                }, 
-                {
-                 "gid":59,
-                 "height":217,
-                 "id":782,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":217,
-                 "x":2480,
-                 "y":4521
-                }, 
-                {
-                 "height":46.6666666666665,
-                 "id":783,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":32,
-                 "x":2054.66666666667,
-                 "y":3936
-                }, 
-                {
-                 "height":41.3333333333335,
-                 "id":784,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":29.3333333333335,
-                 "x":2058.66666666667,
-                 "y":3937.33333333333
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -1328,7 +931,7 @@
          "name":"Props",
          "objects":[
                 {
-                 "gid":41,
+                 "gid":40,
                  "height":143.36,
                  "id":167,
                  "name":"",
@@ -1340,7 +943,7 @@
                  "y":4224.04352208627
                 }, 
                 {
-                 "gid":42,
+                 "gid":41,
                  "height":143.36,
                  "id":169,
                  "name":"",
@@ -1352,7 +955,7 @@
                  "y":4224.04352208627
                 }, 
                 {
-                 "gid":42,
+                 "gid":41,
                  "height":143.36,
                  "id":171,
                  "name":"",
@@ -1364,7 +967,7 @@
                  "y":4224.04352208627
                 }, 
                 {
-                 "gid":43,
+                 "gid":42,
                  "height":143.36,
                  "id":172,
                  "name":"",
@@ -1376,7 +979,7 @@
                  "y":4224
                 }, 
                 {
-                 "gid":41,
+                 "gid":40,
                  "height":143.36,
                  "id":173,
                  "name":"",
@@ -1388,7 +991,7 @@
                  "y":4224.04
                 }, 
                 {
-                 "gid":42,
+                 "gid":41,
                  "height":143.36,
                  "id":174,
                  "name":"",
@@ -1400,7 +1003,7 @@
                  "y":4224.04
                 }, 
                 {
-                 "gid":42,
+                 "gid":41,
                  "height":143.36,
                  "id":175,
                  "name":"",
@@ -1412,7 +1015,7 @@
                  "y":4224.04
                 }, 
                 {
-                 "gid":43,
+                 "gid":42,
                  "height":143.36,
                  "id":176,
                  "name":"",
@@ -1424,7 +1027,7 @@
                  "y":4224
                 }, 
                 {
-                 "gid":41,
+                 "gid":40,
                  "height":143.36,
                  "id":177,
                  "name":"",
@@ -1436,7 +1039,7 @@
                  "y":4224.04
                 }, 
                 {
-                 "gid":42,
+                 "gid":41,
                  "height":143.36,
                  "id":178,
                  "name":"",
@@ -1448,7 +1051,7 @@
                  "y":4224.04
                 }, 
                 {
-                 "gid":42,
+                 "gid":41,
                  "height":143.36,
                  "id":179,
                  "name":"",
@@ -1460,7 +1063,7 @@
                  "y":4224.04
                 }, 
                 {
-                 "gid":43,
+                 "gid":42,
                  "height":143.36,
                  "id":180,
                  "name":"",
@@ -1472,7 +1075,7 @@
                  "y":4224
                 }, 
                 {
-                 "gid":41,
+                 "gid":40,
                  "height":143.36,
                  "id":181,
                  "name":"",
@@ -1484,7 +1087,7 @@
                  "y":4224.04
                 }, 
                 {
-                 "gid":42,
+                 "gid":41,
                  "height":143.36,
                  "id":182,
                  "name":"",
@@ -1496,7 +1099,7 @@
                  "y":4224.04
                 }, 
                 {
-                 "gid":43,
+                 "gid":42,
                  "height":143.36,
                  "id":184,
                  "name":"",
@@ -1508,7 +1111,7 @@
                  "y":4224
                 }, 
                 {
-                 "gid":40,
+                 "gid":39,
                  "height":704,
                  "id":188,
                  "name":"",
@@ -1520,7 +1123,7 @@
                  "y":5184
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":624,
                  "name":"",
@@ -1532,7 +1135,7 @@
                  "y":5956
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":651,
                  "name":"",
@@ -1544,7 +1147,7 @@
                  "y":6707.28787878788
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":652,
                  "name":"",
@@ -1556,7 +1159,7 @@
                  "y":7376.25757575758
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":653,
                  "name":"",
@@ -1568,7 +1171,7 @@
                  "y":7044.24242424242
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":654,
                  "name":"",
@@ -1580,7 +1183,7 @@
                  "y":7035.15151515152
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":655,
                  "name":"",
@@ -1592,7 +1195,7 @@
                  "y":6310.90909090909
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":656,
                  "name":"",
@@ -1604,7 +1207,7 @@
                  "y":6295.75757575758
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":697,
                  "name":"",
@@ -1616,7 +1219,7 @@
                  "y":1676
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":698,
                  "name":"",
@@ -1628,7 +1231,7 @@
                  "y":2001
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":699,
                  "name":"",
@@ -1640,7 +1243,7 @@
                  "y":2341
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":700,
                  "name":"",
@@ -1652,7 +1255,7 @@
                  "y":1048
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":701,
                  "name":"",
@@ -1664,7 +1267,7 @@
                  "y":1301.15151515152
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":703,
                  "name":"",
@@ -1676,7 +1279,7 @@
                  "y":1207
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":704,
                  "name":"",
@@ -1688,7 +1291,7 @@
                  "y":1425.48484848485
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":706,
                  "name":"",
@@ -1700,7 +1303,7 @@
                  "y":1037.36363636364
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":707,
                  "name":"",
@@ -1712,7 +1315,7 @@
                  "y":1190.30303030303
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":708,
                  "name":"",
@@ -1724,7 +1327,7 @@
                  "y":2675.16666666667
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":750,
                  "name":"",
@@ -1736,7 +1339,7 @@
                  "y":5227.16666666667
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":751,
                  "name":"",
@@ -1748,7 +1351,7 @@
                  "y":5526.31818181818
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":752,
                  "name":"",
@@ -1760,7 +1363,7 @@
                  "y":5518.31818181818
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":753,
                  "name":"",
@@ -1772,7 +1375,7 @@
                  "y":5207.89393939394
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":754,
                  "name":"",
@@ -1784,7 +1387,7 @@
                  "y":5808.07575757576
                 }, 
                 {
-                 "gid":37,
+                 "gid":36,
                  "height":239,
                  "id":755,
                  "name":"",
@@ -1796,7 +1399,7 @@
                  "y":5801.04545454545
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":185,
                  "id":764,
                  "name":"",
@@ -1808,7 +1411,7 @@
                  "y":8197
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":185,
                  "id":765,
                  "name":"",
@@ -1820,7 +1423,7 @@
                  "y":8581
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":185,
                  "id":766,
                  "name":"",
@@ -1832,7 +1435,7 @@
                  "y":8205
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":185,
                  "id":767,
                  "name":"",
@@ -1844,7 +1447,7 @@
                  "y":7977
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":185,
                  "id":768,
                  "name":"",
@@ -1856,7 +1459,7 @@
                  "y":9109
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":185,
                  "id":769,
                  "name":"",
@@ -1868,7 +1471,7 @@
                  "y":9265
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":185,
                  "id":770,
                  "name":"",
@@ -1880,7 +1483,7 @@
                  "y":8973
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":1669,
                  "id":771,
                  "name":"",
@@ -1892,7 +1495,7 @@
                  "y":9262.83333333333
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":1669,
                  "id":772,
                  "name":"",
@@ -1904,7 +1507,7 @@
                  "y":9293.5
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":1669,
                  "id":773,
                  "name":"",
@@ -1916,7 +1519,7 @@
                  "y":9307.5
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":785,
                  "id":774,
                  "name":"",
@@ -1928,7 +1531,7 @@
                  "y":9303.5
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":785,
                  "id":775,
                  "name":"",
@@ -1940,7 +1543,7 @@
                  "y":8309.5
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":785,
                  "id":776,
                  "name":"",
@@ -1952,7 +1555,7 @@
                  "y":8323.5
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":785,
                  "id":777,
                  "name":"",
@@ -1964,7 +1567,7 @@
                  "y":9309.5
                 }, 
                 {
-                 "gid":57,
+                 "gid":56,
                  "height":185,
                  "id":779,
                  "name":"",
@@ -1997,11 +1600,11 @@
          "source":"Map3overlay.tsx"
         }, 
         {
-         "firstgid":3,
+         "firstgid":2,
          "source":"mappics.tsx"
         }, 
         {
-         "firstgid":29,
+         "firstgid":28,
          "source":"PropsAndTraps.tsj"
         }],
  "tilewidth":64,
