@@ -45,7 +45,7 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     _skinKey = skinKey;
     
     _actions = actions;
-//    CULog("opening file %s", file.data());
+    CULog("opening file %s", file.data());
     std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(file);
     std::shared_ptr<JsonValue> json = reader->readJson();
     
@@ -516,7 +516,7 @@ void GameModel::initProps(const shared_ptr<JsonValue>& props,
 //                  height);
 //            CULog("prop obst position %f %f", obstacle->getX(), obstacle->getY());
             _obstacles.push_back(obstacle);
-//            obstacle->setEnabled(false);
+            obstacle->setEnabled(false);
         }
     }
 }

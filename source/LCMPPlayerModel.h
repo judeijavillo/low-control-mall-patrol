@@ -27,7 +27,7 @@
 #define LEFT_ANIM_KEY 2
 #define FRONT_ANIM_KEY 3
 #define STILL_ANIM_KEY 4
-#define CHAR_SCALE 0.13f
+#define CHAR_SCALE 0.18f
 
 class PlayerModel : public cugl::physics2::CapsuleObstacle {
 protected:
