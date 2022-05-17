@@ -234,7 +234,13 @@ private:
                   const std::shared_ptr<cugl::JsonValue>& propTileset,
                   const std::shared_ptr<cugl::AssetManager>& assets,
                   float scale);
-    
+
+    /**
+     Scales a prop's hitbox to match what is seen in Tiled
+     */
+    std::shared_ptr<cugl::physics2::PolygonObstacle> scaleHitbox(
+                                                                 std::shared_ptr<GameModel::ObstacleNode_x_Y_Gid_struct> shape, cugl::Vec2 scale_, float x, float y, float height);
+
     /**
      * Initializes a single wall
      */

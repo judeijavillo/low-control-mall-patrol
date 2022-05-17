@@ -61,9 +61,6 @@
             "format"    : {
                 "type" : "Anchored"
             },
-            "data" : {
-                "color": [153,255,255,255]	
-            },
             "children"  : {
                 "logo"  : {
                     "type"   : "Image",
@@ -76,8 +73,8 @@
                         "scale"    : 0.75
                     },
                     "layout" : {
-                        "x_anchor" : "center",
-                        "y_anchor" : "middle",
+                        "x_anchor" : "fill",
+                        "y_anchor" : "fill",
                         "y_offset" : 115,
                         "absolute" : true
                     }

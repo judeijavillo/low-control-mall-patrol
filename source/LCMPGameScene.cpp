@@ -208,11 +208,25 @@ void GameScene::start(bool host, string skinKey, string levelKey) {
     // Initialize the game
     _game = make_shared<GameModel>();
     _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, levelKey, _actions, _skinKey);
+    
+    // Set the player's names
+    for (int i = 0; i < 5; i++) {
+        NetworkController::Player playerData = _network->getPlayer(i);
+        shared_ptr<PlayerModel> player = playerData.playerNumber == -1
+            ? (shared_ptr<PlayerModel>) _game->getThief()
+            : (shared_ptr<PlayerModel>) _game->getCop(playerData.playerNumber);
+        player->setName(playerData.username, _font);
+    }
      
+
     // Initialize subcontrollers
     _collision.init(_game);
-    _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset, _assets, _actions);
-    
+    _uinode->removeAllChildren();
+    _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset, _assets, _actions, _audio);
+
+    // Initialize camera position
+    initCamera();
+
     // Update the state of the game
     _state = GAME;
 }
@@ -282,9 +296,18 @@ void GameScene::reset() {
     _game = make_shared<GameModel>();
     _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions, _skinKey);
     
+    // Set the player's names
+    for (int i = 0; i < 5; i++) {
+        NetworkController::Player playerData = _network->getPlayer(i);
+        shared_ptr<PlayerModel> player = playerData.playerNumber == -1
+            ? (shared_ptr<PlayerModel>) _game->getThief()
+            : (shared_ptr<PlayerModel>) _game->getCop(playerData.playerNumber);
+        player->setName(playerData.username, _font);
+    }
+    
     // Initialize subcontrollers
     _collision.init(_game);
-    _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset, _assets, _actions);
+    _ui.init(_worldnode, _uinode, _game, _font, _screenSize, _offset, _assets, _actions, _audio);
     
     // Update the state of the game
     _state = GAME;
@@ -418,7 +441,7 @@ void GameScene::stateSettings(float timestep) {
     _game->update(timestep);
     _input.clear();
     
-    if (!_ui.didPause()) {
+    if (!_ui.isPaused()) {
         _state = GAME;
     }
     if (_ui.didMute()) {
@@ -438,6 +461,20 @@ void GameScene::stateSettings(float timestep) {
 }
 
 //  MARK: - Helpers
+
+/** 
+ *  
+ */
+void GameScene::initCamera() {
+    shared_ptr<PlayerModel> player = _isThief
+        ? (shared_ptr<PlayerModel>) _game->getThief()
+        : (shared_ptr<PlayerModel>) _game->getCop(_playerNumber);
+    Vec2 curr = _camera->getPosition();
+    Vec2 next = _offset
+        + (player->getPosition() * _scale);
+    _camera->translate((next - curr));
+    _camera->update();
+}
 
 /**
  * Updates local players (own player and non-playing players)

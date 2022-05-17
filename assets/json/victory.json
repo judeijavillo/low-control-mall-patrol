@@ -8,6 +8,12 @@
         },
         "leave" : {
             "file" :   "textures/ui/leave.png"
+        },
+        "thief_win" : {
+            "file" :   "textures/ui/thief_win.png"
+        },
+        "cop_win" : {
+            "file" :   "textures/ui/cop_win.png"
         }
     },
     "sounds": {
@@ -70,6 +76,26 @@
                                         "texture": "leave"
                                     }
                                 }
+                            }
+                        },
+                        "thief_win": {
+                            "type": "Image",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "texture": "thief_win"
+                            },
+                            "layout": {
+                                "x_anchor": "fill"
+                            }
+                        },
+                        "cop_win": {
+                            "type": "Image",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "texture": "cop_win"
+                            },
+                            "layout": {
+                                "x_anchor": "fill"
                             }
                         },
                         "text": {

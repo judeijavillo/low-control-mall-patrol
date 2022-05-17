@@ -124,6 +124,7 @@ void LevelSelectScene::dispose() {
     if (_active) {
         removeAllChildren();
         _active = false;
+        _mapScreen = 0;
     }
 }
 

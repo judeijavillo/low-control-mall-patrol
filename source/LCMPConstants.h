@@ -50,6 +50,8 @@ enum JsonConstants :int {
 	COP_LINGER_DURATION,
 	COP_LINGER_EFFECT,
 	EFFECT_AREA,
+	IDLE_ACTIVATED_ANIMATION,
+	IDLE_DEACTIVATED_ANIMATION,
 	NUM_USAGES,
 	TEXTURE_ACTIVATION_TRIGGER,
 	TEXTURE_ASSET,
@@ -105,6 +107,8 @@ enum JsonConstants :int {
 #define WALL_ASSETS_FILE    "maps/Map3WallAssets.json"
 /** The key for our loaded level */
 #define LEVEL_ONE_KEY       "example6"
+#define LEVEL_DONUT_KEY		"maps/donut_room.json"
+#define LEVEL_CONVEYOR_KEY		"maps/conveyorlevel.json"
 
 /** Tileset for props */
 #define PROPS_FILE          "maps/PropsAndTraps.tsj"
@@ -129,8 +133,8 @@ enum JsonConstants :int {
 #define LOADING_MUSIC           "loading"
 #define MENU_MUSIC              "menu"
 #define SFX_COOLDOWN            2.0f
-#define MUSIC_VOLUME            0.f
-#define SFX_VOLUME              0.5f
+#define MUSIC_VOLUME            0.0f
+#define SFX_VOLUME              0.1f
 
 /** Player constants */
 // Thief Physics Constants
@@ -152,7 +156,7 @@ enum JsonConstants :int {
 /** The amount of time that the cop will be in the air while in a successful tackle */
 #define TACKLE_AIR_TIME 0.25f
 /** The amount of time that the cop will be in the air while in a failed tackle*/
-#define TACKLE_COOLDOWN_TIME 1.5f
+#define TACKLE_COOLDOWN_TIME 1.75f
 /** The movement multiplier for the cop during tackle */
 #define TACKLE_MOVEMENT_MULT 2.0f
 /** The damping multiplier for the cop during tackle */
@@ -165,7 +169,7 @@ enum JsonConstants :int {
 // MARK: - UI Constants
 
 /** This is how long the game will be */
-#define GAME_LENGTH     160
+#define GAME_LENGTH     109
 
 /** This is the size of the active portion of the screen */
 #define SCENE_WIDTH     1024
@@ -176,9 +180,15 @@ enum JsonConstants :int {
 /** Amount UI elements should be shifted left or right to remain on screen */
 #define SCENE_WIDTH_ADJUST 80
 
+
+// UI and settings stuff
+
 #define MENU_OFFSET 0.1
 
 #define DROP_DURATION 0.3f
+
+/** The key for the settings animations */
+#define SETTINGS_ACT_KEY  "settings animation"
 
 /** The radius of the joystick*/
 #define JOYSTICK_RADIUS     100

@@ -41,8 +41,8 @@
 //
 //      3. This notice may not be removed or altered from any source distribution.
 //
-//  Author: Walker White and Enze Zhou
-//  Version: 8/20/20
+//  Author: Walker White, Enze Zhou and Bryce Roth
+//  Version: 4/28/22
 //
 #include <cugl/input/cu_input.h>
 #include <cugl/scene2/cu_scene2.h>
@@ -57,6 +57,8 @@ using namespace cugl::scene2;
 #define LINE_WEIGHT 2.0f
 /** The number of line segments in the knob "circle" */
 #define KNOB_SEGS   32
+/** Whether or not this code is being used with the fixes for LCMP */
+#define LCMP 1
 
 #pragma mark -
 #pragma mark Constructors
@@ -298,26 +300,51 @@ void Slider::placePath(const std::shared_ptr<scene2::SceneNode>& path) {
         psize.height = (_bounds.size.height > 0 ? _bounds.size.height : _bounds.size.height)+_bounds.origin.y;
         float radius = std::max(_bounds.origin.x,_bounds.origin.y);
         
+        float border = 3.0;
+        
         _path = SceneNode::allocWithBounds(psize);
         
         Path2 path;
+
+
         path.vertices.push_back(_bounds.origin);
-        path.vertices.push_back(_bounds.origin+_bounds.size);
-        auto track = PathNode::allocWithPath(path,radius,
-                                             poly2::Joint::SQUARE,
-                                             poly2::EndCap::ROUND);
-        track->setColor(Color4(255,255,255,32));
+        path.vertices.push_back(_bounds.origin + _bounds.size);
+        auto track = PathNode::allocWithPath(path, radius - border,
+            poly2::Joint::SQUARE,
+            poly2::EndCap::ROUND);
+        track->setColor(Color4(255, 255, 255, 38));
         track->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
         track->setPosition(_bounds.origin);
+        if (LCMP) {
+
+            auto bordertrack = PathNode::allocWithPath(path, radius,
+                poly2::Joint::SQUARE,
+                poly2::EndCap::ROUND);
+            bordertrack->setColor(Color4(38, 84, 124, 255));
+            bordertrack->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+            bordertrack->setPosition(_bounds.origin);
+            _path->addChild(bordertrack);
+
+            track->setColor(Color4(255, 255, 255, 255));
+
+        }
+        else {
+            auto line = PathNode::allocWithPath(path, LINE_WEIGHT,
+                poly2::Joint::SQUARE,
+                poly2::EndCap::ROUND);
+            line->setColor(Color4::BLACK);
+            line->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+            line->setPosition(_bounds.origin);
+            _path->addChild(line);
+        }
         _path->addChild(track);
-        
-        auto line = PathNode::allocWithPath(path,LINE_WEIGHT,
-                                            poly2::Joint::SQUARE,
-                                            poly2::EndCap::ROUND);
-        line->setColor(Color4::BLACK);
-        line->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-        line->setPosition(_bounds.origin);
-        _path->addChild(line);
+        //auto line = PathNode::allocWithPath(path,LINE_WEIGHT,
+        //                                    poly2::Joint::SQUARE,
+        //                                    poly2::EndCap::ROUND);
+        //line->setColor(Color4::BLACK);
+        //line->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+        //line->setPosition(_bounds.origin);
+        //_path->addChild(line);
     } else {
         _path = path;
     }

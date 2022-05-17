@@ -75,6 +75,9 @@
         "settings_background": {
             "file": "textures/ui/settings_background.png"
         },
+        "back_button": {
+            "file": "textures/ui/back.png"
+        },
         "baby_carriage_anim_down": {
             "file": "textures/environment/animations/baby_carriage_anim_down.png"
         },
@@ -99,6 +102,9 @@
         "minute_hand": {
             "file":  "textures/ui/minute_hand.png"
         },
+		"ui_thief_head":{
+			"file": "textures/ui/thief_male_beanie_head.png"
+		},
         "frame": {
             "file":  "textures/frame.png"
         },
@@ -108,9 +114,9 @@
         "tree": {
             "file": "textures/environment/tree.png"
         },
-	"box" : {
-	    "file": "textures/environment/box.png"
-	},
+        "box" : {
+            "file": "textures/environment/box.png"
+        },
         "bucket": {
             "file": "textures/environment/bucket.png"
         },
@@ -119,6 +125,9 @@
         },
         "bush": {
             "file": "textures/environment/bush.png"
+        },
+        "circle" : {
+            "file": "textures/environment/circle.png"
         },
         "faris": {
             "file": "textures/environment/faris.png"
@@ -219,6 +228,42 @@
         "thief_run_right": {
             "file": "textures/characters/lcmp_thief_run_right.png"
         },
+        "Trav_D_Dend":{
+            "file":"textures/environment/animations/Trav_D_Dend.png"
+        },
+        "Trav_D_Uend":{
+            "file":"textures/environment/animations/Trav_D_Uend.png"
+        },
+        "Trav_down":{
+            "file":"textures/environment/animations/Trav_down.png"
+        },
+        "Trav_L_Lend":{
+            "file":"textures/environment/animations/Trav_L_Lend.png"
+        },
+        "Trav_L_Rend":{
+            "file":"textures/environment/animations/Trav_L_Rend.png"
+        },
+        "Trav_left":{
+            "file":"textures/environment/animations/Trav_left.png"
+        },
+        "Trav_R_Lend":{
+            "file":"textures/environment/animations/Trav_R_Lend.png"
+        },
+        "Trav_R_Rend":{
+            "file":"textures/environment/animations/Trav_R_Rend.png"
+        },
+        "Trav_right":{
+            "file":"textures/environment/animations/Trav_right.png"
+        },
+        "Trav_U_Dend":{
+            "file":"textures/environment/animations/Trav_U_Dend.png"
+        },
+        "Trav_U_Uend":{
+            "file":"textures/environment/animations/Trav_U_Uend.png"
+        },
+        "Trav_up":{
+            "file":"textures/environment/animations/Trav_up.png"
+        },
         "ss_cop_up": {
             "file": "textures/characters/ss_cop_up.png"
         },
@@ -315,6 +360,12 @@
         "button_x" 	: {
             "file" :   "textures/ui/close.png"
         },
+		"button_back": {
+			"file" :   "textures/ui/back.png"
+		},
+		"donut_brown": {
+			"file" :   "textures/ui/donut_brown.png"
+		},
         "join_button" : {
             "file": "textures/ui/join_button.png"
         },
@@ -362,6 +413,24 @@
         },
         "propeller_hat_left": {
             "file":  "textures/accessories/propeller_hat_left.png"
+        },
+        "title": {
+            "file": "textures/lobby/title.png"
+        },
+        "buy": {
+            "file": "textures/ui/buy_button.png"
+        },
+        "roll": {
+            "file": "textures/ui/roll_button.png"
+        },
+        "shopping_bag_1": {
+            "file": "textures/environment/shopping_bag_1.png"
+        },
+        "shopping_bag_many": {
+            "file": "textures/environment/shopping_bag_many.png"
+        },
+        "donut": {
+            "file": "textures/ui/donut_brown.png"
         }
     },
     "sounds": {
@@ -402,7 +471,7 @@
         },
         "game": {
             "type":     "sample",
-            "file":     "sounds/elevator.ogg",
+            "file":     "sounds/mall.ogg",
             "volume":   0.5
         },
         "menu": {
@@ -455,7 +524,8 @@
     "scene2s" : {
         "menu": {
 			"type": "Node",
-			"comment": "This is the root node of the scene for the lab",
+			"comment": "How anything was placed in the correct spots in this scene without anchors or layout will forever remain a mystery",
+			"comment": "UPDATE: it was hardcoded in. Whoever wrote this is on something else.",
 			"format": {
 				"type": "Anchored"
 			},
@@ -467,6 +537,9 @@
 						"anchor": [0.5, 0],
 						"scale": [1, 1]
 					},
+					"format": {
+						"type": "Anchored"
+					},
 					"layout": {
 						"x_anchor": "fill",
 						"y_anchor": "fill"
@@ -477,15 +550,19 @@
 							"data": {
 								"upnode": "up",
 								"anchor": [0.5, 0.5],
-								"position": [1000, 550],
-								"scale": [1.6, 1.6]
+								"scale": 1.5
+							},
+							"layout": {
+								"x_anchor" : "right",
+								"y_anchor" : "top",
+								"x_offset" : -0.2,
+								"y_offset" : -0.25
 							},
 							"children": {
 								"up": {
 									"type": "Image",
 									"data": {
 										"texture": "create_button"
-
 									}
 								}
 							}
@@ -495,8 +572,13 @@
 							"data": {
 								"upnode": "up",
 								"anchor": [0.5, 0.5],
-								"position": [1000, 350],
-								"scale": [1.5, 1.5]
+								"scale": 1.5
+							},							
+							"layout": {
+								"x_anchor" : "right",
+								"y_anchor" : "middle",
+								"x_offset" : -0.2,
+								"y_offset" : 0
 							},
 							"children": {
 								"up": {
@@ -512,9 +594,14 @@
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "position": [1000, 150],
-                                "scale": [1.5, 1.5]
+                                "scale": 1.5
                             },
+							"layout": {
+								"x_anchor" : "right",
+								"y_anchor" : "bottom",
+								"x_offset" : -0.2,
+								"y_offset" : 0.25
+							},
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -528,15 +615,20 @@
 							"type": "Button",
 							"data": {
 								"upnode": "up",
-								"anchor": [0.5, 0.5],
-								"position": [1450, 640],
+								"anchor": [0.0, 1.0],
 								"scale": [0.3, 0.3]
+							},
+							"layout" :{
+								"x_anchor" : "left",
+								"y_anchor" : "top",
+								"x_offset" : 0.0,
+								"y_offset" : -0.1
 							},
 							"children": {
 								"up": {
 									"type": "Image",
 									"data": {
-										"texture": "settings"
+										"texture": "settings_button"
 									}
 								}
 							}
@@ -549,14 +641,14 @@
 								"position": [50, 640],
 								"scale": [0.3, 0.3]
 							},
-							"children": {
-								"up": {
-									"type": "Image",
-									"data": {
-										"texture": "profile"
-									}
-								}
-							}
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "profile"
+                                    }
+                                }
+                            }
 						},
 						"shop": {
 							"type": "Button",
@@ -576,30 +668,181 @@
 							}
 						},
 						"title": {
-							"type": "Label",
+							"type": "Image",
 							"data": {
 								"anchor": [0.5, 0.5],
-								"scale": 1.5,
-								"font": "futura",
-								"text": "LOW CONTROL",
-								"halign": "center",
-								"valign": "middle",
-								"position": [546, 450]
-
+                                "scale": [0.6, 0.6],
+                                "texture": "title"
+							},
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "middle",
+								"x_offset": -0.15,
+								"y_offset": 0
 							}
 						}
 					}
-				},
-				"title": {
-					"type": "Label",
+				}
+			}
+		},
+		"menu43": {
+			"type": "Node",
+			"comment": "How anything was placed in the correct spots in this scene without anchors or layout will forever remain a mystery",
+			"format": {
+				"type": "Anchored"
+			},
+			"children": {
+				"backdrop": {
+					"type": "Image",
 					"data": {
-						"anchor": [0.5, 0.5],
-						"scale": 1.5,
-						"font": "futura",
-						"text": "MALL PATROL",
-						"halign": "center",
-						"valign": "middle",
-						"position": [546, 350]
+						"texture": "menu_background",
+						"anchor": [0.5, 0],
+						"scale": [1, 1]
+					},
+					"format": {
+						"type": "Anchored"
+					},
+					"layout": {
+						"x_anchor": "fill",
+						"y_anchor": "fill"
+					},
+					"children": {
+						"host": {
+							"type": "Button",
+							"data": {
+								"upnode": "up",
+								"anchor": [0.5, 0.5],
+								"scale": 1.3
+							},
+							"layout": {
+								"x_anchor" : "right",
+								"y_anchor" : "top",
+								"x_offset" : -0.18,
+								"y_offset" : -0.25
+							},
+							"children": {
+								"up": {
+									"type": "Image",
+									"data": {
+										"texture": "create_button"
+									}
+								}
+							}
+						},
+						"join": {
+							"type": "Button",
+							"data": {
+								"upnode": "up",
+								"anchor": [0.5, 0.5],
+								"scale": 1.3
+							},							
+							"layout": {
+								"x_anchor" : "right",
+								"y_anchor" : "middle",
+								"x_offset" : -0.18,
+								"y_offset" : 0
+							},
+							"children": {
+								"up": {
+									"type": "Image",
+									"data": {
+										"texture": "join_button"
+									}
+								}
+							}
+						},
+                        "find": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": 1.3
+                            },
+							"layout": {
+								"x_anchor" : "right",
+								"y_anchor" : "bottom",
+								"x_offset" : -0.18,
+								"y_offset" : 0.25
+							},
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "join_button"
+                                    }
+                                }
+                            }
+                        },
+						"settings": {
+							"type": "Button",
+							"data": {
+								"upnode": "up",
+								"anchor": [0.0, 1.0],
+								"scale": [0.3, 0.3]
+							},
+							"layout" :{
+								"x_anchor" : "left",
+								"y_anchor" : "top",
+								"x_offset" : 0.0,
+								"y_offset" : -0.1
+							},
+							"children": {
+								"up": {
+									"type": "Image",
+									"data": {
+										"texture": "settings_button"
+									}
+								}
+							}
+						},
+						"profile": {
+							"type": "Button",
+							"data": {
+								"upnode": "up",
+								"anchor": [0.5, 0.5],
+								"position": [50, 640],
+								"scale": [0.3, 0.3]
+							},
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "profile"
+                                    }
+                                }
+                            }
+						},
+						"shop": {
+							"type": "Button",
+							"data": {
+								"upnode": "up",
+								"anchor": [0.5, 0.5],
+								"position": [140, 640],
+								"scale": [0.3,0.3]
+							},
+							"children": {
+								"up": {
+									"type": "Image",
+									"data": {
+										"texture": "shop"
+									}
+								}
+							}
+						},
+						"title": {
+							"type": "Image",
+							"data": {
+								"anchor": [0.5, 0.5],
+                                "scale": 0.5,
+                                "texture": "title"
+							},
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "middle",
+								"x_offset": -0.15,
+								"y_offset": 0
+							}
+						}
 					}
 				}
 			}
@@ -631,11 +874,56 @@
                     "layout" : {
                         "x_anchor" : "right",
                         "y_anchor" : "top",
-                        "y_offset" : -10,
-                        "x_offset" : -10,
-                        "absolute" : true
+                        "y_offset" : -0.025,
+                        "x_offset" : -0.025
                     }
-                }
+                },
+				"thiefIndicator": {
+					"type"	: "Image",
+					"format"    : {
+						"type" : "anchored"
+					},
+					"data": {
+						"texture": "button_white",
+						"anchor" : [0.5, 1.0],
+						"scale"	 : 0.35
+					},
+					"layout" : {
+						"x_anchor" : "center",
+						"y_anchor" : "top",
+						"y_offset" : 0
+					},
+					"children" : {
+						"head" : {
+							"type"	: "Image",
+							"data": {
+								"texture": "ui_thief_head",
+								"anchor" : [0.5, 0.5],
+								"scale" : 0.7
+							},
+							"layout" : {
+								"x_anchor" : "right",
+								"y_anchor" : "middle",
+								"x_offset" : -0.075,
+								"y_offset" : -0.2
+							}
+						},
+						"text" : {
+							"type"        : "label",
+                            "data" : {
+                                "anchor"  : [0.5,0.5],
+                                "font"     : "futura heavy",
+                                "text"     : "10m",
+                                "foreground": [38, 84, 124, 255],
+								"scale": 2.5
+                            },
+							"layout" :{
+								"x_anchor" : "center",
+								"y_anchor" : "middle"
+							}
+                        }
+					}
+				}
             }
         },
         "shop" : {
@@ -647,14 +935,15 @@
                 "settings" : {
                     "type" : "Image",
                     "data" :{
-                        "texture":  "settings_background",
-                        "anchor" : [0.5,1]
+                        "texture":  "menu_background",
+                        "anchor" : [0.5,0,5]
                     },
+					"format":{
+						"type": "anchored"
+					},
                     "layout" : {
-                        "x_anchor" : "center",
-                        "y_anchor" : "top",
-                        "y_offset" : 0,
-                        "x_offset" : 0
+                        "x_anchor" : "fill",
+                        "y_anchor" : "fill"
                     },
                     "children" : {
                         "Title" : {
@@ -670,7 +959,7 @@
                                 "position" : [275, 309]
                             }
                         },
-                        "Halo" : {
+                        "halo" : {
                             "type"      : "Button",
                             "data"   : {
                                 "upnode"  : "up",
@@ -687,7 +976,7 @@
                                 }
                             }
                         },
-                        "Cat" : {
+                        "cat_ears" : {
                             "type"      : "Button",
                             "data"   : {
                                 "upnode"  : "up",
@@ -704,7 +993,7 @@
                                 }
                             }
                         },
-                        "Plant" : {
+                        "plant" : {
                             "type"      : "Button",
                             "data"   : {
                                 "upnode"  : "up",
@@ -721,7 +1010,7 @@
                                 }
                             }
                         },
-                        "Police" : {
+                        "police_hat" : {
                             "type"      : "Button",
                             "data"   : {
                                 "upnode"  : "up",
@@ -738,7 +1027,7 @@
                                 }
                             }
                         },
-                        "Propeller" : {
+                        "propeller_hat" : {
                             "type"      : "Button",
                             "data"   : {
                                 "upnode"  : "up",
@@ -755,19 +1044,40 @@
                                 }
                             }
                         },
-                        "X" : {
+                        "Back" : {
                             "type"      : "Button",
                             "data"   : {
                                 "upnode"  : "up",
                                 "anchor":   [0.5,0.5],
-                                "position" : [430, 400],
                                 "scale" : [0.2, 0.2]
+                            },
+							"layout": {
+								"x_anchor": "left",
+								"y_anchor": "top",
+								"x_offset": 0.05,
+								"y_offset": -0.2
+							},
+                            "children": {
+                                "up" : {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture":  "back_button"
+                                    }
+                                }
+                            }
+                        },
+                        "Buy": {
+                            "type": "Button",
+                            "data"   : {
+                                "upnode"  : "up",
+                                "anchor":   [0.5,0.5],
+                                "scale" : [1.5, 1.5]
                             },
                             "children": {
                                 "up" : {
                                     "type": "Image",
                                     "data": {
-                                        "texture":  "button_x"
+                                        "texture":  "buy"
                                     }
                                 }
                             }
@@ -776,150 +1086,148 @@
                 }
             }
         },
-		"pause" : {
-			"type" : "Node",
-			"format" : {
-				"type" : "Anchored"
-			},
-			"children" : {
-				"settings" : {
-					"type" : "Image",
-					"data" :{
-						"texture":  "settings_background",
-						"anchor" : [0.5, 0.5],
-						"size" : [500, 600]
+        "gacha" : {
+            "type" : "Node",
+            "format" : {
+                "type" : "Anchored"
+            },
+            "children" : {
+                "settings" : {
+                    "type" : "Image",
+                    "data" :{
+                        "texture":  "menu_background",
+                        "anchor" : [0.5,0,5]
+                    },
+                    "layout" : {
+                        "x_anchor" : "fill",
+                        "y_anchor" : "fill"
+                    },
+					"format" :{
+						"type": "anchored"
 					},
-					"layout" : {
-						"x_anchor" : "center",
-						"y_anchor" : "middle",
-						"y_offset" : 0,
-						"x_offset" : 0,
-						"absolute" : true
-					},
-					"children" : {
-						"Title" : {
-							"type"		: "label",
-							"data" : {
-								"anchor"  : [0.5,0.5],
-								"scale"    : 0.9,
-								"font"     : "futura heavy",
-								"text"     : "SETTINGS",
-								"halign"   : "center",
-								"valign"   : "middle",
-								"foreground": [38, 84, 124, 255],
-								"position" : [275, 309]
-							}
-						},
-						"Sound" : {
-							"type"      : "Button",
-							"data"   : {
-								"upnode"  : "up",
-								"anchor":   [0.5,0.5],
-								"position" : [163, 205],
-								"scale" : [0.3, 0.3]
+                    "children" : {
+                        "Title" : {
+                            "type"        : "label",
+                            "data" : {
+                                "anchor"  : [0.5,0.5],
+                                "scale"    : 0.9,
+                                "font"     : "futura heavy",
+                                "text"     : "ROLL",
+                                "halign"   : "center",
+                                "valign"   : "middle",
+                                "foreground": [38, 84, 124, 255],
+                                "position" : [275, 309]
+                            }
+                        },
+                        "normal": {
+                            "type"      : "Image",
+                            "data"   : {
+                                "upnode"  : "up",
+                                "anchor":   [0.5,0.5],
+                                "scale" : [0.3,0.3]
+                            },
+                            "children": {
+                                "up" : {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture":  "shopping_bag_1"
+                                    }
+                                }
+                            }
+                        },
+                        "rare": {
+                            "type"      : "Image",
+                            "data"   : {
+                                "upnode"  : "up",
+                                "anchor":   [0.5,0.5],
+                                "scale" : [0.3,0.3]
+                            },
+                            "children": {
+                                "up" : {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture":  "shopping_bag_many"
+                                    }
+                                }
+                            }
+                        },
+                        "Back" : {
+                            "type"      : "Button",
+                            "data"   : {
+                                "upnode"  : "up",
+                                "anchor":   [0.5,0.5],
+                                "scale" : [0.2, 0.2]
+                            },
+							"layout": {
+								"x_anchor": "left",
+								"y_anchor": "top",
+								"x_offset": 0.05,
+								"y_offset": -0.2
 							},
-							"children": {
-								"up" : {
-									"type": "Image",
-									"data": {
-										"texture":  "button_blue"
-									}
-								},
-								"title" : {
-									"type"      : "Label",
-									"data" : {
-										"anchor"  : [0.5,0.5],
-										"scale"    : 1.5,
-										"font"     : "futura heavy",
-										"text"     : "SOUND",
-										"halign"   : "center",
-										"valign"   : "middle",
-										"foreground": [38, 84, 124, 255],
-										"position" : [246, 118]
-									}
-								}
-							}
-						},
-						"Stats" : {
-							"type"      : "Button",
-							"data"   : {
-								"upnode"  : "up",
-								"anchor":   [0.5,0.5],
-								"position" : [324, 205],
-								"scale" : [0.3, 0.3]
-							},
-							"children": {
-								"up" : {
-									"type": "Image",
-									"data": {
-										"texture":  "button_blue"
-									}
-								},
-								"title" : {
-									"type"      : "Label",
-									"data" : {
-										"anchor"  : [0.5,0.5],
-										"scale"    : 1.5,
-										"font"     : "futura heavy",
-										"text"     : "STATS",
-										"halign"   : "center",
-										"valign"   : "middle",
-										"foreground": [38, 84, 124, 255],
-										"position" : [246, 118]
-									}
-								}
-							}
-						},
-						"Quit" : {
-							"type"      : "Button",
-							"data"   : {
-								"upnode"  : "up",
-								"anchor":   [0.5,0.5],
-								"position" : [243, 140],
-								"scale" : [0.2, 0.2]
-							},
-							"children": {
-								"up" : {
-									"type": "Image",
-									"data": {
-										"texture":  "button_pink"
-									}
-								},
-								"title" : {
-									"type"      : "Label",
-									"data" : {
-										"anchor"  : [0.5,0.5],
-										"scale"    : 1.5,
-										"font"     : "futura heavy",
-										"text"     : "QUIT",
-										"halign"   : "center",
-										"valign"   : "middle",
-										"foreground": [38, 84, 124, 255],
-										"position" : [246, 118]
-									}
-								}
-							}
-						},
-						"X" : {
-							"type"      : "Button",
-							"data"   : {
-								"upnode"  : "up",
-								"anchor":   [0.5,0.5],
-								"position" : [440, 283],
-								"scale" : [0.15, 0.15]
-							},
-							"children": {
-								"up" : {
-									"type": "Image",
-									"data": {
-										"texture":  "button_x"
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+                            "children": {
+                                "up" : {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture":  "back_button"
+                                    }
+                                }
+                            }
+                        },
+                        "Roll": {
+                            "type": "Button",
+                            "data"   : {
+                                "upnode"  : "up",
+                                "anchor":   [0.5,0.5],
+                                "scale" : [1.5, 1.5]
+                            },
+                            "children": {
+                                "up" : {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture":  "roll"
+                                    }
+                                }
+                            }
+                        },
+                        "Donut": {
+                            "type"      : "Image",
+                            "data"   : {
+                                "upnode"  : "up",
+                                "anchor":   [0.5,0.5],
+                                "scale" : [0.2,0.2]
+                            },
+                            "children": {
+                                "up" : {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture":  "donut"
+                                    }
+                                }
+                            }
+                        },
+                        "Cash" : {
+                            "type"        : "label",
+                            "data" : {
+                                "anchor"  : [0.5,0.5],
+                                "scale"    : 0.75,
+                                "font"     : "futura heavy",
+                                "text"     : "1000",
+                                "foreground": [38, 84, 124, 255]
+                            }
+                        },
+                        "None" : {
+                            "type"        : "label",
+                            "data" : {
+                                "anchor"  : [0.5,0.5],
+                                "scale"    : 0.5,
+                                "font"     : "futura heavy",
+                                "text"     : "No More NFDs!",
+                                "foreground": [38, 84, 124, 255]
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

@@ -14,9 +14,9 @@ using namespace std;
 //  MARK: - Constants
 
 /** The width of the thief body (its dropshadow) in world units */
-#define THIEF_WIDTH     1.4f
+#define THIEF_WIDTH     1.6f
 /** The height of the thief body (its dropshadow) in world units */
-#define THIEF_HEIGHT    0.7f
+#define THIEF_HEIGHT    0.8f
 
 /** Keys for thief run textures */
 #define THIEF_RUN_BACK      "ss_thief_up"
@@ -53,8 +53,10 @@ bool ThiefModel::init(float scale,
     PlayerModel::init(-1, Vec2::ZERO, size, scale, node, actions);
     
     // Set up the textures for all directions
-    bool female;
-    skinKey == "THIEF_RUN_RIGHT_F" ? female = true : female = false;
+    bool female = (skinKey.back() == 'F');
+//    skinKey == "THIEF_RUN_RIGHT_F" ? female = true : female = false;
+//    female = (skinKey.back() == 'F') ? true : false;
+//    skinKey = (skinKey != "THIEF_RUN_RIGHT") ? "MALE_HATLESS" : "THIEF_RUN_RIGHT";
     
     _spriteSheets.push_back(assets->get<Texture>(skinKey));
     _spriteSheets.push_back(assets->get<Texture>(THIEF_RUN_BACK));

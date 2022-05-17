@@ -88,6 +88,8 @@ protected:
     std::shared_ptr<Effect> thiefLingerEffect;
     /** Cop Linger Effect */
     std::shared_ptr<Effect> copLingerEffect;
+    bool idleActivatedAnimation;
+    bool idleDeactivatedAnimation;
 
     /** Defining the filter bits for the thief effect trap model*/
     b2Filter thiefEffectFilter;
@@ -176,6 +178,8 @@ public:
               std::shared_ptr<Effect> ThiefEffect,
               std::shared_ptr<Effect> copLingerEffect, 
               std::shared_ptr<Effect> thiefLingerEffect,
+              bool idleActivatedAnimation,
+              bool idleDeactivatedAnimation,
               bool sfxOn, std::string sfxKey);
 
 
@@ -247,7 +251,8 @@ public:
     /**
      * Sets all of the assets for this trap
      */
-    void setAssets(float scale,
+    void setAssets(cugl::Vec2 position, cugl::Vec2 dims,
+                   float scale, cugl::Vec2 proportion, float tileSize,
                     const std::shared_ptr<cugl::scene2::SceneNode>& node,
                     const std::shared_ptr<cugl::AssetManager>& assets,
                     const std::shared_ptr<cugl::Texture> activationTriggerTexture,

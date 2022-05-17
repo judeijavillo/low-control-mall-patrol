@@ -212,18 +212,23 @@
     <ClInclude Include="..\..\source\LCMPCopModel.h" />
     <ClInclude Include="..\..\source\LCMPCustomizeScene.h" />
     <ClInclude Include="..\..\source\LCMPFindScene.h" />
+    <ClInclude Include="..\..\source\LCMPGachaScene.h" />
     <ClInclude Include="..\..\source\LCMPGameModel.h" />
     <ClInclude Include="..\..\source\LCMPGameScene.h" />
     <ClInclude Include="..\..\source\LCMPHostScene.h" />
     <ClInclude Include="..\..\source\LCMPInputController.h" />
+    <ClInclude Include="..\..\source\LCMPLevelSelectScene.h" />
     <ClInclude Include="..\..\source\LCMPLoadingScene.h" />
     <ClInclude Include="..\..\source\LCMPMenuScene.h" />
     <ClInclude Include="..\..\source\LCMPNetworkController.h" />
     <ClInclude Include="..\..\source\LCMPObstacleModel.h" />
     <ClInclude Include="..\..\source\LCMPPlayerModel.h" />
+    <ClInclude Include="..\..\source\LCMPPauseController.h" />
+    <ClInclude Include="..\..\source\LCMPShopScene.h" />
     <ClInclude Include="..\..\source\LCMPThiefModel.h" />
     <ClInclude Include="..\..\source\LCMPTrapModel.h" />
     <ClInclude Include="..\..\source\LCMPUIController.h" />
+    <ClInclude Include="..\..\source\LCMPVictoryScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\LCMPApp.cpp" />
@@ -233,18 +238,23 @@
     <ClCompile Include="..\..\source\LCMPCopModel.cpp" />
     <ClCompile Include="..\..\source\LCMPCustomizeScene.cpp" />
     <ClCompile Include="..\..\source\LCMPFindScene.cpp" />
+    <ClCompile Include="..\..\source\LCMPGachaScene.cpp" />
     <ClCompile Include="..\..\source\LCMPGameModel.cpp" />
     <ClCompile Include="..\..\source\LCMPGameScene.cpp" />
     <ClCompile Include="..\..\source\LCMPHostScene.cpp" />
     <ClCompile Include="..\..\source\LCMPInputController.cpp" />
+    <ClCompile Include="..\..\source\LCMPLevelSelectScene.cpp" />
     <ClCompile Include="..\..\source\LCMPLoadingScene.cpp" />
     <ClCompile Include="..\..\source\LCMPMenuScene.cpp" />
     <ClCompile Include="..\..\source\LCMPNetworkController.cpp" />
     <ClCompile Include="..\..\source\LCMPObstacleModel.cpp" />
     <ClCompile Include="..\..\source\LCMPPlayerModel.cpp" />
+    <ClCompile Include="..\..\source\LCMPPauseController.cpp" />
+    <ClCompile Include="..\..\source\LCMPShopScene.cpp" />
     <ClCompile Include="..\..\source\LCMPThiefModel.cpp" />
     <ClCompile Include="..\..\source\LCMPTrapModel.cpp" />
     <ClCompile Include="..\..\source\LCMPUIController.cpp" />
+    <ClCompile Include="..\..\source\LCMPVictoryScene.cpp" />
     <ClCompile Include="..\..\source\main.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

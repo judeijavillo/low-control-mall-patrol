@@ -12,6 +12,9 @@
 		4212F24727E79701008679C8 /* LCMPUIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4212F24427E79701008679C8 /* LCMPUIController.cpp */; };
 		4226A7E228101EDD00A7B339 /* LCMPCustomizeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */; };
 		4226A7E628101EDE00A7B339 /* LCMPCustomizeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */; };
+		426D5D8728301E7700DEEE02 /* LCMPPauseController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 426D5D8628301E7700DEEE02 /* LCMPPauseController.cpp */; };
+		426D5D8828301E9000DEEE02 /* LCMPPauseController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 426D5D8628301E7700DEEE02 /* LCMPPauseController.cpp */; };
+		426D5D8928301E9500DEEE02 /* LCMPPauseController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 426D5D8628301E7700DEEE02 /* LCMPPauseController.cpp */; };
 		4298946B27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */; };
 		4298946C27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */; };
 		4298946D27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */; };
@@ -57,6 +60,12 @@
 		B119EEE128149C0700230B61 /* LCMPVictoryScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B119EEDC28149C0700230B61 /* LCMPVictoryScene.cpp */; };
 		B119EEE228149C0700230B61 /* LCMPVictoryScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B119EEDC28149C0700230B61 /* LCMPVictoryScene.cpp */; };
 		B119EEE328149C0700230B61 /* LCMPVictoryScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B119EEDC28149C0700230B61 /* LCMPVictoryScene.cpp */; };
+		B119EF0C28199E3D00230B61 /* LCMPShopScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B119EF0B28199E3D00230B61 /* LCMPShopScene.cpp */; };
+		B119EF0D28199E3D00230B61 /* LCMPShopScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B119EF0B28199E3D00230B61 /* LCMPShopScene.cpp */; };
+		B119EF0E28199E3D00230B61 /* LCMPShopScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B119EF0B28199E3D00230B61 /* LCMPShopScene.cpp */; };
+		B119EF20281FFA5000230B61 /* LCMPGachaScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B119EF1B281FFA5000230B61 /* LCMPGachaScene.cpp */; };
+		B119EF21281FFA5000230B61 /* LCMPGachaScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B119EF1B281FFA5000230B61 /* LCMPGachaScene.cpp */; };
+		B119EF22281FFA5000230B61 /* LCMPGachaScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B119EF1B281FFA5000230B61 /* LCMPGachaScene.cpp */; };
 		B140973627F67252005C7F11 /* LCMPCustomizeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */; };
 		EB07CFB621EFF3F8000CB3A3 /* DeviceMargins.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB07CFB021EFF3EF000CB3A3 /* DeviceMargins.plist */; };
 		EB13B3B427B2C0DF0032BF19 /* LCMPLoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB13B3A927B2C0DF0032BF19 /* LCMPLoadingScene.cpp */; };
@@ -176,6 +185,8 @@
 /* Begin PBXFileReference section */
 		4212F24027E796EA008679C8 /* LCMPUIController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LCMPUIController.h; sourceTree = "<group>"; };
 		4212F24427E79701008679C8 /* LCMPUIController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPUIController.cpp; sourceTree = "<group>"; };
+		426D5D8528301E7700DEEE02 /* LCMPPauseController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPPauseController.h; sourceTree = "<group>"; };
+		426D5D8628301E7700DEEE02 /* LCMPPauseController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPPauseController.cpp; sourceTree = "<group>"; };
 		4298946627D426A800142B25 /* LCMPObstacleModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPObstacleModel.h; sourceTree = "<group>"; };
 		4298946A27D426A800142B25 /* LCMPObstacleModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPObstacleModel.cpp; sourceTree = "<group>"; };
 		42B26D6627C1DA830019E6FB /* LCMPNetworkController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LCMPNetworkController.h; sourceTree = "<group>"; };
@@ -205,6 +216,10 @@
 		42F2D4AC27DE82AF00B5FCBA /* LCMPConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPConstants.h; sourceTree = "<group>"; };
 		B119EEDC28149C0700230B61 /* LCMPVictoryScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPVictoryScene.cpp; sourceTree = "<group>"; };
 		B119EEE028149C0700230B61 /* LCMPVictoryScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPVictoryScene.h; sourceTree = "<group>"; };
+		B119EF0B28199E3D00230B61 /* LCMPShopScene.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPShopScene.cpp; sourceTree = "<group>"; };
+		B119EF1228199E7E00230B61 /* LCMPShopScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LCMPShopScene.h; sourceTree = "<group>"; };
+		B119EF1B281FFA5000230B61 /* LCMPGachaScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPGachaScene.cpp; sourceTree = "<group>"; };
+		B119EF1F281FFA5000230B61 /* LCMPGachaScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPGachaScene.h; sourceTree = "<group>"; };
 		B140973127F67252005C7F11 /* LCMPCustomizeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPCustomizeScene.h; sourceTree = "<group>"; };
 		B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPCustomizeScene.cpp; sourceTree = "<group>"; };
 		EB07CFB021EFF3EF000CB3A3 /* DeviceMargins.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DeviceMargins.plist; sourceTree = "<group>"; };
@@ -341,6 +356,8 @@
 		42B26D6027C1D97E0019E6FB /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
+				B119EF1B281FFA5000230B61 /* LCMPGachaScene.cpp */,
+				B119EF1F281FFA5000230B61 /* LCMPGachaScene.h */,
 				B119EEE028149C0700230B61 /* LCMPVictoryScene.h */,
 				B119EEDC28149C0700230B61 /* LCMPVictoryScene.cpp */,
 				B140973127F67252005C7F11 /* LCMPCustomizeScene.h */,
@@ -359,6 +376,8 @@
 				42C6F58927F1F22800E61CBE /* LCMPFindScene.cpp */,
 				EB13B3AA27B2C0DF0032BF19 /* LCMPGameScene.h */,
 				EB13B3AC27B2C0DF0032BF19 /* LCMPGameScene.cpp */,
+				B119EF1228199E7E00230B61 /* LCMPShopScene.h */,
+				B119EF0B28199E3D00230B61 /* LCMPShopScene.cpp */,
 			);
 			name = Scenes;
 			sourceTree = "<group>";
@@ -366,6 +385,8 @@
 		42B26D6427C1DA310019E6FB /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				426D5D8528301E7700DEEE02 /* LCMPPauseController.h */,
+				426D5D8628301E7700DEEE02 /* LCMPPauseController.cpp */,
 				4212F24027E796EA008679C8 /* LCMPUIController.h */,
 				4212F24427E79701008679C8 /* LCMPUIController.cpp */,
 				42BFB6C727DE719900D04240 /* LCMPAudioController.h */,
@@ -712,11 +733,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4226A7E628101EDE00A7B339 /* LCMPCustomizeScene.cpp in Sources */,
+				426D5D8928301E9500DEEE02 /* LCMPPauseController.cpp in Sources */,
 				EB9CDA3925D0EAB100EE1A09 /* main.cpp in Sources */,
 				4212F24727E79701008679C8 /* LCMPUIController.cpp in Sources */,
 				EB13B3B627B2C0DF0032BF19 /* LCMPLoadingScene.cpp in Sources */,
 				42B26D7827C2BC730019E6FB /* LCMPThiefModel.cpp in Sources */,
 				EB13B3C527B2C0DF0032BF19 /* LCMPApp.cpp in Sources */,
+				B119EF0E28199E3D00230B61 /* LCMPShopScene.cpp in Sources */,
 				EB13B3BC27B2C0DF0032BF19 /* LCMPGameScene.cpp in Sources */,
 				42B26D7C27C2BC840019E6FB /* LCMPCopModel.cpp in Sources */,
 				4298946D27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */,
@@ -727,6 +750,7 @@
 				42C6F58C27F1F22800E61CBE /* LCMPFindScene.cpp in Sources */,
 				42B26D8427C2BD360019E6FB /* LCMPInputController.cpp in Sources */,
 				42B26D7427C2BC410019E6FB /* LCMPGameModel.cpp in Sources */,
+				B119EF22281FFA5000230B61 /* LCMPGachaScene.cpp in Sources */,
 				42C7BE2F28149F6300A89FFE /* LCMPLevelSelectScene.cpp in Sources */,
 				EB13B3C227B2C0DF0032BF19 /* LCMPClientScene.cpp in Sources */,
 				EB13B3BF27B2C0DF0032BF19 /* LCMPHostScene.cpp in Sources */,
@@ -741,11 +765,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4226A7E228101EDD00A7B339 /* LCMPCustomizeScene.cpp in Sources */,
+				426D5D8828301E9000DEEE02 /* LCMPPauseController.cpp in Sources */,
 				EB7454AE1D74D891002FBAE6 /* main.cpp in Sources */,
 				4212F24627E79701008679C8 /* LCMPUIController.cpp in Sources */,
 				EB13B3B527B2C0DF0032BF19 /* LCMPLoadingScene.cpp in Sources */,
 				42B26D7727C2BC730019E6FB /* LCMPThiefModel.cpp in Sources */,
 				EB13B3C427B2C0DF0032BF19 /* LCMPApp.cpp in Sources */,
+				B119EF0D28199E3D00230B61 /* LCMPShopScene.cpp in Sources */,
 				EB13B3BB27B2C0DF0032BF19 /* LCMPGameScene.cpp in Sources */,
 				42B26D7B27C2BC840019E6FB /* LCMPCopModel.cpp in Sources */,
 				4298946C27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */,
@@ -756,6 +782,7 @@
 				42C6F58B27F1F22800E61CBE /* LCMPFindScene.cpp in Sources */,
 				42B26D8327C2BD360019E6FB /* LCMPInputController.cpp in Sources */,
 				42B26D7327C2BC410019E6FB /* LCMPGameModel.cpp in Sources */,
+				B119EF21281FFA5000230B61 /* LCMPGachaScene.cpp in Sources */,
 				42C7BE2E28149F6300A89FFE /* LCMPLevelSelectScene.cpp in Sources */,
 				EB13B3C127B2C0DF0032BF19 /* LCMPClientScene.cpp in Sources */,
 				EB13B3BE27B2C0DF0032BF19 /* LCMPHostScene.cpp in Sources */,
@@ -773,8 +800,10 @@
 				4212F24527E79701008679C8 /* LCMPUIController.cpp in Sources */,
 				EB13B3B427B2C0DF0032BF19 /* LCMPLoadingScene.cpp in Sources */,
 				42B26D7627C2BC730019E6FB /* LCMPThiefModel.cpp in Sources */,
+				426D5D8728301E7700DEEE02 /* LCMPPauseController.cpp in Sources */,
 				EB13B3C327B2C0DF0032BF19 /* LCMPApp.cpp in Sources */,
 				B140973627F67252005C7F11 /* LCMPCustomizeScene.cpp in Sources */,
+				B119EF0C28199E3D00230B61 /* LCMPShopScene.cpp in Sources */,
 				EB13B3BA27B2C0DF0032BF19 /* LCMPGameScene.cpp in Sources */,
 				42B26D7A27C2BC840019E6FB /* LCMPCopModel.cpp in Sources */,
 				4298946B27D426A800142B25 /* LCMPObstacleModel.cpp in Sources */,
@@ -785,6 +814,7 @@
 				42C6F58A27F1F22800E61CBE /* LCMPFindScene.cpp in Sources */,
 				42B26D7227C2BC410019E6FB /* LCMPGameModel.cpp in Sources */,
 				EB13B3C027B2C0DF0032BF19 /* LCMPClientScene.cpp in Sources */,
+				B119EF20281FFA5000230B61 /* LCMPGachaScene.cpp in Sources */,
 				42C7BE2D28149F6300A89FFE /* LCMPLevelSelectScene.cpp in Sources */,
 				EB13B3BD27B2C0DF0032BF19 /* LCMPHostScene.cpp in Sources */,
 				42ED6B8227C3761F00EC1EF4 /* LCMPPlayerModel.cpp in Sources */,
@@ -1016,7 +1046,7 @@
 				DEVELOPMENT_TEAM = 8C78ZZ3P8X;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Mac-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.ak778.mac.LCMP;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.mac.LCMP;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1031,7 +1061,7 @@
 				DEVELOPMENT_TEAM = 8C78ZZ3P8X;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Mac-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.ak778.mac.LCMP;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.mac.LCMP;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

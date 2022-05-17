@@ -20,6 +20,8 @@ AudioController::AudioController() {
     AudioEngine::start(DEFAULT_SLOTSIZE);
     _queue = AudioEngine::get()->getMusicQueue();
     make_heap(_heap.begin(), _heap.end());
+    setMusicMult(1.0);
+    setSFXMult(1.0);
 }
 
 /**
@@ -56,13 +58,13 @@ void AudioController::playSound(const std::shared_ptr<cugl::AssetManager>& asset
         
             // Adjust sfx volume
             for (int i = 0; i < _heap.size(); i++) {
-                AudioEngine::get()->setVolume(_heap.at(i).second,SFX_VOLUME/_heap.size());
+                AudioEngine::get()->setVolume(_heap.at(i).second,SFX_VOLUME * _SFXMult /_heap.size());
             }
         
-            AudioEngine::get()->play(key,source,true,SFX_VOLUME/_heap.size());
+            AudioEngine::get()->play(key,source,true,SFX_VOLUME * _SFXMult /_heap.size());
             AudioEngine::get()->setTimeRemaining(key, source->getDuration() + SFX_COOLDOWN);
             
-            cout << "adding " << key << " at " << gameTime << " volume: " << SFX_VOLUME / _heap.size() << "\n";
+            cout << "adding " << key << " at " << gameTime << " volume: " << SFX_VOLUME * _SFXMult / _heap.size() << "\n";
         }
     }
     // Play music
@@ -76,10 +78,10 @@ void AudioController::playSound(const std::shared_ptr<cugl::AssetManager>& asset
         if (frames != -1) {
             // Repeat if loading or menu themes
             if (key == LOADING_MUSIC || key == MENU_MUSIC) {
-                _queue->play(source, true, MUSIC_VOLUME, DEFAULT_FADE);
+                _queue->play(source, true, MUSIC_VOLUME * _musicMult, DEFAULT_FADE);
             }
             else {
-                _queue->play(source, false, MUSIC_VOLUME, DEFAULT_FADE);
+                _queue->play(source, false, MUSIC_VOLUME * _musicMult, DEFAULT_FADE);
             }
         }
         else {

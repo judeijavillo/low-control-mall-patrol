@@ -69,6 +69,8 @@ protected:
     std::shared_ptr<cugl::scene2::Label> _gameid;
     /** The players label (for updating) */
     std::shared_ptr<cugl::scene2::Label> _player;
+    /** The name label (for updating) */
+    std::shared_ptr<cugl::scene2::TextField> _name;
     
     /** The current status */
     Status _status;
@@ -112,7 +114,8 @@ public:
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets,
               std::shared_ptr<NetworkController>& network,
-              std::shared_ptr<AudioController>& audio);
+              std::shared_ptr<AudioController>& audio,
+              bool sixteenNineAspectRatio);
     
 //  MARK: - Methods
     

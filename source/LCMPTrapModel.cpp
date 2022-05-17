@@ -30,6 +30,8 @@ bool TrapModel::init(int trapID,
                      std::shared_ptr<Effect> thiefEffect_,
                      std::shared_ptr<Effect> copLingerEffect_,
                      std::shared_ptr<Effect> thiefLingerEffect_,
+                     bool idleActivatedAnimation_,
+                     bool idleDeactivatedAnimation_,
                      bool sfxOn, std::string sfxKey) {
     _trapID = trapID;
     activated = activated_;
@@ -47,6 +49,9 @@ bool TrapModel::init(int trapID,
     thiefEffect = thiefEffect_;
     copLingerEffect = copLingerEffect_;
     thiefLingerEffect = thiefLingerEffect_;
+    idleActivatedAnimation = idleActivatedAnimation_;
+    idleDeactivatedAnimation = idleDeactivatedAnimation_;
+
     _sfxOn = sfxOn;
     _sfxKey = sfxKey;
 
@@ -88,18 +93,20 @@ bool TrapModel::Effect::init(TrapType type, std::shared_ptr<cugl::Vec2> effect) 
 /**
  * Sets all of the assets for this trap
  */
-void TrapModel::setAssets(float scale,
-                          const std::shared_ptr<cugl::scene2::SceneNode>& node,
-                          const std::shared_ptr<cugl::AssetManager>& assets,
-                          const std::shared_ptr<cugl::Texture> activationTriggerTexture,
-                          const std::shared_ptr<cugl::Texture> deactivationTriggerTexture,
-                          const tuple <bool, int, int, std::string> assetInfo
-
-) {
+void TrapModel::setAssets(Vec2 position, Vec2 dims,
+                          float scale, Vec2 proportion, float tileSize,
+    const std::shared_ptr<cugl::scene2::SceneNode>& node,
+    const std::shared_ptr<cugl::AssetManager>& assets,
+    const std::shared_ptr<cugl::Texture> activationTriggerTexture,
+    const std::shared_ptr<cugl::Texture> deactivationTriggerTexture,
+    const tuple <bool, int, int, std::string> assetInfo) {
     
     // Create nodes
     _activationTriggerNode = scene2::PolygonNode::allocWithTexture(activationTriggerTexture);
     _deactivationTriggerNode = scene2::PolygonNode::allocWithTexture(deactivationTriggerTexture);
+
+    float effectWidth = thiefEffectArea->getSize().width;
+    float effectHeight = thiefEffectArea->getSize().height;
     
     //there is a bug at this line for left and right animation assets... I have no clue why
     auto assetTexture = assets->get<Texture>(get<3>(assetInfo));
@@ -108,11 +115,17 @@ void TrapModel::setAssets(float scale,
         
         _assetNode = scene2::SpriteNode::alloc(assetTexture, get<1>(assetInfo), get<2>(assetInfo));
         _hasActivationAnimation = true;
+//        Vec2 proportions = Vec2(effectWidth * get<2>(assetInfo) / assetTexture->getWidth(), effectHeight * get<1>(assetInfo) / assetTexture->getHeight()) * scale ;
+        _assetNode->setScale(proportion * scale);
+        //CULog("hello %f", _assetNode->getScale().x);
+
     }
     else {
         //texture is static
         _assetNode = scene2::SpriteNode::alloc(assetTexture, 1, 1);
         _hasActivationAnimation = false;
+//        Vec2 proportions = Vec2(effectWidth / assetTexture->getWidth(), effectHeight / assetTexture->getHeight()) * scale;
+        _assetNode->setScale(proportion * scale);
     }
 
     //Set the nodes' scales
@@ -126,15 +139,19 @@ void TrapModel::setAssets(float scale,
     _deactivationTriggerNode->setPosition((triggerPos->x /* + deactivationTriggerTextureScale->x/2 */) * scale,
         (triggerPos->y /* + deactivationTriggerTextureScale->y / 2 */) * scale);
 
-    _assetNode->setPosition((thiefEffectArea->getPosition().x + thiefEffectArea->getWidth() /2) * scale,
-        (thiefEffectArea->getPosition().y + thiefEffectArea->getHeight() / 2) * scale);
+    _assetNode->setPosition((position.x + dims.x / 2) * scale, (position.y + dims.y / 2) * scale);
+//    CULog("trap asset node placed at %f %f", (position.x + dims.x / 2) * scale, (position.y + dims.y / 2) * scale);
+    
 
     //CULog("%f, %f, %f, %f", triggerPos->x, triggerPos->y, thiefEffectArea->getPosition().x, thiefEffectArea->getPosition().y);
 
     // Set the nodes' scales
     _activationTriggerNode->setScale(PROP_SCALE*2);
     _deactivationTriggerNode->setScale(PROP_SCALE*2);
-    _assetNode->setScale(PROP_SCALE*2);
+    //
+
+
+
 
     
     // TODO: these should really be children of a parent node that isn't the world node
@@ -210,7 +227,13 @@ void TrapModel::activate() {
  * Increments the activation animation until it's actually activated
  */
 void TrapModel::updateTrap(float timestep) {
-
+    if (idleActivatedAnimation) {
+        prevTime += timestep;
+        if (prevTime >= 0.1) {
+            prevTime = 0;
+            _assetNode->setFrame((_assetNode->getFrame() + 1) % _assetNodeFrameCount);
+        }
+    }
     //checks if the trap is in the middle of activating
     if (activating && _assetNode->getFrame() < _assetNodeFrameCount) {
         prevTime += timestep;

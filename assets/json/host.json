@@ -12,12 +12,6 @@
         "settings": {
             "file": "textures/lobby/settings.png"
         },
-        "profile": {
-            "file": "textures/lobby/profile.png"
-        },
-        "shop": {
-            "file": "textures/lobby/shop.png"
-        },
         "back": {
             "file": "textures/lobby/back.png"
         },
@@ -46,6 +40,9 @@
                         "anchor": [0.5, 0.5],
                         "scale": [1, 1]
                     },
+					"format": {
+						"type" : "anchored"
+					},
                     "layout": {
                         "x_anchor": "fill",
                         "y_anchor": "fill"
@@ -56,9 +53,14 @@
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "position": [600, 150],
                                 "scale": [1.6, 1.6]
                             },
+							"layout" : {
+								"x_anchor": "center",
+								"y_anchor": "bottom",
+								"x_offset": -0.15,
+								"y_offset": 0.25
+							},
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -85,48 +87,19 @@
                                 }
                             }
                         },
-                        "profile": {
-                            "type": "Button",
-                            "data": {
-                                "upnode": "up",
-                                "anchor": [0.5, 0.5],
-                                "position": [50, 640],
-                                "scale": [0.3, 0.3]
-                            },
-                            "children": {
-                                "up": {
-                                    "type": "Image",
-                                    "data": {
-                                        "texture": "profile"
-                                    }
-                                }
-                            }
-                        },
-                        "shop": {
-                            "type": "Button",
-                            "data": {
-                                "upnode": "up",
-                                "anchor": [0.5, 0.5],
-                                "position": [140, 640],
-                                "scale": [0.3, 0.3]
-                            },
-                            "children": {
-                                "up": {
-                                    "type": "Image",
-                                    "data": {
-                                        "texture": "shop"
-                                    }
-                                }
-                            }
-                        },
                         "back": {
                             "type": "Button",
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "position": [50, 560],
                                 "scale": [0.3, 0.3]
                             },
+							"layout": {
+								"x_anchor": "left",
+								"y_anchor": "top",
+								"x_offset": 0.05,
+								"y_offset": -0.2
+							},
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -145,9 +118,14 @@
                                 "font": "futura",
                                 "text": "Tell your friends this room code: ",
                                 "halign": "middle",
-                                "valign": "center",
-                                "position": [600, 500]
-                            }
+                                "valign": "center"
+                            },
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "top",
+								"x_offset": -0.05,
+								"y_offset": -0.1
+							}
                         },
                         "players": {
                             "type": "Label",
@@ -156,9 +134,153 @@
                                 "scale": 1,
                                 "font": "futura",
                                 "text": "Waiting for players (1/1)",
-                                "halign": "center",
-                                "valign": "middle",
-                                "position": [600, 400]
+                                "halign": "middle",
+                                "valign": "center"
+                            },
+							"layout": {
+								"x_anchor" : "center",
+								"y_anchor" : "top",
+								"x_offset" : 0,
+								"y_offset" : -0.18
+							}
+                        },
+                        "player1": {
+                            "type": "Label",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "scale": 1,
+                                "font": "futura",
+                                "text": "No Player",
+                                "halign": "middle",
+                                "valign": "center"
+                            },
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "middle",
+								"x_offset": 0.25,
+								"y_offset": 0.05
+							}
+                        },
+                        "player2": {
+                            "type": "Label",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "scale": 1,
+                                "font": "futura",
+                                "text": "No Player",
+                                "halign": "middle",
+                                "valign": "center"
+                            },
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "middle",
+								"x_offset": 0.25,
+								"y_offset": -0.02
+							}
+                        },
+                        "player3": {
+                            "type": "Label",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "scale": 1,
+                                "font": "futura",
+                                "text": "No Player",
+                                "halign": "middle",
+                                "valign": "center"
+                            },
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "middle",
+								"x_offset": 0.25,
+								"y_offset": -0.09
+							}
+                        },
+                        "player4": {
+                            "type": "Label",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "scale": 1,
+                                "font": "futura",
+                                "text": "No Player",
+                                "halign": "middle",
+                                "valign": "center"
+                            },
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "middle",
+								"x_offset": 0.25,
+								"y_offset": -0.16
+							}
+                        },
+                        "player5": {
+                            "type": "Label",
+                            "data": {
+                                "anchor": [0.5, 0.5],
+                                "scale": 1,
+                                "font": "futura",
+                                "text": "No Player",
+                                "halign": "middle",
+                                "valign": "center"
+                            },
+							"layout":{
+								"x_anchor": "center",
+								"y_anchor": "middle",
+								"x_offset": 0.25,
+								"y_offset": -0.23
+							}
+                        },
+                        "name": {
+                            "type"   : "Node",
+                            "format" : {
+                                   "type"         : "Float",
+                                    "orientation" : "horizontal",
+                                    "x_alignment" : "center",
+                                    "y_alignment" : "middle"
+                            },
+                            "data"   : {
+                                "anchor"  : [0.5,0.5],
+                                "size": [600,100]
+                            },
+							"layout" : {
+								"x_anchor": "center",
+								"y_anchor": "top",
+								"x_offset": 0,
+								"y_offset": -0.3
+							},
+                            "children" : {
+                                "label": {
+                                    "type": "Label",
+                                    "data"   : {
+                                        "anchor"   : [0.5, 0.5],
+                                        "font"     : "futura heavy",
+                                        "text"     : "Name:",
+                                        "padding"  : [20, 20, 40, 20],
+                                        "halign"   : "left",
+                                        "valign"   : "middle"
+                                    },
+                                    "layout" : {
+                                        "priority" : 1
+                                    }
+                                },
+                                "field": {
+                                    "type": "Widget",
+                                    "data"   : {
+                                        "key"     : "textfield",
+                                        "variables" : {
+                                            "size": [300,100],
+                                            "text": "",
+                                            "halign": "center",
+                                            "framecolor": "#000000"
+                                        }
+                                    },
+                                    "layout" : {
+                                        "priority" : 2
+                                    }
+                                }
+                            },
+                            "layout" : {
+                                "priority" : 1,
+                                "padding"  : [0,50,0,0]
                             }
                         }
                     }

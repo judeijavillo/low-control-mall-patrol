@@ -56,6 +56,8 @@ protected:
     std::shared_ptr<cugl::scene2::Button> _leaveButton;
     /** The victory text */
     std::shared_ptr<cugl::scene2::Label> _text;
+    std::shared_ptr<cugl::scene2::PolygonNode> _thiefBanner;
+    std::shared_ptr<cugl::scene2::PolygonNode> _copBanner;
     
     /** The amount to move the world node by to center it in the scene */
     cugl::Vec2 _offset;

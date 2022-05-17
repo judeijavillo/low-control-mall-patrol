@@ -66,15 +66,15 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Get the interactive UI elements that we need to access later
     _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_backdrop_create"));
-    _startgame->setPositionX(SCENE_WIDTH/2);
-    _startgame->setAnchor(Vec2(0.5,0.5));
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_backdrop_back"));
     _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_roomID"));
-    _gameid->setPositionX(SCENE_WIDTH/2);
-    _gameid->setAnchor(Vec2(0.5,0.5));
     _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_players"));
-    _player->setPositionX(SCENE_WIDTH/2);
-    _player->setAnchor(Vec2(0.5,0.5));
+    _player1 = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_player1"));
+    _player2 = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_player2"));
+    _player3 = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_player3"));
+    _player4 = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_player4"));
+    _player5 = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_player5"));
+    _name = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("host_backdrop_name_field_text"));
     _status = Status::IDLE;
     
     // Program the buttons
@@ -91,6 +91,12 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
             _status = Status::START;
             _audio->stopSfx(CLICK_SFX);
             _audio->playSound(_assets, CLICK_SFX, true, 0);
+        }
+    });
+    
+    _name->addExitListener([this](const std::string& name, const std::string& value) {
+        if (_network->isConnected()) {
+            _network->sendDisplayName(value);
         }
     });
     
@@ -120,6 +126,12 @@ void HostScene::dispose() {
  */
 void HostScene::update(float timestep) {
     if (_network->isConnected() && _status != START && _status != ABORT) {
+        _player1->setText(_network->getPlayer(0).username);
+        _player2->setText(_network->getPlayer(1).username);
+        _player3->setText(_network->getPlayer(2).username);
+        _player4->setText(_network->getPlayer(3).username);
+        _player5->setText(_network->getPlayer(4).username);
+        
         _network->update();
         switch (_network->getStatus()) {
             case NetworkController::Status::IDLE:
@@ -130,8 +142,6 @@ void HostScene::update(float timestep) {
             {
                 _status = WAIT;
                 _gameid->setText(("Tell your friends this room code: " + _network->getRoomID()), true);
-                _gameid->setPosition(Vec2(SCENE_WIDTH/2, 3*SCENE_HEIGHT/4) + _offset);
-                _gameid->setAnchor(Vec2(0.5,0.5));
                 break;
             }
             case NetworkController::START:
@@ -142,8 +152,6 @@ void HostScene::update(float timestep) {
                 break;
         }
         _player->setText(strtool::format("Waiting for players: (%d/5)", _network->getNumPlayers()), true);
-        _player->setPosition(Vec2(SCENE_WIDTH/2, SCENE_HEIGHT/2) + _offset);
-        _player->setAnchor(Vec2(0.5,0.5));
     }
 }
 
@@ -164,10 +172,12 @@ void HostScene::setActive(bool value) {
             _status = IDLE;
             _startgame->activate();
             _backout->activate();
+            _name->activate();
             connect();
         } else {
             _startgame->deactivate();
             _backout->deactivate();
+            _name->deactivate();
             // If any were pressed, reset them
             _startgame->setDown(false);
             _backout->setDown(false);
