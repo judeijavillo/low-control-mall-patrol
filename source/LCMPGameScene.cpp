@@ -26,7 +26,7 @@ using namespace std;
 //  MARK: - Constants
 
 /** Whether or not to show the debug node */
-#define DEBUG_ON        0
+#define DEBUG_ON        1
 
 /** Width of the game world in Box2d units */
 #define DEFAULT_WIDTH   32.0f

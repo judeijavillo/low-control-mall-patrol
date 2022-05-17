@@ -14,6 +14,7 @@
         },
         "Props.tsj": {
             "dynamicWrapping": true,
+            "scaleInDock": 1,
             "scaleInEditor": 1
         },
         "PropsAndTraps.tsj": {
@@ -22,11 +23,11 @@
             "scaleInEditor": 0.11
         },
         "conveyorlevel.json": {
-            "scale": 0.5,
+            "scale": 0.33,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 1517,
-                "y": 6295
+                "x": 3037.878787878788,
+                "y": 3260.606060606061
             }
         },
         "donut_room.json": {
@@ -34,7 +35,7 @@
             "selectedLayer": 1,
             "viewCenter": {
                 "x": 184.66666666666663,
-                "y": -66.66666666666663
+                "y": 109.33333333333331
             }
         },
         "donut_room.tmx": {
@@ -45,28 +46,52 @@
                 "y": 543.8903470399533
             }
         },
-        "example3.json": {
-            "scale": 1,
+        "example1.json": {
+            "scale": 0.133,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 5003,
-                "y": 4645
+                "x": 3169.1729323308273,
+                "y": 3203.0075187969924
+            }
+        },
+        "example2.json": {
+            "scale": 0.0546875,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 7981.714285714284,
+                "y": 8009.142857142857
+            }
+        },
+        "example3.json": {
+            "scale": 0.125,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 5004,
+                "y": 4692
+            }
+        },
+        "example4.json": {
+            "scale": 0.05267410714285714,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 5571.997626917537,
+                "y": 5609.966946351386
             }
         },
         "example5.json": {
-            "scale": 0.43,
-            "selectedLayer": 1,
-            "viewCenter": {
-                "x": 4959.302325581395,
-                "y": 4669.767441860466
-            }
-        },
-        "example6.json": {
             "scale": 0.25,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 3030,
-                "y": 3998
+                "x": 3434,
+                "y": 3480
+            }
+        },
+        "example6.json": {
+            "scale": 0.33,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 3271.212121212121,
+                "y": 3551.5151515151515
             }
         },
         "mappics.tsx": {
@@ -74,7 +99,8 @@
             "scaleInDock": 1
         },
         "traps.tsj": {
-            "dynamicWrapping": true
+            "dynamicWrapping": true,
+            "scaleInDock": 1
         }
     },
     "last.externalTilesetPath": "/Users/june/low-control-mall-patrol/assets/maps",
@@ -86,11 +112,15 @@
         "conveyorlevel.json"
     ],
     "project": "maps.tiled-project",
-    "property.type": "bool",
+    "property.type": "Effect",
     "recentFiles": [
+        "example3.json",
+        "example2.json",
+        "example1.json",
+        "example4.json",
+        "donut_room.json",
         "donut_room.tmx",
         "example6.json",
-        "donut_room.json",
         "PropsAndTraps.tsj",
         "example5.json",
         "Props.tsj"
