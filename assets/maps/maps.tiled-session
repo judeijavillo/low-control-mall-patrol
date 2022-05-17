@@ -1,4 +1,8 @@
 {
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
     "activeFile": "",
     "expandedProjectPaths": [
     ],
@@ -49,11 +53,11 @@
             }
         },
         "example5.json": {
-            "scale": 0.136,
-            "selectedLayer": 5,
+            "scale": 0.8691,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 5091.911764705883,
-                "y": 5393.382352941177
+                "x": 5457.945000575308,
+                "y": 4971.234610516627
             }
         },
         "example6.json": {
@@ -61,7 +65,7 @@
             "selectedLayer": 1,
             "viewCenter": {
                 "x": 2307.750406945198,
-                "y": 8938.469886055344
+                "y": 8916.800868149756
             }
         }
     },
