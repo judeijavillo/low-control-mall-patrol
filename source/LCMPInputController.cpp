@@ -196,6 +196,7 @@ void InputController::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
             break;
         case InputController::Zone::RIGHT:
             if ((int)event.timestamp.ellapsedMillis(_rtouch.timestamp) < TAP_THRESHOLD) {
+                _didSpace = true;
                 _didSwitch = !_didSwitch;
             }
             _rtouch.timestamp.mark();
