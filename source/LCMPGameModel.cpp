@@ -76,7 +76,7 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     constantsMap["copLingerDuration"] = COP_LINGER_DURATION;
     constantsMap["copLingerEffect"] = COP_LINGER_EFFECT;
     constantsMap["effectArea"] = EFFECT_AREA;
-    constantsMap["hasTrigger"] = HAS_TRIGGER;
+    constantsMap["hasTriggers"] = HAS_TRIGGER;
     constantsMap["idleActivatedAnimation"] = IDLE_ACTIVATED_ANIMATION,
     constantsMap["idleDeactivatedAnimation"] = IDLE_DEACTIVATED_ANIMATION,
     constantsMap["numUsages"] = NUM_USAGES;
