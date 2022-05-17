@@ -102,7 +102,7 @@ enum JsonConstants :int {
 #define PROP_SCALE          0.2f
 
 /** The source for our level file */
-#define LEVEL_ONE_FILE      "maps/example6.json"
+#define LEVEL_ONE_FILE      "maps/example5.json"
 /** Assets for our level */
 #define WALL_ASSETS_FILE    "maps/Map3WallAssets.json"
 /** The key for our loaded level */
