@@ -1,0 +1,35 @@
+{
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "/Users/june/assets/maps/PropsAndTraps.tsj": {
+            "dynamicWrapping": true,
+            "scaleInEditor": 0.03
+        },
+        "/Users/june/assets/maps/example5.json": {
+            "scale": 0.2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 5715,
+                "y": 5182.5
+            }
+        },
+        "/Users/june/assets/maps/example6.json": {
+            "scale": 0.04614883814102564,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 4962.205100379815,
+                "y": 4994.7086272381985
+            }
+        }
+    },
+    "last.imagePath": "/Users/june/low-control-mall-patrol/assets/textures/environment",
+    "openFiles": [
+    ],
+    "project": "",
+    "recentFiles": [
+        "/Users/june/assets/maps/PropsAndTraps.tsj"
+    ]
+}

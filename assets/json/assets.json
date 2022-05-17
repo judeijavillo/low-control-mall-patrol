@@ -1,5 +1,20 @@
 {
     "textures": {
+        "whiteboard_donut": {
+            "file": "textures/environment/Whiteboard_do_nut.png"
+        },
+        "whiteboard_blank": {
+            "file": "textures/environment/Whiteboard_blank.png"
+        },
+        "vending_machine": {
+            "file": "textures/environment/Vendingmachine.png"
+        },
+        "chalk_sign_fish": {
+            "file": "textures/environment/Chalk_sign_fish.png"
+        },
+        "chalk_sign_blank": {
+            "file": "textures/environment/Chalk_sign_blank.png"
+        },
         "table_right": {
             "file": "textures/environment/Table_Rend.png"
         },
