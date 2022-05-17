@@ -1,5 +1,5 @@
 {
-    "activeFile": "conveyorlevel.json",
+    "activeFile": "PropsAndTraps.tsj",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -19,15 +19,15 @@
         },
         "PropsAndTraps.tsj": {
             "dynamicWrapping": true,
-            "scaleInDock": 1,
+            "scaleInDock": 0.0625,
             "scaleInEditor": 0.11
         },
         "conveyorlevel.json": {
             "scale": 0.25,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 2006,
-                "y": 3356
+                "x": 3854,
+                "y": 3200
             }
         },
         "donut_room.json": {
@@ -83,7 +83,7 @@
             "selectedLayer": 1,
             "viewCenter": {
                 "x": 4316,
-                "y": 4016
+                "y": 4012
             }
         },
         "example6.json": {
@@ -109,11 +109,15 @@
     "map.lastUsedFormat": "json",
     "openFiles": [
         "example5.json",
-        "conveyorlevel.json"
+        "conveyorlevel.json",
+        "PropsAndTraps.tsj"
     ],
     "project": "maps.tiled-project",
     "property.type": "Vec2",
     "recentFiles": [
+        "example5.json",
+        "conveyorlevel.json",
+        "PropsAndTraps.tsj",
         "example3.json",
         "example2.json",
         "example1.json",
@@ -121,8 +125,6 @@
         "donut_room.json",
         "donut_room.tmx",
         "example6.json",
-        "PropsAndTraps.tsj",
-        "example5.json",
         "Props.tsj"
     ],
     "tileset.lastUsedFilter": "JSON tileset files (*.tsj *.json)"
