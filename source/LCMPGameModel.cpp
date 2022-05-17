@@ -45,6 +45,7 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     _skinKey = skinKey;
     
     _actions = actions;
+//    CULog("opening file %s", file.data());
     std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(file);
     std::shared_ptr<JsonValue> json = reader->readJson();
     
@@ -435,7 +436,7 @@ map<int,GameModel::TileData> GameModel::buildTileDataMap(const shared_ptr<JsonVa
                 anim_cols = p->getInt("value");
             }
         }
-//        CULog("reading tile %s", assetName.data());
+//        CULog("reading tile %d, name %s", id, assetName.data());
         vector<shared_ptr<ObstacleNode_x_Y_Gid_struct>> hitboxes;
         if (tile->get("objectgroup") != nullptr) {
             auto hitbox_jsons = tile->get("objectgroup")->get("objects");
