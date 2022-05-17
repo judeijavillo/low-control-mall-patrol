@@ -23,11 +23,11 @@
             "scaleInEditor": 0.11
         },
         "conveyorlevel.json": {
-            "scale": 0.33,
+            "scale": 0.25,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 3037.878787878788,
-                "y": 3260.606060606061
+                "x": 2006,
+                "y": 3356
             }
         },
         "donut_room.json": {
@@ -79,11 +79,11 @@
             }
         },
         "example5.json": {
-            "scale": 0.25,
+            "scale": 0.125,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 3434,
-                "y": 3480
+                "x": 4316,
+                "y": 4016
             }
         },
         "example6.json": {
@@ -105,14 +105,14 @@
     },
     "last.externalTilesetPath": "/Users/june/low-control-mall-patrol/assets/maps",
     "last.imagePath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/textures/environment",
-    "last.objectTypesPath": "C:/Users/bryce/source/repos/low-control-mall-patrol/assets/maps/trapTypeDef.xml",
+    "last.objectTypesPath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/maps/propertytypes.json",
     "map.lastUsedFormat": "json",
     "openFiles": [
         "example5.json",
         "conveyorlevel.json"
     ],
     "project": "maps.tiled-project",
-    "property.type": "Effect",
+    "property.type": "Vec2",
     "recentFiles": [
         "example3.json",
         "example2.json",

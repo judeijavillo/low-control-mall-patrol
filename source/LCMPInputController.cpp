@@ -118,6 +118,7 @@ void InputController::update(float timestep) {
     if (keys->keyDown(KeyCode::ARROW_RIGHT)) _acceleration.x += 1.0f;
     if (keys->keyDown(KeyCode::ARROW_DOWN)) _acceleration.y += 1.0f;
     if (keys->keyDown(KeyCode::ARROW_UP)) _acceleration.y -= 1.0f;
+    if (keys->keyDown(KeyCode::SPACE)) _didSpace = true;
 
 #endif
 }
@@ -128,6 +129,7 @@ void InputController::update(float timestep) {
 void InputController::clear() {
     _didSwipe = false;
     _didSwitch = false;
+    _didSpace = false;
     _acceleration = Vec2::ZERO;
 }
     

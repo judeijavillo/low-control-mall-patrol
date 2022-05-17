@@ -10,6 +10,13 @@
                 }
             },
             {
+                "name": "Slippy Modifier",
+                "propertyType": "Vec2",
+                "type": "class",
+                "value": {
+                }
+            },
+            {
                 "name": "Speed Modifier",
                 "propertyType": "Vec2",
                 "type": "class",
@@ -49,7 +56,8 @@
             "Velocity Modifier",
             "Escalator",
             "Teleport",
-            "Stairs"
+            "Stairs",
+            "Slippy"
         ],
         "valuesAsFlags": false
     },

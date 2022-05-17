@@ -35,6 +35,8 @@ protected:
     bool _didSwipe;
     /** Whether the player has double tapped to switch characters */
     bool _didSwitch;
+    /** Whether the player has pressed space*/
+    bool _didSpace;
     /** Whether this input controller is active */
     bool _isActive;
     /** Whether the player has pressed the screen to use the joystick */
@@ -147,6 +149,11 @@ public:
      * Returns the direction of the swipe
      */
     cugl::Vec2 const getSwipe() { return _swipe; }
+
+    /**
+     * Returns whether space was pressed
+     */
+    bool const didSpace() { return _didSpace; }
     
     /**
      * Converts from touch screen coordinates to screen coordinates

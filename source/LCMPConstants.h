@@ -69,6 +69,7 @@ enum JsonConstants :int {
 	TELEPORT,
 	STAIRS,
 	VELOCITY_MODIFIER,
+	SLIPPY,
 
 
 	NIL
@@ -82,6 +83,7 @@ enum JsonConstants :int {
 #define STAIRCASE_VELOCITY			"Staircase Vector"
 #define TELEPORT_LOCATION			"Teleport Location"
 #define SPEED_MODIFIER				"Speed Modifier"
+#define SLIPPY_MODIFIER				"Slippy Modifier"
 
 /** The physics fields for each object */
 #define POSITION_FIELD      "pos"

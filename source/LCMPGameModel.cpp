@@ -94,6 +94,7 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     constantsMap["Teleport"] = TELEPORT;
     constantsMap["Stairs"] = STAIRS;
     constantsMap["Velocity Modifier"] = VELOCITY_MODIFIER;
+    constantsMap["Slippy"] = SLIPPY;
 
     constantsMap["NULL"] = NIL;
     
@@ -941,7 +942,7 @@ void GameModel::initTrap(int trapID,
 
 
     trap->setAssets(Vec2(x,y), Vec2(width,height),
-                    scale, scale_, _tileSize, _worldnode, assets,
+                    scale, scale_, _tileSize, _floornode, assets,
                     activationTriggerTexture,deactivationTriggerTexture,
                     assetInfo);
     trap->setDebugScene(_debugnode);
@@ -993,6 +994,12 @@ shared_ptr<TrapModel::Effect> GameModel::readJsonEffect(shared_ptr<JsonValue> ef
             effecty = effect->get(VALUE_FIELD)->get(SPEED_MODIFIER)->getFloat(Y_FIELD, 0);
             effectVec = make_shared<cugl::Vec2>(effectx, effecty);
             break;
+
+        case SLIPPY:
+            effectType = TrapModel::TrapType::Slippy;
+            effectx = effect->get(VALUE_FIELD)->get(SLIPPY_MODIFIER)->getFloat(X_FIELD, 0);
+            effecty = effect->get(VALUE_FIELD)->get(SLIPPY_MODIFIER)->getFloat(Y_FIELD, 0);
+            effectVec = make_shared<cugl::Vec2>(effectx, effecty);
 
         case NIL:
         default:
