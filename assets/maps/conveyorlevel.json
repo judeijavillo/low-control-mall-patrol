@@ -3111,6 +3111,11 @@
                  "point":true,
                  "properties":[
                         {
+                         "name":"activated",
+                         "type":"bool",
+                         "value":false
+                        }, 
+                        {
                          "name":"activationSound",
                          "type":"string",
                          "value":"bucket_activate"
@@ -3126,12 +3131,17 @@
                          "type":"class",
                          "value":
                             {
+                             "Slippy Modifier":
+                                {
+                                 "x":0.01,
+                                 "y":0.01
+                                },
                              "Speed Modifier":
                                 {
                                  "x":0.5,
                                  "y":0.5
                                 },
-                             "Type":"Velocity Modifier"
+                             "Type":"Slippy"
                             }
                         }, 
                         {
@@ -3165,12 +3175,17 @@
                                  "x":0.5,
                                  "y":0.5
                                 },
+                             "Slippy Modifier":
+                                {
+                                 "x":0.01,
+                                 "y":0.01
+                                },
                              "Speed Modifier":
                                 {
                                  "x":0.5,
                                  "y":0.5
                                 },
-                             "Type":"Velocity Modifier"
+                             "Type":"Slippy"
                             }
                         }, 
                         {
@@ -3187,8 +3202,8 @@
                  "type":"Trap",
                  "visible":true,
                  "width":0,
-                 "x":2776.09181818182,
-                 "y":3162.54933333333
+                 "x":2777.09181818182,
+                 "y":3027.54933333333
                 }, 
                 {
                  "height":306,
@@ -3221,8 +3236,8 @@
                  "type":"",
                  "visible":true,
                  "width":383.061,
-                 "x":2579.87181818182,
-                 "y":3596.40933333333
+                 "x":2588.87181818182,
+                 "y":3587.40933333333
                 }],
          "opacity":1,
          "type":"objectgroup",

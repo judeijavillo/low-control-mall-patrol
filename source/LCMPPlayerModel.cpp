@@ -148,6 +148,12 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
                 _realbody->SetLinearVelocity(b2Vec2(b2velocity.x + std::get<1>(elem)->x, b2velocity.y + std::get<1>(elem)->y));
                 //CULog("escalator!%d:%d", std::get<1>(elem)->x, std::get<1>(elem)->y);
                 break;
+
+            case TrapModel::TrapType::Slippy:
+                setAccelerationMultiplier(Vec2(std::get<1>(elem)->x, std::get<1>(elem)->y));
+                setDampingMultiplier(Vec2(std::get<1>(elem)->x, std::get<1>(elem)->y));
+                break;
+
             default:
                 break;
             }
@@ -195,6 +201,11 @@ bool PlayerModel::removeEffects(int trapID) {
     }
 
     if (playerEffects[trapID]->size() == 1) {
+        if (std::get<0>(playerEffects[trapID]->at(0)) == TrapModel::Slippy) {
+            setAccelerationMultiplier(Vec2(1, 1));
+            setDampingMultiplier(Vec2(1, 1));
+        }
+
         playerEffects.erase(trapID);
         return true;
     }
@@ -222,6 +233,13 @@ void PlayerModel::act(int trapID, std::shared_ptr<TrapModel::Effect> effect) {
     case TrapModel::Teleport:
         addEffects(trapID, effect->traptype, effect->effectVec);
         break;
+
+    case TrapModel::Slippy:
+        addEffects(trapID, effect->traptype, effect->effectVec);
+        //setAccelerationMultiplier(Vec2(effect->effectVec->x, effect->effectVec->y));
+        //setDampingMultiplier(Vec2(effect->effectVec->x, effect->effectVec->y));
+        break;
+
     default:
         break;
     }
@@ -246,6 +264,12 @@ void PlayerModel::unact(int trapID, std::shared_ptr<TrapModel::Effect> effect) {
         break;
     case TrapModel::Teleport:
         removeEffects(trapID);
+        break;
+
+    case TrapModel::Slippy:
+        removeEffects(trapID);
+        //setAccelerationMultiplier(Vec2(1, 1));
+        //setDampingMultiplier(Vec2(1, 1));
         break;
     default:
         break;

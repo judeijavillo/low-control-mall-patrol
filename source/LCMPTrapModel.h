@@ -20,7 +20,8 @@ public:
         VelMod,
         Directional_VelMod,
         Moving_Platform,
-        Teleport
+        Teleport,
+        Slippy
     };
 
     //  MARK: - Effect Class

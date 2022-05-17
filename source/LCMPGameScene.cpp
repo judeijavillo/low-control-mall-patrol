@@ -346,7 +346,7 @@ void GameScene::stateGame(float timestep) {
     Vec2 movement = _input.getMovementVector(_isThief);
     Vec2 tackle = _input.getSwipe();
     bool joystick = _input.didPressJoystick();
-    bool activate = _input.didSwitch();
+    bool activate = _input.didSpace();
     bool swipe = _input.didSwipe();
     movement.y = -movement.y;
     tackle.y = -tackle.y;
@@ -511,6 +511,8 @@ void GameScene::updateThief(float timestep, Vec2 movement, bool dtap) {
         _game->activateTrap(trapID);
         _network->sendTrapActivation(trapID);
     }
+
+    CULog("acc: (%f %f), damp: (%f, %f)", _game->getThief()->getAcceleration().x, _game->getThief()->getAcceleration().y, _game->getThief()->getDamping().x, _game->getThief()->getDamping().y);
 }
 
 /**
