@@ -53,10 +53,17 @@ void CollisionController::beginContact(b2Contact* contact) {
     // Check all of the traps
     for (int i = 0; i < _game->numberOfTraps(); i++) {
         shared_ptr<TrapModel> trap = _game->getTrap(i);
-        b2Body* triggerBody = trap->getTriggerArea()->getRealBody();
+        
+        b2Body* triggerBody;
+        b2Body* deactivationBody;
+        if (trap->hasTrigger) {
+            triggerBody = trap->getTriggerArea()->getRealBody();
+            deactivationBody = trap->getDeactivationArea()->getRealBody();
+        }
+
+
         b2Body* thiefEffectBody = trap->getThiefEffectArea()->getRealBody();
         b2Body* copEffectBody = trap->getCopEffectArea()->getRealBody();
-        b2Body* deactivationBody = trap->getDeactivationArea()->getRealBody();
 
         if (trap->activated) {
             if ((thiefBody == body1 && thiefEffectBody == body2) ||
@@ -72,19 +79,22 @@ void CollisionController::beginContact(b2Contact* contact) {
                     _game->getCop(i)->act(trap->getTrapID(), trap->getCopEffect());
                     didHitTrap = true;
                 }
-
-                if ((copBody == body1 && deactivationBody == body2) ||
-                    (copBody == body2 && deactivationBody == body1)) {
-                    _game->getCop(i)->trapDeactivationFlag = trap->getTrapID();
+                if (trap->hasTrigger) {
+                    if ((copBody == body1 && deactivationBody == body2) ||
+                        (copBody == body2 && deactivationBody == body1)) {
+                        _game->getCop(i)->trapDeactivationFlag = trap->getTrapID();
+                    }
                 }
+                
             }
         }
         else {
-            if ((thiefBody == body1 && triggerBody == body2) ||
-                (thiefBody == body2 && triggerBody == body1)) {
-                _game->getThief()->trapActivationFlag = trap->getTrapID();
+            if (trap->hasTrigger) {
+                if ((thiefBody == body1 && triggerBody == body2) ||
+                    (thiefBody == body2 && triggerBody == body1)) {
+                    _game->getThief()->trapActivationFlag = trap->getTrapID();
+                }
             }
-
         }
     }
     
@@ -101,7 +111,14 @@ void CollisionController::endContact(b2Contact* contact) {
 
     for (int i = 0; i < _game->numberOfTraps(); i++) {
         shared_ptr<TrapModel> trap = _game->getTrap(i);
-        b2Body* triggerBody = trap->getTriggerArea()->getRealBody();
+        b2Body* triggerBody;
+        b2Body* deactivationBody;
+
+        if (trap->hasTrigger) {
+            triggerBody = trap->getTriggerArea()->getRealBody();
+            deactivationBody = trap->getDeactivationArea()->getRealBody();
+        }
+
         b2Body* thiefEffectBody = trap->getThiefEffectArea()->getRealBody();
         b2Body* copEffectBody = trap->getCopEffectArea()->getRealBody();
 
@@ -117,13 +134,22 @@ void CollisionController::endContact(b2Contact* contact) {
                     (copBody == body2 && copEffectBody == body1)) {
                     _game->getCop(i)->unact( trap->getTrapID(), trap->getCopEffect());
                 }
+
+                if (trap->hasTrigger) {
+                    if ((copBody == body1 && deactivationBody == body2) ||
+                        (copBody == body2 && deactivationBody == body1)) {
+                        _game->getCop(i)->trapDeactivationFlag = -1;
+                    }
+                }
             }
         }
         else {
-            if ((thiefBody == body1 && triggerBody == body2) ||
-                (thiefBody == body2 && triggerBody == body1)) {
-                _game->getThief()->trapActivationFlag = -1;
-            }
+            if (trap->hasTrigger) {
+                if ((thiefBody == body1 && triggerBody == body2) ||
+                    (thiefBody == body2 && triggerBody == body1)) {
+                    _game->getThief()->trapActivationFlag = -1;
+                }
+            } 
         }
     }
 }
