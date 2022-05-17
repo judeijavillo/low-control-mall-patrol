@@ -76,7 +76,9 @@ protected:
     TouchInstance _ltouch;
     /** The current touch location for the right zone */
     TouchInstance _rtouch;
-
+    /** The oldest touch location (used for cop tackle) */
+    TouchInstance _mtouch;
+    
 public:
 //  MARK: - Constructors
     /**
