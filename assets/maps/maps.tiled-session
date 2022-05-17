@@ -57,8 +57,8 @@
             "scale": 0.43,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 5190.697674418605,
-                "y": 5180.232558139534
+                "x": 4959.302325581395,
+                "y": 4669.767441860466
             }
         },
         "example6.json": {
@@ -86,7 +86,7 @@
         "conveyorlevel.json"
     ],
     "project": "maps.tiled-project",
-    "property.type": "Effect",
+    "property.type": "bool",
     "recentFiles": [
         "donut_room.tmx",
         "example6.json",

@@ -76,6 +76,7 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     constantsMap["copLingerDuration"] = COP_LINGER_DURATION;
     constantsMap["copLingerEffect"] = COP_LINGER_EFFECT;
     constantsMap["effectArea"] = EFFECT_AREA;
+    constantsMap["hasTrigger"] = HAS_TRIGGER;
     constantsMap["idleActivatedAnimation"] = IDLE_ACTIVATED_ANIMATION,
     constantsMap["idleDeactivatedAnimation"] = IDLE_DEACTIVATED_ANIMATION,
     constantsMap["numUsages"] = NUM_USAGES;
@@ -712,6 +713,7 @@ void GameModel::initTrap(int trapID,
     //int effectObjectId = -1;
     float effectAreaX = 0;
     float effectAreaY = 0;
+    bool hasTrigger = false;
     int triggerObjectId = -1;
     int deactivationObjectId = -1;
     int numUses = -1;
@@ -771,6 +773,10 @@ void GameModel::initTrap(int trapID,
 
         case EFFECT_AREA:
             //effectObjectId = elem->getInt(VALUE_FIELD);
+            break;
+
+        case HAS_TRIGGER:
+            hasTrigger = elem->getBool(VALUE_FIELD);
             break;
 
         case IDLE_ACTIVATED_ANIMATION:
@@ -876,31 +882,24 @@ void GameModel::initTrap(int trapID,
             break;
         }
     }
+    shared_ptr<cugl::physics2::PolygonObstacle> triggerArea;
+    shared_ptr<cugl::physics2::PolygonObstacle> deactivationArea;
 
-    //CULog("1");
+    if (hasTrigger) {
+        triggerArea = map1.at(triggerObjectId).obstacle;
+        deactivationArea = map2.at(deactivationObjectId).obstacle;
+    }
 
-    //shared_ptr<cugl::physics2::PolygonObstacle> thiefEffectArea = map1.at(effectObjectId).obstacle;
-    //shared_ptr<cugl::physics2::PolygonObstacle> copEffectArea = map2.at(effectObjectId).obstacle;
-    shared_ptr<cugl::physics2::PolygonObstacle> triggerArea = map1.at(triggerObjectId).obstacle;
-    shared_ptr<cugl::physics2::PolygonObstacle> deactivationArea = map2.at(deactivationObjectId).obstacle;
 
     std::shared_ptr<cugl::Vec2> triggerPosition = make_shared<cugl::Vec2>(json->getFloat(X_FIELD)/_tileSize, _mapHeight - json->getFloat(Y_FIELD)/_tileSize);
 
 
-    // Create the parameters to create a trap
 
-    //std::shared_ptr<cugl::Vec2> triggerPosition = make_shared<cugl::Vec2>(center);
-    //bool copSolid = true;
-    //bool thiefSolid = false;
-    //int numUses = 1;
-    //float lingerDur = 0.3;
-    //std::shared_ptr<cugl::Affine2> thiefVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
-    //std::shared_ptr<cugl::Affine2> copVelMod = make_shared<cugl::Affine2>(1, 0, 0, 1, 0, 0);
 
     // Initialize a trap
-
     trap->init(trapID,
                 activated,
+                hasTrigger,
                 thiefEffectArea, copEffectArea,
                 triggerArea, deactivationArea,
                 triggerPosition,
@@ -922,15 +921,17 @@ void GameModel::initTrap(int trapID,
     // Configure physics
     _world->addObstacle(thiefEffectArea);
     _world->addObstacle(copEffectArea);
-    _world->addObstacle(triggerArea);
     thiefEffectArea->setPosition(Vec2(effectAreaX, effectAreaY));
     copEffectArea->setPosition(Vec2(effectAreaX, effectAreaY));
 
-    triggerArea->setPosition(Vec2(map1.at(triggerObjectId).x, map1.at(triggerObjectId).y));
-    deactivationArea->setPosition(Vec2(map2.at(deactivationObjectId).x, map2.at(deactivationObjectId).y));
+    if (hasTrigger) {
+        _world->addObstacle(triggerArea);
+        triggerArea->setPosition(Vec2(map1.at(triggerObjectId).x, map1.at(triggerObjectId).y));
+        deactivationArea->setPosition(Vec2(map2.at(deactivationObjectId).x, map2.at(deactivationObjectId).y));
 
-    deactivationArea->setSensor(true);
-    triggerArea->setSensor(true);
+        deactivationArea->setSensor(true);
+        triggerArea->setSensor(true);
+    }
     thiefEffectArea->setSensor(true);
     copEffectArea->setSensor(true);
 

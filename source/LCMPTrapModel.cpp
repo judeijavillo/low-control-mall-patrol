@@ -19,6 +19,7 @@ using namespace cugl;
  */
 bool TrapModel::init(int trapID,
                      bool activated_,
+                     bool hasTrigger_,
                      const shared_ptr<physics2::PolygonObstacle> thiefArea, const shared_ptr<physics2::PolygonObstacle> copArea,
                      const shared_ptr<physics2::PolygonObstacle> triggerArea_, const shared_ptr<physics2::PolygonObstacle> deactivationArea_,
                      const shared_ptr<Vec2> triggerPosition,
@@ -35,6 +36,7 @@ bool TrapModel::init(int trapID,
                      bool sfxOn, std::string sfxKey) {
     _trapID = trapID;
     activated = activated_;
+    hasTrigger = hasTrigger_;
     thiefEffectArea = thiefArea;
     copEffectArea = copArea;
     triggerArea = triggerArea_;
@@ -65,15 +67,18 @@ bool TrapModel::init(int trapID,
     copEffectFilter.categoryBits = 0b01000;
     copEffectArea->setFilterData(copEffectFilter);
     
-    triggerFilter = b2Filter();
-    triggerFilter.maskBits = 0b00100;
-    triggerFilter.categoryBits = 0b00100;
-    triggerArea->setFilterData(triggerFilter);
+    if (hasTrigger) {
+        triggerFilter = b2Filter();
+        triggerFilter.maskBits = 0b00100;
+        triggerFilter.categoryBits = 0b00100;
+        triggerArea->setFilterData(triggerFilter);
 
-    deactivationFilter = b2Filter();
-    deactivationFilter.maskBits = 0b01000;
-    deactivationFilter.categoryBits = 0b01000;
-    deactivationArea->setFilterData(deactivationFilter);
+        deactivationFilter = b2Filter();
+        deactivationFilter.maskBits = 0b01000;
+        deactivationFilter.categoryBits = 0b01000;
+        deactivationArea->setFilterData(deactivationFilter);
+    }
+    
 
     return true;
 }
@@ -101,14 +106,10 @@ void TrapModel::setAssets(Vec2 position, Vec2 dims,
     const std::shared_ptr<cugl::Texture> deactivationTriggerTexture,
     const tuple <bool, int, int, std::string> assetInfo) {
     
-    // Create nodes
-    _activationTriggerNode = scene2::PolygonNode::allocWithTexture(activationTriggerTexture);
-    _deactivationTriggerNode = scene2::PolygonNode::allocWithTexture(deactivationTriggerTexture);
 
     float effectWidth = thiefEffectArea->getSize().width;
     float effectHeight = thiefEffectArea->getSize().height;
     
-    //there is a bug at this line for left and right animation assets... I have no clue why
     auto assetTexture = assets->get<Texture>(get<3>(assetInfo));
     if (get<0>(assetInfo)) {
         //texture is animated
@@ -133,25 +134,31 @@ void TrapModel::setAssets(Vec2 position, Vec2 dims,
     Vec2 deactivationScale_ = Vec2::ONE;//Vec2(deactivationTriggerTextureScale->x / deactivationTriggerTexture->getWidth(), deactivationTriggerTextureScale->x / deactivationTriggerTexture->getHeight());
     Vec2 effectAreaScale_ = Vec2(thiefEffectArea->getWidth() / assetTexture->getWidth(), thiefEffectArea->getHeight() / assetTexture->getHeight());
 
-    // Set the nodes' positions
-    _activationTriggerNode->setPosition((triggerPos->x /* + activationTriggerTextureScale->x / 2 */) * scale,
-        (triggerPos->y /* + activationTriggerTextureScale->y / 2 */) * scale);
-    _deactivationTriggerNode->setPosition((triggerPos->x /* + deactivationTriggerTextureScale->x/2 */) * scale,
-        (triggerPos->y /* + deactivationTriggerTextureScale->y / 2 */) * scale);
+
+    
+    if (hasTrigger) {
+        // Create nodes
+        _activationTriggerNode = scene2::PolygonNode::allocWithTexture(activationTriggerTexture);
+        _deactivationTriggerNode = scene2::PolygonNode::allocWithTexture(deactivationTriggerTexture);
+
+        // Set the nodes' positions
+        _activationTriggerNode->setPosition((triggerPos->x /* + activationTriggerTextureScale->x / 2 */) * scale,
+            (triggerPos->y /* + activationTriggerTextureScale->y / 2 */) * scale);
+        _deactivationTriggerNode->setPosition((triggerPos->x /* + deactivationTriggerTextureScale->x/2 */) * scale,
+            (triggerPos->y /* + deactivationTriggerTextureScale->y / 2 */) * scale);
+
+        // Set the nodes' scales
+        _activationTriggerNode->setScale(PROP_SCALE * 2);
+        _deactivationTriggerNode->setScale(PROP_SCALE * 2);
+        //
+    }
+    
 
     _assetNode->setPosition((position.x + dims.x / 2) * scale, (position.y + dims.y / 2) * scale);
 //    CULog("trap asset node placed at %f %f", (position.x + dims.x / 2) * scale, (position.y + dims.y / 2) * scale);
     
 
     //CULog("%f, %f, %f, %f", triggerPos->x, triggerPos->y, thiefEffectArea->getPosition().x, thiefEffectArea->getPosition().y);
-
-    // Set the nodes' scales
-    _activationTriggerNode->setScale(PROP_SCALE*2);
-    _deactivationTriggerNode->setScale(PROP_SCALE*2);
-    //
-
-
-
 
     
     // TODO: these should really be children of a parent node that isn't the world node
@@ -162,11 +169,15 @@ void TrapModel::setAssets(Vec2 position, Vec2 dims,
     if (!activated) {
         _node->addChild(_assetNode);
         _assetNode->setFrame(0);
-        _node->addChild(_activationTriggerNode);
+        if (hasTrigger) {
+            _node->addChild(_activationTriggerNode);
+        }
         //CULog("activated?");
     }
     else {
-        _node->addChild(_deactivationTriggerNode);
+        if (hasTrigger) {
+            _node->addChild(_deactivationTriggerNode);
+        }   
         _node->addChild(_assetNode);
         _assetNode->setFrame(_assetNodeFrameCount-1);
     }
@@ -180,8 +191,11 @@ void TrapModel::setAssets(Vec2 position, Vec2 dims,
 void TrapModel::setDebugScene(const shared_ptr<scene2::SceneNode>& node) {
     thiefEffectArea->setDebugScene(node);
     copEffectArea->setDebugScene(node);
-    triggerArea->setDebugScene(node);
-    deactivationArea->setDebugScene(node);
+    if (hasTrigger) {
+        triggerArea->setDebugScene(node);
+        deactivationArea->setDebugScene(node);
+    }
+    
 }
 
 /**
@@ -213,9 +227,12 @@ void TrapModel::activate() {
             copEffectArea->setSensor(false);
         }
 
-        // Change which nodes are being shown
-        _node->removeChild(_activationTriggerNode);
-        _node->addChild(_deactivationTriggerNode);
+        if (hasTrigger) {
+            // Change which nodes are being shown
+            _node->removeChild(_activationTriggerNode);
+            _node->addChild(_deactivationTriggerNode);
+        }
+        
     }
 
     
@@ -244,7 +261,7 @@ void TrapModel::updateTrap(float timestep) {
         
 
         //once it has finished the animations, it will activate the trap and unset the flag to enter this loop
-        if (_assetNode->getFrame() == _assetNodeFrameCount-1) {
+        if (_assetNode->getFrame() == _assetNodeFrameCount - 1) {
             activated = true;
             if (thiefCollide) {
                 thiefEffectArea->setSensor(false);
@@ -253,10 +270,14 @@ void TrapModel::updateTrap(float timestep) {
                 copEffectArea->setSensor(false);
             }
 
-            // Change which nodes are being shown
-            _node->removeChild(_activationTriggerNode);
-            _node->addChild(_deactivationTriggerNode);
-            //CULog("removing");
+            if (hasTrigger) {
+                // Change which nodes are being shown
+                _node->removeChild(_activationTriggerNode);
+                _node->addChild(_deactivationTriggerNode);
+                //CULog("removing");
+            }
+
+            
 
             activating = false;
         }
@@ -276,12 +297,12 @@ void TrapModel::deactivate() {
     //reset the animation to normal
     _assetNode->setFrame(0);
 
-    // Change which nodes are being shown
-    _node->removeChild(_deactivationTriggerNode);
-    //_node->removeChild(_assetNode);
-    _node->addChild(_activationTriggerNode);
-
-   
+    if (hasTrigger) {
+        // Change which nodes are being shown
+        _node->removeChild(_deactivationTriggerNode);
+        //_node->removeChild(_assetNode);
+        _node->addChild(_activationTriggerNode);
+    }
 }
 
 

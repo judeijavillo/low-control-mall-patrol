@@ -140,7 +140,8 @@ protected:
 public:
     /** Whether the trap is activated */
     bool activated;
-    
+    /** Whether this trap has any activation or deactivation triggers */
+    bool hasTrigger;
 
 
         
@@ -167,6 +168,7 @@ public:
      */
     bool init(int trapID,
               bool activated,
+              bool hasTrigger_,
               const std::shared_ptr<cugl::physics2::PolygonObstacle> thiefEffectArea, const std::shared_ptr<cugl::physics2::PolygonObstacle> copEffectArea,
               const std::shared_ptr<cugl::physics2::PolygonObstacle> triggerArea, const std::shared_ptr<cugl::physics2::PolygonObstacle> deactivationArea,
               const std::shared_ptr<cugl::Vec2> triggerPosition,
