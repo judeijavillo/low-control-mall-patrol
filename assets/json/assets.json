@@ -60,9 +60,6 @@
         "floor": {
             "file": "textures/environment/floor.png"
         },
-        "cleaning_cart": {
-            "file": "textures/environment/cleaning_cart.png"
-        },
         "cleaning_cart_triggered_w_banana": {
             "file": "textures/environment/cleaning_cart_triggered_w_banana.png"
         },
@@ -188,6 +185,9 @@
         },
         "Trav_up":{
             "file":"textures/environment/animations/Trav_up.png"
+        },
+        "janitor_cart":{
+            "file":"textures/environment/animations/janitor_cart.png"
         },
         "ss_cop_up": {
             "file": "textures/characters/ss_cop_up.png"
