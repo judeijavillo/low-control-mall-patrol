@@ -178,6 +178,15 @@ cugl::Vec2 const InputController::getMovementVector(bool isThief) const {
 void InputController::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
     Vec2 pos = event.position;
     Zone zone = getZone(pos);
+    
+    if (_mtouch.touchids.empty()) {
+        // Left is the floating joystick
+        _mtouch.position = event.position;
+        _mtouch.timestamp.mark();
+        _mtouch.touchids.insert(event.touch);
+    }
+    _didSwipe = false;
+
     switch (zone) {
         case InputController::Zone::LEFT:
             if (_ltouch.touchids.empty()) {
@@ -190,7 +199,6 @@ void InputController::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
             _joystickID = event.touch;
             _joystickOrigin = event.position;
             _joystickPosition = event.position;
-            _didSwipe = false;
             break;
         case InputController::Zone::RIGHT:
             if ((int)event.timestamp.ellapsedMillis(_rtouch.timestamp) < TAP_THRESHOLD) {
@@ -207,6 +215,14 @@ void InputController::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
  * Callback for detecting that the player has released the touchscreen
  */
 void InputController::touchEndedCB(const cugl::TouchEvent& event, bool focus) {
+   
+    // End oldest touch
+    if (_mtouch.touchids.find(event.touch) != _mtouch.touchids.end()) {
+        _mtouch.touchids.clear();
+        _didSwipe = false;
+    }
+    
+    // End joystick maybe
     Vec2 pos = event.position;
     Zone zone = getZone(pos);
     if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
@@ -225,13 +241,15 @@ void InputController::touchMovedCB(const cugl::TouchEvent& event, const cugl::Ve
     // Only check for swipes in the main zone if there is more than one finger.
     if (_ltouch.touchids.find(event.touch) != _ltouch.touchids.end()) {
         _joystickPosition = event.position;
-        Vec2 pos = event.position;
-        // Only check for swipes in the main zone if there is more than one finger.
-        if ((_ltouch.position - pos).lengthSquared() > EVENT_SWIPE_LENGTH * EVENT_SWIPE_LENGTH) {
-            _swipe = (pos - _ltouch.position);
-            _didSwipe = true;
-        } else _didSwipe = false;
     }
+    // Only check for swipes in the main zone if there is more than one finger.
+    Vec2 pos = event.position;
+    if (_mtouch.touchids.find(event.touch) != _mtouch.touchids.end()
+        && (_mtouch.position - pos).lengthSquared() > EVENT_SWIPE_LENGTH * EVENT_SWIPE_LENGTH) {
+        _swipe = (pos - _mtouch.position);
+        _didSwipe = true;
+    }
+    else _didSwipe = false;
 }
 
 //  MARK: - Helpers
