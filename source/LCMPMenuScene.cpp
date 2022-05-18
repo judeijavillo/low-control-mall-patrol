@@ -89,7 +89,6 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         _shopButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu43_backdrop_shop"));
         _gachaButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu43_backdrop_profile"));
     }
-
     
     // Program the buttons
     _hostbutton->addListener([this](const std::string& name, bool down) {

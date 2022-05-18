@@ -22,16 +22,16 @@
             "file": "textures/lobby/background.png"
         },
         "button_join": {
-            "file": "textures/lobby/join.png"
+            "file": "textures/ui/join.png"
         },
         "back": {
-            "file": "textures/lobby/back.png"
+            "file": "textures/ui/back.png"
         },
         "map": {
             "file": "textures/lobby/map.png"
         },
         "ready": {
-            "file": "textures/lobby/ready.png"
+            "file": "textures/ui/ready.png"
         },
         "donut_pink": {
             "file": "textures/ui/donut_pink.png"
@@ -71,12 +71,6 @@
         },
         "propeller_hat_left": {
             "file":  "textures/accessories/propeller_hat_left.png"
-        }
-    },
-    "fonts": {
-        "futura": {
-            "file": "fonts/futur.ttf",
-            "size": 48
         }
     },
     "scene2s": {
@@ -196,7 +190,7 @@
                             "data": {
                                 "anchor": [0.5, 0.5],
                                 "scale": 1.5,
-                                "font": "futura",
+                                "font": "rubik",
                                 "text": "CHOOSE YOUR FIGHTER",
                                 "halign": "center",
                                 "valign": "middle",

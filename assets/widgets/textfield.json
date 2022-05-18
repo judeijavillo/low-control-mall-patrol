@@ -24,7 +24,7 @@
 				"type"   : "TextField",
 				"data": {
 					"anchor"   : [0.5, 0.5],
-					"font"     : "futura heavy",
+					"font"     : "futura",
 					"text"     : "Text",
 					"padding"  : [20, 20, 20, 20],
 					"halign"   : "left",

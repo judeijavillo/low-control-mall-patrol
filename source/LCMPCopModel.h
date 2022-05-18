@@ -66,7 +66,7 @@ public:
               const std::shared_ptr<cugl::scene2::SceneNode>& node,
               const std::shared_ptr<cugl::AssetManager>& assets,
               std::shared_ptr<cugl::scene2::ActionManager>& actions,
-              string skinKey);
+              bool male);
     
 //  MARK: - Methods
     

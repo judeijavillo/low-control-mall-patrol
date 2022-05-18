@@ -4,25 +4,19 @@
             "file": "textures/lobby/background.png"
         },
         "button_join": {
-            "file": "textures/lobby/join.png"
+            "file": "textures/ui/join.png"
         },
-        "button_create": {
-            "file": "textures/lobby/create.png"
+        "button_ready": {
+            "file": "textures/ui/ready.png"
         },
         "settings": {
-            "file": "textures/lobby/settings.png"
+            "file": "textures/ui/settings.png"
         },
         "back": {
-            "file": "textures/lobby/back.png"
+            "file": "textures/ui/back.png"
         },
         "map": {
             "file": "textures/lobby/map.png"
-        }
-    },
-    "fonts": {
-        "futura": {
-            "file": "fonts/futur.ttf",
-            "size": 48
         }
     },
     "scene2s": {
@@ -48,24 +42,44 @@
                         "y_anchor": "fill"
                     },
                     "children": {
-                        "create": {
+                        "ready": {
                             "type": "Button",
                             "data": {
                                 "upnode": "up",
-                                "anchor": [0.5, 0.5],
-                                "scale": [1.6, 1.6]
+                                "anchor": [0.5, 0.5]
                             },
 							"layout" : {
 								"x_anchor": "center",
 								"y_anchor": "bottom",
-								"x_offset": -0.15,
-								"y_offset": 0.25
+								"y_offset": 0.15
 							},
                             "children": {
                                 "up": {
                                     "type": "Image",
                                     "data": {
-                                        "texture": "button_create"
+                                        "texture": "button_ready"
+                                    }
+                                }
+                            }
+                        },
+                        "gender": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": [0.5, 0.5]
+                            },
+                            "layout" : {
+                                "x_anchor": "center",
+                                "y_anchor": "bottom",
+                                "y_offset": 0.15,
+                                "x_offset": 0.3
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "ui_thief_head"
                                     }
                                 }
                             }
@@ -98,7 +112,7 @@
 								"x_anchor": "left",
 								"y_anchor": "top",
 								"x_offset": 0.05,
-								"y_offset": -0.2
+								"y_offset": -0.1
 							},
                             "children": {
                                 "up": {
@@ -115,10 +129,11 @@
                             "data": {
                                 "anchor": [0.5, 0.5],
                                 "scale": 1,
-                                "font": "futura",
-                                "text": "Tell your friends this room code: ",
+                                "font": "rubik",
+                                "text": "Share this room code: ",
                                 "halign": "middle",
-                                "valign": "center"
+                                "valign": "center",
+                                "background": "#88888880"
                             },
 							"layout":{
 								"x_anchor": "center",
@@ -127,160 +142,272 @@
 								"y_offset": -0.1
 							}
                         },
-                        "players": {
-                            "type": "Label",
-                            "data": {
-                                "anchor": [0.5, 0.5],
-                                "scale": 1,
-                                "font": "futura",
-                                "text": "Waiting for players (1/1)",
-                                "halign": "middle",
-                                "valign": "center"
-                            },
-							"layout": {
-								"x_anchor" : "center",
-								"y_anchor" : "top",
-								"x_offset" : 0,
-								"y_offset" : -0.18
-							}
-                        },
-                        "player1": {
-                            "type": "Label",
-                            "data": {
-                                "anchor": [0.5, 0.5],
-                                "scale": 1,
-                                "font": "futura",
-                                "text": "No Player",
-                                "halign": "middle",
-                                "valign": "center"
-                            },
-							"layout":{
-								"x_anchor": "center",
-								"y_anchor": "middle",
-								"x_offset": 0.25,
-								"y_offset": 0.05
-							}
-                        },
-                        "player2": {
-                            "type": "Label",
-                            "data": {
-                                "anchor": [0.5, 0.5],
-                                "scale": 1,
-                                "font": "futura",
-                                "text": "No Player",
-                                "halign": "middle",
-                                "valign": "center"
-                            },
-							"layout":{
-								"x_anchor": "center",
-								"y_anchor": "middle",
-								"x_offset": 0.25,
-								"y_offset": -0.02
-							}
-                        },
-                        "player3": {
-                            "type": "Label",
-                            "data": {
-                                "anchor": [0.5, 0.5],
-                                "scale": 1,
-                                "font": "futura",
-                                "text": "No Player",
-                                "halign": "middle",
-                                "valign": "center"
-                            },
-							"layout":{
-								"x_anchor": "center",
-								"y_anchor": "middle",
-								"x_offset": 0.25,
-								"y_offset": -0.09
-							}
-                        },
-                        "player4": {
-                            "type": "Label",
-                            "data": {
-                                "anchor": [0.5, 0.5],
-                                "scale": 1,
-                                "font": "futura",
-                                "text": "No Player",
-                                "halign": "middle",
-                                "valign": "center"
-                            },
-							"layout":{
-								"x_anchor": "center",
-								"y_anchor": "middle",
-								"x_offset": 0.25,
-								"y_offset": -0.16
-							}
-                        },
-                        "player5": {
-                            "type": "Label",
-                            "data": {
-                                "anchor": [0.5, 0.5],
-                                "scale": 1,
-                                "font": "futura",
-                                "text": "No Player",
-                                "halign": "middle",
-                                "valign": "center"
-                            },
-							"layout":{
-								"x_anchor": "center",
-								"y_anchor": "middle",
-								"x_offset": 0.25,
-								"y_offset": -0.23
-							}
-                        },
-                        "name": {
-                            "type"   : "Node",
-                            "format" : {
-                                   "type"         : "Float",
-                                    "orientation" : "horizontal",
-                                    "x_alignment" : "center",
-                                    "y_alignment" : "middle"
-                            },
+                        "thiefField": {
+                            "type": "Widget",
                             "data"   : {
-                                "anchor"  : [0.5,0.5],
-                                "size": [600,100]
-                            },
-							"layout" : {
-								"x_anchor": "center",
-								"y_anchor": "top",
-								"x_offset": 0,
-								"y_offset": -0.3
-							},
-                            "children" : {
-                                "label": {
-                                    "type": "Label",
-                                    "data"   : {
-                                        "anchor"   : [0.5, 0.5],
-                                        "font"     : "futura heavy",
-                                        "text"     : "Name:",
-                                        "padding"  : [20, 20, 40, 20],
-                                        "halign"   : "left",
-                                        "valign"   : "middle"
-                                    },
-                                    "layout" : {
-                                        "priority" : 1
-                                    }
-                                },
-                                "field": {
-                                    "type": "Widget",
-                                    "data"   : {
-                                        "key"     : "textfield",
-                                        "variables" : {
-                                            "size": [300,100],
-                                            "text": "",
-                                            "halign": "center",
-                                            "framecolor": "#000000"
-                                        }
-                                    },
-                                    "layout" : {
-                                        "priority" : 2
-                                    }
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
                                 }
                             },
                             "layout" : {
-                                "priority" : 1,
-                                "padding"  : [0,50,0,0]
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : -0.4,
+                                "y_offset" : 0.2
+                            }
+                        },
+                        "cop1Field": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
+                            },
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : -0.2,
+                                "y_offset" : 0.2
+                            }
+                        },
+                        "cop2Field": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
+                            },
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0,
+                                "y_offset" : 0.2
+                            }
+                        },
+                        "cop3Field": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
+                            },
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0.2,
+                                "y_offset" : 0.2
+                            }
+                        },
+                        "cop4Field": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
+                            },
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0.4,
+                                "y_offset" : 0.2
+                            }
+                        },
+                        "thief" : {
+                            "type" : "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5]
+                            },
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : -0.4,
+                                "y_offset" : -0.05
+                            },
+                            "children": {
+                                "up": {
+                                    "type"    : "Sprite",
+                                    "data"    : {
+                                        "scale"     : 0.5,
+                                        "texture"   : "ss_thief_idle_right",
+                                        "span"      : 4,
+                                        "cols"      : 4,
+                                        "frame"     : 0
+                                    }
+                                }
+                            }
+                        },
+                        "cop1" : {
+                            "type"    : "Sprite",
+                            "data"    : {
+                                "scale"     : 0.5,
+                                "anchor"    : [0.5, 0.5],
+                                "texture"   : "ss_cop_idle_left",
+                                "span"      : 4,
+                                "cols"      : 4,
+                                "frame"     : 0
+                            },
+                                "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : -0.2,
+                                "y_offset" : -0.05
+                            }
+                        },
+                        "cop2" : {
+                            "type"    : "Sprite",
+                            "data"    : {
+                                "scale"     : 0.5,
+                                "anchor"    : [0.5, 0.5],
+                                "texture"   : "ss_cop_idle_left",
+                                "span"      : 4,
+                                "cols"      : 4,
+                                "frame"     : 0
+                            },
+                                "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0,
+                                "y_offset" : -0.05
+                            }
+                        },
+                        "cop3" : {
+                            "type"    : "Sprite",
+                            "data"    : {
+                                "scale"     : 0.5,
+                                "anchor"    : [0.5, 0.5],
+                                "texture"   : "ss_cop_idle_left",
+                                "span"      : 4,
+                                "cols"      : 4,
+                                "frame"     : 0
+                            },
+                                "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0.2,
+                                "y_offset" : -0.05
+                            }
+                        },
+                        "cop4" : {
+                            "type"    : "Sprite",
+                            "data"    : {
+                                "scale"     : 0.5,
+                                "anchor"    : [0.5, 0.5],
+                                "texture"   : "ss_cop_idle_left",
+                                "span"      : 4,
+                                "cols"      : 4,
+                                "frame"     : 0
+                            },
+                                "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0.4,
+                                "y_offset" : -0.05
+                            }
+                        },
+                        "cat_ears": {
+                            "type": "Image",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": [0.3, 0.3]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "cat_ears"
+                                    }
+                                }
+                            }
+                        },
+                        "propeller_hat": {
+                            "type": "Image",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": [0.3, 0.3]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "propeller_hat"
+                                    }
+                                }
+                            }
+                        },
+                        "police_hat": {
+                            "type": "Image",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": [0.3, 0.3]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "police_hat"
+                                    }
+                                }
+                            }
+                        },
+                        "plant": {
+                            "type": "Image",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": [0.3, 0.3]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "plant"
+                                    }
+                                }
+                            }
+                        },
+                        "halo": {
+                            "type": "Image",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": [0.3, 0.3]
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "halo"
+                                    }
+                                }
                             }
                         }
                     }

@@ -43,8 +43,6 @@ protected:
         CLIENT,
         /** The scene to find a game */
         FIND,
-        /** The scene to customize characters */
-        CUSTOM,
         /** The scene to choose a level */
         LEVEL,
         /** The scene to play the game */
@@ -80,8 +78,6 @@ protected:
     ClientScene _client;
     /** The scene to find a game */
     FindScene _find;
-    /** The scene to customize characters */
-    CustomizeScene _customize;
     /** The scene to choose a level */
     LevelSelectScene _levelselect;
     /** The primary controller for the game world */
@@ -232,16 +228,6 @@ private:
      */
     void updateFindScene(float timestep);
     
-    /**
-     * Individualized update method for the client scene.
-     *
-     * This method keeps the primary {@link #update} from being a mess of switch
-     * statements. It also handles the transition logic from the client scene.
-     *
-     * @param timestep  The amount of time (in seconds) since the last frame
-     */
-    void updateCustomizeScene(float timestep);
-
     /**
      * Individualized update method for the client scene.
      *

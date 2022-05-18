@@ -59,40 +59,57 @@ protected:
 
     /** The menu button for starting a game */
     std::shared_ptr<cugl::scene2::Button> _startgame;
+    /** The menu button for changing a player's gender */
+    std::shared_ptr<cugl::scene2::Button> _genderButton;
     /** The back button for the menu scene */
     std::shared_ptr<cugl::scene2::Button> _backout;
     /** The game id label (for updating) */
     std::shared_ptr<cugl::scene2::Label> _gameid;
-    /** The players label (for updating) */
-    std::shared_ptr<cugl::scene2::Label> _player;
     
+    /** A mapping from player number to character node */
+    std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _nodes;
+    /** The sprite of the thief */
+    std::shared_ptr<cugl::scene2::SpriteNode> _thiefNode;
+    /** The sprite of cop 1 */
+    std::shared_ptr<cugl::scene2::SpriteNode> _cop1Node;
+    /** The sprite of cop 2 */
+    std::shared_ptr<cugl::scene2::SpriteNode> _cop2Node;
+    /** The sprite of cop 3 */
+    std::shared_ptr<cugl::scene2::SpriteNode> _cop3Node;
+    /** The sprite of cop 4 */
+    std::shared_ptr<cugl::scene2::SpriteNode> _cop4Node;
+    
+    /** A mapping from player number  to character node */
+    std::vector<std::shared_ptr<cugl::scene2::TextField>> _players;
     /** The player 1 label (for updating) */
-    std::shared_ptr<cugl::scene2::Label> _player1;
+    std::shared_ptr<cugl::scene2::TextField> _player1;
     /** The player 2 label (for updating) */
-    std::shared_ptr<cugl::scene2::Label> _player2;
+    std::shared_ptr<cugl::scene2::TextField> _player2;
     /** The player 3 label (for updating) */
-    std::shared_ptr<cugl::scene2::Label> _player3;
+    std::shared_ptr<cugl::scene2::TextField> _player3;
     /** The player 4 label (for updating) */
-    std::shared_ptr<cugl::scene2::Label> _player4;
+    std::shared_ptr<cugl::scene2::TextField> _player4;
     /** The player 5 label (for updating) */
-    std::shared_ptr<cugl::scene2::Label> _player5;
-    /** The name label (for updating) */
-    std::shared_ptr<cugl::scene2::TextField> _name;
+    std::shared_ptr<cugl::scene2::TextField> _player5;
     
-
-//    /** Reference to the node containing the customization menu */
-//    std::shared_ptr<cugl::scene2::SceneNode> _customizeMenu;
-//    /** The open button for the customization scene */
-//    std::shared_ptr<cugl::scene2::Button> _customizeButton;
-//    /** The close button for the customization scene */
-//    std::shared_ptr<cugl::scene2::Button> _closeButton;
-//    /** Whether or not the game is being sent to the customize menu. */
-//    bool _didCustomize;
+    /** The keys to access player skins */
+    std::vector<string> _skinKeys;
+    /** The references to player skins */
+    std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _skins;
+    
+    /** The current animation frame */
+    int _aniFrame;
+    /** The previous timestep. */
+    float _prevTime;
     
     /** The current status */
     Status _status;
 
 public:
+    
+    /** The skin the player chooses */
+    int skinChoice;
+    
 //  MARK: - Constructors
     
     /**
@@ -177,27 +194,6 @@ public:
 
 private:
 //  MARK: - Helpers
-
-    /**
-     * Updates the text in the given button.
-     *
-     * Techincally a button does not contain text. A button is simply a scene graph
-     * node with one child for the up state and another for the down state. So to
-     * change the text in one of our buttons, we have to descend the scene graph.
-     * This method simplifies this process for you.
-     *
-     * @param button    The button to modify
-     * @param text      The new text value
-     */
-    void updateText(const std::shared_ptr<cugl::scene2::Button>& button, const std::string text);
-    
-    /**
-     * Reconfigures the start button for this scene
-     *
-     * This is necessary because what the buttons do depends on the state of the
-     * networking.
-     */
-    void configureStartButton();
     
     /**
      * Connects to the game server as specified in the assets file
@@ -209,26 +205,16 @@ private:
      * @return true if the connection was successful
      */
     bool connect();
-
-    /**
-     * Checks that the network connection is still active.
-     *
-     * Even if you are not sending messages all that often, you need to be calling
-     * this method regularly. This method is used to determine the current state
-     * of the scene.
-     *
-     * @return true if the network connection is still active.
-     */
-    bool checkConnection();
     
     /**
-     * Starts the game.
-     *
-     * This method is called once the requisite number of players have connected.
-     * It locks down the room and sends a "start game" message to all other
-     * players.
+     * Plays animations for the players
      */
-    void startGame();
+    void updateLobby(float timestep);
+    
+    /**
+     * Updates the player customizations
+     */
+    void updateSkins(float timestep);
     
 };
 

@@ -63,14 +63,24 @@ bool NetworkController::init() {
 //  MARK: - Methods
 
 /**
+ * Returns the mapping of playerID to male boolean
+ */
+std::unordered_map<int, bool> NetworkController::getMales() {
+    unordered_map<int, bool> result;
+    for (int playerID = 0; playerID < 5; playerID++) {
+        result[playerID] = _players[playerID].male;
+    }
+    return result;
+}
+
+/**
  * Establishes a host connection with the server
  */
 bool NetworkController::connect() {
     _connection = NetworkConnection::alloc(_config);
     
-    
     for (int playerID = 0; playerID < 5; playerID++) {
-        _players[playerID] = {playerID, -2, "No Player"};
+        _players[playerID] = {true, playerID, -2, "None"};
     }
     _players[0].username = "Player 1";
     
@@ -85,7 +95,7 @@ bool NetworkController::connect(const std::string room) {
     _connection = NetworkConnection::alloc(_config, room);
     
     for (int playerID = 0; playerID < 5; playerID++) {
-        _players[playerID] = {playerID, -2, "No Player"};
+        _players[playerID] = {true, playerID, -2, "None"};
     }
     
     update();
@@ -98,7 +108,10 @@ bool NetworkController::connect(const std::string room) {
  * Checks the connection and updates the status accordingly (pre-game)
  */
 void NetworkController::update() {
-    if (_connection == nullptr) return;
+    if (_connection == nullptr) {
+        _status = IDLE;
+        return;
+    }
     switch (_connection->getStatus()) {
     case NetworkConnection::NetStatus::Pending:
         _status = CONNECTING;
@@ -111,18 +124,28 @@ void NetworkController::update() {
     case NetworkConnection::NetStatus::RoomNotFound:
     case NetworkConnection::NetStatus::ApiMismatch:
     case NetworkConnection::NetStatus::GenericError:
+    case NetworkConnection::NetStatus::NatFailure:
         _status = IDLE;
         break;
     }
     
+    sendPlayer();
+    
     _connection->receive([this](const std::vector<uint8_t> msg) {
-        // TODO: Add more functionality for getting client info, like names
         _deserializer.receive(msg);
         vector<float> data = _deserializer.readFloatVector();
         switch ((int) data.at(0)) {
-        case DISPLAY_NAME:
-            _players[data.at(1)].username = _deserializer.readString();
+        case PLAYER:
+            {
+            int playerID = data.at(1);
+            if (playerID != -1) {
+                _players[playerID].male = _deserializer.readBool();
+                _players[playerID].playerID = (int) _deserializer.readFloat();
+                _players[playerID].playerNumber = (int) _deserializer.readFloat();
+                _players[playerID].username = _deserializer.readString();
+            }
             break;
+            }
         case START_GAME:
             _status = START;
             int i = 2;
@@ -144,20 +167,24 @@ void NetworkController::update() {
 }
 
 /**
- * Sends the updated name of a particular player
+ * Sends the state of the lobby
  */
-void NetworkController::sendDisplayName(string name) {
-    vector<float> data;
-    data.push_back(DISPLAY_NAME);
-    data.push_back(getPlayerID() ? *getPlayerID() : -1);
-    _players[*getPlayerID()].username = name;
+void NetworkController::sendPlayer() {
+    int playerID = getPlayerID() ? *getPlayerID() : -1;
     
+    vector<float> data;
+    data.push_back(PLAYER);
+    data.push_back(playerID);
     _serializer.writeFloatVector(data);
-    _serializer.writeString(name);
+    
+    _serializer.writeBool(_players[playerID].male);
+    _serializer.writeFloat(_players[playerID].playerID);
+    _serializer.writeFloat(_players[playerID].playerNumber);
+    _serializer.writeString(_players[playerID].username);
+    
     _connection->send(_serializer.serialize());
     _serializer.reset();
 }
-
 /**
  * Sends a byte vector to start the game
  */

@@ -4,25 +4,19 @@
             "file": "textures/lobby/background.png"
         },
         "button_join": {
-            "file": "textures/lobby/join.png"
+            "file": "textures/ui/join.png"
         },
         "button_create": {
-            "file": "textures/lobby/create.png"
+            "file": "textures/ui/create.png"
         },
         "settings": {
-            "file": "textures/lobby/settings.png"
+            "file": "textures/ui/settings.png"
         },
         "back": {
-            "file": "textures/lobby/back.png"
+            "file": "textures/ui/back.png"
         },
         "map": {
             "file": "textures/lobby/map.png"
-        }
-    },
-    "fonts": {
-        "futura": {
-            "file": "fonts/futur.ttf",
-            "size": 48
         }
     },
     "scene2s": {
@@ -101,7 +95,7 @@
                             "data": {
                                 "anchor": [0.5, 0.5],
                                 "scale": 1,
-                                "font": "futura",
+                                "font": "rubik",
                                 "text": "Connecting to server",
                                 "halign": "middle",
                                 "valign": "center",
@@ -113,7 +107,7 @@
                             "data": {
                                 "anchor": [0.5, 0.5],
                                 "scale": 1,
-                                "font": "futura",
+                                "font": "rubik",
                                 "text": "Waiting for players (1/1)",
                                 "halign": "center",
                                 "valign": "middle",

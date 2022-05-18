@@ -1,7 +1,7 @@
 {
     "textures": {
         "victory_background" : {
-            "file": "textures/ui/menu_background.png"
+            "file": "textures/lobby/background.png"
         },
         "replay" : {
             "file" :   "textures/ui/replay.png"
@@ -17,12 +17,6 @@
         }
     },
     "sounds": {
-    },
-    "fonts": {
-        "futura": {
-            "file": "fonts/futur.ttf",
-            "size": 48
-        }
     },
     "scene2s": {
         "victory": {
@@ -103,7 +97,7 @@
                             "data": {
                                 "anchor": [0.5, 0.5],
                                 "scale": 1,
-                                "font": "futura",
+                                "font": "rubik",
                                 "text": "Please Change This Text To Something Else",
                                 "halign": "center",
                                 "valign": "middle",

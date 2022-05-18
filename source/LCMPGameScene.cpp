@@ -195,7 +195,7 @@ void GameScene::dispose() {
  *
  * @param host  Whether the player is host.
  */
-void GameScene::start(bool host, string skinKey) {
+void GameScene::start(bool host) {
     _gameTime = 0;
     _doneTime = 0;
     _isThiefWin = false;
@@ -203,14 +203,13 @@ void GameScene::start(bool host, string skinKey) {
     _audio->playSound(_assets, GAME_MUSIC, false, -1);
     _playerNumber = _network->getPlayerNumber();
     _isThief = (_playerNumber == -1);
-    _skinKey = skinKey;
 
     // Initialize the game
     _game = make_shared<GameModel>();
-    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _skinKey);
+    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _network->getMales(), _network->getNumPlayers());
     
     // Set the player's names
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < _game->numberOfCops() + 1; i++) {
         NetworkController::Player playerData = _network->getPlayer(i);
         shared_ptr<PlayerModel> player = playerData.playerNumber == -1
             ? (shared_ptr<PlayerModel>) _game->getThief()
@@ -294,10 +293,10 @@ void GameScene::reset() {
     
     // Make a new game
     _game = make_shared<GameModel>();
-    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _skinKey);
+    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _network->getMales(), _network->getNumPlayers());
     
     // Set the player's names
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < _game->numberOfCops() + 1; i++) {
         NetworkController::Player playerData = _network->getPlayer(i);
         shared_ptr<PlayerModel> player = playerData.playerNumber == -1
             ? (shared_ptr<PlayerModel>) _game->getThief()
@@ -485,7 +484,7 @@ void GameScene::updateLocal(float timestep, Vec2 movement, bool dtap,
     if (_isHost) {
         for (int i = 0; i < 5; i++) {
             int copID = _network->getPlayer(i).playerNumber;
-            if (!_network->isPlayerConnected(i) && copID != -1 && copID != _playerNumber) {
+            if (!_network->isPlayerConnected(i) && copID != -1 && copID != _playerNumber && copID < _game->numberOfCops()) {
                 updateCop(timestep, copID, Vec2::ZERO, false, Vec2::ZERO, dtap);
             }
         }
