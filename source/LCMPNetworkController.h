@@ -36,8 +36,8 @@ public:
     
     /** The different signals that the Network Controller can send */
     enum Signal {
-        /** Change the display name of a player */
-        DISPLAY_NAME,
+        /** State of the lobby */
+        PLAYER,
         /** It's time to start the game */
         START_GAME,
         /** What follows is which cop to update, its x and y position, and its x and y velocity */
@@ -54,6 +54,7 @@ public:
     
     /** A data representation of a Player */
     struct Player {
+        bool male;
         int playerID;
         int playerNumber;
         string username;
@@ -167,6 +168,16 @@ public:
     std::string getLevel() { return _level; }
     
     /**
+     * Sets this player's username
+     */
+    void setUsername(std::string username) { _players[*getPlayerID()].username = username; }
+    
+    /**
+     * Sets this player's gender
+     */
+    void toggleGender() { _players[*getPlayerID()].male = !_players[*getPlayerID()].male; }
+    
+    /**
      * Establishes a host connection with the server
      */
     bool connect();
@@ -189,9 +200,9 @@ public:
     void update();
     
     /**
-     * Sends the updated name of a particular player
+     * Sends the state of a given player
      */
-    void sendDisplayName(string name);
+    void sendPlayer();
     
     /**
      * Sends a byte vector to start the game

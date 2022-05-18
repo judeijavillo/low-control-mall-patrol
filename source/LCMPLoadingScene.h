@@ -2,15 +2,6 @@
 //  LCMPLoadingScene.h
 //  Low Control Mall Patrol
 //
-//  This module provides a very barebones loading screen.  Most of the time you
-//  will not need a loading screen, because the assets will load so fast.  But
-//  just in case, this is a simple example you can use in your games.
-//
-//  We know from 3152 that you all like to customize this screen.  Therefore,
-//  we have kept it as simple as possible so that it is easy to modify. In
-//  fact, this loading screen uses the new modular JSON format for defining
-//  scenes.  See the file "loading.json" for how to change this scene.
-//
 //  Originator: Walker White, Aidan Hobler
 //  Author: Kevin Games
 //  Version: 2/18/22
@@ -42,14 +33,17 @@ protected:
     std::shared_ptr<AudioController> _audio;
     
     // VIEW
-    /** The engine name */
-    std::shared_ptr<cugl::scene2::SceneNode>  _brand;
     /** The "play" button */
     std::shared_ptr<cugl::scene2::Button>    _button;
 
-
     /** The child node for displaying the loading texture */
-    std::shared_ptr<cugl::scene2::SpriteNode> _aniSpriteNode;
+//    std::shared_ptr<cugl::scene2::SpriteNode> _aniSpriteNode;
+    std::shared_ptr<cugl::scene2::SpriteNode> _copNode;
+    std::shared_ptr<cugl::scene2::SpriteNode> _thiefNode;
+    std::shared_ptr<cugl::scene2::PolygonNode> _tackleNode;
+    std::shared_ptr<cugl::scene2::PolygonNode> _landNode;
+    std::shared_ptr<cugl::scene2::PolygonNode> _background;
+
     /** The current animation frame */
     int _aniFrame;
     /** The previous timestep. */

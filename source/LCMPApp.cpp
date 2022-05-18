@@ -58,6 +58,9 @@ void LCMPApp::onStartup() {
     _assets->attach<scene2::SceneNode>(Scene2Loader::alloc()->getHook());
     _assets->attach<Sound>(SoundLoader::alloc()->getHook());
     
+    // Create a "loading" screen
+    _loading.init(_assets, _audio);
+    
     // Queue up the other assets
     _assets->loadDirectoryAsync("json/assets.json", nullptr);
     _assets->loadDirectoryAsync("json/host.json",nullptr);
@@ -65,14 +68,11 @@ void LCMPApp::onStartup() {
     _assets->loadDirectoryAsync("json/find.json",nullptr);
     _assets->loadDirectoryAsync("json/customize.json",nullptr);
     _assets->loadDirectoryAsync("json/levelselect.json", nullptr);
-    _assets->loadDirectoryAsync("json/skins.json",nullptr);
     _assets->loadDirectoryAsync("json/victory.json",nullptr);
     _assets->loadDirectoryAsync("json/pause.json", nullptr);
     _assets->loadDirectoryAsync(WALL_ASSETS_FILE, nullptr);
     
-    // Create a "loading" screen
     _scene = State::LOAD;
-    _loading.init(_assets, _audio);
     
     // Call the parent's onStartup
     Application::onStartup();

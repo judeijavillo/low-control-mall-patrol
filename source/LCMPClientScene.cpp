@@ -27,6 +27,8 @@ using namespace std;
 #define SCENE_HEIGHT  720
 /** The longest roomID allowed */
 #define MAX_ROOM_ID_LENGTH 5
+/** Time between animation frames */
+#define ANIMATION_SPEED         0.07f
 
 Vec2 ROOM_ID_LABEL_HOME = Vec2(512, 870);
 
@@ -67,12 +69,29 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     if (sixteenNineAspectRatio) {
         scene->setContentSize(dimen);
         scene->doLayout(); // Repositions the HUD
+        
         // Get interactive UI elements
+        _keypad = _assets->get<scene2::SceneNode>("join_backdrop_keypad");
+        _genderButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_gender"));
         _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_join"));
         _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_back"));
         _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_roomID"));
-        _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_instructions"));
-        _name = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join_backdrop_name_field_text"));
+        _info  = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_instructions"));
+        
+        // The text fields showing the player names
+        _player1 = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join_backdrop_thiefField_text"));
+        _player2 = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join_backdrop_cop1Field_text"));
+        _player3 = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join_backdrop_cop2Field_text"));
+        _player4 = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join_backdrop_cop3Field_text"));
+        _player5 = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join_backdrop_cop4Field_text"));
+        
+        // The sprite nodes showing the characters
+        _thiefNode = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_thief_up"));
+        _cop1Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_cop1"));
+        _cop2Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_cop2"));
+        _cop3Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_cop3"));
+        _cop4Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_cop4"));
+        
     }
     else {
         scene = _assets->get<scene2::SceneNode>("join43");
@@ -80,12 +99,42 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         scene->doLayout(); // Repositions the HUD
 
         // Get interactive UI elements
+        _keypad = _assets->get<scene2::SceneNode>("join43_backdrop_keypad");
+        _genderButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_gender"));
         _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_join"));
         _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_back"));
         _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join43_backdrop_keypad_roomID"));
-        _player = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join43_backdrop_instructions"));
-        _name = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join43_backdrop_name_field_text"));
+        _info = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join43_backdrop_instructions"));
+        
+        // The text fields showing the player names
+        _player1 = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join43_backdrop_thiefField_text"));
+        _player2 = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join43_backdrop_cop1Field_text"));
+        _player3 = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join43_backdrop_cop2Field_text"));
+        _player4 = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join43_backdrop_cop3Field_text"));
+        _player5 = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join43_backdrop_cop4Field_text"));
+        
+        // The sprite nodes showing the characters
+        _thiefNode = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_thief_up"));
+        _cop1Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_cop1"));
+        _cop2Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_cop2"));
+        _cop3Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_cop3"));
+        _cop4Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_cop4"));
     }
+    
+    // Maintain a mapping of player names for later
+    _players.push_back(_player1);
+    _players.push_back(_player2);
+    _players.push_back(_player3);
+    _players.push_back(_player4);
+    _players.push_back(_player5);
+    
+    // Maintain a mapping of character nodes for later
+    _nodes.push_back(_thiefNode);
+    _nodes.push_back(_cop1Node);
+    _nodes.push_back(_cop2Node);
+    _nodes.push_back(_cop3Node);
+    _nodes.push_back(_cop4Node);
+    
     _status = Status::IDLE;
     
     // Attach listener to back button
@@ -96,6 +145,20 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
             _audio->playSound(_assets, CLICK_SFX, true, 0);
         }
     });
+    
+    _genderButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            _audio->stopSfx(CLICK_SFX);
+            _audio->playSound(_assets, CLICK_SFX, true, 0);
+            if (_network->isConnected()) _network->toggleGender();
+        }
+    });
+    
+    for (int i = 0; i < 5; i++) {
+        _players[i]->addExitListener([this](const std::string& name, const std::string& value) {
+            if (_network->isConnected()) _network->setUsername(value);
+        });
+    }
     
     // Create all of the numbered buttons
     for (int i = 0; i < 10; i++) {
@@ -137,11 +200,9 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         }
     });
     
-    _name->addExitListener([this](const std::string& name, const std::string& value) {
-        if (_network->isConnected()) {
-            _network->sendDisplayName(value);
-        }
-    });
+    // Set other attributes for animations
+    _aniFrame = 0;
+    _prevTime = 0;
     
     addChild(scene);
     setActive(false);
@@ -172,12 +233,16 @@ void ClientScene::update(float timestep) {
         _network->update();
         switch (_network->getStatus()) {
         case NetworkController::Status::IDLE:
+            _status = WAIT;
         case NetworkController::CONNECTING:
-            _status = IDLE;
+            _status = JOIN;
             break;
         case NetworkController::WAIT:
-            if (_status == IDLE) _network->sendDisplayName("Player " + (
-                _network->getPlayerID() ? to_string(*(_network->getPlayerID()) + 1) : ""));
+            if (_status == JOIN) {
+                _network->setUsername("Player " + (_network->getPlayerID() ? to_string(*(_network->getPlayerID()) + 1) : ""));
+                _info->setText("Connected!");
+                showLobby(true);
+            }
             _status = WAIT;
             break;
         case NetworkController::START:
@@ -191,23 +256,23 @@ void ClientScene::update(float timestep) {
     
     switch (_status) {
     case IDLE:
-        _player->setText("Enter a room code", true);
+        _info->setText("Enter a room code", true);
+        _startgame->setDown(false);
+        _startgame->activate();
         break;
     case JOIN:
-        _player->setText("Connecting", true);
+        _info->setText("Connecting");
         break;
     case WAIT:
     {
-        string message = strtool::format("Waiting for host (%d/5)", _network->getNumPlayers());
-        _player->setText(message, true);
+        updateLobby(timestep);
+        _startgame->deactivate();
         break;
     }
     default:
         break;
     }
-    
-    configureStartButton();
-}
+    }
 
 /**
  * Sets whether the scene is currently active
@@ -225,21 +290,20 @@ void ClientScene::setActive(bool value) {
             _status = IDLE;
             _network->disconnect();
             _backout->activate();
-            _name->activate();
             for (auto button = _keypadButtons.begin(); button != _keypadButtons.end(); button++) {
                 (*button)->activate();
             }
             _gameid->setText("");
-            _player->setText("Enter a room code");
-            
-            configureStartButton();
+            _info->setText("Enter a room code", true);
+            showLobby(false);
         } else {
             _startgame->deactivate();
             _backout->deactivate();
-            _name->deactivate();
             for (auto button = _keypadButtons.begin(); button != _keypadButtons.end(); button++) {
                 (*button)->deactivate();
             }
+            for (int i = 0; i < 5; i++) _players[i]->deactivate();
+            _genderButton->deactivate();
             // If any were pressed, reset them
             _startgame->setDown(false);
             _backout->setDown(false);
@@ -248,21 +312,6 @@ void ClientScene::setActive(bool value) {
 }
 
 //  MARK: - Helpers
-
-/**
- * Checks that the network connection is still active.
- *
- * Even if you are not sending messages all that often, you need to be calling
- * this method regularly. This method is used to determine the current state
- * of the scene.
- *
- * @return true if the network connection is still active.
- */
-void ClientScene::updateText(const std::shared_ptr<scene2::Button>& button, const std::string text) {
-//    auto label = std::dynamic_pointer_cast<scene2::Label>(button->getChildByName("up")->getChildByName("label"));
-//    label->setText(text);
-
-}
 
 /**
  * Connects to the game server as specified in the assets file
@@ -281,31 +330,70 @@ bool ClientScene::connect(const std::string room) {
 }
 
 /**
- * Reconfigures the start button for this scene
- *
- * This is necessary because what the buttons do depends on the state of the
- * networking.
+ * Helper for showing and hiding the lobby
  */
-void ClientScene::configureStartButton() {
-    switch (_status) {
-    case IDLE:
-        _startgame->setDown(false);
-        _startgame->activate();
-        break;
-    case JOIN:
-        _startgame->deactivate();
-    case WAIT:
-        _startgame->deactivate();
-    default:
-        break;
+void ClientScene::showLobby(bool lobby) {
+    _keypad->setVisible(!lobby);
+    _startgame->setDown(lobby);
+    lobby ? _startgame->deactivate() : _startgame->activate();
+    _genderButton->activate();
+    _startgame->setVisible(!lobby);
+    for (int i = 0; i < 5; i++) {
+        _players[i]->setVisible(lobby);
+        _players[i]->deactivate();
+        _players[i]->setBackground(Color4("#88888880"));
+        _nodes[i]->setVisible(lobby);
+    }
+    if (!_network->isConnected()) return;
+    int playerID = _network->getPlayerID() ? *(_network->getPlayerID()) : -1;
+    if (playerID == -1) return;
+    
+    std::shared_ptr<cugl::scene2::TextField> player = _players[playerID];
+    player->activate();
+    player->setBackground(Color4("#ffffffff"));
+    
+}
+
+/**
+ * Plays animations for the players and sets their names
+ */
+void ClientScene::updateLobby(float timestep) {
+    for (int playerID = 0; playerID < 5; playerID++) {
+        NetworkController::Player player = _network->getPlayer(playerID);
+        string key;
+        if (playerID == 0) {
+            key = player.male ? "ss_thief_idle_right" : "ss_thief_idle_right_f";
+        } else {
+            key = player.male ? "ss_cop_idle_right" : "ss_cop_idle_right_f";
+        }
+        if (playerID != *(_network->getPlayerID())) {
+            _players[playerID]->setText(player.username);
+        }
+        _nodes[playerID]->setTexture(_assets->get<Texture>(key));
+    }
+    
+    // Update the frame accordingly
+    _prevTime += timestep;
+    if (_prevTime >= ANIMATION_SPEED) {
+        _prevTime = 0;
+        _aniFrame = (_aniFrame >= 3) ? 0 : _aniFrame + 1;
+        _thiefNode->setFrame(_aniFrame);
+        _cop1Node->setFrame(_aniFrame);
+        _cop2Node->setFrame(_aniFrame);
+        _cop3Node->setFrame(_aniFrame);
+        _cop4Node->setFrame(_aniFrame);
     }
 }
 
+/**
+ * Helper for keypad button callback
+ */
 void ClientScene::pressButton(const std::string& name, bool down, int buttonID) {
     if (down) {
         if (_gameid->getText().length() < MAX_ROOM_ID_LENGTH) {
             _gameid->setText(_gameid->getText() + to_string(buttonID), true);
-            _gameid->setPosition(ROOM_ID_LABEL_HOME);   
+            _gameid->setPosition(ROOM_ID_LABEL_HOME);
         }
     }
 }
+

@@ -4,35 +4,55 @@
             "file": "textures/lobby/background.png"
         },
         "button_join": {
-            "file": "textures/lobby/join.png"
+            "file": "textures/ui/join.png"
         },
         "button_create": {
-            "file": "textures/lobby/create.png"
+            "file": "textures/ui/create.png"
         },
         "settings": {
-            "file": "textures/lobby/settings.png"
+            "file": "textures/ui/settings.png"
         },
         "back": {
-            "file": "textures/lobby/back.png"
-        },
-        "keypad": {
-            "file": "textures/lobby/keypad.png"
+            "file": "textures/ui/back.png"
         },
         "keypad_base": {
             "file": "textures/lobby/keypad_base.png"
         },
-        "keypad_button": {
-            "file": "textures/lobby/keypad_button.png"
-        }
-    },
-    "fonts": {
-        "futura": {
-            "file": "fonts/futur.ttf",
-            "size": 36
+        "one": {
+            "file": "textures/ui/one.png"
         },
-		"futura43": {
-            "file": "fonts/futur.ttf",
-            "size": 36
+        "two": {
+            "file": "textures/ui/two.png"
+        },
+        "three": {
+            "file": "textures/ui/three.png"
+        },
+        "four": {
+            "file": "textures/ui/four.png"
+        },
+        "five": {
+            "file": "textures/ui/five.png"
+        },
+        "six": {
+            "file": "textures/ui/six.png"
+        },
+        "seven": {
+            "file": "textures/ui/seven.png"
+        },
+        "eight": {
+            "file": "textures/ui/eight.png"
+        },
+        "nine": {
+            "file": "textures/ui/nine.png"
+        },
+        "zero": {
+            "file": "textures/ui/zero.png"
+        },
+        "x": {
+            "file": "textures/ui/x.png"
+        },
+        "del": {
+            "file": "textures/ui/del.png"
         }
     },
     "scene2s": {
@@ -47,30 +67,30 @@
                     "type": "Image",
                     "data": {
                         "texture": "background",
-                        "anchor": [0, 0.5],
+                        "anchor": [0.5, 0.5],
                         "scale": [1, 1]
                     },
-					"format": {
-						"type": "anchored"
-					},
+                    "format": {
+                        "type": "anchored"
+                    },
                     "layout": {
                         "x_anchor": "fill",
                         "y_anchor": "fill"
                     },
                     "children": {
                         "keypad": {
-                            "type": "Image",
+                            "type": "Node",
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "scale": [0.5, 0.5]
+                                "scale": 0.5
                             },
-							"layout":{
-								"x_anchor": "left",
-								"y_anchor": "center",
-								"x_offset": 0.15,
-								"y_offset": -0.1
-							},
+                            "layout":{
+                                "x_anchor": "center",
+                                "y_anchor": "middle",
+                                "x_offset": -0.17,
+                                "y_offset": -0.34
+                            },
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -84,7 +104,7 @@
                                     "data": {
                                         "anchor": [0.5, 0.5],
                                         "scale": 1.5,
-                                        "font": "futura",
+                                        "font": "rubik",
                                         "text": "",
                                         "halign": "center",
                                         "valign": "middle",
@@ -98,32 +118,17 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [300, 650],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "one"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "1",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
                                     }
                                 },
@@ -133,34 +138,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [490, 650],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "two"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "2",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "button3": {
@@ -169,34 +158,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [680, 650],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "three"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "3",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 
@@ -206,34 +179,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [300, 480],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "four"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "4",
-                                                "halign": "center",
-                                                "valign": "middle"                                               
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "button5": {
@@ -242,34 +199,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [490, 480],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "five"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "5",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "button6": {
@@ -278,34 +219,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [680, 480],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "six"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "6",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 
@@ -315,34 +240,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [300, 310],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "seven"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "7",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "button8": {
@@ -351,34 +260,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [490, 310],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "eight"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "8",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "button9": {
@@ -387,71 +280,38 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [680, 310],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "nine"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "9",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
-                                
                                 "buttonX": {
                                     "type": "Button",
                                     "data": {
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [300, 140],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "x"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "X",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "button0": {
@@ -460,34 +320,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [490, 140],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "zero"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "0",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "buttonDEL": {
@@ -496,32 +340,17 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [680, 140],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "del"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "DEL",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
                                     }
                                 }
@@ -553,12 +382,12 @@
                                 "anchor": [0.5, 0.5],
                                 "scale": [0.3, 0.3]
                             },
-							"layout": {
-								"x_anchor": "left",
-								"y_anchor": "top",
-								"x_offset": 0.05,
-								"y_offset": -0.2
-							},
+                            "layout": {
+                                "x_anchor": "left",
+                                "y_anchor": "top",
+                                "x_offset": 0.05,
+                                "y_offset": -0.2
+                            },
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -568,139 +397,261 @@
                                 }
                             }
                         },
-                        "name": {
-                            "type"   : "Node",
-                            "format" : {
-                                   "type"         : "Float",
-                                    "orientation" : "horizontal",
-                                    "x_alignment" : "center",
-                                    "y_alignment" : "middle"
-                            },
-                            "data"   : {
-                                "anchor"  : [0.5,0.5],
-                                "size": [600,100]
-                            },
-							"layout":{
-								"x_anchor": "right",
-								"y_anchor": "top",
-								"x_offset": -0.25,
-								"y_offset": -0.2
-							},
-                            "children" : {
-                                "label": {
-                                    "type": "Label",
-                                    "data"   : {
-                                        "anchor"   : [0.5, 0.5],
-                                        "font"     : "futura heavy",
-                                        "text"     : "Name:",
-                                        "padding"  : [20, 20, 40, 20],
-                                        "halign"   : "left",
-                                        "valign"   : "middle"
-                                    },
-                                    "layout" : {
-                                        "priority" : 1
-                                    }
-                                },
-                                "field": {
-                                    "type": "Widget",
-                                    "data"   : {
-                                        "key"     : "textfield",
-                                        "variables" : {
-                                            "size": [300,100],
-                                            "text": "",
-                                            "halign": "center",
-                                            "framecolor": "#000000"
-                                        }
-                                    },
-                                    "layout" : {
-                                        "priority" : 2
-                                    }
-                                }
-                            },
-                            "layout" : {
-                                "priority" : 1,
-                                "padding"  : [0,50,0,0]
-                            }
-                        },
                         "instructions": {
                             "type": "Label",
                             "data": {
                                 "anchor": [0.5, 0.5],
                                 "scale": 1.3,
-                                "font": "futura",
+                                "font": "rubik",
                                 "text": "Enter a room code",
                                 "halign": "center",
-                                "valign": "middle"
+                                "valign": "middle",
+                                "background": "#88888880"
                             },
-							"layout":{
-								"x_anchor": "right",
-								"y_anchor": "top",
-								"x_offset": -0.25,
-								"y_offset": -0.3
-							}
+                            "layout":{
+                                "x_anchor": "center",
+                                "y_anchor": "top",
+                                "x_offset": 0,
+                                "y_offset": -0.1
+                            }
                         },
-                        "title1": {
-                            "type": "Label",
-                            "data": {
-                                "anchor": [0.5, 0.5],
-                                "scale": 1.3,
-                                "font": "futura",
-                                "text": "JOIN YOUR",
-                                "halign": "center",
-                                "valign": "middle"
+                        "thiefField": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
                             },
-							"layout":{
-								"x_anchor": "right",
-								"y_anchor": "top",
-								"x_offset": -0.25,
-								"y_offset": -0.5
-							}
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : -0.4,
+                                "y_offset" : 0.2
+                            }
                         },
-                        "title2": {
-                            "type": "Label",
-                            "data": {
-                                "anchor": [0.5, 0.5],
-                                "scale": 1.3,
-                                "font": "futura",
-                                "text": "FRIEND'S GAME",
-                                "halign": "center",
-                                "valign": "middle"
+                        "cop1Field": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
                             },
-							"layout":{
-								"x_anchor": "right",
-								"y_anchor": "top",
-								"x_offset": -0.25,
-								"y_offset": -0.6
-							}
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : -0.2,
+                                "y_offset" : 0.2
+                            }
+                        },
+                        "cop2Field": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
+                            },
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0,
+                                "y_offset" : 0.2
+                            }
+                        },
+                        "cop3Field": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
+                            },
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0.2,
+                                "y_offset" : 0.2
+                            }
+                        },
+                        "cop4Field": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
+                            },
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0.4,
+                                "y_offset" : 0.2
+                            }
+                        },
+                        "thief" : {
+                            "type" : "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5]
+                            },
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : -0.4,
+                                "y_offset" : -0.05
+                            },
+                            "children": {
+                                "up": {
+                                    "type"    : "Sprite",
+                                    "data"    : {
+                                        "scale"     : 0.5,
+                                        "texture"   : "ss_thief_idle_right",
+                                        "span"      : 4,
+                                        "cols"      : 4,
+                                        "frame"     : 0
+                                    }
+                                }
+                            }
+                        },
+                        "cop1" : {
+                            "type"    : "Sprite",
+                            "data"    : {
+                                "scale"     : 0.5,
+                                "anchor"    : [0.5, 0.5],
+                                "texture"   : "ss_cop_idle_left",
+                                "span"      : 4,
+                                "cols"      : 4,
+                                "frame"     : 0
+                            },
+                                "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : -0.2,
+                                "y_offset" : -0.05
+                            }
+                        },
+                        "cop2" : {
+                            "type"    : "Sprite",
+                            "data"    : {
+                                "scale"     : 0.5,
+                                "anchor"    : [0.5, 0.5],
+                                "texture"   : "ss_cop_idle_left",
+                                "span"      : 4,
+                                "cols"      : 4,
+                                "frame"     : 0
+                            },
+                                "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0,
+                                "y_offset" : -0.05
+                            }
+                        },
+                        "cop3" : {
+                            "type"    : "Sprite",
+                            "data"    : {
+                                "scale"     : 0.5,
+                                "anchor"    : [0.5, 0.5],
+                                "texture"   : "ss_cop_idle_left",
+                                "span"      : 4,
+                                "cols"      : 4,
+                                "frame"     : 0
+                            },
+                                "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0.2,
+                                "y_offset" : -0.05
+                            }
+                        },
+                        "cop4" : {
+                            "type"    : "Sprite",
+                            "data"    : {
+                                "scale"     : 0.5,
+                                "anchor"    : [0.5, 0.5],
+                                "texture"   : "ss_cop_idle_left",
+                                "span"      : 4,
+                                "cols"      : 4,
+                                "frame"     : 0
+                            },
+                                "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0.4,
+                                "y_offset" : -0.05
+                            }
+                        },
+                        "gender": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": [0.5, 0.5]
+                            },
+                            "layout" : {
+                                "x_anchor": "center",
+                                "y_anchor": "bottom",
+                                "y_offset": 0.15,
+                                "x_offset": 0.3
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "ui_thief_head"
+                                    }
+                                }
+                            }
                         },
                         "join": {
                             "type": "Button",
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "scale": [1.6, 1.6]
+                                "scale": [1, 1]
                             },
-							"layout":{
-								"x_anchor": "center",
-								"y_anchor": "bottom",
-								"x_offset": 0.25,
-								"y_offset": 0.2
-							},
+                            "layout":{
+                                "x_anchor": "center",
+                                "y_anchor": "bottom",
+                                "x_offset": 0,
+                                "y_offset": 0.1
+                            },
                             "children": {
                                 "up": {
                                     "type": "Image",
                                     "data": {
                                         "texture": "button_join"
-
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }                        
+            }
         },
-		"join43": {
+        "join43": {
             "type": "Node",
             "comment": "This is the root node of the scene for the lab",
             "format": {
@@ -714,9 +665,9 @@
                         "anchor": [0, 0.5],
                         "scale": [1, 1]
                     },
-					"format": {
-						"type": "anchored"
-					},
+                    "format": {
+                        "type": "anchored"
+                    },
                     "layout": {
                         "x_anchor": "fill",
                         "y_anchor": "fill"
@@ -729,12 +680,12 @@
                                 "anchor": [0.5, 0.5],
                                 "scale": [0.5, 0.5]
                             },
-							"layout":{
-								"x_anchor": "left",
-								"y_anchor": "center",
-								"x_offset": 0.05,
-								"y_offset": -0.1
-							},
+                            "layout":{
+                                "x_anchor": "left",
+                                "y_anchor": "center",
+                                "x_offset": 0.05,
+                                "y_offset": -0.1
+                            },
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -748,7 +699,7 @@
                                     "data": {
                                         "anchor": [0.5, 0.5],
                                         "scale": 1.5,
-                                        "font": "futura",
+                                        "font": "rubik",
                                         "text": "",
                                         "halign": "center",
                                         "valign": "middle",
@@ -762,32 +713,17 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [300, 650],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "one"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "1",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
                                     }
                                 },
@@ -797,34 +733,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [490, 650],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "two"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "2",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "button3": {
@@ -833,34 +753,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [680, 650],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "three"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "3",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 
@@ -870,34 +774,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [300, 480],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "four"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "4",
-                                                "halign": "center",
-                                                "valign": "middle"                                               
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "button5": {
@@ -906,34 +794,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [490, 480],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "five"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "5",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "button6": {
@@ -942,34 +814,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [680, 480],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "six"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "6",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 
@@ -979,34 +835,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [300, 310],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "seven"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "7",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "button8": {
@@ -1015,34 +855,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [490, 310],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "eight"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "8",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "button9": {
@@ -1051,71 +875,38 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [680, 310],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "nine"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "9",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
-                                
                                 "buttonX": {
                                     "type": "Button",
                                     "data": {
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [300, 140],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "x"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "X",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "button0": {
@@ -1124,34 +915,18 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [490, 140],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "zero"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "0",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
-
                                     }
                                 },
                                 "buttonDEL": {
@@ -1160,32 +935,17 @@
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
                                         "position": [680, 140],
-                                        "scale": [1, 1]
+                                        "scale": [3, 3]
                                     },
-									"format" : {
-										"type" : "Anchored"
-									},
+                                    "format" : {
+                                        "type" : "Anchored"
+                                    },
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
-                                                "texture": "keypad_button"
+                                                "texture": "del"
                                             }
-                                        },
-                                        "label": {
-                                            "type": "Label",
-                                            "data": {
-                                                "anchor": [0.5, 0.5],
-                                                "scale": 1.3,
-                                                "font": "futura",
-                                                "text": "DEL",
-                                                "halign": "center",
-                                                "valign": "middle"
-                                            },
-											"layout" :{
-												"x_anchor": "center",
-												"y_anchor": "middle"
-											}
                                         }
                                     }
                                 }
@@ -1217,12 +977,12 @@
                                 "anchor": [0.5, 0.5],
                                 "scale": 0.3
                             },
-							"layout": {
-								"x_anchor": "left",
-								"y_anchor": "top",
-								"x_offset": 0.05,
-								"y_offset": -0.2
-							},
+                            "layout": {
+                                "x_anchor": "left",
+                                "y_anchor": "top",
+                                "x_offset": 0.05,
+                                "y_offset": -0.2
+                            },
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -1232,111 +992,233 @@
                                 }
                             }
                         },
-                        "name": {
-                            "type"   : "Node",
-                            "format" : {
-                                   "type"         : "Float",
-                                    "orientation" : "horizontal",
-                                    "x_alignment" : "center",
-                                    "y_alignment" : "middle"
-                            },
-                            "data"   : {
-                                "anchor"  : [0.5,0.5],
-                                "size": [600,100],
-								"scale": 0.8
-                            },
-							"layout":{
-								"x_anchor": "right",
-								"y_anchor": "top",
-								"x_offset": -0.25,
-								"y_offset": -0.2
-							},
-                            "children" : {
-                                "label": {
-                                    "type": "Label",
-                                    "data"   : {
-                                        "anchor"   : [0.5, 0.5],
-                                        "font"     : "futura heavy",
-                                        "text"     : "Name:",
-                                        "padding"  : [20, 20, 40, 20],
-                                        "halign"   : "left",
-                                        "valign"   : "middle"
-                                    },
-                                    "layout" : {
-                                        "priority" : 1
-                                    }
-                                },
-                                "field": {
-                                    "type": "Widget",
-                                    "data"   : {
-                                        "key"     : "textfield",
-                                        "variables" : {
-                                            "size": [300,100],
-                                            "text": "",
-                                            "halign": "center",
-                                            "framecolor": "#000000"
-                                        }
-                                    },
-                                    "layout" : {
-                                        "priority" : 2
-                                    }
-                                }
-                            },
-                            "layout" : {
-                                "priority" : 1,
-                                "padding"  : [0,50,0,0]
-                            }
-                        },
                         "instructions": {
                             "type": "Label",
                             "data": {
                                 "anchor": [0.5, 0.5],
                                 "scale": 1.0,
-                                "font": "futura",
+                                "font": "rubik",
                                 "text": "Enter a room code",
                                 "halign": "center",
-                                "valign": "middle"
+                                "valign": "middle",
+                                "background": "#88888880"
                             },
-							"layout":{
-								"x_anchor": "right",
-								"y_anchor": "top",
-								"x_offset": -0.25,
-								"y_offset": -0.3
-							}
+                            "layout":{
+                                "x_anchor": "right",
+                                "y_anchor": "top",
+                                "x_offset": -0.25,
+                                "y_offset": -0.3
+                            }
                         },
-                        "title1": {
-                            "type": "Label",
-                            "data": {
-                                "anchor": [0.5, 0.5],
-                                "scale": 1.0,
-                                "font": "futura",
-                                "text": "JOIN YOUR",
-                                "halign": "center",
-                                "valign": "middle"
+                        "thiefField": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
                             },
-							"layout":{
-								"x_anchor": "right",
-								"y_anchor": "top",
-								"x_offset": -0.25,
-								"y_offset": -0.5
-							}
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : -0.4,
+                                "y_offset" : 0.2
+                            }
                         },
-                        "title2": {
-                            "type": "Label",
-                            "data": {
-                                "anchor": [0.5, 0.5],
-                                "scale": 1.0,
-                                "font": "futura",
-                                "text": "FRIEND'S GAME",
-                                "halign": "center",
-                                "valign": "middle"
+                        "cop1Field": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
                             },
-							"layout":{
-								"x_anchor": "right",
-								"y_anchor": "top",
-								"x_offset": -0.25,
-								"y_offset": -0.6
-							}
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : -0.2,
+                                "y_offset" : 0.2
+                            }
+                        },
+                        "cop2Field": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
+                            },
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0,
+                                "y_offset" : 0.2
+                            }
+                        },
+                        "cop3Field": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
+                            },
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0.2,
+                                "y_offset" : 0.2
+                            }
+                        },
+                        "cop4Field": {
+                            "type": "Widget",
+                            "data"   : {
+                                "key"     : "textfield",
+                                "variables" : {
+                                    "size": [190,75],
+                                    "text": "",
+                                    "halign": "center",
+                                    "framecolor": "#00000000",
+                                    "background": "#88888880"
+                                }
+                            },
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0.4,
+                                "y_offset" : 0.2
+                            }
+                        },
+                        "thief" : {
+                            "type" : "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5]
+                            },
+                            "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : -0.4,
+                                "y_offset" : -0.05
+                            },
+                            "children": {
+                                "up": {
+                                    "type"    : "Sprite",
+                                    "data"    : {
+                                        "scale"     : 0.5,
+                                        "texture"   : "ss_thief_idle_right",
+                                        "span"      : 4,
+                                        "cols"      : 4,
+                                        "frame"     : 0
+                                    }
+                                }
+                            }
+                        },
+                        "cop1" : {
+                            "type"    : "Sprite",
+                            "data"    : {
+                                "scale"     : 0.5,
+                                "anchor"    : [0.5, 0.5],
+                                "texture"   : "ss_cop_idle_left",
+                                "span"      : 4,
+                                "cols"      : 4,
+                                "frame"     : 0
+                            },
+                                "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : -0.2,
+                                "y_offset" : -0.05
+                            }
+                        },
+                        "cop2" : {
+                            "type"    : "Sprite",
+                            "data"    : {
+                                "scale"     : 0.5,
+                                "anchor"    : [0.5, 0.5],
+                                "texture"   : "ss_cop_idle_left",
+                                "span"      : 4,
+                                "cols"      : 4,
+                                "frame"     : 0
+                            },
+                                "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0,
+                                "y_offset" : -0.05
+                            }
+                        },
+                        "cop3" : {
+                            "type"    : "Sprite",
+                            "data"    : {
+                                "scale"     : 0.5,
+                                "anchor"    : [0.5, 0.5],
+                                "texture"   : "ss_cop_idle_left",
+                                "span"      : 4,
+                                "cols"      : 4,
+                                "frame"     : 0
+                            },
+                                "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0.2,
+                                "y_offset" : -0.05
+                            }
+                        },
+                        "cop4" : {
+                            "type"    : "Sprite",
+                            "data"    : {
+                                "scale"     : 0.5,
+                                "anchor"    : [0.5, 0.5],
+                                "texture"   : "ss_cop_idle_left",
+                                "span"      : 4,
+                                "cols"      : 4,
+                                "frame"     : 0
+                            },
+                                "layout" : {
+                                "x_anchor" : "center",
+                                "y_anchor" : "middle",
+                                "x_offset" : 0.4,
+                                "y_offset" : -0.05
+                            }
+                        },
+                        "gender": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": [0.5, 0.5]
+                            },
+                            "layout" : {
+                                "x_anchor": "center",
+                                "y_anchor": "bottom",
+                                "y_offset": 0.15,
+                                "x_offset": 0.3
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "ui_thief_head"
+                                    }
+                                }
+                            }
                         },
                         "join": {
                             "type": "Button",
@@ -1345,12 +1227,12 @@
                                 "anchor": [0.5, 0.5],
                                 "scale": 1.4
                             },
-							"layout":{
-								"x_anchor": "center",
-								"y_anchor": "bottom",
-								"x_offset": 0.25,
-								"y_offset": 0.2
-							},
+                            "layout":{
+                                "x_anchor": "center",
+                                "y_anchor": "bottom",
+                                "x_offset": 0.25,
+                                "y_offset": 0.2
+                            },
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -1363,7 +1245,7 @@
                         }
                     }
                 }
-            }                        
+            }
         }
     }
 }

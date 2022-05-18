@@ -61,6 +61,10 @@ protected:
 
     /** The keypad buttons */
     unordered_set<std::shared_ptr<cugl::scene2::Button>> _keypadButtons;
+    /** The scene node containing the keypad */
+    std::shared_ptr<cugl::scene2::SceneNode> _keypad;
+    /** The menu button for changing a player's gender */
+    std::shared_ptr<cugl::scene2::Button> _genderButton;
     /** The menu button for starting a game */
     std::shared_ptr<cugl::scene2::Button> _startgame;
     /** The back button for the menu scene */
@@ -68,9 +72,38 @@ protected:
     /** The game id label (for updating) */
     std::shared_ptr<cugl::scene2::Label> _gameid;
     /** The players label (for updating) */
-    std::shared_ptr<cugl::scene2::Label> _player;
-    /** The name label (for updating) */
-    std::shared_ptr<cugl::scene2::TextField> _name;
+    std::shared_ptr<cugl::scene2::Label> _info;
+    
+    /** A mapping from player number to character node */
+    std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _nodes;
+    /** The sprite of the thief */
+    std::shared_ptr<cugl::scene2::SpriteNode> _thiefNode;
+    /** The sprite of cop 1 */
+    std::shared_ptr<cugl::scene2::SpriteNode> _cop1Node;
+    /** The sprite of cop 2 */
+    std::shared_ptr<cugl::scene2::SpriteNode> _cop2Node;
+    /** The sprite of cop 3 */
+    std::shared_ptr<cugl::scene2::SpriteNode> _cop3Node;
+    /** The sprite of cop 4 */
+    std::shared_ptr<cugl::scene2::SpriteNode> _cop4Node;
+    
+    /** A mapping from player number  to character node */
+    std::vector<std::shared_ptr<cugl::scene2::TextField>> _players;
+    /** The player 1 label (for updating) */
+    std::shared_ptr<cugl::scene2::TextField> _player1;
+    /** The player 2 label (for updating) */
+    std::shared_ptr<cugl::scene2::TextField> _player2;
+    /** The player 3 label (for updating) */
+    std::shared_ptr<cugl::scene2::TextField> _player3;
+    /** The player 4 label (for updating) */
+    std::shared_ptr<cugl::scene2::TextField> _player4;
+    /** The player 5 label (for updating) */
+    std::shared_ptr<cugl::scene2::TextField> _player5;
+    
+    /** The current animation frame */
+    int _aniFrame;
+    /** The previous timestep. */
+    float _prevTime;
     
     /** The current status */
     Status _status;
@@ -160,27 +193,6 @@ public:
 
 private:
 //  MARK: - Helpers
-
-    /**
-     * Updates the text in the given button.
-     *
-     * Techincally a button does not contain text. A button is simply a scene graph
-     * node with one child for the up state and another for the down state. So to
-     * change the text in one of our buttons, we have to descend the scene graph.
-     * This method simplifies this process for you.
-     *
-     * @param button    The button to modify
-     * @param text      The new text value
-     */
-    void updateText(const std::shared_ptr<cugl::scene2::Button>& button, const std::string text);
-
-    /**
-     * Reconfigures the start button for this scene
-     *
-     * This is necessary because what the buttons do depends on the state of the
-     * networking.
-     */
-    void configureStartButton();
     
     /**
      * Connects to the game server as specified in the assets file
@@ -194,6 +206,16 @@ private:
      * @return true if the connection was successful
      */
     bool connect(const std::string room);
+    
+    /**
+     * Helper for showing and hiding the lobby
+     */
+    void showLobby(bool lobby);
+    
+    /**
+     * Plays animations for the players and sets their names
+     */
+    void updateLobby(float timestep);
 
 //  MARK: - Callbacks
     

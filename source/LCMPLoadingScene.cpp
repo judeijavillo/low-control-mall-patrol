@@ -2,15 +2,6 @@
 //  LCMPLoadingScene.cpp
 //  Low Control Mall Patrol
 //
-//  This module provides a very barebones loading screen.  Most of the time you
-//  will not need a loading screen, because the assets will load so fast.  But
-//  just in case, this is a simple example you can use in your games.
-//
-//  We know from 3152 that you all like to customize this screen.  Therefore,
-//  we have kept it as simple as possible so that it is easy to modify. In
-//  fact, this loading screen uses the new modular JSON format for defining
-//  scenes.  See the file "loading.json" for how to change this scene.
-//
 //  Originator: Walker White, Aidan Hobler
 //  Author: Kevin Games
 //  Version: 2/18/22
@@ -25,12 +16,6 @@ using namespace cugl;
 
 /** This is the ideal size of the logo */
 #define SCENE_SIZE  1024
-
-/** The keys for the loading animation */
-#define LOADING           "load_animation"
-
-/** Number of frames in animation */
-#define ANIMATION_NUM_FRAMES    52
 
 /** Time between animation frames */
 #define ANIMATION_SPEED         0.07f
@@ -74,17 +59,27 @@ bool LoadingScene::init(const std::shared_ptr<AssetManager>& assets,
     _audio->playSound(_assets, LOADING_MUSIC, false, -1);
     
     // Save the SceneNodes that we'll need to access later
-    _brand = assets->get<scene2::SceneNode>("load_name");
-    _button = std::dynamic_pointer_cast<scene2::Button>(assets->get<scene2::SceneNode>("load_play"));
+    _button = std::dynamic_pointer_cast<scene2::Button>(assets->get<scene2::SceneNode>("load_background_play"));
     _button->addListener([=](const std::string& name, bool down) {
         this->_active = down;
         if (down) _audio->playSound(_assets, CLICK_SFX, true, 0);
     });
 
     // Loading screen animation initalization
-    _aniSpriteNode = std::dynamic_pointer_cast<scene2::SpriteNode>(assets->get<scene2::SceneNode>(LOADING));
     _aniFrame = 0;
     _prevTime = 0;
+    _background = std::dynamic_pointer_cast<scene2::PolygonNode>(assets->get<scene2::SceneNode>("load_background"));
+    _copNode = std::dynamic_pointer_cast<scene2::SpriteNode>(assets->get<scene2::SceneNode>("load_background_cop"));
+    _thiefNode = std::dynamic_pointer_cast<scene2::SpriteNode>(assets->get<scene2::SceneNode>("load_background_thief"));
+    _tackleNode = std::dynamic_pointer_cast<scene2::PolygonNode>(assets->get<scene2::SceneNode>("load_background_tackle"));
+    _landNode = std::dynamic_pointer_cast<scene2::PolygonNode>(assets->get<scene2::SceneNode>("load_background_land"));
+    _thiefNode->setPositionX(SCENE_WIDTH * 0.75);
+    _copNode->setScale(0.5);
+    _thiefNode->setScale(0.5);
+    _tackleNode->setVisible(false);
+    _landNode->setVisible(false);
+    _tackleNode->setScale(0.5);
+    _landNode->setScale(0.5);
     
     // Set the background color and add the LoadingScene to the screen
     Application::get()->setClearColor(Color4(192,192,192,255));
@@ -101,7 +96,6 @@ void LoadingScene::dispose() {
         _button->deactivate();
     }
     _button = nullptr;
-    _brand = nullptr;
     _assets = nullptr;
     _progress = 0.0f;
 }
@@ -121,7 +115,6 @@ void LoadingScene::update(float timestep) {
         _progress = _assets->progress();
         if (_progress >= 1) {
             _progress = 1.0f;
-            _brand->setVisible(false);
             _button->setVisible(true);
             _button->activate();
         }
@@ -143,11 +136,30 @@ bool LoadingScene::isPending() const {
  */
 void LoadingScene::playAnimation(float timestep) {
     _prevTime += timestep;
-    int f = (int) (_progress * ANIMATION_NUM_FRAMES);
+    int copPos = (int) (_progress * 3*SCENE_WIDTH/4);
+    int thiefPos = (int) (_progress * SCENE_WIDTH/4 + 3*SCENE_WIDTH/4);
     
-    if (_prevTime >= ANIMATION_SPEED && f > _aniFrame) {
+    if (copPos >= 3*SCENE_WIDTH/4) {
+        _tackleNode->setVisible(false);
+        _landNode->setVisible(true);
+        _landNode->setPositionX(copPos);
+    }
+    else if (copPos >= SCENE_WIDTH/2) {
+        _copNode->setVisible(false);
+        _tackleNode->setVisible(true);
+        _tackleNode->setPositionX(copPos);
+    }
+    
+    if (_prevTime >= ANIMATION_SPEED) {
         _prevTime = 0;
-        _aniFrame++;
-        _aniSpriteNode->setFrame(_aniFrame);
+        
+        _aniFrame = (_aniFrame >= 7) ? 0 : _aniFrame + 1;
+        _copNode->setFrame(_aniFrame);
+        _thiefNode->setFrame(_aniFrame);
+    }
+    
+    if (copPos > _copNode->getPositionX()) {
+        _copNode->setPositionX(copPos);
+        _thiefNode->setPositionX(thiefPos);
     }
 }
