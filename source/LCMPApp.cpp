@@ -339,8 +339,8 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
     _levelselect.update(timestep);
     switch (_levelselect.getChoice()) {
     case LevelSelectScene::Choice::ONE:
-        _levelKey = LEVEL_DONUT_KEY;
-        _levelselect.setActive(false);
+        _levelKey = LEVEL_PROPS_KEY;
+        _levelselect.setActive(false); 
         _game.setActive(true);
         _scene = State::GAME;
         _network->sendStartGame(_levelKey);
@@ -364,7 +364,7 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
         _game.start(true, _customize.skinKey, _levelKey);
         break;
     case LevelSelectScene::Choice::FOUR:
-        _levelKey = LEVEL_PROPS_KEY;
+        _levelKey = LEVEL_DONUT_KEY;
         _levelselect.setActive(false);
         _levelselect.prevPage();
         _game.setActive(true);
