@@ -77,13 +77,24 @@ std::unordered_map<int, bool> NetworkController::getMales() {
 }
 
 /**
+ * Returns the mapping of playerID to skin key
+ */
+std::unordered_map<int, string> NetworkController::getSkins() {
+    unordered_map<int, std::string> result;
+    for (int playerID = 0; playerID < 5; playerID++) {
+        result[playerID] = _players[playerID].skinKey;
+    }
+    return result;
+}
+
+/**
  * Establishes a host connection with the server
  */
 bool NetworkController::connect() {
     _connection = NetworkConnection::alloc(_config);
     
     for (int playerID = 0; playerID < 5; playerID++) {
-        _players[playerID] = {true, playerID, -2, 0, "None"};
+        _players[playerID] = {true, "", playerID, -2, 0, "None"};
     }
     _players[0].username = "Player 1";
     
@@ -98,7 +109,7 @@ bool NetworkController::connect(const std::string room) {
     _connection = NetworkConnection::alloc(_config, room);
     
     for (int playerID = 0; playerID < 5; playerID++) {
-        _players[playerID] = {true, playerID, -2, 0, "None"};
+        _players[playerID] = {true, "", playerID, -2, 0, "None"};
     }
     
     update(0);

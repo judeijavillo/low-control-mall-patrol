@@ -24,7 +24,9 @@ using namespace cugl;
  */
 bool PlayerModel::init(int playerNumber, const Vec2 pos, const Size size, float scale,
                        const std::shared_ptr<cugl::scene2::SceneNode>& node,
-                       std::shared_ptr<cugl::scene2::ActionManager>& actions) {
+                       const std::shared_ptr<cugl::AssetManager>& assets,
+                       std::shared_ptr<cugl::scene2::ActionManager>& actions,
+                       std::string skinKey, bool male) {
     // Call the parent's initializer
     physics2::CapsuleObstacle::init(pos, size);
     
@@ -60,6 +62,13 @@ bool PlayerModel::init(int playerNumber, const Vec2 pos, const Size size, float 
     _dropshadow->setColor(Color4(Vec4(0,0,0,0.25f)));
     _node->addChild(_dropshadow);
     
+    _skinNode = scene2::PolygonNode::allocWithTexture(assets->get<Texture>(skinKey));
+    _skinNode->setScale(CHAR_SCALE);
+    _skinNode->setAnchor(Vec2(0, 0.5));
+    _skinNodeLeft = scene2::PolygonNode::allocWithTexture(assets->get<Texture>(skinKey + "_left"));
+    _skinNodeLeft->setScale(CHAR_SCALE);
+    _skinNodeLeft->setAnchor(Vec2(0, 0.5));
+        
     // Create animations
     for (int i = 0; i < _animFrames.size(); i++) {
         std::vector<int> vec;
@@ -140,7 +149,6 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
                 setAccelerationMultiplier(Vec2(std::get<1>(elem)->x, std::get<1>(elem)->y));
                 setMaxSpeedMultiplier(max(std::get<1>(elem)->x, std::get<1>(elem)->y));
                 break;
-
             case TrapModel::TrapType::Directional_VelMod:
                 playerVel = Vec2(b2velocity.x, b2velocity.y);
                 addedVel = -0.5 * abs(playerVel.dot(Vec2(std::get<1>(elem)->x, std::get<1>(elem)->y))) * Vec2(std::get<1>(elem)->x, std::get<1>(elem)->y);
@@ -152,7 +160,6 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
             case TrapModel::TrapType::Moving_Platform:
                 //_realbody->ApplyForceToCenter(b2Vec2(std::get<1>(elem)->x * getAcceleration().x, std::get<1>(elem)->y * getAcceleration().y), true);
                 _realbody->SetLinearVelocity(b2Vec2(b2velocity.x + std::get<1>(elem)->x, b2velocity.y + std::get<1>(elem)->y));
-                //CULog("escalator!%d:%d", std::get<1>(elem)->x, std::get<1>(elem)->y);
                 break;
 
             case TrapModel::TrapType::Slippy:
@@ -164,7 +171,6 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
                 break;
             }
         }
-
     }
 
     /**
@@ -310,6 +316,14 @@ void PlayerModel::update(float timestep) {
 
 /** Returns player animation key */
 int PlayerModel::findDirection(Vec2 movement) {
+    if (movement.x > 0) _moveRight = true;
+    else _moveRight = false;
+    
+    // Set skin direction
+    _skinNode->setVisible(_moveRight);
+    _skinNodeLeft->setVisible(! _moveRight);
+    
+    // Set animation direction
     if (abs(movement.x) >= abs(movement.y)) {
         return (movement.x > 0 ? RIGHT_ANIM_KEY : LEFT_ANIM_KEY);
     } else {
@@ -325,7 +339,9 @@ void PlayerModel::playAnimation() {
     int key = findDirection(_movement);
     
     // If there is no movement, use the still animation
-    if (_movement.length() == 0) key = STILL_ANIM_KEY;
+    if (_movement.length() == 0) {
+        key = _moveRight ? STILL_RIGHT_ANIM_KEY : STILL_LEFT_ANIM_KEY;
+    }
     
     // Play desired animation and pause others
     for (int i = 0; i < _spriteNodes.size(); i++) {
@@ -353,5 +369,10 @@ void PlayerModel::setSpriteNodes(float width) {
         _spriteNodes[i]->setVisible(false);
         _node->addChild(_spriteNodes[i]);
     }
-    _spriteNodes[STILL_ANIM_KEY]->setVisible(true);
+    _spriteNodes[STILL_RIGHT_ANIM_KEY]->setVisible(true);
+    _skinNode->setPositionX(_skinNode->getPositionX() -_skinNode->getWidth()/8);
+    _node->addChild(_skinNode);
+    _skinNodeLeft->setPositionX(_skinNodeLeft->getPositionX() -_skinNodeLeft->getWidth()/8);
+    _skinNodeLeft->setVisible(false);
+    _node->addChild(_skinNodeLeft);
 }

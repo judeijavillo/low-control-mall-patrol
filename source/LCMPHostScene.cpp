@@ -86,6 +86,7 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _players.push_back(_player5);
     
     // The sprite nodes showing the characters
+    _thiefButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_backdrop_thief"));
     _thiefNode = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("host_backdrop_thief_up"));
     _cop1Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("host_backdrop_cop1"));
     _cop2Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("host_backdrop_cop2"));
@@ -102,8 +103,7 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     for (int i = 0; i < _skinKeys.size(); i++) {
         _skins.push_back(std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("host_backdrop_" + _skinKeys[i])));
         _skins[i]->setVisible(false);
-        _skins[i]->setPosition(_thiefNode->getPosition() + Vec2(0, _thiefNode->getHeight()/2));
-        _skins[i]->setAnchor(0.5, 0.5);
+        _skins[i]->setPosition(_thiefNode->getPosition() + Vec2(-_thiefNode->getWidth()/8, _thiefNode->getHeight()));
     }
     // No skin selected
     skinChoice = -1;
@@ -127,10 +127,14 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         }
     });
     
+    _thiefButton->addListener([this](const std::string& name, bool down) {
+        if (down) {
+            updateSkins();
+        }
+    });
+
     _genderButton->addListener([this](const std::string& name, bool down) {
         if (down) {
-            _audio->stopSfx(CLICK_SFX);
-            _audio->playSound(_assets, CLICK_SFX, true, 0);
             if (_network->isConnected()) _network->toggleGender();
         }
     });
@@ -168,7 +172,6 @@ void HostScene::dispose() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void HostScene::update(float timestep) {
-    updateSkins(timestep);
     updateLobby(timestep);
     if (_network->isConnected() && _status != START && _status != ABORT) {
         _network->update(timestep);
@@ -211,6 +214,7 @@ void HostScene::setActive(bool value) {
             _startgame->activate();
             _backout->activate();
             _genderButton->activate();
+            _thiefButton->activate();
             connect();
         } else {
             _startgame->deactivate();
@@ -221,10 +225,12 @@ void HostScene::setActive(bool value) {
             _player4->deactivate();
             _player5->deactivate();
             _genderButton->deactivate();
+            _thiefButton->deactivate();
             // If any were pressed, reset them
             _startgame->setDown(false);
             _backout->setDown(false);
             _genderButton->setDown(false);
+            _thiefButton->setDown(false);
         }
     }
 }
@@ -256,7 +262,8 @@ void HostScene::updateLobby(float timestep) {
         if (playerID == 0) {
             key = player.male ? "ss_thief_idle_right" : "ss_thief_idle_right_f";
         } else {
-            key = player.male ? "ss_cop_idle_right" : "ss_cop_idle_right_f";
+            key = player.male ? "ss_cop_idle_left" : "ss_cop_idle_left_f";
+            _players[playerID]->setText(player.username);
         }
         if (!_players[playerID]->isActive()) _players[playerID]->setText(player.username);
         _nodes[playerID]->setTexture(_assets->get<Texture>(key));
@@ -278,11 +285,18 @@ void HostScene::updateLobby(float timestep) {
 /**
  * Updates the player customizations
  */
-void HostScene::updateSkins(float timestep) {
-    if (skinChoice == -1) {
-        
+void HostScene::updateSkins() {
+    if (skinChoice == _skinKeys.size()-1) {
+        _skins[skinChoice]->setVisible(false);
+        skinChoice = -1;
+        if (_network->isConnected()) _network->setSkin("");
     }
-    else if (skinChoice >= _skinKeys.size()) {
-        
+    else {
+        if (skinChoice != -1) {
+            _skins[skinChoice]->setVisible(false);
+        }
+        skinChoice++;
+        _skins[skinChoice]->setVisible(true);
+        if (_network->isConnected()) _network->setSkin(_skinKeys[skinChoice]);
     }
 }

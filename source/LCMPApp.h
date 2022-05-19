@@ -17,7 +17,7 @@
 #include "LCMPHostScene.h"
 #include "LCMPClientScene.h"
 #include "LCMPFindScene.h"
-#include "LCMPCustomizeScene.h"
+//#include "LCMPCustomizeScene.h"
 #include "LCMPLevelSelectScene.h"
 #include "LCMPGameScene.h"
 #include "LCMPVictoryScene.h"

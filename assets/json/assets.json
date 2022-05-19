@@ -243,6 +243,12 @@
         "cop_jump_right": {
             "file": "textures/characters/lcmp_cop_jump_right.png"
         },
+        "cop_jump_left_f": {
+            "file": "textures/characters/lcmp_cop_jump_left_f.png"
+        },
+        "cop_jump_right_f": {
+            "file": "textures/characters/lcmp_cop_jump_right_f.png"
+        },
         "cop_land_down": {
             "file": "textures/characters/lcmp_cop_jump_land_down.png"
         },
@@ -254,6 +260,12 @@
         },
         "cop_land_right": {
             "file": "textures/characters/lcmp_cop_jump_land_right.png"
+        },
+        "cop_land_left_f": {
+            "file": "textures/characters/lcmp_cop_jump_land_left_f.png"
+        },
+        "cop_land_right_f": {
+            "file": "textures/characters/lcmp_cop_jump_land_right_f.png"
         },
         "mop_anim_down": {
             "file": "textures/environment/animations/mop_anim_down.png"
@@ -324,6 +336,12 @@
         "ss_cop_down": {
             "file": "textures/characters/ss_cop_down.png"
         },
+        "ss_cop_up_f": {
+            "file": "textures/characters/ss_cop_up_f.png"
+        },
+        "ss_cop_down_f": {
+            "file": "textures/characters/ss_cop_down_f.png"
+        },
         "ss_cop_right": {
             "file": "textures/characters/ss_cop_right.png"
         },
@@ -341,6 +359,12 @@
         },
         "ss_thief_down": {
             "file": "textures/characters/ss_thief_down.png"
+        },
+        "ss_thief_up_f": {
+            "file": "textures/characters/ss_thief_up_f.png"
+        },
+        "ss_thief_down_f": {
+            "file": "textures/characters/ss_thief_down_f.png"
         },
         "ss_thief_right": {
             "file": "textures/characters/ss_thief_right.png"

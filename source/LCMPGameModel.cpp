@@ -32,6 +32,7 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
                      const std::shared_ptr<cugl::AssetManager>& assets,
                      float scale, const std::string& file,
                      std::shared_ptr<cugl::scene2::ActionManager>& actions,
+                     std::unordered_map<int, std::string> skinKeys,
                      std::unordered_map<int, bool> males,
                      int numPlayers) {
     
@@ -120,10 +121,10 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     initBackdrop(backdropScale, 5, 5, assets, file);
 
     // Initialize thief
-    initThief(scale, thiefSpawn, assets, _actions, males[0]);
+    initThief(scale, thiefSpawn, assets, _actions, skinKeys[0], males[0]);
     
     // Initialize cops
-    for (int i = 0; i < numPlayers - 1; i++) initCop(i, scale, copsSpawn, assets, _actions, males[i + 1]);
+    for (int i = 0; i < numPlayers - 1; i++) initCop(i, scale, copsSpawn, assets, _actions, skinKeys[i+1], males[i + 1]);
 
     _obstacles = std::vector<std::shared_ptr<physics2::PolygonObstacle>>();
     
@@ -428,7 +429,7 @@ void GameModel::initThief(float scale,
                           const shared_ptr<JsonValue>& spawn,
                           const shared_ptr<AssetManager>& assets,
                           shared_ptr<scene2::ActionManager>& actions,
-                          bool male) {
+                          string skinKey, bool male) {
     // Create thief node
     std::shared_ptr<scene2::SceneNode> thiefNode = scene2::SceneNode::alloc();
     thiefNode->setAnchor(Vec2::ANCHOR_CENTER);
@@ -436,7 +437,7 @@ void GameModel::initThief(float scale,
     
     // Create thief
     _thief = std::make_shared<ThiefModel>();
-    _thief->init(scale, thiefNode, assets, actions, male);
+    _thief->init(scale, thiefNode, assets, actions, skinKey, male);
     _thief->setDebugScene(_debugnode);
     _thief->setCollisionSound(THIEF_COLLISION_SFX);
     _thief->setObstacleSound(OBJ_COLLISION_SFX);
@@ -451,7 +452,7 @@ void GameModel::initCop(int copID, float scale,
                         const std::shared_ptr<JsonValue>& spawns,
                         const std::shared_ptr<cugl::AssetManager>& assets,
                         std::shared_ptr<cugl::scene2::ActionManager>& actions,
-                        bool male) {
+                        std::string skinKey, bool male) {
     // Create cop node
     std::shared_ptr<scene2::SceneNode> copNode = scene2::SceneNode::alloc();
     copNode->setAnchor(Vec2::ANCHOR_CENTER);
@@ -459,7 +460,7 @@ void GameModel::initCop(int copID, float scale,
     
     // Create cop
     std::shared_ptr<CopModel> cop = std::make_shared<CopModel>();
-    cop->init(copID, scale, copNode, assets, actions, male);
+    cop->init(copID, scale, copNode, assets, actions, skinKey, male);
     cop->setDebugScene(_debugnode);
     cop->setCollisionSound(COP_COLLISION_SFX);
     cop->setObstacleSound(OBJ_COLLISION_SFX);

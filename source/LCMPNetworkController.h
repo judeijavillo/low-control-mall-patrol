@@ -61,6 +61,7 @@ public:
     /** A data representation of a Player */
     struct Player {
         bool male;
+        string skinKey;
         int playerID;
         int playerNumber;
         float lastPing;
@@ -179,6 +180,10 @@ public:
      */
     std::unordered_map<int, bool> getMales();
     
+    /**
+     * Returns the mapping of playerID to skin key
+     */
+    std::unordered_map<int, std::string> getSkins();
     
     /**
      * Sets the status of the Network Controller
@@ -194,6 +199,11 @@ public:
      * Sets this player's gender
      */
     void toggleGender() { _players[*getPlayerID()].male = !_players[*getPlayerID()].male; }
+    
+    /**
+     * Sets this player's skin key
+     */
+    void setSkin(std::string skinKey) { _players[*getPlayerID()].skinKey = skinKey; }
     
     /**
      * Establishes a host connection with the server

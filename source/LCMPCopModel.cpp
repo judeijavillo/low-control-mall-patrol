@@ -23,8 +23,11 @@ using namespace std;
 #define COP_RUN_FRONT       "ss_cop_down"
 #define COP_RUN_LEFT        "ss_cop_left"
 #define COP_RUN_RIGHT       "ss_cop_right"
-#define COP_RUN_LEFT_F        "ss_cop_left_f"
-#define COP_RUN_RIGHT_F       "ss_cop_right_f"
+#define COP_RUN_BACK_F      "ss_cop_up_f"
+#define COP_RUN_FRONT_F     "ss_cop_down_f"
+#define COP_RUN_LEFT_F      "ss_cop_left_f"
+#define COP_RUN_RIGHT_F     "ss_cop_right_f"
+
 /** Keys for cop tackle textures */
 #define COP_JUMP_UP         "cop_jump_up"
 #define COP_JUMP_DOWN       "cop_jump_down"
@@ -34,6 +37,10 @@ using namespace std;
 #define COP_LAND_DOWN       "cop_land_down"
 #define COP_LAND_LEFT        "cop_land_left"
 #define COP_LAND_RIGHT       "cop_land_right"
+#define COP_JUMP_LEFT        "cop_jump_left_f"
+#define COP_JUMP_RIGHT       "cop_jump_right_f"
+#define COP_LAND_LEFT        "cop_land_left_f"
+#define COP_LAND_RIGHT       "cop_land_right_f"
 /** Keys for cop still textures */
 #define COP_IDLE_RIGHT        "ss_cop_idle_right"
 #define COP_IDLE_LEFT       "ss_cop_idle_left"
@@ -51,13 +58,13 @@ bool CopModel::init(int copID, float scale,
                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
                       const std::shared_ptr<cugl::AssetManager>& assets,
                     std::shared_ptr<cugl::scene2::ActionManager>& actions,
-                    bool male) {
+                    std::string skinKey, bool male) {
     // The cop has constant size
     Size size(COP_WIDTH, COP_HEIGHT);
     _animFrames = {8, 8, 8, 8, 4, 4};
     
     // Call the parent's initializer
-    PlayerModel::init(copID, Vec2::ZERO, size, scale, node, actions);
+    PlayerModel::init(copID, Vec2::ZERO, size, scale, node, assets, actions, skinKey, male);
     
     // Set up the textures for all tackle directions
     _tackleDownTexture = assets->get<Texture>(COP_JUMP_DOWN);
@@ -70,11 +77,10 @@ bool CopModel::init(int copID, float scale,
     _landRightTexture = assets->get<Texture>(COP_LAND_RIGHT);
     
     // Set up the textures for all directions
-    
     _spriteSheets.push_back(assets->get<Texture>(male ? COP_RUN_RIGHT : COP_RUN_RIGHT_F));
-    _spriteSheets.push_back(assets->get<Texture>(COP_RUN_BACK));
+    _spriteSheets.push_back(assets->get<Texture>(male ? COP_RUN_BACK : COP_RUN_BACK_F));
     _spriteSheets.push_back(assets->get<Texture>(male ? COP_RUN_LEFT : COP_RUN_LEFT_F));
-    _spriteSheets.push_back(assets->get<Texture>(COP_RUN_FRONT));
+    _spriteSheets.push_back(assets->get<Texture>(male ? COP_RUN_FRONT : COP_RUN_BACK_F));
     _spriteSheets.push_back(assets->get<Texture>(male ? COP_IDLE_RIGHT : COP_IDLE_RIGHT_F));
     _spriteSheets.push_back(assets->get<Texture>(male ? COP_IDLE_LEFT : COP_IDLE_LEFT_F));
         

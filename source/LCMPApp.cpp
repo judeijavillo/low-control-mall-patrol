@@ -450,12 +450,11 @@ void LCMPApp::updateFindScene(float timestep) {
         _scene = State::MENU;
         break;
     case FindScene::Status::START:
+        // TODO: check w jude about this
         _find.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
         _game.start(true);
-//        _customize.setActive(true);
-//        _scene = State::CUSTOM;
         break;
     case FindScene::Status::WAIT:
     case FindScene::Status::IDLE:

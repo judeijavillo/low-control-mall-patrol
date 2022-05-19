@@ -95,6 +95,9 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // Create the font
     _font = _assets->get<Font>("futura heavy");
     
+    // Initialize skin keys
+    _skinKeys = {"cat_ears", "propeller_hat", "police_hat", "halo", "plant"};
+
     // Initialize the input controller
     _input.init(getBounds());
     
@@ -211,7 +214,7 @@ void GameScene::start(bool host) {
 
     // Initialize the game
     _game = make_shared<GameModel>();
-    _game->init(_world, _ceilingnode, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _network->getMales(), _network->getNumPlayers());
+    _game->init(_world, _ceilingnode, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _network->getSkins(), _network->getMales(), _network->getNumPlayers());
     
     // Set the player's names
     for (int i = 0; i < _game->numberOfCops() + 1; i++) {
@@ -219,9 +222,9 @@ void GameScene::start(bool host) {
         shared_ptr<PlayerModel> player = playerData.playerNumber == -1
             ? (shared_ptr<PlayerModel>) _game->getThief()
             : (shared_ptr<PlayerModel>) _game->getCop(playerData.playerNumber);
+        // Set the player names
         player->setName(playerData.username, _font);
     }
-     
 
     // Initialize subcontrollers
     _collision.init(_game);
@@ -297,7 +300,7 @@ void GameScene::reset() {
     
     // Make a new game
     _game = make_shared<GameModel>();
-    _game->init(_world, _ceilingnode, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _network->getMales(), _network->getNumPlayers());
+    _game->init(_world, _ceilingnode, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _network->getSkins(),  _network->getMales(), _network->getNumPlayers());
     
     // Set the player's names
     for (int i = 0; i < _game->numberOfCops() + 1; i++) {
@@ -491,8 +494,7 @@ void GameScene::updateLocal(float timestep, Vec2 movement, bool dtap,
     if (_isHost) {
         for (int i = 0; i < 5; i++) {
             int copID = _network->getPlayer(i).playerNumber;
-            if (!_network->isPlayerConnected(i) && copID != -1 && copID != _playerNumber && copID < _game->numberOfCops()) {
-                updateCop(timestep, copID, Vec2::ZERO, false, Vec2::ZERO, dtap);
+            if (!_network->isPlayerConnected(i) && copID != -1 && copID != _playerNumber && copID < _game->numberOfCops()) {  updateCop(timestep, copID, Vec2::ZERO, false, Vec2::ZERO, dtap);
             }
         }
     }
@@ -519,6 +521,7 @@ void GameScene::updateLocal(float timestep, Vec2 movement, bool dtap,
 void GameScene::updateThief(float timestep, Vec2 movement, bool dtap) {
     // Update and network thief movement
     _game->updateThief(movement);
+//    _skins[0]->setPosition(_game->getThief()->getPosition() + Vec2(0, _game->getThief()->getHeight()));
     _network->sendThiefMovement(_game, movement);
     
     // Activate and network traps
@@ -547,6 +550,7 @@ void GameScene::updateThief(float timestep, Vec2 movement, bool dtap) {
 void GameScene::updateCop(float timestep, int copID, Vec2 movement, bool swipe, Vec2 tackle, bool dtap) {
     // Get some reusable variables
     shared_ptr<CopModel> cop = _game->getCop(copID);
+//    _skins[copID]->setPosition(cop->getPosition() + Vec2(0, cop->getHeight()));
     Vec2 thiefPosition = _game->getThief()->getPosition();
 
     int trapID = cop->trapDeactivationFlag;

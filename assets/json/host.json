@@ -335,7 +335,7 @@
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "scale": [0.3, 0.3]
+                                "scale": [0.5, 0.5]
                             },
                             "children": {
                                 "up": {
@@ -351,7 +351,7 @@
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "scale": [0.3, 0.3]
+                                "scale": [0.5, 0.5]
                             },
                             "children": {
                                 "up": {
@@ -367,7 +367,7 @@
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "scale": [0.3, 0.3]
+                                "scale": [0.5, 0.5]
                             },
                             "children": {
                                 "up": {
@@ -383,7 +383,7 @@
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "scale": [0.3, 0.3]
+                                "scale": [0.5, 0.5]
                             },
                             "children": {
                                 "up": {
@@ -399,7 +399,7 @@
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "scale": [0.3, 0.3]
+                                "scale": [0.5, 0.5]
                             },
                             "children": {
                                 "up": {

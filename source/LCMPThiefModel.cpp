@@ -25,6 +25,8 @@ using namespace std;
 #define THIEF_RUN_RIGHT     "ss_thief_right"
 #define THIEF_RUN_LEFT_F      "ss_thief_left_f"
 #define THIEF_RUN_RIGHT_F     "ss_thief_right_f"
+#define THIEF_RUN_BACK_F      "ss_thief_up_f"
+#define THIEF_RUN_FRONT_F     "ss_thief_down_f"
 #define MALE_CAT                "ss_thief_cat_right"
 #define FEMALE_CAT              "ss_thief_cat_right_f"
 #define MALE_HATLESS            "ss_thief_hatless_right"
@@ -44,18 +46,19 @@ bool ThiefModel::init(float scale,
                       const std::shared_ptr<cugl::scene2::SceneNode>& node,
                       const std::shared_ptr<cugl::AssetManager>& assets,
                       std::shared_ptr<cugl::scene2::ActionManager>& actions,
-                      bool male) {
+                      std::string skinKey, bool male) {
     // The thief has constant size
     Size size(THIEF_WIDTH, THIEF_HEIGHT);
     _animFrames = {8, 6, 8, 6, 4, 4};
     
     // Call the parent's initializer
-    PlayerModel::init(-1, Vec2::ZERO, size, scale, node, actions);
+    PlayerModel::init(-1, Vec2::ZERO, size, scale, node, assets, actions, skinKey, male);
     
+    // Set up the textures for all directions
     _spriteSheets.push_back(assets->get<Texture>(male ? THIEF_RUN_RIGHT : THIEF_RUN_RIGHT_F));
-    _spriteSheets.push_back(assets->get<Texture>(THIEF_RUN_BACK));
+    _spriteSheets.push_back(assets->get<Texture>(male ? THIEF_RUN_BACK : THIEF_RUN_BACK_F));
     _spriteSheets.push_back(assets->get<Texture>(male ? THIEF_RUN_LEFT : THIEF_RUN_LEFT_F));
-    _spriteSheets.push_back(assets->get<Texture>(THIEF_RUN_FRONT));
+    _spriteSheets.push_back(assets->get<Texture>(male ? THIEF_RUN_FRONT : THIEF_RUN_FRONT_F));
     _spriteSheets.push_back(assets->get<Texture>(male ? THIEF_IDLE_RIGHT : THIEF_IDLE_RIGHT_F));
     _spriteSheets.push_back(assets->get<Texture>(male ? THIEF_IDLE_LEFT : THIEF_IDLE_LEFT_F));
     

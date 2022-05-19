@@ -70,6 +70,8 @@ protected:
     std::vector<std::shared_ptr<cugl::scene2::SpriteNode>> _nodes;
     /** The sprite of the thief */
     std::shared_ptr<cugl::scene2::SpriteNode> _thiefNode;
+    /** The button of the thief */
+    std::shared_ptr<cugl::scene2::Button> _thiefButton;
     /** The sprite of cop 1 */
     std::shared_ptr<cugl::scene2::SpriteNode> _cop1Node;
     /** The sprite of cop 2 */
@@ -106,7 +108,6 @@ protected:
     Status _status;
 
 public:
-    
     /** The skin the player chooses */
     int skinChoice;
     
@@ -214,7 +215,7 @@ private:
     /**
      * Updates the player customizations
      */
-    void updateSkins(float timestep);
+    void updateSkins();
     
 };
 

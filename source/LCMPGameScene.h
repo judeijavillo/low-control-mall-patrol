@@ -118,6 +118,12 @@ protected:
     /** Whether we quit the game */
     bool _quit;
     
+    // Skins
+    /** The keys to access player skins */
+    std::vector<string> _skinKeys;
+    /** The references to player skins */
+    std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _skins;
+    
 public:
 //  MARK: - Constructors
     
