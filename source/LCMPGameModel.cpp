@@ -517,7 +517,7 @@ void GameModel::initProps(const shared_ptr<JsonValue>& props,
 //                  height);
 //            CULog("prop obst position %f %f", obstacle->getX(), obstacle->getY());
             _obstacles.push_back(obstacle);
-//            obstacle->setEnabled(false);
+            obstacle->setEnabled(false);
         }
     }
 }

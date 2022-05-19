@@ -512,7 +512,7 @@ void GameScene::updateThief(float timestep, Vec2 movement, bool dtap) {
         _network->sendTrapActivation(trapID);
     }
 
-    CULog("acc: (%f %f), damp: (%f, %f)", _game->getThief()->getAcceleration().x, _game->getThief()->getAcceleration().y, _game->getThief()->getDamping().x, _game->getThief()->getDamping().y);
+//    CULog("acc: (%f %f), damp: (%f, %f)", _game->getThief()->getAcceleration().x, _game->getThief()->getAcceleration().y, _game->getThief()->getDamping().x, _game->getThief()->getDamping().y);
 }
 
 /**
