@@ -552,6 +552,116 @@
                  "width":338.667,
                  "x":1326.10978787879,
                  "y":5500.85945454545
+                }, 
+                {
+                 "height":0,
+                 "id":1643,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"copEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Slippy Modifier":
+                                {
+                                 "x":0,
+                                 "y":0
+                                },
+                             "Speed Modifier":
+                                {
+                                 "x":0.25,
+                                 "y":0.25
+                                },
+                             "Type":"Velocity Modifier"
+                            }
+                        }, 
+                        {
+                         "name":"hasTriggers",
+                         "type":"bool",
+                         "value":true
+                        }, 
+                        {
+                         "name":"numUsages",
+                         "type":"int",
+                         "value":1
+                        }, 
+                        {
+                         "name":"textureAsset",
+                         "type":"object",
+                         "value":1647
+                        }, 
+                        {
+                         "name":"thiefEffect",
+                         "propertytype":"Effect",
+                         "type":"class",
+                         "value":
+                            {
+                             "Slippy Modifier":
+                                {
+                                 "x":0,
+                                 "y":0
+                                },
+                             "Speed Modifier":
+                                {
+                                 "x":0.25,
+                                 "y":0.25
+                                },
+                             "Type":"Velocity Modifier"
+                            }
+                        }, 
+                        {
+                         "name":"triggerArea",
+                         "type":"object",
+                         "value":1646
+                        }, 
+                        {
+                         "name":"triggerDeactivationArea",
+                         "type":"object",
+                         "value":1645
+                        }],
+                 "rotation":0,
+                 "type":"Trap",
+                 "visible":true,
+                 "width":0,
+                 "x":7437.75281818182,
+                 "y":2391.04127272727
+                }, 
+                {
+                 "height":286,
+                 "id":1645,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":340,
+                 "x":6775.08948484848,
+                 "y":2405.70793939394
+                }, 
+                {
+                 "height":292,
+                 "id":1646,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":338.667,
+                 "x":6777.74948484848,
+                 "y":2403.04460606061
+                }, 
+                {
+                 "gid":104,
+                 "height":444,
+                 "id":1647,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":641.333333333333,
+                 "x":6632,
+                 "y":2728
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -6138,7 +6248,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":1641,
+ "nextobjectid":1648,
  "orientation":"orthogonal",
  "renderorder":"right-up",
  "tiledversion":"1.8.2",
