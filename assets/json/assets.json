@@ -1,5 +1,86 @@
 {
     "textures": {
+        "2chair": {
+            "file": "textures/environment/2chair.png"
+        },
+        "3chair": {
+            "file": "textures/environment/3chair.png"
+        },
+        "4chair": {
+            "file": "textures/environment/4chair.png"
+        },
+        "whiteboard_donut": {
+            "file": "textures/environment/Whiteboard_do_nut.png"
+        },
+        "whiteboard_blank": {
+            "file": "textures/environment/Whiteboard_blank.png"
+        },
+        "vending_machine": {
+            "file": "textures/environment/Vendingmachine.png"
+        },
+        "chalk_sign_fish": {
+            "file": "textures/environment/Chalk_sign_fish.png"
+        },
+        "chalk_sign_blank": {
+            "file": "textures/environment/Chalk_sign_blank.png"
+        },
+        "palm_tree": {
+            "file": "textures/environment/Plamtree.png"
+        },
+        "chair_right": {
+            "file": "textures/environment/Chair_right.png"
+        },
+        "chair_rfront": {
+            "file": "textures/environment/chair_Rfront.png"
+        },
+        "chair_lfront": {
+            "file": "textures/environment/Chair_Lfront.png"
+        },
+        "chair_left": {
+            "file": "textures/environment/Chair_left.png"
+        },
+        "chair_front": {
+            "file": "textures/environment/Chair_front.png"
+        },
+        "bench_spineless": {
+            "file": "textures/environment/bench_spineless.png"
+        },
+        "bench_spine": {
+            "file": "textures/environment/bench_spine.png"
+        },
+        "arcade_side_right": {
+            "file": "textures/environment/arcade_side_right.png"
+        },
+        "arcade_side_left": {
+            "file": "textures/environment/arcade_side_left.png"
+        },
+        "arcade_side_top_cont": {
+            "file": "textures/environment/arcade_side_top_cont.png"
+        },
+        "arcade_side_Lcont": {
+            "file": "textures/environment/arcade_side_Lcont.png"
+        },
+        "arcade_side_Rcont": {
+            "file": "textures/environment/arcade_side_Rcont.png"
+        },
+        "arcade_front": {
+            "file": "textures/environment/arcade_front.png"
+        },
+        "arcade_front_rside": {
+            "file": "textures/environment/arcade_front_Rside.png"
+        },
+        "arcade_front_lside": {
+            "file": "textures/environment/arcade_front_Lside.png"
+        },
+        "arcade_back": {
+            "file": "textures/environment/arcade_back.png"
+        },
+        "arcade_back_rside": {
+            "file": "textures/environment/arcade_back_Rside.png"
+        },
+        "arcade_back_lside": {
+            "file": "textures/environment/arcade_back_Lside.png"
+        },
         "back_button": {
             "file": "textures/ui/back.png"
         },
@@ -83,6 +164,15 @@
         },
         "tall_plant": {
             "file": "textures/environment/tall_plant.png"
+        },
+        "table_right": {
+            "file": "textures/environment/Table_Rend.png"
+        },
+        "table_left": {
+            "file": "textures/environment/Table_Lend.png"
+        },
+        "table_horizontal": {
+            "file": "textures/environment/Table_Hmiddle.png"
         },
         "teleporttemp": {
             "file": "textures/environment/teleporttemp.png"
@@ -348,11 +438,17 @@
         "roll": {
             "file": "textures/ui/roll_button.png"
         },
-        "shopping_bag_1": {
-            "file": "textures/environment/shopping_bag_1.png"
-        },
-        "shopping_bag_many": {
+        "shopping_bags_together": {
             "file": "textures/environment/shopping_bag_many.png"
+        },
+        "shopping_bag_red": {
+            "file": "textures/environment/shopping_bag_3.png"
+        },
+        "shopping_bag_blue": {
+            "file": "textures/environment/shopping_bag_2.png"
+        },
+        "shopping_bag_yellow": {
+            "file": "textures/environment/shopping_bag_1.png"
         },
         "donut": {
             "file": "textures/ui/donut_brown.png"

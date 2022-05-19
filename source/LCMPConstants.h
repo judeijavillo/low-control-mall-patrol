@@ -111,7 +111,8 @@ enum JsonConstants :int {
 /** The key for our loaded level */
 #define LEVEL_ONE_KEY       "example6"
 #define LEVEL_DONUT_KEY		"maps/donut_room.json"
-#define LEVEL_CONVEYOR_KEY		"maps/conveyorlevel.json"
+#define LEVEL_CONVEYOR_KEY        "maps/conveyorlevel.json"
+#define LEVEL_PROPS_KEY        "maps/example5.json"
 
 /** Tileset for props */
 #define PROPS_FILE          "maps/PropsAndTraps.tsj"
@@ -121,7 +122,7 @@ enum JsonConstants :int {
 #define POLYFACTORY_TOLERANCE   0.1
 
 /** size of grid squares for collision optimization */
-#define GRID_SIZE               5
+#define GRID_SIZE               1
 
 /** Music constants */
 #define THIEF_COLLISION_SFX     "fuck"
