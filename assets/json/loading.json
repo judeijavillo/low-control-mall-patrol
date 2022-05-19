@@ -65,7 +65,7 @@
                         "thief" : {
                             "type"    : "Sprite",
                             "data"    : {
-                                "anchor"    : [0.5, 0.5],
+                                "anchor"    : [0.5, 0],
                                 "texture"    : "thief_animation",
                                 "span"        : 8,
                                 "cols"         : 8,
@@ -73,14 +73,14 @@
                             },
                                 "layout" : {
                                 "x_anchor" : "center",
-                                "y_anchor" : "middle",
+                                "y_anchor" : "bottom",
                                 "absolute" : true
                             }
                         },
                         "cop" : {
                             "type"    : "Sprite",
                             "data"    : {
-                                "anchor"    : [0.5, 0.5],
+                                "anchor"    : [0.5, 0],
                                 "texture"    : "cop_animation",
                                 "span"        : 8,
                                 "cols"         : 8,
@@ -88,31 +88,31 @@
                             },
                                 "layout" : {
                                 "x_anchor" : "left",
-                                "y_anchor" : "middle",
+                                "y_anchor" : "bottom",
                                 "absolute" : true
                             }
                         },
                         "tackle" : {
                             "type"    : "Image",
                             "data"    : {
-                                "anchor"    : [0.5, 0.5],
+                                "anchor"    : [0.5, 0],
                                 "texture"    : "tackle"
                             },
                             "layout" : {
                                 "x_anchor" : "center",
-                                "y_anchor" : "middle",
+                                "y_anchor" : "bottom",
                                 "absolute" : true
                             }
                         },
                         "land" : {
                             "type"    : "Image",
                             "data"    : {
-                                "anchor"    : [0.5, 0.5],
+                                "anchor"    : [0.5, 0],
                                 "texture"    : "land"
                             },
                             "layout" : {
                                 "x_anchor" : "center",
-                                "y_anchor" : "middle",
+                                "y_anchor" : "bottom",
                                 "absolute" : true
                             }
                         },

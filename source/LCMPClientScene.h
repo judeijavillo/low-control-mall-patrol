@@ -63,6 +63,8 @@ protected:
     unordered_set<std::shared_ptr<cugl::scene2::Button>> _keypadButtons;
     /** The scene node containing the keypad */
     std::shared_ptr<cugl::scene2::SceneNode> _keypad;
+    /** The scene node containing the donut box front */
+    std::shared_ptr<cugl::scene2::PolygonNode> _donutFront;
     /** The menu button for changing a player's gender */
     std::shared_ptr<cugl::scene2::Button> _genderButton;
     /** The menu button for starting a game */
@@ -86,6 +88,8 @@ protected:
     std::shared_ptr<cugl::scene2::SpriteNode> _cop3Node;
     /** The sprite of cop 4 */
     std::shared_ptr<cugl::scene2::SpriteNode> _cop4Node;
+    /** The cop buttons */
+    std::vector<std::shared_ptr<cugl::scene2::Button>> _copButtons;
     
     /** A mapping from player number  to character node */
     std::vector<std::shared_ptr<cugl::scene2::TextField>> _players;
@@ -100,6 +104,13 @@ protected:
     /** The player 5 label (for updating) */
     std::shared_ptr<cugl::scene2::TextField> _player5;
     
+    /** The keys to access player skins */
+    std::vector<string> _skinKeys;
+    /** The references to player skins */
+    std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _skins;
+    
+    bool _sixteenNineAspectRatio;
+    
     /** The current animation frame */
     int _aniFrame;
     /** The previous timestep. */
@@ -109,6 +120,8 @@ protected:
     Status _status;
 
 public:
+    /** The skin the player chooses */
+    int skinChoice;
 //  MARK: - Constructors
     /**
      * Creates a new client scene with the default values.
@@ -216,6 +229,11 @@ private:
      * Plays animations for the players and sets their names
      */
     void updateLobby(float timestep);
+    
+    /**
+     * Updates the player customizations
+     */
+    void updateSkins();
 
 //  MARK: - Callbacks
     

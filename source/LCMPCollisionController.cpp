@@ -35,7 +35,7 @@ void CollisionController::beginContact(b2Contact* contact) {
     }
 
     // Check all of the cops
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < _game->numberOfCops(); i++) {
         b2Body* copBody = _game->getCop(i)->getRealBody();
         
         if (copBody == body1 || copBody == body2) {
@@ -65,7 +65,7 @@ void CollisionController::beginContact(b2Contact* contact) {
                 didHitTrap = true;
             }
 
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < _game->numberOfCops(); i++) {
                 b2Body* copBody = _game->getCop(i)->getRealBody();
                 if ((copBody == body1 && copEffectBody == body2) ||
                     (copBody == body2 && copEffectBody == body1)) {
@@ -111,7 +111,7 @@ void CollisionController::endContact(b2Contact* contact) {
                 (thiefBody == body2 && thiefEffectBody == body1)) {
                 _game->getThief()->unact(trap->getTrapID(), trap->getThiefEffect());
             }
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < _game->numberOfCops(); i++) {
                 b2Body* copBody = _game->getCop(i)->getRealBody();
                 if ((copBody == body1 && copEffectBody == body2) ||
                     (copBody == body2 && copEffectBody == body1)) {

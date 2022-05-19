@@ -117,8 +117,12 @@ protected:
     bool _quit;
     /** Whether the thief wins or loses */
     bool _isThiefWin;
-    /** Which custom skin the player selected */
-    string _skinKey;
+    
+    // Skins
+    /** The keys to access player skins */
+    std::vector<string> _skinKeys;
+    /** The references to player skins */
+    std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _skins;
     
 public:
 //  MARK: - Constructors
@@ -178,7 +182,7 @@ public:
      *
      * @param host  Whether the player is host.
      */
-    void start(bool host, string skinKey, string levelKey);
+    void start(bool host, string levelKey);
     
     /**
      * The method called to update the scene.

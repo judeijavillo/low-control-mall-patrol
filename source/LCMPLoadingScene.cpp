@@ -136,8 +136,8 @@ bool LoadingScene::isPending() const {
  */
 void LoadingScene::playAnimation(float timestep) {
     _prevTime += timestep;
-    int copPos = (int) (_progress * 3*SCENE_WIDTH/4);
-    int thiefPos = (int) (_progress * SCENE_WIDTH/4 + 3*SCENE_WIDTH/4);
+    int copPos = (int) (_progress * 0.8*SCENE_WIDTH);
+    int thiefPos = (int) (_progress * SCENE_WIDTH/3 + 3*SCENE_WIDTH/4);
     
     if (copPos >= 3*SCENE_WIDTH/4) {
         _tackleNode->setVisible(false);

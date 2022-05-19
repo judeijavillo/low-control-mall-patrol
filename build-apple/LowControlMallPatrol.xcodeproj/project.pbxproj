@@ -10,8 +10,6 @@
 		4212F24527E79701008679C8 /* LCMPUIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4212F24427E79701008679C8 /* LCMPUIController.cpp */; };
 		4212F24627E79701008679C8 /* LCMPUIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4212F24427E79701008679C8 /* LCMPUIController.cpp */; };
 		4212F24727E79701008679C8 /* LCMPUIController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4212F24427E79701008679C8 /* LCMPUIController.cpp */; };
-		4226A7E228101EDD00A7B339 /* LCMPCustomizeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */; };
-		4226A7E628101EDE00A7B339 /* LCMPCustomizeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */; };
 		426D5D8728301E7700DEEE02 /* LCMPPauseController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 426D5D8628301E7700DEEE02 /* LCMPPauseController.cpp */; };
 		426D5D8828301E9000DEEE02 /* LCMPPauseController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 426D5D8628301E7700DEEE02 /* LCMPPauseController.cpp */; };
 		426D5D8928301E9500DEEE02 /* LCMPPauseController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 426D5D8628301E7700DEEE02 /* LCMPPauseController.cpp */; };
@@ -66,7 +64,6 @@
 		B119EF20281FFA5000230B61 /* LCMPGachaScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B119EF1B281FFA5000230B61 /* LCMPGachaScene.cpp */; };
 		B119EF21281FFA5000230B61 /* LCMPGachaScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B119EF1B281FFA5000230B61 /* LCMPGachaScene.cpp */; };
 		B119EF22281FFA5000230B61 /* LCMPGachaScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B119EF1B281FFA5000230B61 /* LCMPGachaScene.cpp */; };
-		B140973627F67252005C7F11 /* LCMPCustomizeScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */; };
 		EB07CFB621EFF3F8000CB3A3 /* DeviceMargins.plist in Resources */ = {isa = PBXBuildFile; fileRef = EB07CFB021EFF3EF000CB3A3 /* DeviceMargins.plist */; };
 		EB13B3B427B2C0DF0032BF19 /* LCMPLoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB13B3A927B2C0DF0032BF19 /* LCMPLoadingScene.cpp */; };
 		EB13B3B527B2C0DF0032BF19 /* LCMPLoadingScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB13B3A927B2C0DF0032BF19 /* LCMPLoadingScene.cpp */; };
@@ -220,8 +217,6 @@
 		B119EF1228199E7E00230B61 /* LCMPShopScene.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LCMPShopScene.h; sourceTree = "<group>"; };
 		B119EF1B281FFA5000230B61 /* LCMPGachaScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPGachaScene.cpp; sourceTree = "<group>"; };
 		B119EF1F281FFA5000230B61 /* LCMPGachaScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPGachaScene.h; sourceTree = "<group>"; };
-		B140973127F67252005C7F11 /* LCMPCustomizeScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPCustomizeScene.h; sourceTree = "<group>"; };
-		B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPCustomizeScene.cpp; sourceTree = "<group>"; };
 		EB07CFB021EFF3EF000CB3A3 /* DeviceMargins.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DeviceMargins.plist; sourceTree = "<group>"; };
 		EB13B3A827B2C0DF0032BF19 /* LCMPClientScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LCMPClientScene.h; sourceTree = "<group>"; };
 		EB13B3A927B2C0DF0032BF19 /* LCMPLoadingScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LCMPLoadingScene.cpp; sourceTree = "<group>"; };
@@ -360,8 +355,6 @@
 				B119EF1F281FFA5000230B61 /* LCMPGachaScene.h */,
 				B119EEE028149C0700230B61 /* LCMPVictoryScene.h */,
 				B119EEDC28149C0700230B61 /* LCMPVictoryScene.cpp */,
-				B140973127F67252005C7F11 /* LCMPCustomizeScene.h */,
-				B140973527F67252005C7F11 /* LCMPCustomizeScene.cpp */,
 				42C7BE2C28149F6300A89FFE /* LCMPLevelSelectScene.h */,
 				42C7BE2828149F6300A89FFE /* LCMPLevelSelectScene.cpp */,
 				EB13B3B027B2C0DF0032BF19 /* LCMPLoadingScene.h */,
@@ -617,12 +610,12 @@
 					};
 					EB74548B1D74D75C002FBAE6 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 8C78ZZ3P8X;
+						DevelopmentTeam = P2RQL34LD9;
 						ProvisioningStyle = Automatic;
 					};
 					EBBF18901D74904A008E2001 = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = 8C78ZZ3P8X;
+						DevelopmentTeam = P2RQL34LD9;
 					};
 				};
 			};
@@ -732,7 +725,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4226A7E628101EDE00A7B339 /* LCMPCustomizeScene.cpp in Sources */,
 				426D5D8928301E9500DEEE02 /* LCMPPauseController.cpp in Sources */,
 				EB9CDA3925D0EAB100EE1A09 /* main.cpp in Sources */,
 				4212F24727E79701008679C8 /* LCMPUIController.cpp in Sources */,
@@ -764,7 +756,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4226A7E228101EDD00A7B339 /* LCMPCustomizeScene.cpp in Sources */,
 				426D5D8828301E9000DEEE02 /* LCMPPauseController.cpp in Sources */,
 				EB7454AE1D74D891002FBAE6 /* main.cpp in Sources */,
 				4212F24627E79701008679C8 /* LCMPUIController.cpp in Sources */,
@@ -802,7 +793,6 @@
 				42B26D7627C2BC730019E6FB /* LCMPThiefModel.cpp in Sources */,
 				426D5D8728301E7700DEEE02 /* LCMPPauseController.cpp in Sources */,
 				EB13B3C327B2C0DF0032BF19 /* LCMPApp.cpp in Sources */,
-				B140973627F67252005C7F11 /* LCMPCustomizeScene.cpp in Sources */,
 				B119EF0C28199E3D00230B61 /* LCMPShopScene.cpp in Sources */,
 				EB13B3BA27B2C0DF0032BF19 /* LCMPGameScene.cpp in Sources */,
 				42B26D7A27C2BC840019E6FB /* LCMPCopModel.cpp in Sources */,
@@ -885,12 +875,12 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 8C78ZZ3P8X;
+				DEVELOPMENT_TEAM = P2RQL34LD9;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.ios.LCMP;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.ios.LCMP3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
@@ -906,12 +896,12 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = 8C78ZZ3P8X;
+				DEVELOPMENT_TEAM = P2RQL34LD9;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.ios.LCMP;
+				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.ios.LCMP3;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1043,7 +1033,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 8C78ZZ3P8X;
+				DEVELOPMENT_TEAM = P2RQL34LD9;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Mac-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.mac.LCMP;
@@ -1058,7 +1048,7 @@
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 8C78ZZ3P8X;
+				DEVELOPMENT_TEAM = P2RQL34LD9;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Mac-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = edu.cornell.jij8.mac.LCMP;

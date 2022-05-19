@@ -144,9 +144,6 @@ void LCMPApp::update(float timestep) {
     case FIND:
         updateFindScene(timestep);
         break;
-    case CUSTOM:
-        updateCustomizeScene(timestep);
-        break;
     case LEVEL:
         updateLevelSelectScene(timestep);
         break;
@@ -190,9 +187,6 @@ void LCMPApp::draw() {
         break;
     case FIND:
         _find.render(_batch);
-        break;
-    case CUSTOM:
-        _customize.render(_batch);
         break;
     case LEVEL:
         _levelselect.render(_batch);
@@ -238,7 +232,6 @@ void LCMPApp::updateLoadingScene(float timestep) {
         _host.init(_assets, _network, _audio);
         _client.init(_assets, _network, _audio, _sixteenNineAspectRatio);
         _find.init(_assets, _network);
-        _customize.init(_assets, _network, _audio, _actions);
         _levelselect.init(_assets, _audio);
         _game.init(_assets, _network, _audio, _actions);
         _victory.init(_assets, _network, _audio, _actions, true);
@@ -344,7 +337,7 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
         _game.setActive(true);
         _scene = State::GAME;
         _network->sendStartGame(_levelKey);
-        _game.start(true, _customize.skinKey, _levelKey);
+        _game.start(true, _levelKey);
         break;
     case LevelSelectScene::Choice::TWO:
         _levelKey = LEVEL_CONVEYOR_KEY;
@@ -352,7 +345,7 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
         _game.setActive(true);
         _scene = State::GAME;
         _network->sendStartGame(_levelKey);
-        _game.start(true, _customize.skinKey, _levelKey);
+        _game.start(true, _levelKey);
         break;
     case LevelSelectScene::Choice::THREE:
         _levelKey = LEVEL_ONE_FILE;
@@ -361,7 +354,7 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
         _game.setActive(true);
         _scene = State::GAME;
         _network->sendStartGame(_levelKey);
-        _game.start(true, _customize.skinKey, _levelKey);
+        _game.start(true, _levelKey);
         break;
     case LevelSelectScene::Choice::FOUR:
         _levelKey = LEVEL_ONE_FILE;
@@ -370,7 +363,7 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
         _game.setActive(true);
         _scene = State::GAME;
         _network->sendStartGame(_levelKey);
-        _game.start(true, _customize.skinKey, _levelKey);
+        _game.start(true, _levelKey);
         break;
     case LevelSelectScene::Choice::BACK:
         _levelselect.setActive(false);
@@ -403,8 +396,8 @@ void LCMPApp::updateHostScene(float timestep) {
         break;
     case HostScene::Status::START:
         _host.setActive(false);
-        _customize.setActive(true, true);
-        _scene = State::CUSTOM;
+        _levelselect.setActive(true);
+        _scene = State::LEVEL;
         break;
     case HostScene::Status::WAIT:
     case HostScene::Status::IDLE:
@@ -432,9 +425,8 @@ void LCMPApp::updateClientScene(float timestep) {
         break;
     case ClientScene::Status::START:
         _client.setActive(false);
-        _game.setActive(true);
-        _scene = State::GAME;
-        _game.start(false, _customize.skinKey, _network->getLevel());
+        _levelselect.setActive(true);
+        _scene = State::LEVEL;
         break;
     case ClientScene::Status::WAIT:
     case ClientScene::Status::IDLE:
@@ -461,12 +453,10 @@ void LCMPApp::updateFindScene(float timestep) {
         _scene = State::MENU;
         break;
     case FindScene::Status::START:
+        // TODO: check w jude about this
         _find.setActive(false);
-        _game.setActive(true);
-        _scene = State::GAME;
-        _game.start(true, _customize.skinKey, _levelKey);
-//        _customize.setActive(true);
-//        _scene = State::CUSTOM;
+        _levelselect.setActive(true);
+        _scene = State::LEVEL;
         break;
     case FindScene::Status::WAIT:
     case FindScene::Status::IDLE:
@@ -477,36 +467,6 @@ void LCMPApp::updateFindScene(float timestep) {
     }
 }
 
-/**
- * Individualized update method for the customization scene.
- *
- * This method keeps the primary {@link #update} from being a mess of switch
- * statements. It also handles the transition logic from the host scene.
- *
- * @param timestep  The amount of time (in seconds) since the last frame
- */
-void LCMPApp::updateCustomizeScene(float timestep) {
-    _customize.update(timestep);
-    // TODO: Make changes with factored out Network Controller
-    switch (_customize.getStatus()) {
-    case CustomizeScene::Status::ABORT:
-        _customize.setActive(false, true);
-        _menu.setActive(true);
-        _scene = State::MENU;
-        break;
-    case CustomizeScene::Status::START:
-        _customize.setActive(false, true);
-        if (_network->isHost()) {
-            _levelselect.setActive(true);
-            _scene = State::LEVEL;
-        }
-        break;
-    case CustomizeScene::Status::WAIT:
-    case CustomizeScene::Status::IDLE:
-        // DO NOTHING
-        break;
-    }
-}
 
 /**
  * Individualized update method for the game scene.

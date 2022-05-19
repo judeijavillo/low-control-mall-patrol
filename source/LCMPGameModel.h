@@ -59,9 +59,6 @@ protected:
     /** A flag indicating whether the game is over */
     bool _gameover;
 
-    /** The chosen customization skin  */
-    string _skinKey;
-    
 public:
 //  MARK: - Constructors
     
@@ -90,7 +87,9 @@ public:
               const std::shared_ptr<cugl::AssetManager>& assets,
               float scale, const std::string& file,
               std::shared_ptr<cugl::scene2::ActionManager>& actions,
-              string skinKey);
+              std::unordered_map<int, std::string> skinKeys,
+              std::unordered_map<int, bool> males,
+              int numPlayers);
     
 //  MARK: - Methods
     
@@ -188,7 +187,8 @@ private:
     void initThief(float scale,
                    const std::shared_ptr<cugl::JsonValue>& spawn,
                    const std::shared_ptr<cugl::AssetManager>& assets,
-                   std::shared_ptr<cugl::scene2::ActionManager>& actions);
+                   std::shared_ptr<cugl::scene2::ActionManager>& actions,
+                   std::string skinKey, bool male);
     
     /**
      * Initializes a single cop
@@ -196,7 +196,8 @@ private:
     void initCop(int copID, float scale,
                  const std::shared_ptr<cugl::JsonValue>& spawns,
                  const std::shared_ptr<cugl::AssetManager>& assets,
-                 std::shared_ptr<cugl::scene2::ActionManager>& actions);
+                 std::shared_ptr<cugl::scene2::ActionManager>& actions,
+                 std::string skinKey, bool male);
     
     struct ObstacleNode_x_Y_Gid_struct{
         std::shared_ptr<cugl::physics2::PolygonObstacle> obstacle;

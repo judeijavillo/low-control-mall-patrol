@@ -17,7 +17,7 @@
 #include "LCMPHostScene.h"
 #include "LCMPClientScene.h"
 #include "LCMPFindScene.h"
-#include "LCMPCustomizeScene.h"
+//#include "LCMPCustomizeScene.h"
 #include "LCMPLevelSelectScene.h"
 #include "LCMPGameScene.h"
 #include "LCMPVictoryScene.h"
@@ -80,8 +80,6 @@ protected:
     ClientScene _client;
     /** The scene to find a game */
     FindScene _find;
-    /** The scene to customize characters */
-    CustomizeScene _customize;
     /** The scene to choose a level */
     LevelSelectScene _levelselect;
     /** The primary controller for the game world */

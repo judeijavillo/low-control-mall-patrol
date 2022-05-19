@@ -63,6 +63,8 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _network = network;
     _audio = audio;
     
+    _sixteenNineAspectRatio = sixteenNineAspectRatio;
+    
     // Acquire the scene built by the asset loader and resize it the scene
     std::shared_ptr<scene2::SceneNode> scene = _assets->get<scene2::SceneNode>("join");
 
@@ -77,6 +79,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_back"));
         _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_roomID"));
         _info  = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_instructions"));
+        _donutFront = std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_donutBoxFront"));
         
         // The text fields showing the player names
         _player1 = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join_backdrop_thiefField_text"));
@@ -87,11 +90,14 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         
         // The sprite nodes showing the characters
         _thiefNode = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_thief_up"));
-        _cop1Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_cop1"));
-        _cop2Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_cop2"));
-        _cop3Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_cop3"));
-        _cop4Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_cop4"));
-        
+        _cop1Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_cop1_up"));
+        _cop2Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_cop2_up"));
+        _cop3Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_cop3_up"));
+        _cop4Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join_backdrop_cop4_up"));
+        for (int i = 1; i <= 4; i++) {
+            _copButtons.push_back(std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_cop" + to_string(i))));
+            _copButtons[i-1]->deactivate();
+        }
     }
     else {
         scene = _assets->get<scene2::SceneNode>("join43");
@@ -103,8 +109,9 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         _genderButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_gender"));
         _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_join"));
         _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_back"));
-        _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join43_backdrop_keypad_roomID"));
+        _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join43_backdrop_roomID"));
         _info = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join43_backdrop_instructions"));
+        _donutFront = std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("join43_backdrop_keypad_donutBoxFront"));
         
         // The text fields showing the player names
         _player1 = std::dynamic_pointer_cast<scene2::TextField>(_assets->get<scene2::SceneNode>("join43_backdrop_thiefField_text"));
@@ -115,10 +122,14 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         
         // The sprite nodes showing the characters
         _thiefNode = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_thief_up"));
-        _cop1Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_cop1"));
-        _cop2Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_cop2"));
-        _cop3Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_cop3"));
-        _cop4Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_cop4"));
+        _cop1Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_cop1_up"));
+        _cop2Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_cop2_up"));
+        _cop3Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_cop3_up"));
+        _cop4Node = std::dynamic_pointer_cast<scene2::SpriteNode>(_assets->get<scene2::SceneNode>("join43_backdrop_cop4_up"));
+        for (int i = 1; i <= 4; i++) {
+            _copButtons.push_back(std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_cop" + to_string(i))));
+            _copButtons[i]->deactivate();
+        }
     }
     
     // Maintain a mapping of player names for later
@@ -135,6 +146,17 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _nodes.push_back(_cop3Node);
     _nodes.push_back(_cop4Node);
     
+    // Initialize skins
+    _skinKeys = {"cat_ears_left", "propeller_hat_left", "police_hat_left", "halo_left", "plant_left"};
+    for (int i = 0; i < _skinKeys.size(); i++) {
+        _skins.push_back(std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("join_backdrop_" + _skinKeys[i])));
+        _skins[i]->setAnchor(Vec2(1,0.5));
+        _skins[i]->setVisible(false);
+        _skins[i]->flipVertical(true);
+    }
+    // No skin selected
+    skinChoice = -1;
+    
     _status = Status::IDLE;
     
     // Attach listener to back button
@@ -148,8 +170,6 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     _genderButton->addListener([this](const std::string& name, bool down) {
         if (down) {
-            _audio->stopSfx(CLICK_SFX);
-            _audio->playSound(_assets, CLICK_SFX, true, 0);
             if (_network->isConnected()) _network->toggleGender();
         }
     });
@@ -173,8 +193,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     shared_ptr<scene2::Button> buttonX = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_buttonX"));
     if (!sixteenNineAspectRatio) buttonX = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_keypad_buttonX"));
     buttonX->addListener([this](const std::string& name, bool down) {
-        _gameid->setText("", true);
-        _gameid->setPosition(ROOM_ID_LABEL_HOME);
+        _gameid->setText("", false);
     });
     _keypadButtons.insert(buttonX);
     
@@ -184,8 +203,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     buttonDEL->addListener([this](const std::string& name, bool down) {
         if (down) {
             string text = _gameid->getText();
-            _gameid->setText(text.substr(0, text.length() - 1), true);
-            _gameid->setPosition(ROOM_ID_LABEL_HOME);
+            _gameid->setText(text.substr(0, text.length() - 1), false);
         }
     });
     _keypadButtons.insert(buttonDEL);
@@ -305,6 +323,7 @@ void ClientScene::setActive(bool value) {
             for (int i = 0; i < 5; i++) _players[i]->deactivate();
             _genderButton->deactivate();
             // If any were pressed, reset them
+            _genderButton->setDown(false);
             _startgame->setDown(false);
             _backout->setDown(false);
         }
@@ -336,8 +355,8 @@ void ClientScene::showLobby(bool lobby) {
     _keypad->setVisible(!lobby);
     _startgame->setDown(lobby);
     lobby ? _startgame->deactivate() : _startgame->activate();
-    _genderButton->activate();
     _startgame->setVisible(!lobby);
+    _genderButton->setVisible(lobby);
     for (int i = 0; i < 5; i++) {
         _players[i]->setVisible(lobby);
         _players[i]->deactivate();
@@ -348,10 +367,23 @@ void ClientScene::showLobby(bool lobby) {
     int playerID = _network->getPlayerID() ? *(_network->getPlayerID()) : -1;
     if (playerID == -1) return;
     
+    // Initialize cop button
+    if (playerID > 0) {
+        _copButtons[playerID-1]->activate();
+        _copButtons[playerID-1]->addListener([this](const std::string& name, bool down) {
+            if (down) {
+                updateSkins();
+            }
+        });
+        for (int i = 0; i < _skins.size(); i++) {
+            _skins[i]->setPosition(_copButtons[playerID-1]->getPosition() + Vec2(-_copButtons[playerID-1]->getWidth()/8, _copButtons[playerID-1]->getHeight()/4));
+        }
+    }
+        
     std::shared_ptr<cugl::scene2::TextField> player = _players[playerID];
     player->activate();
     player->setBackground(Color4("#ffffffff"));
-    
+    _genderButton->activate();
 }
 
 /**
@@ -364,7 +396,7 @@ void ClientScene::updateLobby(float timestep) {
         if (playerID == 0) {
             key = player.male ? "ss_thief_idle_right" : "ss_thief_idle_right_f";
         } else {
-            key = player.male ? "ss_cop_idle_right" : "ss_cop_idle_right_f";
+            key = player.male ? "ss_cop_idle_left" : "ss_cop_idle_left_f";
         }
         if (playerID != *(_network->getPlayerID())) {
             _players[playerID]->setText(player.username);
@@ -391,9 +423,27 @@ void ClientScene::updateLobby(float timestep) {
 void ClientScene::pressButton(const std::string& name, bool down, int buttonID) {
     if (down) {
         if (_gameid->getText().length() < MAX_ROOM_ID_LENGTH) {
-            _gameid->setText(_gameid->getText() + to_string(buttonID), true);
-            _gameid->setPosition(ROOM_ID_LABEL_HOME);
+            _gameid->setText(_gameid->getText() + to_string(buttonID), false);
         }
+    }
+}
+
+/**
+ * Updates the player customizations
+ */
+void ClientScene::updateSkins() {
+    if (skinChoice == _skinKeys.size()-1) {
+        _skins[skinChoice]->setVisible(false);
+        skinChoice = -1;
+        if (_network->isConnected()) _network->setSkin("");
+    }
+    else {
+        if (skinChoice != -1) {
+            _skins[skinChoice]->setVisible(false);
+        }
+        skinChoice++;
+        _skins[skinChoice]->setVisible(true);
+        if (_network->isConnected()) _network->setSkin(_skinKeys[skinChoice]);
     }
 }
 

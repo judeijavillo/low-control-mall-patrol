@@ -95,6 +95,9 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // Create the font
     _font = _assets->get<Font>("futura heavy");
     
+    // Initialize skin keys
+    _skinKeys = {"cat_ears", "propeller_hat", "police_hat", "halo", "plant"};
+
     // Initialize the input controller
     _input.init(getBounds());
     
@@ -195,7 +198,7 @@ void GameScene::dispose() {
  *
  * @param host  Whether the player is host.
  */
-void GameScene::start(bool host, string skinKey, string levelKey) {
+void GameScene::start(bool host, string levelKey) {
     _gameTime = 0;
     _doneTime = 0;
     _isThiefWin = false;
@@ -203,21 +206,19 @@ void GameScene::start(bool host, string skinKey, string levelKey) {
     _audio->playSound(_assets, GAME_MUSIC, false, -1);
     _playerNumber = _network->getPlayerNumber();
     _isThief = (_playerNumber == -1);
-    _skinKey = skinKey;
 
     // Initialize the game
     _game = make_shared<GameModel>();
-    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, levelKey, _actions, _skinKey);
+    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, levelKey, _actions, _network->getSkins(), _network->getMales(), _network->getNumPlayers());
     
-    // Set the player's names
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < _game->numberOfCops() + 1; i++) {
         NetworkController::Player playerData = _network->getPlayer(i);
         shared_ptr<PlayerModel> player = playerData.playerNumber == -1
             ? (shared_ptr<PlayerModel>) _game->getThief()
             : (shared_ptr<PlayerModel>) _game->getCop(playerData.playerNumber);
+        // Set the player names
         player->setName(playerData.username, _font);
     }
-     
 
     // Initialize subcontrollers
     _collision.init(_game);
@@ -294,10 +295,11 @@ void GameScene::reset() {
     
     // Make a new game
     _game = make_shared<GameModel>();
-    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions, _skinKey);
+    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions,
+                _network->getSkins(), _network->getMales(), _network->getNumPlayers());
     
     // Set the player's names
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < _game->numberOfCops() + 1; i++) {
         NetworkController::Player playerData = _network->getPlayer(i);
         shared_ptr<PlayerModel> player = playerData.playerNumber == -1
             ? (shared_ptr<PlayerModel>) _game->getThief()
@@ -485,8 +487,7 @@ void GameScene::updateLocal(float timestep, Vec2 movement, bool dtap,
     if (_isHost) {
         for (int i = 0; i < 5; i++) {
             int copID = _network->getPlayer(i).playerNumber;
-            if (!_network->isPlayerConnected(i) && copID != -1 && copID != _playerNumber) {
-                updateCop(timestep, copID, Vec2::ZERO, false, Vec2::ZERO, dtap);
+            if (!_network->isPlayerConnected(i) && copID != -1 && copID != _playerNumber && copID < _game->numberOfCops()) {  updateCop(timestep, copID, Vec2::ZERO, false, Vec2::ZERO, dtap);
             }
         }
     }
@@ -503,6 +504,7 @@ void GameScene::updateLocal(float timestep, Vec2 movement, bool dtap,
 void GameScene::updateThief(float timestep, Vec2 movement, bool dtap) {
     // Update and network thief movement
     _game->updateThief(movement);
+//    _skins[0]->setPosition(_game->getThief()->getPosition() + Vec2(0, _game->getThief()->getHeight()));
     _network->sendThiefMovement(_game, movement);
     
     // Activate and network traps
@@ -519,6 +521,7 @@ void GameScene::updateThief(float timestep, Vec2 movement, bool dtap) {
 void GameScene::updateCop(float timestep, int copID, Vec2 movement, bool swipe, Vec2 tackle, bool dtap) {
     // Get some reusable variables
     shared_ptr<CopModel> cop = _game->getCop(copID);
+    _skins[copID]->setPosition(cop->getPosition() + Vec2(0, cop->getHeight()));
     Vec2 thiefPosition = _game->getThief()->getPosition();
 
     int trapID = cop->trapDeactivationFlag;

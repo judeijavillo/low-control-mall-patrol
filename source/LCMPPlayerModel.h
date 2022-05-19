@@ -26,7 +26,8 @@
 #define BACK_ANIM_KEY 1
 #define LEFT_ANIM_KEY 2
 #define FRONT_ANIM_KEY 3
-#define STILL_ANIM_KEY 4
+#define STILL_RIGHT_ANIM_KEY 4
+#define STILL_LEFT_ANIM_KEY 5
 #define CHAR_SCALE 0.18f
 
 class PlayerModel : public cugl::physics2::CapsuleObstacle {
@@ -34,12 +35,18 @@ protected:
 //  MARK: - Properties
     /** A reference to the Action Manager */
     std::shared_ptr<cugl::scene2::ActionManager> _actions;
+    /** A reference to the Asset Manager */
+    std::shared_ptr<cugl::AssetManager> _assets;
 
     // Views
     /** The top-level node for displaying the player */
     std::shared_ptr<cugl::scene2::SceneNode> _node;
     /** The child node for displaying the player's dropshadow */
     std::shared_ptr<cugl::scene2::PolygonNode> _dropshadow;
+    /** The child node for displaying the player's skin to the right */
+    std::shared_ptr<cugl::scene2::PolygonNode> _skinNode;
+    /** The child node for displaying the player's skin to the left */
+    std::shared_ptr<cugl::scene2::PolygonNode> _skinNodeLeft;
     /** The child node for displaying the player's username */
     std::shared_ptr<cugl::scene2::Label> _username;
     /** The child nodes for displaying the player */
@@ -52,6 +59,8 @@ protected:
     std::vector<int> _animFrames;
     /** Map that associates trap ID to <trap type, effect vector> vector list, since there could be repeats */
     map<int, shared_ptr<vector<std::tuple<TrapModel::TrapType, shared_ptr<cugl::Vec2>>>>> playerEffects;
+    /** Whether the player moves right or left */
+    bool _moveRight;
     
     // Physics
     /** A multipler for the damping constant */
@@ -114,18 +123,20 @@ public:
      */
     bool init(int playerNumber, const cugl::Vec2 pos, const cugl::Size size, float scale,
               const std::shared_ptr<cugl::scene2::SceneNode>& node,
-              std::shared_ptr<cugl::scene2::ActionManager>& actions);
+              const std::shared_ptr<cugl::AssetManager>& assets,
+              std::shared_ptr<cugl::scene2::ActionManager>& actions,
+              std::string skinKey, bool male);
     
 //  MARK: - Methods
     
     /**
-    * applies the effect to the player model
+     * Applies the effect to the player model
     */
     void act(int trapID, std::shared_ptr<TrapModel::Effect> trap);
 
 
     /**
-    * reverts player model to default state, adding any linger effects as needed
+     * Reverts player model to default state, adding any linger effects as needed
     */
     void unact(int trapID, std::shared_ptr<TrapModel::Effect> trap);
 
