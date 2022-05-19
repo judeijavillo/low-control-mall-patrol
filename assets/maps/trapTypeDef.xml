@@ -11,7 +11,8 @@
   <property name="copLingerEffect" type="string" default=""/>
   <property name="deactivationSound" type="string"/>
   <property name="effectArea" type="object" default="0"/>
-  <property name="idleActivedAnimation" type="bool" default="false"/>
+  <property name="hasTriggers" type="bool" default="false"/>
+  <property name="idleActivatedAnimation" type="bool" default="false"/>
   <property name="idleDeactivatedAnimation" type="bool" default="false"/>
   <property name="numUsages" type="int" default="-1"/>
   <property name="textureActivationTrigger" type="object" default="0"/>
