@@ -195,7 +195,7 @@ void GameScene::dispose() {
  *
  * @param host  Whether the player is host.
  */
-void GameScene::start(bool host, string skinKey, string levelKey) {
+void GameScene::start(bool host, string skinKey) {
     _gameTime = 0;
     _doneTime = 0;
     _isThiefWin = false;
@@ -207,7 +207,7 @@ void GameScene::start(bool host, string skinKey, string levelKey) {
 
     // Initialize the game
     _game = make_shared<GameModel>();
-    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, levelKey, _actions, _skinKey);
+    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _skinKey);
     
     // Set the player's names
     for (int i = 0; i < 5; i++) {
@@ -294,7 +294,7 @@ void GameScene::reset() {
     
     // Make a new game
     _game = make_shared<GameModel>();
-    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, LEVEL_ONE_FILE, _actions, _skinKey);
+    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _skinKey);
     
     // Set the player's names
     for (int i = 0; i < 5; i++) {

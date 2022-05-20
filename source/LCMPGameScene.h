@@ -178,7 +178,7 @@ public:
      *
      * @param host  Whether the player is host.
      */
-    void start(bool host, string skinKey, string levelKey);
+    void start(bool host, string skinKey);
     
     /**
      * The method called to update the scene.

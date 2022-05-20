@@ -339,38 +339,34 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
     _levelselect.update(timestep);
     switch (_levelselect.getChoice()) {
     case LevelSelectScene::Choice::ONE:
-        _levelKey = LEVEL_QUADRANTS_KEY;
         _levelselect.setActive(false); 
         _game.setActive(true);
         _scene = State::GAME;
-        _network->sendStartGame(_levelKey);
-        _game.start(true, _customize.skinKey, _levelKey);
+        _network->sendStartGame(LEVEL_QUADRANTS_KEY);
+        _game.start(true, _customize.skinKey);
         break;
     case LevelSelectScene::Choice::TWO:
-        _levelKey = LEVEL_ORIGINAL_KEY;
         _levelselect.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _network->sendStartGame(_levelKey);
-        _game.start(true, _customize.skinKey, _levelKey);
+        _network->sendStartGame(LEVEL_ORIGINAL_KEY);
+        _game.start(true, _customize.skinKey);
         break;
     case LevelSelectScene::Choice::THREE:
-        _levelKey = LEVEL_QUADRANTS_KEY;
         _levelselect.prevPage();
         _levelselect.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _network->sendStartGame(_levelKey);
-        _game.start(true, _customize.skinKey, _levelKey);
+        _network->sendStartGame(LEVEL_QUADRANTS_KEY);
+        _game.start(true, _customize.skinKey);
         break;
     case LevelSelectScene::Choice::FOUR:
-        _levelKey = LEVEL_CONVEYOR_KEY;
         _levelselect.setActive(false);
         _levelselect.prevPage();
         _game.setActive(true);
         _scene = State::GAME;
-        _network->sendStartGame(_levelKey);
-        _game.start(true, _customize.skinKey, _levelKey);
+        _network->sendStartGame(LEVEL_CONVEYOR_KEY);
+        _game.start(true, _customize.skinKey);
         break;
     case LevelSelectScene::Choice::BACK:
         _levelselect.setActive(false);
@@ -434,7 +430,7 @@ void LCMPApp::updateClientScene(float timestep) {
         _client.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _game.start(false, _customize.skinKey, _network->getLevel());
+        _game.start(false, _customize.skinKey);
         break;
     case ClientScene::Status::WAIT:
     case ClientScene::Status::IDLE:
@@ -464,7 +460,7 @@ void LCMPApp::updateFindScene(float timestep) {
         _find.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _game.start(true, _customize.skinKey, _levelKey);
+        _game.start(true, _customize.skinKey);
 //        _customize.setActive(true);
 //        _scene = State::CUSTOM;
         break;

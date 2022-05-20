@@ -93,9 +93,6 @@ protected:
     /** The scene to show the gacha game */
     GachaScene _gacha;
 
-    /** The key for which level the game will take place in */
-    string _levelKey;
-
     /** The current active scene */
     State _scene;
     /** The previous frame's active scene */

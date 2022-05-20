@@ -162,6 +162,7 @@ void NetworkController::sendDisplayName(string name) {
  * Sends a byte vector to start the game
  */
 void NetworkController::sendStartGame(string level, bool randomThief, int thiefChoice) {
+    _level = level;
     vector<float> data;
     data.push_back(START_GAME);
     data.push_back(getNumPlayers());
