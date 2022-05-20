@@ -66,12 +66,12 @@
                         {
                          "name":"triggerArea",
                          "type":"object",
-                         "value":1617
+                         "value":1651
                         }, 
                         {
                          "name":"triggerDeactivationArea",
                          "type":"object",
-                         "value":1616
+                         "value":1652
                         }],
                  "rotation":0,
                  "type":"Trap",
@@ -89,30 +89,8 @@
                  "type":"",
                  "visible":true,
                  "width":450,
-                 "x":2133,
-                 "y":5300.905
-                }, 
-                {
-                 "height":212,
-                 "id":1616,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":297.333,
-                 "x":2206.97,
-                 "y":4653.765
-                }, 
-                {
-                 "height":212,
-                 "id":1617,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":297.333,
-                 "x":2207.3,
-                 "y":4653.095
+                 "x":2121.33333333333,
+                 "y":5301.23833333333
                 }, 
                 {
                  "height":0,
@@ -161,12 +139,12 @@
                         {
                          "name":"triggerArea",
                          "type":"object",
-                         "value":1620
+                         "value":1650
                         }, 
                         {
                          "name":"triggerDeactivationArea",
                          "type":"object",
-                         "value":1621
+                         "value":1649
                         }],
                  "rotation":0,
                  "type":"Trap",
@@ -185,29 +163,7 @@
                  "visible":true,
                  "width":450,
                  "x":4096.33333333333,
-                 "y":6425.23333333333
-                }, 
-                {
-                 "height":212,
-                 "id":1620,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":297.333,
-                 "x":4175.63666666667,
-                 "y":5756.77
-                }, 
-                {
-                 "height":212,
-                 "id":1621,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":297.333,
-                 "x":4174.63333333333,
-                 "y":5752.1
+                 "y":6419.9
                 }, 
                 {
                  "height":0,
@@ -256,12 +212,12 @@
                         {
                          "name":"triggerArea",
                          "type":"object",
-                         "value":1624
+                         "value":1654
                         }, 
                         {
                          "name":"triggerDeactivationArea",
                          "type":"object",
-                         "value":1625
+                         "value":1653
                         }],
                  "rotation":0,
                  "type":"Trap",
@@ -279,30 +235,8 @@
                  "type":"",
                  "visible":true,
                  "width":450,
-                 "x":6371.21212121212,
-                 "y":8460.50606060606
-                }, 
-                {
-                 "height":212,
-                 "id":1624,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":297.333,
-                 "x":6449.18212121212,
-                 "y":7797.37606060606
-                }, 
-                {
-                 "height":212,
-                 "id":1625,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":297.333,
-                 "x":6453.51212121212,
-                 "y":7798.0393939394
+                 "x":6377.21212121212,
+                 "y":8422.50606060606
                 }, 
                 {
                  "height":0,
@@ -351,12 +285,12 @@
                         {
                          "name":"triggerArea",
                          "type":"object",
-                         "value":1629
+                         "value":1646
                         }, 
                         {
                          "name":"triggerDeactivationArea",
                          "type":"object",
-                         "value":1628
+                         "value":1645
                         }],
                  "rotation":0,
                  "type":"Trap",
@@ -374,30 +308,8 @@
                  "type":"",
                  "visible":true,
                  "width":450,
-                 "x":5392.33333333333,
-                 "y":2757.23333333333
-                }, 
-                {
-                 "height":212,
-                 "id":1628,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":297.333,
-                 "x":5471.63666666667,
-                 "y":2090.10333333333
-                }, 
-                {
-                 "height":212,
-                 "id":1629,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":297.333,
-                 "x":5470.63333333333,
-                 "y":2097.43333333333
+                 "x":5409.33333333333,
+                 "y":2722.23333333333
                 }, 
                 {
                  "height":0,
@@ -446,7 +358,7 @@
                         {
                          "name":"triggerArea",
                          "type":"object",
-                         "value":1636
+                         "value":1642
                         }, 
                         {
                          "name":"triggerDeactivationArea",
@@ -469,30 +381,19 @@
                  "type":"",
                  "visible":true,
                  "width":450,
-                 "x":4895,
-                 "y":1404.23166666667
+                 "x":4912,
+                 "y":1469.23166666667
                 }, 
                 {
-                 "height":212,
-                 "id":1636,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":297.333,
-                 "x":4979.64333333333,
-                 "y":742.435
-                }, 
-                {
-                 "height":212,
+                 "height":310,
                  "id":1637,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":297.333,
-                 "x":4981.3,
-                 "y":744.431666666666
+                 "width":384.333,
+                 "x":4928.3,
+                 "y":722.431666666666
                 }, 
                 {
                  "height":0,
@@ -541,12 +442,12 @@
                         {
                          "name":"triggerArea",
                          "type":"object",
-                         "value":1641
+                         "value":1647
                         }, 
                         {
                          "name":"triggerDeactivationArea",
                          "type":"object",
-                         "value":1640
+                         "value":1648
                         }],
                  "rotation":0,
                  "type":"Trap",
@@ -564,30 +465,129 @@
                  "type":"",
                  "visible":true,
                  "width":450,
-                 "x":7354,
-                 "y":2238.565
+                 "x":7319.66666666667,
+                 "y":2287.565
                 }, 
                 {
-                 "height":212,
-                 "id":1640,
+                 "height":310,
+                 "id":1642,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":297.333,
-                 "x":7436.31,
-                 "y":1569.435
+                 "width":384.333,
+                 "x":4927.8335,
+                 "y":729
                 }, 
                 {
-                 "height":212,
-                 "id":1641,
+                 "height":310,
+                 "id":1645,
                  "name":"",
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":297.333,
-                 "x":7435.3,
-                 "y":1570.765
+                 "width":384.333,
+                 "x":5447.22743939394,
+                 "y":1987.42424242424
+                }, 
+                {
+                 "height":310,
+                 "id":1646,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":384.333,
+                 "x":5444.8335,
+                 "y":1991
+                }, 
+                {
+                 "height":310,
+                 "id":1647,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":384.333,
+                 "x":7338.16683333333,
+                 "y":1609.66666666667
+                }, 
+                {
+                 "height":310,
+                 "id":1648,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":384.333,
+                 "x":7336.16683333333,
+                 "y":1613
+                }, 
+                {
+                 "height":310,
+                 "id":1649,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":384.333,
+                 "x":4118.50016666667,
+                 "y":5703.66666666667
+                }, 
+                {
+                 "height":310,
+                 "id":1650,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":384.333,
+                 "x":4121.16683333333,
+                 "y":5707.66666666667
+                }, 
+                {
+                 "height":310,
+                 "id":1651,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":384.333,
+                 "x":2154.50016666667,
+                 "y":4593.66666666667
+                }, 
+                {
+                 "height":310,
+                 "id":1652,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":384.333,
+                 "x":2152.8335,
+                 "y":4595
+                }, 
+                {
+                 "height":310,
+                 "id":1653,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":384.333,
+                 "x":6408.8335,
+                 "y":7739
+                }, 
+                {
+                 "height":310,
+                 "id":1654,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":384.333,
+                 "x":6380.8335,
+                 "y":7744
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -6162,7 +6162,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":1642,
+ "nextobjectid":1655,
  "orientation":"orthogonal",
  "renderorder":"right-up",
  "tiledversion":"1.8.2",

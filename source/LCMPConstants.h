@@ -144,11 +144,11 @@ enum JsonConstants :int {
 /** Player constants */
 // Thief Physics Constants
 /** The thief's damping coefficient */
-#define THIEF_DAMPING_DEFAULT 150.0f
+#define THIEF_DAMPING_DEFAULT 200.0f
 /** The thief's maximum speed of this player */
 #define THIEF_MAX_SPEED_DEFAULT 10.0f
 /** The thief's acceleration of this player */
-#define THIEF_ACCELERATION_DEFAULT 1500.0f
+#define THIEF_ACCELERATION_DEFAULT 2320.0f
 
 // Cop Physics Constants
 /** The cop's damping coefficient */
