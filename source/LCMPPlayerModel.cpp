@@ -206,9 +206,13 @@ bool PlayerModel::removeEffects(int trapID) {
     }
 
     if (playerEffects[trapID]->size() == 1) {
-        if (std::get<0>(playerEffects[trapID]->at(0)) == TrapModel::Slippy || std::get<0>(playerEffects[trapID]->at(0)) == TrapModel::VelMod) {
+        if (std::get<0>(playerEffects[trapID]->at(0)) == TrapModel::Slippy) {
             setAccelerationMultiplier(Vec2(1, 1));
             setDampingMultiplier(Vec2(1, 1));
+            
+        }
+        else if (std::get<0>(playerEffects[trapID]->at(0)) == TrapModel::VelMod) {
+            setAccelerationMultiplier(Vec2(1, 1));
             setMaxSpeedMultiplier(1);
         }
 
