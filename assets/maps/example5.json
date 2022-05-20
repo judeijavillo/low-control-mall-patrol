@@ -3595,42 +3595,6 @@
                 }, 
                 {
                  "gid":57,
-                 "height":145.464,
-                 "id":1305,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":106.099,
-                 "x":2271.6,
-                 "y":4416
-                }, 
-                {
-                 "gid":59,
-                 "height":145.464,
-                 "id":1306,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":118.096,
-                 "x":2153.77,
-                 "y":4416
-                }, 
-                {
-                 "gid":58,
-                 "height":145.464,
-                 "id":1307,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":106.099,
-                 "x":2048,
-                 "y":4416
-                }, 
-                {
-                 "gid":57,
                  "height":173.799,
                  "id":1312,
                  "name":"",

@@ -8,7 +8,7 @@
  "margin":0,
  "name":"Props",
  "spacing":0,
- "tilecount":67,
+ "tilecount":69,
  "tiledversion":"1.8.2",
  "tileheight":2805,
  "tiles":[
@@ -3430,6 +3430,29 @@
          "image":"..\/textures\/environment\/arcade_front_Rside.png",
          "imageheight":633,
          "imagewidth":42,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":550.662,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":42,
+                     "x":0,
+                     "y":82.3379
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
          "properties":[
                 {
                  "name":"anim_cols",
@@ -3457,6 +3480,29 @@
          "image":"..\/textures\/environment\/arcade_front_Lside.png",
          "imageheight":633,
          "imagewidth":42,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":550.662,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":42,
+                     "x":0,
+                     "y":82.3379
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
          "properties":[
                 {
                  "name":"anim_cols",
@@ -3533,6 +3579,29 @@
          "image":"..\/textures\/environment\/arcade_back_Rside.png",
          "imageheight":633,
          "imagewidth":43,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":550.662,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":43,
+                     "x":0,
+                     "y":82.3379
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
          "properties":[
                 {
                  "name":"anim_cols",
@@ -3560,6 +3629,29 @@
          "image":"..\/textures\/environment\/arcade_back_Lside.png",
          "imageheight":633,
          "imagewidth":43,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":550.662,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":43,
+                     "x":0,
+                     "y":82.3379
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
          "properties":[
                 {
                  "name":"anim_cols",
@@ -3587,6 +3679,30 @@
          "image":"..\/textures\/environment\/Whiteboard_do_nut.png",
          "imageheight":480,
          "imagewidth":326,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "ellipse":true,
+                     "height":117.633751838027,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":229.612034837688,
+                     "x":47.5059382422803,
+                     "y":347.245786675715
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
          "properties":[
                 {
                  "name":"anim_cols",
@@ -3614,6 +3730,30 @@
          "image":"..\/textures\/environment\/Whiteboard_blank.png",
          "imageheight":477,
          "imagewidth":329,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "ellipse":true,
+                     "height":117.634,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":229.612,
+                     "x":47.5059,
+                     "y":347.246
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
          "properties":[
                 {
                  "name":"anim_cols",
@@ -3641,6 +3781,29 @@
          "image":"..\/textures\/environment\/Vendingmachine.png",
          "imageheight":710,
          "imagewidth":443,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":553.223443223443,
+                     "id":1,
+                     "name":"",
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":419.556776556777,
+                     "x":10.2564102564103,
+                     "y":146.520146520147
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
          "properties":[
                 {
                  "name":"anim_cols",
@@ -3668,6 +3831,50 @@
          "image":"..\/textures\/environment\/Chalk_sign_fish.png",
          "imageheight":324,
          "imagewidth":254,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":3,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":2,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":108.585001696641,
+                             "y":50.8992195453003
+                            }, 
+                            {
+                             "x":237.529691211401,
+                             "y":7.91765637371338
+                            }, 
+                            {
+                             "x":196.810315575161,
+                             "y":-153.828752403574
+                            }, 
+                            {
+                             "x":47.5059382422803,
+                             "y":-206.990159484221
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":10.1798439090601,
+                     "y":266.938129170908
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
          "properties":[
                 {
                  "name":"anim_cols",
@@ -3695,6 +3902,50 @@
          "image":"..\/textures\/environment\/Chalk_sign_blank.png",
          "imageheight":339,
          "imagewidth":257,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":108.585,
+                             "y":50.8992
+                            }, 
+                            {
+                             "x":237.53,
+                             "y":7.91766
+                            }, 
+                            {
+                             "x":196.81,
+                             "y":-153.829
+                            }, 
+                            {
+                             "x":47.5059,
+                             "y":-206.99
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":10.1798,
+                     "y":266.938
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
          "properties":[
                 {
                  "name":"anim_cols",
@@ -4763,6 +5014,60 @@
                  "name":"name",
                  "type":"string",
                  "value":"janitor_cart"
+                }]
+        }, 
+        {
+         "id":76,
+         "image":"..\/textures\/environment\/wallsurface.png",
+         "imageheight":64,
+         "imagewidth":64,
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"wall_surface"
+                }]
+        }, 
+        {
+         "id":77,
+         "image":"..\/textures\/environment\/wallinterior.png",
+         "imageheight":64,
+         "imagewidth":64,
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"wall_interior"
                 }]
         }],
  "tilewidth":2276,

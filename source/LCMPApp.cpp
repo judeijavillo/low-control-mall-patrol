@@ -355,7 +355,7 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
         _game.start(true, _customize.skinKey, _levelKey);
         break;
     case LevelSelectScene::Choice::THREE:
-        _levelKey = LEVEL_ONE_FILE;
+        _levelKey = LEVEL_QUADRANTS_KEY;
         _levelselect.prevPage();
         _levelselect.setActive(false);
         _game.setActive(true);

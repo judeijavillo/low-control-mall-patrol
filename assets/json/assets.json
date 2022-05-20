@@ -1,5 +1,11 @@
 {
     "textures": {
+        "wall_interior": {
+            "file": "textures/environment/wallinterior.png"
+        },
+        "wall_surface": {
+            "file": "textures/environment/wallsurface.png"
+        },
         "2chair": {
             "file": "textures/environment/2chair.png"
         },
