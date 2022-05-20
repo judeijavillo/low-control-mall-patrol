@@ -1,5 +1,5 @@
 {
-    "activeFile": "PropsAndTraps.tsj",
+    "activeFile": "example5.json",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -26,8 +26,8 @@
             "scale": 0.25,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 3854,
-                "y": 3200
+                "x": 4854,
+                "y": 4164
             }
         },
         "donut_room.json": {
@@ -79,11 +79,11 @@
             }
         },
         "example5.json": {
-            "scale": 0.125,
+            "scale": 0.25,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4316,
-                "y": 4012
+                "x": 3326,
+                "y": 5434
             }
         },
         "example6.json": {
@@ -113,11 +113,11 @@
         "PropsAndTraps.tsj"
     ],
     "project": "maps.tiled-project",
-    "property.type": "Vec2",
+    "property.type": "bool",
     "recentFiles": [
-        "example5.json",
-        "conveyorlevel.json",
         "PropsAndTraps.tsj",
+        "conveyorlevel.json",
+        "example5.json",
         "example3.json",
         "example2.json",
         "example1.json",

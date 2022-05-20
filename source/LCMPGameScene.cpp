@@ -26,7 +26,7 @@ using namespace std;
 //  MARK: - Constants
 
 /** Whether or not to show the debug node */
-#define DEBUG_ON        1
+#define DEBUG_ON        0
 
 /** Width of the game world in Box2d units */
 #define DEFAULT_WIDTH   32.0f
@@ -512,7 +512,7 @@ void GameScene::updateThief(float timestep, Vec2 movement, bool dtap) {
         _network->sendTrapActivation(trapID);
     }
 
-    CULog("acc: (%f %f), damp: (%f, %f)", _game->getThief()->getAcceleration().x, _game->getThief()->getAcceleration().y, _game->getThief()->getDamping().x, _game->getThief()->getDamping().y);
+//    CULog("acc: (%f %f), damp: (%f, %f)", _game->getThief()->getAcceleration().x, _game->getThief()->getAcceleration().y, _game->getThief()->getDamping().x, _game->getThief()->getDamping().y);
 }
 
 /**
