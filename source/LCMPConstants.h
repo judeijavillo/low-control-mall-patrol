@@ -123,7 +123,7 @@ enum JsonConstants :int {
 #define POLYFACTORY_TOLERANCE   0.1
 
 /** size of grid squares for collision optimization */
-#define GRID_SIZE               1
+#define GRID_SIZE               0.5
 
 /** Music constants */
 #define THIEF_COLLISION_SFX     "fuck"
