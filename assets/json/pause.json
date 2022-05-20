@@ -87,17 +87,35 @@
 								"size" : [500, 600]
 							},
 							"children":{
+								"MenuTitle" : {
+									"type"		: "label",
+									"data" : {
+										"anchor"  : [0.5,0.5],
+										"scale"    : 1.0,
+										"font"     : "rubik",
+										"text"     : "SETTINGS",
+										"halign"   : "center",
+										"valign"   : "middle",
+										"foreground": [113, 23, 23, 255]
+									},
+									"layout": {
+										"x_anchor": "center",
+										"y_anchor": "middle",
+										"x_offset": 0.05,
+										"y_offset": 0.015
+									}
+								},
 								"SoundButton" : {
 									"type"      : "Button",
 									"data"   : {
 										"upnode"  : "up",
 										"anchor":   [0.5,0.5],
-										"scale" : [0.3, 0.3]
+										"scale" : [0.5, 0.5]
 									},
 									"layout": {
 										"x_anchor": "center",
 										"y_anchor": "middle",
-										"x_offset": -0.115,
+										"x_offset": 0.038,
 										"y_offset": -0.115
 									},
 									"children": {
@@ -114,7 +132,7 @@
 									"data"   : {
 										"upnode"  : "up",
 										"anchor":   [0.5,0.5],
-										"scale" : [0.2, 0.2]
+										"scale" : [0.5, 0.5]
 									},
 									"layout": {
 										"x_anchor": "center",
@@ -147,12 +165,12 @@
 									"type"		: "label",
 									"data" : {
 										"anchor"  : [0.5,0.5],
-										"scale"    : 0.9,
+										"scale"    : 1.0,
 										"font"     : "rubik",
 										"text"     : "SOUND",
 										"halign"   : "center",
 										"valign"   : "middle",
-										"foreground": [38, 84, 124, 255]
+										"foreground": [113, 23, 23, 255]
 									},
 									"layout": {
 										"x_anchor": "center",
@@ -170,7 +188,7 @@
 										"text"     : "MUSIC",
 										"halign"   : "center",
 										"valign"   : "middle",
-										"foreground": [38, 84, 124, 255]
+										"foreground": [113, 23, 23, 255]
 									},
 									"layout": {
 										"x_anchor": "center",
@@ -226,7 +244,7 @@
 										"text"     : "SFX",
 										"halign"   : "center",
 										"valign"   : "middle",
-										"foreground": [38, 84, 124, 255]
+										"foreground": [113, 23, 23, 255]
 									},
 									"layout": {
 										"x_anchor": "center",

@@ -434,6 +434,9 @@
         },
         "donut": {
             "file": "textures/ui/donut_brown.png"
+        },
+		"button_white": {
+            "file": "textures/ui/lcmp_buttons_white.png"
         }
     },
     "sounds": {
@@ -919,7 +922,7 @@
 					"layout" : {
 						"x_anchor" : "center",
 						"y_anchor" : "top",
-						"y_offset" : 0
+						"y_offset" : -0.05
 					},
 					"children" : {
 						"head" : {
