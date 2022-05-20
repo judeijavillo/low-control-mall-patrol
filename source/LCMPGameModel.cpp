@@ -109,8 +109,7 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
 
     //float backdropScale = (scale / _tileSize) * 1.12; // 1.12 is the scale of the floor plan relative to the tiled map
     float backdropScale = (scale / _tileSize);
-
-    initBackdrop(backdropScale, 5, 5, assets);
+    initBackdrop(backdropScale, 5, 5, assets, file);
 
     // Initialize thief
     initThief(scale, thiefSpawn, assets, _actions);
@@ -331,28 +330,30 @@ void GameModel::deactivateTrap(int trapID) {
 //  MARK: - Helpers
 
 void GameModel::initBackdrop(float scale, int rows, int cols,
-                             const shared_ptr<AssetManager>& assets) {
+                             const shared_ptr<AssetManager>& assets, string file) {
 
     // Create textured node to store texture for each map chunk
     std::shared_ptr<cugl::scene2::PolygonNode> chunkNode;
 
     Vec2 origin = Vec2(0.0f, 0.0f);
+    
+    if (file == LEVEL_ORIGINAL_KEY) {
+        // Cycle through all map chunks
+        for (int y = 1; y <= cols; y++) {
+            for (int x = 1; x <= rows; x++) {
 
-    // Cycle through all map chunks
-    for (int y = 1; y <= cols; y++) {
-        for (int x = 1; x <= rows; x++) {
+                // Retrieve map chunk from assets
+                string assetName = strtool::format("row-%d-column-%d", y, x);
+                auto mapChunk = assets->get<Texture>(assetName);
 
-            // Retrieve map chunk from assets
-            string assetName = strtool::format("row-%d-column-%d", y, x);
-            auto mapChunk = assets->get<Texture>(assetName);
-
-            // Create textured node for chunk
-            chunkNode = scene2::PolygonNode::allocWithTexture(mapChunk);
-            chunkNode->setAnchor(0.0f, 0.0f);
-            chunkNode->setScale(scale);
-            chunkNode->setPositionX(origin.x + mapChunk->getWidth() * scale * (x - 1));
-            chunkNode->setPositionY(origin.y + mapChunk->getHeight() * scale * (y - 1));
-            _floornode->addChild(chunkNode);
+                // Create textured node for chunk
+                chunkNode = scene2::PolygonNode::allocWithTexture(mapChunk);
+                chunkNode->setAnchor(0.0f, 0.0f);
+                chunkNode->setScale(scale);
+                chunkNode->setPositionX(origin.x + mapChunk->getWidth() * scale * (x - 1));
+                chunkNode->setPositionY(origin.y + mapChunk->getHeight() * scale * (y - 1));
+                _floornode->addChild(chunkNode);
+            }
         }
     }
 }
