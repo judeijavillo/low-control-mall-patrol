@@ -506,6 +506,14 @@ void GameScene::updateThief(float timestep, Vec2 movement, bool dtap) {
     
     // Activate and network traps
     int trapID = _game->getThief()->trapActivationFlag;
+
+    if (trapID != 1) {
+        //insert visual for trap
+    }
+    else {
+        //remove visual for trap
+    }
+
     if (dtap && trapID != -1) {
         _game->activateTrap(trapID);
         _network->sendTrapActivation(trapID);
