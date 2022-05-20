@@ -180,7 +180,8 @@ private:
     void initBackdrop(float scale,
                       int rows,
                       int cols,
-                      const std::shared_ptr<cugl::AssetManager>& assets);
+                      const std::shared_ptr<cugl::AssetManager>& assets,
+                      string file);
     
     /**
      * Initializes a thief
