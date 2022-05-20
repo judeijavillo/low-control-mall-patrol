@@ -18,31 +18,7 @@
          "draworder":"topdown",
          "id":5,
          "name":"Traps",
-         "objects":[
-                {
-                 "gid":70,
-                 "height":203.818197563575,
-                 "id":1334,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":203.818197563575,
-                 "x":2618.64271808752,
-                 "y":2443.81819756358
-                }, 
-                {
-                 "gid":70,
-                 "height":226.176,
-                 "id":1336,
-                 "name":"",
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":226.176,
-                 "x":1622.16122772976,
-                 "y":2406.80754983242
-                }],
+         "objects":[],
          "opacity":1,
          "type":"objectgroup",
          "visible":true,
@@ -5584,6 +5560,30 @@
                  "width":141.099,
                  "x":9241,
                  "y":2560
+                }, 
+                {
+                 "gid":70,
+                 "height":226.176,
+                 "id":1608,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":226.176,
+                 "x":1632,
+                 "y":2416
+                }, 
+                {
+                 "gid":70,
+                 "height":226.176,
+                 "id":1609,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":226.176,
+                 "x":2624,
+                 "y":2464
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -5592,7 +5592,7 @@
          "y":0
         }],
  "nextlayerid":14,
- "nextobjectid":1608,
+ "nextobjectid":1610,
  "orientation":"orthogonal",
  "renderorder":"right-up",
  "tiledversion":"1.8.2",
