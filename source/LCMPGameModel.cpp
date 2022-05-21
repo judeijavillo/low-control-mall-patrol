@@ -43,6 +43,7 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     _worldnode = worldnode;
     _debugnode = debugnode;
     _gameover = false;
+    _thiefWon = false;
     
     _actions = actions;
     std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(file);

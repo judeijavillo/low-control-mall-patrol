@@ -230,7 +230,7 @@ void ClientScene::dispose() {
  */
 void ClientScene::update(float timestep) {
     if (_network->isConnected() && _status != START && _status != ABORT) {
-        _network->update();
+        _network->update(timestep);
         switch (_network->getStatus()) {
         case NetworkController::Status::IDLE:
             _status = WAIT;
@@ -349,6 +349,7 @@ void ClientScene::showLobby(bool lobby) {
     if (playerID == -1) return;
     
     std::shared_ptr<cugl::scene2::TextField> player = _players[playerID];
+    player->setText("Player " + to_string(playerID + 1));
     player->activate();
     player->setBackground(Color4("#ffffffff"));
     
@@ -366,9 +367,7 @@ void ClientScene::updateLobby(float timestep) {
         } else {
             key = player.male ? "ss_cop_idle_right" : "ss_cop_idle_right_f";
         }
-        if (playerID != *(_network->getPlayerID())) {
-            _players[playerID]->setText(player.username);
-        }
+        if (!_players[playerID]->isActive()) _players[playerID]->setText(player.username);
         _nodes[playerID]->setTexture(_assets->get<Texture>(key));
     }
     

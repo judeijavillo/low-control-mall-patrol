@@ -60,6 +60,8 @@ protected:
     float _tileSize;
     /** A flag indicating whether the game is over */
     bool _gameover;
+    /** A flag indicating whether the thief won */
+    bool _thiefWon;
 
 public:
 //  MARK: - Constructors
@@ -95,7 +97,7 @@ public:
 //  MARK: - Methods
     
     /**
-     * Returns true iff the game is over (cops won)
+     * Returns true iff the game is over
      */
     bool isGameOver() { return _gameover; }
     
@@ -103,6 +105,16 @@ public:
      * Sets a flag indicating game over
      */
     void setGameOver(bool value) { _gameover = value; }
+    
+    /**
+     * Returns true iff the thief won
+     */
+    bool getThiefWon() { return _thiefWon; }
+    
+    /**
+     * Sets a flag indicating if the thief won
+     */
+    void setThiefWon(bool value) { _thiefWon = value; }
     
     /**
      * Returns a reference to the thief

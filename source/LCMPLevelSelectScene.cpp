@@ -42,7 +42,8 @@ using namespace std;
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool LevelSelectScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
-                     std::shared_ptr<AudioController>& audio) {
+                            std::shared_ptr<NetworkController>& network,
+                            std::shared_ptr<AudioController>& audio) {
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     dimen *= SCENE_HEIGHT/dimen.height;
@@ -54,6 +55,7 @@ bool LevelSelectScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     
     // Save the references to managers and controllers
     _assets = assets;
+    _network = network;
     _audio = audio;
     
     _mapScreen = 0;
@@ -129,6 +131,7 @@ void LevelSelectScene::dispose() {
 }
 
 void LevelSelectScene::update(float timestep) {
+    if (_network->isConnected()) _network->update(timestep);
     if (_mapScreen != _prevScreen) {
         _prevScreen = _mapScreen;
         switch (_mapScreen) {

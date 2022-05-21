@@ -15,6 +15,7 @@
 #include <cugl/cugl.h>
 #include <vector>
 #include "LCMPAudioController.h"
+#include "LCMPNetworkController.h"
 
 /**
  * This class presents the menu to the player.
@@ -51,6 +52,8 @@ protected:
     cugl::Vec2 _offset;
     /** The asset manager for this scene. */
     std::shared_ptr<cugl::AssetManager> _assets;
+    /** A reference to the Network Controller instance */
+    std::shared_ptr<NetworkController> _network;
     /** The sound controller for the game */
     std::shared_ptr<AudioController> _audio;
     /** The button for playing on map 1 */
@@ -112,6 +115,7 @@ public:
      * @return true if the controller is initialized properly, false otherwise.
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets,
+              std::shared_ptr<NetworkController>& network,
               std::shared_ptr<AudioController>& audio);
 
 //  MARK: - Methods

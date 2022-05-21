@@ -113,6 +113,7 @@ enum JsonConstants :int {
 #define LEVEL_DONUT_KEY		"maps/donut_room.json"
 #define LEVEL_CONVEYOR_KEY        "maps/map3.json"
 #define LEVEL_ORIGINAL_KEY        "maps/example5.json"
+#define LEVEL_THREE_KEY        "maps/map3.json"
 #define LEVEL_QUADRANTS_KEY        "maps/quadrants2.json"
 
 /** Tileset for props */

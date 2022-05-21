@@ -17,10 +17,6 @@
 #include "LCMPAudioController.h"
 #include "LCMPPauseController.h"
 #include <cugl/scene2/actions/CUActionManager.h>
-//#include <cugl/scene2/actions/CUMoveAction.h>
-//#include <cugl/scene2/actions/CUScaleAction.h>
-//#include <cugl/scene2/actions/CUAnimateAction.h>
-//#include <cugl/math/CUEasingBezier.h>
 
 /**
  * This class presents the menu to the player.

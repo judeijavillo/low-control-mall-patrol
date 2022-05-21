@@ -232,7 +232,7 @@ void LCMPApp::updateLoadingScene(float timestep) {
         _host.init(_assets, _network, _audio);
         _client.init(_assets, _network, _audio, _sixteenNineAspectRatio);
         _find.init(_assets, _network);
-        _levelselect.init(_assets, _audio);
+        _levelselect.init(_assets, _network, _audio);
         _game.init(_assets, _network, _audio, _actions);
         _victory.init(_assets, _network, _audio, _actions, true);
         _shop.init(_assets, _audio);

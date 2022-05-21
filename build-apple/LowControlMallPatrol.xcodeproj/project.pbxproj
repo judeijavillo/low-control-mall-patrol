@@ -356,8 +356,8 @@
 		42B26D6027C1D97E0019E6FB /* Scenes */ = {
 			isa = PBXGroup;
 			children = (
-				B119EF1B281FFA5000230B61 /* LCMPGachaScene.cpp */,
 				B119EF1F281FFA5000230B61 /* LCMPGachaScene.h */,
+				B119EF1B281FFA5000230B61 /* LCMPGachaScene.cpp */,
 				B119EEE028149C0700230B61 /* LCMPVictoryScene.h */,
 				B119EEDC28149C0700230B61 /* LCMPVictoryScene.cpp */,
 				B140973127F67252005C7F11 /* LCMPCustomizeScene.h */,

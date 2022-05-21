@@ -87,7 +87,7 @@ protected:
     /** The sprite of cop 4 */
     std::shared_ptr<cugl::scene2::SpriteNode> _cop4Node;
     
-    /** A mapping from player number  to character node */
+    /** A mapping from player number to player username textfield */
     std::vector<std::shared_ptr<cugl::scene2::TextField>> _players;
     /** The player 1 label (for updating) */
     std::shared_ptr<cugl::scene2::TextField> _player1;

@@ -171,12 +171,7 @@ void HostScene::update(float timestep) {
     updateSkins(timestep);
     updateLobby(timestep);
     if (_network->isConnected() && _status != START && _status != ABORT) {
-        _player2->setText(_network->getPlayer(1).username);
-        _player3->setText(_network->getPlayer(2).username);
-        _player4->setText(_network->getPlayer(3).username);
-        _player5->setText(_network->getPlayer(4).username);
-        
-        _network->update();
+        _network->update(timestep);
         switch (_network->getStatus()) {
             case NetworkController::Status::IDLE:
             case NetworkController::CONNECTING:
@@ -262,8 +257,8 @@ void HostScene::updateLobby(float timestep) {
             key = player.male ? "ss_thief_idle_right" : "ss_thief_idle_right_f";
         } else {
             key = player.male ? "ss_cop_idle_right" : "ss_cop_idle_right_f";
-            _players[playerID]->setText(player.username);
         }
+        if (!_players[playerID]->isActive()) _players[playerID]->setText(player.username);
         _nodes[playerID]->setTexture(_assets->get<Texture>(key));
     }
     

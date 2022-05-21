@@ -29,6 +29,9 @@ using namespace std;
 /** The version of the server */
 #define SERVER_VERSION  0
 
+/** The number of messages the network controller can receive at a given update call */
+#define NETWORK_STEP    10
+
 //  MARK: - Constructors
 
 /**
@@ -80,11 +83,11 @@ bool NetworkController::connect() {
     _connection = NetworkConnection::alloc(_config);
     
     for (int playerID = 0; playerID < 5; playerID++) {
-        _players[playerID] = {true, playerID, -2, "None"};
+        _players[playerID] = {true, playerID, -2, 0, "None"};
     }
     _players[0].username = "Player 1";
     
-    update();
+    update(0);
     return _status != IDLE;
 }
 
@@ -95,10 +98,10 @@ bool NetworkController::connect(const std::string room) {
     _connection = NetworkConnection::alloc(_config, room);
     
     for (int playerID = 0; playerID < 5; playerID++) {
-        _players[playerID] = {true, playerID, -2, "None"};
+        _players[playerID] = {true, playerID, -2, 0, "None"};
     }
     
-    update();
+    update(0);
     return _status != IDLE;
 }
 
@@ -107,11 +110,13 @@ bool NetworkController::connect(const std::string room) {
 /**
  * Checks the connection and updates the status accordingly (pre-game)
  */
-void NetworkController::update() {
+void NetworkController::update(float timestep) {
     if (_connection == nullptr) {
         _status = IDLE;
         return;
     }
+    
+    // Check the status of the network connection
     switch (_connection->getStatus()) {
     case NetworkConnection::NetStatus::Pending:
         _status = CONNECTING;
@@ -129,41 +134,75 @@ void NetworkController::update() {
         break;
     }
     
+    // Keep track of long it's been since the last player sent a ping
+    for (int playerID = 0; playerID < getNumPlayers(); playerID++) {
+        int myID = getPlayerID() ? *getPlayerID() : -1;
+        if (myID != playerID) _players[playerID].lastPing += timestep;
+    }
+    
+    // Let other players know that you're still active
+    sendPing();
+    
+    // Let other players know who you are
     sendPlayer();
     
-    _connection->receive([this](const std::vector<uint8_t> msg) {
-        _deserializer.receive(msg);
-        vector<float> data = _deserializer.readFloatVector();
-        switch ((int) data.at(0)) {
-        case PLAYER:
-            {
-            int playerID = data.at(1);
-            if (playerID != -1) {
-                _players[playerID].male = _deserializer.readBool();
-                _players[playerID].playerID = (int) _deserializer.readFloat();
-                _players[playerID].playerNumber = (int) _deserializer.readFloat();
-                _players[playerID].username = _deserializer.readString();
+    // Receive data from other players
+    for (int i = 0; i < NETWORK_STEP; i++) {
+        _connection->receive([this](const std::vector<uint8_t> msg) {
+            _deserializer.receive(msg);
+            vector<float> data = _deserializer.readFloatVector();
+            switch ((int) data.at(0)) {
+            case PING:
+                {
+                int playerID = (int) data.at(1);
+                if (playerID != -1) _players[playerID].lastPing = 0;
+                break;
+                }
+            case PLAYER:
+                {
+                int playerID = (int) data.at(1);
+                int myID = getPlayerID() ? *getPlayerID() : -1;
+                if (playerID != -1 && playerID != myID) {
+                    _players[playerID].male = _deserializer.readBool();
+                    _players[playerID].playerID = (int) _deserializer.readFloat();
+                    _players[playerID].playerNumber = (int) _deserializer.readFloat();
+                    _players[playerID].username = _deserializer.readString();
+                }
+                break;
+                }
+            case START_GAME:
+                _status = START;
+                int i = 2;
+                while (i < data.size()) {
+                    int player = (int) data.at(i);
+                    int role = (int) data.at(i+1);
+                    if (player == this->getPlayerID()) _playerNumber = role;
+                    _players[player].playerNumber = role;
+                    i += 2;
+                }
+                for (int i = 0; i < 5; i++) {
+                    _players[i].username = _deserializer.readString();
+                }
+                _level = _deserializer.readString();
+                break;
             }
-            break;
-            }
-        case START_GAME:
-            _status = START;
-            int i = 2;
-            while (i < data.size()) {
-                int player = (int) data.at(i);
-                int role = (int) data.at(i+1);
-                if (player == this->getPlayerID()) _playerNumber = role;
-                _players[player].playerNumber = role;
-                i += 2;
-            }
-            for (int i = 0; i < 5; i++) {
-                _players[i].username = _deserializer.readString();
-            }
-            _level = _deserializer.readString();
-            break;
-        }
-        _deserializer.reset();
-    });
+            _deserializer.reset();
+        });
+    }
+}
+
+/**
+ * Sends a ping to verify that the player is still active
+ */
+void NetworkController::sendPing() {
+    int playerID = getPlayerID() ? *getPlayerID() : -1;
+    
+    vector<float> data;
+    data.push_back(PING);
+    data.push_back(playerID);
+    _serializer.writeFloatVector(data);
+    _connection->send(_serializer.serialize());
+    _serializer.reset();
 }
 
 /**
@@ -185,6 +224,7 @@ void NetworkController::sendPlayer() {
     _connection->send(_serializer.serialize());
     _serializer.reset();
 }
+
 /**
  * Sends a byte vector to start the game
  */
@@ -226,49 +266,55 @@ void NetworkController::sendStartGame(string level, bool randomThief, int thiefC
 /**
  * Checks the connection, updates the status accordingly, and updates the game (during game)
  */
-void NetworkController::update(std::shared_ptr<GameModel>& game) {
+void NetworkController::update(float timestep, std::shared_ptr<GameModel>& game) {
     // Give up if connection is not established
     if (_connection == nullptr) return;
     
-    // Handle different
     if (_connection->getStatus() != NetworkConnection::NetStatus::Connected) {
         // TODO: Handle other network statuses
         return;
     }
     
-    _connection->receive([this, game](const std::vector<uint8_t> msg) {
-        _deserializer.receive(msg);
-        vector<float> data = _deserializer.readFloatVector();
-        _deserializer.reset();
-        
-        switch ((int) data.at(0)) {
-        case COP_MOVEMENT:
-            game->updateCop(Vec2(data.at(1), data.at(2)),
-                            Vec2(data.at(3), data.at(4)),
-                            Vec2(data.at(5), data.at(6)),
-                            Vec2(data.at(7), data.at(8)),
-                            Vec2(data.at(9), data.at(10)),
-                            (float) data.at(11),
-                            (bool) data.at(12),
-                            (bool) data.at(13),
-                            (bool) data.at(14),
-                            (int) data.at(15));
-            break;
-        case THIEF_MOVEMENT:
-            game->updateThief(Vec2(data.at(1), data.at(2)),
-                              Vec2(data.at(3), data.at(4)),
-                              Vec2(data.at(5), data.at(6)));
-            break;
-        case TRAP_ACTIVATION:
-            game->activateTrap((int) data.at(1));
-            break;
-        case GAME_OVER:
-            game->setGameOver(true);
-            break;
-        default:
-            break;
-        }
-    });
+    // Let other players know that you're still active
+    sendPing();
+    
+    // Receive data from other players
+    for (int i = 0; i < NETWORK_STEP; i++) {
+        _connection->receive([this, game](const std::vector<uint8_t> msg) {
+            _deserializer.receive(msg);
+            vector<float> data = _deserializer.readFloatVector();
+            
+            switch ((int) data.at(0)) {
+            case COP_MOVEMENT:
+                game->updateCop(Vec2(data.at(1), data.at(2)),
+                                Vec2(data.at(3), data.at(4)),
+                                Vec2(data.at(5), data.at(6)),
+                                Vec2(data.at(7), data.at(8)),
+                                Vec2(data.at(9), data.at(10)),
+                                (float) data.at(11),
+                                (bool) data.at(12),
+                                (bool) data.at(13),
+                                (bool) data.at(14),
+                                (int) data.at(15));
+                break;
+            case THIEF_MOVEMENT:
+                game->updateThief(Vec2(data.at(1), data.at(2)),
+                                  Vec2(data.at(3), data.at(4)),
+                                  Vec2(data.at(5), data.at(6)));
+                break;
+            case TRAP_ACTIVATION:
+                game->activateTrap((int) data.at(1));
+                break;
+            case GAME_OVER:
+                game->setGameOver(true);
+                game->setThiefWon(_deserializer.readBool());
+                break;
+            default:
+                break;
+            }
+            _deserializer.reset();
+        });
+    }
 }
 
 /**
@@ -352,12 +398,13 @@ void NetworkController::sendTrapActivation(int trapID) {
 /**
  * Sends a byte vector to indicate game over
  */
-void NetworkController::sendGameOver() {
+void NetworkController::sendGameOver(bool thiefWin) {
     if (_connection == nullptr) return;
     vector<float> data;
     data.push_back(GAME_OVER);
     
     _serializer.writeFloatVector(data);
+    _serializer.writeBool(thiefWin);
     _connection->send(_serializer.serialize());
     _serializer.reset();
 }
