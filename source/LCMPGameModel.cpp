@@ -124,7 +124,7 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     initThief(scale, thiefSpawn, assets, _actions, skinKeys[0], males[0]);
     
     // Initialize cops
-    for (int i = 0; i < numPlayers - 1; i++) initCop(i, scale, copsSpawn, assets, _actions, skinKeys[i+1], males[i + 1]);
+    for (int i = 0; i < 4; i++) initCop(i, scale, copsSpawn, assets, _actions, skinKeys[i+1], males[i + 1]);
 
     _obstacles = std::vector<std::shared_ptr<physics2::PolygonObstacle>>();
     
@@ -145,9 +145,9 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
         initProps(props, prop_firstGid, idToTileData, assets, scale);
     }
     
-    ceilingObToNode = map<shared_ptr<physics2::PolygonObstacle>, shared_ptr<scene2::SceneNode>>();
-    if(ceilingprops != nullptr)
-        initCeilingProps(ceilingprops, prop_firstGid, idToTileData, assets, scale);
+//    ceilingObToNode = map<shared_ptr<physics2::PolygonObstacle>, shared_ptr<scene2::SceneNode>>();
+//    if(ceilingprops != nullptr)
+//        initCeilingProps(ceilingprops, prop_firstGid, idToTileData, assets, scale);
     
     timer = time(NULL);
     timeinfo = localtime (&timer);
