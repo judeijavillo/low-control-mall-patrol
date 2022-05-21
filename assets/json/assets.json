@@ -676,28 +676,6 @@
 								}
 							}
 						},
-						"settings": {
-							"type": "Button",
-							"data": {
-								"upnode": "up",
-								"anchor": [0.5, 0.5],
-								"scale": [0.3, 0.3]
-							},
-							"layout" :{
-								"x_anchor" : "right",
-								"y_anchor" : "top",
-								"x_offset" : -0.05,
-								"y_offset" : -0.1
-							},
-							"children": {
-								"up": {
-									"type": "Image",
-									"data": {
-										"texture": "settings_button"
-									}
-								}
-							}
-						},
 						"profile": {
 							"type": "Button",
 							"data": {
@@ -708,7 +686,7 @@
                             "layout" :{
                                 "x_anchor" : "right",
                                 "y_anchor" : "top",
-                                "x_offset" : -0.125,
+                                "x_offset" : -0.05,
                                 "y_offset" : -0.1
                             },
                             "children": {
@@ -730,7 +708,7 @@
                             "layout" :{
                                 "x_anchor" : "right",
                                 "y_anchor" : "top",
-                                "x_offset" : -0.2,
+                                "x_offset" : -0.125,
                                 "y_offset" : -0.1
                             },
 							"children": {
@@ -825,28 +803,6 @@
                                 }
                             }
                         },
-                        "settings": {
-                            "type": "Button",
-                            "data": {
-                                "upnode": "up",
-                                "anchor": [0.5, 0.5],
-                                "scale": [0.3, 0.3]
-                            },
-                            "layout" :{
-                                "x_anchor" : "right",
-                                "y_anchor" : "top",
-                                "x_offset" : -0.05,
-                                "y_offset" : -0.1
-                            },
-                            "children": {
-                                "up": {
-                                    "type": "Image",
-                                    "data": {
-                                        "texture": "settings_button"
-                                    }
-                                }
-                            }
-                        },
                         "profile": {
                             "type": "Button",
                             "data": {
@@ -857,7 +813,7 @@
                             "layout" :{
                                 "x_anchor" : "right",
                                 "y_anchor" : "top",
-                                "x_offset" : -0.125,
+                                "x_offset" : -0.05,
                                 "y_offset" : -0.1
                             },
                             "children": {
@@ -879,7 +835,7 @@
                             "layout" :{
                                 "x_anchor" : "right",
                                 "y_anchor" : "top",
-                                "x_offset" : -0.2,
+                                "x_offset" : -0.125,
                                 "y_offset" : -0.1
                             },
                             "children": {

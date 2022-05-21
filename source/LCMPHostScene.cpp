@@ -266,7 +266,7 @@ void HostScene::updateLobby(float timestep) {
         if (playerID == 0) {
             key = player.male ? "ss_thief_idle_right" : "ss_thief_idle_right_f";
         } else {
-            key = player.male ? "ss_cop_idle_left" : "ss_cop_idle_left_f";
+            key = player.male ? "ss_cop_idle_right" : "ss_cop_idle_right_f";
             _players[playerID]->setText(player.username);
         }
         if (!_players[playerID]->isActive()) _players[playerID]->setText(player.username);

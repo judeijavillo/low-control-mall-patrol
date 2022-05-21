@@ -149,7 +149,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _nodes.push_back(_cop4Node);
     
     // Initialize skins
-    _skinKeys = {"cat_ears_left", "propeller_hat_left", "police_hat_left", "halo_left", "plant_left"};
+    _skinKeys = {"cat_ears", "propeller_hat", "police_hat", "halo", "plant"};
     for (int i = 0; i < _skinKeys.size(); i++) {
         _skins.push_back(std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("join_backdrop_" + _skinKeys[i])));
         _skins[i]->setAnchor(Vec2(1,0.5));
@@ -399,7 +399,7 @@ void ClientScene::updateLobby(float timestep) {
         if (playerID == 0) {
             key = player.male ? "ss_thief_idle_right" : "ss_thief_idle_right_f";
         } else {
-            key = player.male ? "ss_cop_idle_left" : "ss_cop_idle_left_f";
+            key = player.male ? "ss_cop_idle_right" : "ss_cop_idle_right_f";
         }
         if (!_players[playerID]->isActive()) _players[playerID]->setText(player.username);
         _nodes[playerID]->setTexture(_assets->get<Texture>(key));

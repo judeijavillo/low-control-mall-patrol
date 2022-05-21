@@ -364,25 +364,6 @@
                                 }
                             }
                         },
-                        "settings": {
-                            "type": "Button",
-                            "data": {
-                                "upnode": "up",
-                                "anchor": [0.5, 0.5],
-                                "position": [1450, 640],
-                                "scale": [0.3, 0.3]
-                            },
-                            "children": {
-                                "up": {
-                                    "type": "Image",
-                                    "data": {
-                                        "texture": "settings"
-                                    }
-
-                                }
-
-                            }
-                        },
                         "back": {
                             "type": "Button",
                             "data": {
@@ -560,7 +541,7 @@
                                     "type"    : "Sprite",
                                     "data"    : {
                                         "scale"     : 0.5,
-                                        "texture"   : "ss_cop_idle_left",
+                                        "texture"   : "ss_cop_idle_right",
                                         "span"      : 4,
                                         "cols"      : 4,
                                         "frame"     : 0
@@ -585,7 +566,7 @@
                                     "type"    : "Sprite",
                                     "data"    : {
                                         "scale"     : 0.5,
-                                        "texture"   : "ss_cop_idle_left",
+                                        "texture"   : "ss_cop_idle_right",
                                         "span"      : 4,
                                         "cols"      : 4,
                                         "frame"     : 0
@@ -610,7 +591,7 @@
                                     "type"    : "Sprite",
                                     "data"    : {
                                         "scale"     : 0.5,
-                                        "texture"   : "ss_cop_idle_left",
+                                        "texture"   : "ss_cop_idle_right",
                                         "span"      : 4,
                                         "cols"      : 4,
                                         "frame"     : 0
@@ -635,7 +616,7 @@
                                     "type"    : "Sprite",
                                     "data"    : {
                                         "scale"     : 0.5,
-                                        "texture"   : "ss_cop_idle_left",
+                                        "texture"   : "ss_cop_idle_right",
                                         "span"      : 4,
                                         "cols"      : 4,
                                         "frame"     : 0
@@ -687,7 +668,7 @@
                                 }
                             }
                         },
-                        "cat_ears_left": {
+                        "cat_ears": {
                             "type": "Image",
                             "data": {
                                 "upnode": "up",
@@ -698,12 +679,12 @@
                                 "up": {
                                     "type": "Image",
                                     "data": {
-                                        "texture": "cat_ears_left"
+                                        "texture": "cat_ears"
                                     }
                                 }
                             }
                         },
-                        "propeller_hat_left": {
+                        "propeller_hat": {
                             "type": "Image",
                             "data": {
                                 "upnode": "up",
@@ -714,12 +695,12 @@
                                 "up": {
                                     "type": "Image",
                                     "data": {
-                                        "texture": "propeller_hat_left"
+                                        "texture": "propeller_hat"
                                     }
                                 }
                             }
                         },
-                        "police_hat_left": {
+                        "police_hat": {
                             "type": "Image",
                             "data": {
                                 "upnode": "up",
@@ -730,12 +711,12 @@
                                 "up": {
                                     "type": "Image",
                                     "data": {
-                                        "texture": "police_hat_left"
+                                        "texture": "police_hat"
                                     }
                                 }
                             }
                         },
-                        "plant_left": {
+                        "plant": {
                             "type": "Image",
                             "data": {
                                 "upnode": "up",
@@ -746,12 +727,12 @@
                                 "up": {
                                     "type": "Image",
                                     "data": {
-                                        "texture": "plant_left"
+                                        "texture": "plant"
                                     }
                                 }
                             }
                         },
-                        "halo_left": {
+                        "halo": {
                             "type": "Image",
                             "data": {
                                 "upnode": "up",
@@ -762,7 +743,7 @@
                                 "up": {
                                     "type": "Image",
                                     "data": {
-                                        "texture": "halo_left"
+                                        "texture": "halo"
                                     }
                                 }
                             }
@@ -1076,23 +1057,6 @@
                                 }
                             }
                         },
-                        "settings": {
-                            "type": "Button",
-                            "data": {
-                                "upnode": "up",
-                                "anchor": [0.5, 0.5],
-                                "position": [1450, 640],
-                                "scale": 0.3
-                            },
-                            "children": {
-                                "up": {
-                                    "type": "Image",
-                                    "data": {
-                                        "texture": "settings"
-                                    }
-                                }
-                            }
-                        },
                         "back": {
                             "type": "Button",
                             "data": {
@@ -1270,7 +1234,7 @@
                                     "type"    : "Sprite",
                                     "data"    : {
                                         "scale"     : 0.5,
-                                        "texture"   : "ss_cop_idle_left",
+                                        "texture"   : "ss_cop_idle_right",
                                         "span"      : 4,
                                         "cols"      : 4,
                                         "frame"     : 0
@@ -1295,7 +1259,7 @@
                                     "type"    : "Sprite",
                                     "data"    : {
                                         "scale"     : 0.5,
-                                        "texture"   : "ss_cop_idle_left",
+                                        "texture"   : "ss_cop_idle_right",
                                         "span"      : 4,
                                         "cols"      : 4,
                                         "frame"     : 0
@@ -1320,7 +1284,7 @@
                                     "type"    : "Sprite",
                                     "data"    : {
                                         "scale"     : 0.5,
-                                        "texture"   : "ss_cop_idle_left",
+                                        "texture"   : "ss_cop_idle_right",
                                         "span"      : 4,
                                         "cols"      : 4,
                                         "frame"     : 0
@@ -1345,7 +1309,7 @@
                                     "type"    : "Sprite",
                                     "data"    : {
                                         "scale"     : 0.5,
-                                        "texture"   : "ss_cop_idle_left",
+                                        "texture"   : "ss_cop_idle_right",
                                         "span"      : 4,
                                         "cols"      : 4,
                                         "frame"     : 0

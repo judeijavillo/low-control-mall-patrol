@@ -84,23 +84,6 @@
                                 }
                             }
                         },
-                        "settings": {
-                            "type": "Button",
-                            "data": {
-                                "upnode": "up",
-                                "anchor": [0.5, 0.5],
-                                "position": [1450, 640],
-                                "scale": [0.3, 0.3]
-                            },
-                            "children": {
-                                "up": {
-                                    "type": "Image",
-                                    "data": {
-                                        "texture": "settings"
-                                    }
-                                }
-                            }
-                        },
                         "back": {
                             "type": "Button",
                             "data": {
@@ -266,7 +249,7 @@
                             "data"    : {
                                 "scale"     : 0.5,
                                 "anchor"    : [0.5, 0.5],
-                                "texture"   : "ss_cop_idle_left",
+                                "texture"   : "ss_cop_idle_right",
                                 "span"      : 4,
                                 "cols"      : 4,
                                 "frame"     : 0
@@ -283,7 +266,7 @@
                             "data"    : {
                                 "scale"     : 0.5,
                                 "anchor"    : [0.5, 0.5],
-                                "texture"   : "ss_cop_idle_left",
+                                "texture"   : "ss_cop_idle_right",
                                 "span"      : 4,
                                 "cols"      : 4,
                                 "frame"     : 0
@@ -300,7 +283,7 @@
                             "data"    : {
                                 "scale"     : 0.5,
                                 "anchor"    : [0.5, 0.5],
-                                "texture"   : "ss_cop_idle_left",
+                                "texture"   : "ss_cop_idle_right",
                                 "span"      : 4,
                                 "cols"      : 4,
                                 "frame"     : 0
@@ -317,7 +300,7 @@
                             "data"    : {
                                 "scale"     : 0.5,
                                 "anchor"    : [0.5, 0.5],
-                                "texture"   : "ss_cop_idle_left",
+                                "texture"   : "ss_cop_idle_right",
                                 "span"      : 4,
                                 "cols"      : 4,
                                 "frame"     : 0
