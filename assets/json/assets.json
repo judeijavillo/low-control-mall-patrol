@@ -1,5 +1,41 @@
 {
     "textures": {
+        "bench_sideways_spine_L": {
+            "file": "textures/environment/bench_sideways_spined_L.png"
+        },
+        "bench_sideways_spine_R": {
+            "file": "textures/environment/bench_sideways_spined_R.png"
+        },
+        "bench_sideways_spineless": {
+            "file": "textures/environment/bench_sideways_spineless.png"
+        },
+        "swivel_chair_R": {
+            "file": "textures/environment/swivel_chair_R.png"
+        },
+        "swivel_chair_L": {
+            "file": "textures/environment/swivel_chair_L.png"
+        },
+        "security_sign": {
+            "file": "textures/environment/sus_sign.png"
+        },
+        "security_docs_1": {
+            "file": "textures/environment/sus_documents.png"
+        },
+        "security_docs_2": {
+            "file": "textures/environment/sus_documents_2.png"
+        },
+        "poster_1": {
+            "file": "textures/environment/poster_tutorial.png"
+        },
+        "poster_2": {
+            "file": "textures/environment/poster_new.png"
+        },
+        "poster_3": {
+            "file": "textures/environment/poster_lcmp.png"
+        },
+        "poster_4": {
+            "file": "textures/environment/poster_donut.png"
+        },
         "wall_interior": {
             "file": "textures/environment/wallinterior.png"
         },
