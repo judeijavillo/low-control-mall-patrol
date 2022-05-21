@@ -3,38 +3,17 @@
         "back_button": {
             "file": "textures/ui/back.png"
         },
-        "button": {
-            "file":  "textures/button.png"
-        },
 		"ui_thief_head":{
 			"file": "textures/ui/thief_male_beanie_head.png"
 		},
         "frame": {
             "file":  "textures/frame.png"
         },
-        "left": {
-            "file":  "textures/left_arrow.png"
-        },
         "settings_button": {
             "file":    "textures/ui/settings.png"
         },
         "settings_background" : {
             "file" :   "textures/ui/settings_background.png"
-        },
-        "button_blue" 	: {
-            "file" :   "textures/ui/lcmp_buttons_blue.png"
-        },
-        "button_pink" 	: {
-            "file" :   "textures/ui/lcmp_buttons_pink.png"
-        },
-        "button_white"     : {
-            "file" :   "textures/ui/btn_white.png"
-        },
-        "button_brown"     : {
-            "file" :   "textures/ui/btn_brown.png"
-        },
-        "button_yellow"     : {
-            "file" :   "textures/ui/btn_yellow.png"
         },
         "button_x" 	: {
             "file" :   "textures/ui/close.png"
@@ -45,14 +24,8 @@
 		"donut_brown": {
 			"file" :   "textures/ui/donut_brown.png"
 		},
-        "join_button" : {
-            "file": "textures/ui/join_button.png"
-        },
-        "create_button" : {
-            "file": "textures/ui/create_button.png"
-        },
         "menu_background": {
-            "file": "textures/ui/menu_background.png"
+            "file": "textures/lobby/background.png"
         },
         "profile": {
             "file": "textures/ui/profile.png"
@@ -65,29 +38,13 @@
         },
         "donut": {
             "file": "textures/ui/donut_brown.png"
-        }
-    },
-    "fonts": {
-        "gyparody": {
-            "file":     "fonts/gyparody-hv.ttf",
-            "size":     48
         },
-		"futura": {
-			"file": "fonts/futura medium bt.ttf",
-			"size": 48
-		},
-		"futura heavy": {
-			"file": "fonts/Futura Heavy font.ttf",
-			"size": 48
-		},
-		"futura heavy border": {
-			"file": "fonts/Futura Heavy font.ttf",
-			"size": 60
-		},
-		"tooneynoodle":{
-			"file":"fonts/TooneyNoodleNF.ttf",
-			"size": 48
-		}
+        "sound" : {
+            "file": "textures/ui/sound.png"
+        },
+        "quit" : {
+            "file": "textures/ui/quit.png"
+        }
     },
     "widgets": {
         "colorbutton" : "widgets/colorbutton.json",
@@ -130,16 +87,16 @@
 								"size" : [500, 600]
 							},
 							"children":{
-								"SettingsTitle" : {
+								"MenuTitle" : {
 									"type"		: "label",
 									"data" : {
 										"anchor"  : [0.5,0.5],
-										"scale"    : 0.9,
-										"font"     : "futura heavy",
+										"scale"    : 1.0,
+										"font"     : "rubik",
 										"text"     : "SETTINGS",
 										"halign"   : "center",
 										"valign"   : "middle",
-										"foreground": [38, 84, 124, 255]
+										"foreground": [113, 23, 23, 255]
 									},
 									"layout": {
 										"x_anchor": "center",
@@ -153,77 +110,29 @@
 									"data"   : {
 										"upnode"  : "up",
 										"anchor":   [0.5,0.5],
-										"scale" : [0.3, 0.3]
+										"scale" : [0.5, 0.5]
 									},
 									"layout": {
 										"x_anchor": "center",
 										"y_anchor": "middle",
-										"x_offset": -0.115,
+										"x_offset": 0.038,
 										"y_offset": -0.115
 									},
 									"children": {
 										"up" : {
 											"type": "Image",
 											"data": {
-												"texture":  "button_blue"
-											}
-										},
-										"title" : {
-											"type"      : "Label",
-											"data" : {
-												"anchor"  : [0.5,0.5],
-												"scale"    : 1.5,
-												"font"     : "futura heavy",
-												"text"     : "SOUND",
-												"halign"   : "center",
-												"valign"   : "middle",
-												"foreground": [38, 84, 124, 255],
-												"position" : [246, 118]
+												"texture":  "sound"
 											}
 										}
-									}
-								},
-								"StatsButton" : {
-									"type"      : "Button",
-									"data"   : {
-										"upnode"  : "up",
-										"anchor":   [0.5,0.5],
-										"scale" : [0.3, 0.3]
-									},
-									"layout": {
-										"x_anchor": "center",
-										"y_anchor": "middle",
-										"x_offset": 0.195,
-										"y_offset": -0.115
-									},
-									"children": {
-										"up" : {
-											"type": "Image",
-											"data": {
-												"texture":  "button_blue"
-											}
-										},
-										"title" : {
-											"type"      : "Label",
-											"data" : {
-												"anchor"  : [0.5,0.5],
-												"scale"    : 1.5,
-												"font"     : "futura heavy",
-												"text"     : "STATS",
-												"halign"   : "center",
-												"valign"   : "middle",
-												"foreground": [38, 84, 124, 255],
-												"position" : [246, 118]
-											}
-										}
-									}
+                                    }
 								},
 								"QuitButton" : {
 									"type"      : "Button",
 									"data"   : {
 										"upnode"  : "up",
 										"anchor":   [0.5,0.5],
-										"scale" : [0.2, 0.2]
+										"scale" : [0.5, 0.5]
 									},
 									"layout": {
 										"x_anchor": "center",
@@ -235,20 +144,7 @@
 										"up" : {
 											"type": "Image",
 											"data": {
-												"texture":  "button_pink"
-											}
-										},
-										"title" : {
-											"type"      : "Label",
-											"data" : {
-												"anchor"  : [0.5,0.5],
-												"scale"    : 1.5,
-												"font"     : "futura heavy",
-												"text"     : "QUIT",
-												"halign"   : "center",
-												"valign"   : "middle",
-												"foreground": [38, 84, 124, 255],
-												"position" : [246, 118]
+												"texture":  "quit"
 											}
 										}
 									}
@@ -269,12 +165,12 @@
 									"type"		: "label",
 									"data" : {
 										"anchor"  : [0.5,0.5],
-										"scale"    : 0.9,
-										"font"     : "futura",
+										"scale"    : 1.0,
+										"font"     : "rubik",
 										"text"     : "SOUND",
 										"halign"   : "center",
 										"valign"   : "middle",
-										"foreground": [38, 84, 124, 255]
+										"foreground": [113, 23, 23, 255]
 									},
 									"layout": {
 										"x_anchor": "center",
@@ -288,11 +184,11 @@
 									"data" : {
 										"anchor"  : [0.5,0.5],
 										"scale"    : 0.5,
-										"font"     : "futura",
+										"font"     : "rubik",
 										"text"     : "MUSIC",
 										"halign"   : "center",
 										"valign"   : "middle",
-										"foreground": [38, 84, 124, 255]
+										"foreground": [113, 23, 23, 255]
 									},
 									"layout": {
 										"x_anchor": "center",
@@ -344,11 +240,11 @@
 									"data" : {
 										"anchor"  : [0.5,0.5],
 										"scale"    : 0.5,
-										"font"     : "futura",
+										"font"     : "rubik",
 										"text"     : "SFX",
 										"halign"   : "center",
 										"valign"   : "middle",
-										"foreground": [38, 84, 124, 255]
+										"foreground": [113, 23, 23, 255]
 									},
 									"layout": {
 										"x_anchor": "center",

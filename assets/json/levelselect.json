@@ -1,13 +1,13 @@
 {
     "textures": {
         "background": {
-            "file": "textures/ui/menu_background.png"
+            "file": "textures/lobby/background.png"
         },
         "button_blue": {
-            "file": "textures/ui/join_button.png"
+            "file": "textures/ui/join.png"
         },
         "button_pink": {
-            "file": "textures/ui/create_button.png"
+            "file": "textures/ui/create.png"
         },
         "settings": {
             "file": "textures/ui/settings.png"
@@ -35,12 +35,6 @@
         },
         "map4": {
             "file": "textures/ui/map4.png"
-        }
-    },
-    "fonts": {
-        "futura": {
-            "file": "fonts/futura medium bt.ttf",
-            "size": 48
         }
     },
     "scene2s": {
@@ -94,7 +88,7 @@
 							"data": {
 								"anchor": [0.5, 0.5],
 								"scale": 1.5,
-								"font": "futura",
+								"font": "rubik",
 								"text": "PICK A STAGE"
 							},
 							"layout":{

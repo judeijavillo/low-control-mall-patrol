@@ -136,6 +136,11 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
             switch (std::get<0>(elem))
             {
 
+            case TrapModel::TrapType::VelMod:
+                setAccelerationMultiplier(Vec2(std::get<1>(elem)->x, std::get<1>(elem)->y));
+                setMaxSpeedMultiplier(max(std::get<1>(elem)->x, std::get<1>(elem)->y));
+                break;
+
             case TrapModel::TrapType::Directional_VelMod:
                 playerVel = Vec2(b2velocity.x, b2velocity.y);
                 addedVel = -0.5 * abs(playerVel.dot(Vec2(std::get<1>(elem)->x, std::get<1>(elem)->y))) * Vec2(std::get<1>(elem)->x, std::get<1>(elem)->y);
@@ -204,6 +209,11 @@ bool PlayerModel::removeEffects(int trapID) {
         if (std::get<0>(playerEffects[trapID]->at(0)) == TrapModel::Slippy) {
             setAccelerationMultiplier(Vec2(1, 1));
             setDampingMultiplier(Vec2(1, 1));
+            
+        }
+        else if (std::get<0>(playerEffects[trapID]->at(0)) == TrapModel::VelMod) {
+            setAccelerationMultiplier(Vec2(1, 1));
+            setMaxSpeedMultiplier(1);
         }
 
         playerEffects.erase(trapID);
@@ -221,8 +231,7 @@ void PlayerModel::act(int trapID, std::shared_ptr<TrapModel::Effect> effect) {
     switch (effect->traptype)
     {
     case TrapModel::VelMod:
-        setAccelerationMultiplier(Vec2(effect->effectVec->x, effect->effectVec->y));
-        setMaxSpeedMultiplier(max(effect->effectVec->x, effect->effectVec->y));
+        addEffects(trapID, effect->traptype, effect->effectVec);
         break;
     case TrapModel::Directional_VelMod:
         addEffects(trapID, effect->traptype, effect->effectVec);
@@ -253,8 +262,7 @@ void PlayerModel::unact(int trapID, std::shared_ptr<TrapModel::Effect> effect) {
     switch (effect->traptype)
     {
     case TrapModel::VelMod:
-        setAccelerationMultiplier(Vec2(1, 1));
-        setMaxSpeedMultiplier(1);
+        removeEffects(trapID);
         break;
     case TrapModel::Directional_VelMod:
         removeEffects(trapID);

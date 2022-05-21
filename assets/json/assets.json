@@ -102,9 +102,6 @@
         "baby_carriage_anim_up": {
             "file": "textures/environment/animations/baby_carriage_anim_up.png"
         },
-        "button": {
-            "file":  "textures/button.png"
-        },
         "clock": {
             "file":  "textures/ui/clock.png"
         },
@@ -119,9 +116,6 @@
 		},
         "frame": {
             "file":  "textures/frame.png"
-        },
-        "left": {
-            "file":  "textures/left_arrow.png"
         },
         "tree": {
             "file": "textures/environment/tree.png"
@@ -360,24 +354,6 @@
         "settings_button": {
             "file":    "textures/ui/settings.png"
         },
-        "settings_background" : {
-            "file" :   "textures/ui/settings_background.png"
-        },
-        "button_blue" 	: {
-            "file" :   "textures/ui/lcmp_buttons_blue.png"
-        },
-        "button_pink" 	: {
-            "file" :   "textures/ui/lcmp_buttons_pink.png"
-        },
-        "button_white"     : {
-            "file" :   "textures/ui/btn_white.png"
-        },
-        "button_brown"     : {
-            "file" :   "textures/ui/btn_brown.png"
-        },
-        "button_yellow"     : {
-            "file" :   "textures/ui/btn_yellow.png"
-        },
         "button_x" 	: {
             "file" :   "textures/ui/close.png"
         },
@@ -388,13 +364,13 @@
 			"file" :   "textures/ui/donut_brown.png"
 		},
         "join_button" : {
-            "file": "textures/ui/join_button.png"
+            "file": "textures/ui/join.png"
         },
         "create_button" : {
-            "file": "textures/ui/create_button.png"
+            "file": "textures/ui/create.png"
         },
-        "menu_background": {
-            "file": "textures/ui/menu_background.png"
+        "find_button" : {
+            "file": "textures/ui/find.png"
         },
         "profile": {
             "file": "textures/ui/profile.png"
@@ -436,13 +412,13 @@
             "file":  "textures/accessories/propeller_hat_left.png"
         },
         "title": {
-            "file": "textures/lobby/title.png"
+            "file": "textures/ui/title.png"
         },
         "buy": {
-            "file": "textures/ui/buy_button.png"
+            "file": "textures/ui/buy.png"
         },
         "roll": {
-            "file": "textures/ui/roll_button.png"
+            "file": "textures/ui/roll.png"
         },
         "shopping_bags_together": {
             "file": "textures/environment/shopping_bag_many.png"
@@ -458,6 +434,9 @@
         },
         "donut": {
             "file": "textures/ui/donut_brown.png"
+        },
+		"button_white": {
+            "file": "textures/ui/lcmp_buttons_white.png"
         }
     },
     "sounds": {
@@ -537,7 +516,15 @@
 		"tooneynoodle":{
 			"file":"fonts/TooneyNoodleNF.ttf",
 			"size": 48
-		}
+		},
+        "rubik": {
+            "file": "fonts/Rubik-Medium.ttf",
+            "size": 36
+        },
+        "rubik-bold": {
+            "file": "fonts/Rubik-Bold.ttf",
+            "size": 48
+        }
     },
     "jsons": {
         "server": "json/server.json"
@@ -551,8 +538,6 @@
     "scene2s" : {
         "menu": {
 			"type": "Node",
-			"comment": "How anything was placed in the correct spots in this scene without anchors or layout will forever remain a mystery",
-			"comment": "UPDATE: it was hardcoded in. Whoever wrote this is on something else.",
 			"format": {
 				"type": "Anchored"
 			},
@@ -560,7 +545,7 @@
 				"backdrop": {
 					"type": "Image",
 					"data": {
-						"texture": "menu_background",
+						"texture": "background",
 						"anchor": [0.5, 0],
 						"scale": [1, 1]
 					},
@@ -580,10 +565,10 @@
 								"scale": 1.5
 							},
 							"layout": {
-								"x_anchor" : "right",
-								"y_anchor" : "top",
-								"x_offset" : -0.2,
-								"y_offset" : -0.25
+								"x_anchor" : "middle",
+								"y_anchor" : "bottom",
+                                "x_offset" : 0.5,
+								"y_offset" : 0.25
 							},
 							"children": {
 								"up": {
@@ -602,10 +587,10 @@
 								"scale": 1.5
 							},							
 							"layout": {
-								"x_anchor" : "right",
-								"y_anchor" : "middle",
-								"x_offset" : -0.2,
-								"y_offset" : 0
+								"x_anchor" : "middle",
+								"y_anchor" : "bottom",
+								"x_offset" : 0.2,
+								"y_offset" : 0.25
 							},
 							"children": {
 								"up": {
@@ -624,16 +609,16 @@
                                 "scale": 1.5
                             },
 							"layout": {
-								"x_anchor" : "right",
+								"x_anchor" : "middle",
 								"y_anchor" : "bottom",
-								"x_offset" : -0.2,
+								"x_offset" : 0.8,
 								"y_offset" : 0.25
 							},
                             "children": {
                                 "up": {
                                     "type": "Image",
                                     "data": {
-                                        "texture": "join_button"
+                                        "texture": "find_button"
                                     }
                                 }
                             }
@@ -642,13 +627,13 @@
 							"type": "Button",
 							"data": {
 								"upnode": "up",
-								"anchor": [0.0, 1.0],
+								"anchor": [0.5, 0.5],
 								"scale": [0.3, 0.3]
 							},
 							"layout" :{
-								"x_anchor" : "left",
+								"x_anchor" : "right",
 								"y_anchor" : "top",
-								"x_offset" : 0.0,
+								"x_offset" : -0.05,
 								"y_offset" : -0.1
 							},
 							"children": {
@@ -665,9 +650,14 @@
 							"data": {
 								"upnode": "up",
 								"anchor": [0.5, 0.5],
-								"position": [50, 640],
 								"scale": [0.3, 0.3]
 							},
+                            "layout" :{
+                                "x_anchor" : "right",
+                                "y_anchor" : "top",
+                                "x_offset" : -0.125,
+                                "y_offset" : -0.1
+                            },
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -682,9 +672,14 @@
 							"data": {
 								"upnode": "up",
 								"anchor": [0.5, 0.5],
-								"position": [140, 640],
 								"scale": [0.3,0.3]
 							},
+                            "layout" :{
+                                "x_anchor" : "right",
+                                "y_anchor" : "top",
+                                "x_offset" : -0.2,
+                                "y_offset" : -0.1
+                            },
 							"children": {
 								"up": {
 									"type": "Image",
@@ -704,8 +699,8 @@
 							"layout":{
 								"x_anchor": "center",
 								"y_anchor": "middle",
-								"x_offset": -0.15,
-								"y_offset": 0
+								"x_offset": 0,
+								"y_offset": 0.15
 							}
 						}
 					}
@@ -714,7 +709,6 @@
 		},
 		"menu43": {
 			"type": "Node",
-			"comment": "How anything was placed in the correct spots in this scene without anchors or layout will forever remain a mystery",
 			"format": {
 				"type": "Anchored"
 			},
@@ -722,8 +716,8 @@
 				"backdrop": {
 					"type": "Image",
 					"data": {
-						"texture": "menu_background",
-						"anchor": [0.5, 0],
+						"texture": "background",
+						"anchor": [0, 0],
 						"scale": [1, 1]
 					},
 					"format": {
@@ -734,63 +728,41 @@
 						"y_anchor": "fill"
 					},
 					"children": {
-						"host": {
-							"type": "Button",
-							"data": {
-								"upnode": "up",
-								"anchor": [0.5, 0.5],
-								"scale": 1.3
-							},
-							"layout": {
-								"x_anchor" : "right",
-								"y_anchor" : "top",
-								"x_offset" : -0.18,
-								"y_offset" : -0.25
-							},
-							"children": {
-								"up": {
-									"type": "Image",
-									"data": {
-										"texture": "create_button"
-									}
-								}
-							}
-						},
-						"join": {
-							"type": "Button",
-							"data": {
-								"upnode": "up",
-								"anchor": [0.5, 0.5],
-								"scale": 1.3
-							},							
-							"layout": {
-								"x_anchor" : "right",
-								"y_anchor" : "middle",
-								"x_offset" : -0.18,
-								"y_offset" : 0
-							},
-							"children": {
-								"up": {
-									"type": "Image",
-									"data": {
-										"texture": "join_button"
-									}
-								}
-							}
-						},
-                        "find": {
+                        "host": {
                             "type": "Button",
                             "data": {
                                 "upnode": "up",
                                 "anchor": [0.5, 0.5],
-                                "scale": 1.3
+                                "scale": 1.5
                             },
-							"layout": {
-								"x_anchor" : "right",
-								"y_anchor" : "bottom",
-								"x_offset" : -0.18,
-								"y_offset" : 0.25
-							},
+                            "layout": {
+                                "x_anchor" : "middle",
+                                "y_anchor" : "bottom",
+                                "x_offset" : 0.5,
+                                "y_offset" : 0.25
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "create_button"
+                                    }
+                                }
+                            }
+                        },
+                        "join": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": 1.5
+                            },
+                            "layout": {
+                                "x_anchor" : "middle",
+                                "y_anchor" : "bottom",
+                                "x_offset" : 0.2,
+                                "y_offset" : 0.25
+                            },
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -800,36 +772,63 @@
                                 }
                             }
                         },
-						"settings": {
-							"type": "Button",
-							"data": {
-								"upnode": "up",
-								"anchor": [0.0, 1.0],
-								"scale": [0.3, 0.3]
-							},
-							"layout" :{
-								"x_anchor" : "left",
-								"y_anchor" : "top",
-								"x_offset" : 0.0,
-								"y_offset" : -0.1
-							},
-							"children": {
-								"up": {
-									"type": "Image",
-									"data": {
-										"texture": "settings_button"
-									}
-								}
-							}
-						},
-						"profile": {
-							"type": "Button",
-							"data": {
-								"upnode": "up",
-								"anchor": [0.5, 0.5],
-								"position": [50, 640],
-								"scale": [0.3, 0.3]
-							},
+                        "find": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": 1.5
+                            },
+                            "layout": {
+                                "x_anchor" : "middle",
+                                "y_anchor" : "bottom",
+                                "x_offset" : 0.8,
+                                "y_offset" : 0.25
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "find_button"
+                                    }
+                                }
+                            }
+                        },
+                        "settings": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": [0.3, 0.3]
+                            },
+                            "layout" :{
+                                "x_anchor" : "right",
+                                "y_anchor" : "top",
+                                "x_offset" : -0.05,
+                                "y_offset" : -0.1
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "settings_button"
+                                    }
+                                }
+                            }
+                        },
+                        "profile": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": [0.3, 0.3]
+                            },
+                            "layout" :{
+                                "x_anchor" : "right",
+                                "y_anchor" : "top",
+                                "x_offset" : -0.125,
+                                "y_offset" : -0.1
+                            },
                             "children": {
                                 "up": {
                                     "type": "Image",
@@ -838,24 +837,29 @@
                                     }
                                 }
                             }
-						},
-						"shop": {
-							"type": "Button",
-							"data": {
-								"upnode": "up",
-								"anchor": [0.5, 0.5],
-								"position": [140, 640],
-								"scale": [0.3,0.3]
-							},
-							"children": {
-								"up": {
-									"type": "Image",
-									"data": {
-										"texture": "shop"
-									}
-								}
-							}
-						},
+                        },
+                        "shop": {
+                            "type": "Button",
+                            "data": {
+                                "upnode": "up",
+                                "anchor": [0.5, 0.5],
+                                "scale": [0.3,0.3]
+                            },
+                            "layout" :{
+                                "x_anchor" : "right",
+                                "y_anchor" : "top",
+                                "x_offset" : -0.2,
+                                "y_offset" : -0.1
+                            },
+                            "children": {
+                                "up": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "shop"
+                                    }
+                                }
+                            }
+                        },
 						"title": {
 							"type": "Image",
 							"data": {
@@ -866,8 +870,8 @@
 							"layout":{
 								"x_anchor": "center",
 								"y_anchor": "middle",
-								"x_offset": -0.15,
-								"y_offset": 0
+                                "x_offest": 0,
+                                "y_offset": 0.15
 							}
 						}
 					}
@@ -918,7 +922,7 @@
 					"layout" : {
 						"x_anchor" : "center",
 						"y_anchor" : "top",
-						"y_offset" : 0
+						"y_offset" : -0.05
 					},
 					"children" : {
 						"head" : {
@@ -962,7 +966,7 @@
                 "settings" : {
                     "type" : "Image",
                     "data" :{
-                        "texture":  "menu_background",
+                        "texture":  "background",
                         "anchor" : [0.5,0,5]
                     },
 					"format":{
@@ -1122,7 +1126,7 @@
                 "settings" : {
                     "type" : "Image",
                     "data" :{
-                        "texture":  "menu_background",
+                        "texture":  "background",
                         "anchor" : [0.5,0,5]
                     },
                     "layout" : {

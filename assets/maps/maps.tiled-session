@@ -4,6 +4,14 @@
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "C:/Users/bryce/Documents/5152/temp/example5.json": {
+            "scale": 0.75,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 2496.6666666666665,
+                "y": 4914
+            }
+        },
         "Map1Overlay.tsx": {
             "dynamicWrapping": false,
             "scaleInDock": 1
@@ -26,8 +34,8 @@
             "scale": 0.25,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4854,
-                "y": 4164
+                "x": 4958,
+                "y": 4992
             }
         },
         "donut_room.json": {
@@ -82,8 +90,8 @@
             "scale": 0.25,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 3326,
-                "y": 5434
+                "x": 3578,
+                "y": 5502
             }
         },
         "example6.json": {

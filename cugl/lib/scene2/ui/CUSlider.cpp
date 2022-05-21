@@ -320,7 +320,7 @@ void Slider::placePath(const std::shared_ptr<scene2::SceneNode>& path) {
             auto bordertrack = PathNode::allocWithPath(path, radius,
                 poly2::Joint::SQUARE,
                 poly2::EndCap::ROUND);
-            bordertrack->setColor(Color4(38, 84, 124, 255));
+            bordertrack->setColor(Color4(113, 23, 23, 255));
             bordertrack->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
             bordertrack->setPosition(_bounds.origin);
             _path->addChild(bordertrack);
