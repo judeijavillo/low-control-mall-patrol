@@ -80,6 +80,7 @@ bool LevelSelectScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _map3button->setVisible(false);
     _map4button->setVisible(false);
     _prevbutton->setVisible(false);
+    _nextbutton->setVisible(false);
 
     // Program the buttons
     _map1button->addListener([this](const std::string& name, bool down) {
@@ -100,11 +101,11 @@ bool LevelSelectScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
             _choice = Choice::FOUR;
         }
         });
-    _nextbutton->addListener([this](const std::string& name, bool down) {
-        if (down) {
-            _mapScreen = 1;
-        }
-        });
+    //_nextbutton->addListener([this](const std::string& name, bool down) {
+    //    if (down) {
+    //        _mapScreen = 1;
+    //    }
+    //    });
     _prevbutton->addListener([this](const std::string& name, bool down) {
         if (down) {
             _mapScreen = 0;
@@ -170,10 +171,10 @@ void LevelSelectScene::prevPage() {
     _mapScreen = 0;
     _map1button->activate();
     _map2button->activate();
-    _nextbutton->activate();
+    //_nextbutton->activate();
     _map1button->setVisible(true);
     _map2button->setVisible(true);
-    _nextbutton->setVisible(true);
+    //_nextbutton->setVisible(true);
 
     _map3button->deactivate();
     _map4button->deactivate();
@@ -199,7 +200,7 @@ void LevelSelectScene::setActive(bool value) {
             _choice = NONE;
             _map1button->activate();
             _map2button->activate();
-            _nextbutton->activate();
+            //_nextbutton->activate();
             _backbutton->activate();
         } else {
             _map1button->deactivate();

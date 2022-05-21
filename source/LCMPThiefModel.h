@@ -20,6 +20,8 @@ public:
 
     /** Flag for whether thief is in range to activate a trap. -1 indicates out of range, otherwise it indicates the id of the trap the thief will activate */
     int trapActivationFlag = -1;
+    /** Number of trap activation hitboxes the thief is in contact with */
+    int trapActivationPolygons = 0;
 
 
 //  MARK: - Constructors

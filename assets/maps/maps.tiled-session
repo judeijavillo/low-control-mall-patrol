@@ -5,12 +5,15 @@
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "C:/Users/bryce/Documents/5152/temp/example5.json": {
-            "scale": 0.75,
+            "scale": 0.25,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4959.333333333333,
-                "y": 4992
+                "x": 7312,
+                "y": 2262
             }
+        },
+        "MAP3.tsx": {
+            "scaleInDock": 1
         },
         "Map1Overlay.tsx": {
             "dynamicWrapping": true,
@@ -34,8 +37,8 @@
             "scale": 0.25,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 5132,
-                "y": 5450
+                "x": 5128,
+                "y": 5446
             }
         },
         "donut_room.json": {
@@ -88,10 +91,10 @@
         },
         "example5.json": {
             "scale": 0.25,
-            "selectedLayer": 2,
+            "selectedLayer": -1,
             "viewCenter": {
-                "x": 5984,
-                "y": 5306
+                "x": 5476,
+                "y": 4854
             }
         },
         "example6.json": {
@@ -103,11 +106,11 @@
             }
         },
         "map3.json": {
-            "scale": 1.5,
+            "scale": 0.0625,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 6413.333333333333,
-                "y": 7239
+                "x": 6688,
+                "y": 5928
             }
         },
         "map3.json#MAP3": {
@@ -132,9 +135,13 @@
             "scale": 0.125,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 3164,
-                "y": 3200
+                "x": 3496,
+                "y": 3268
             }
+        },
+        "theater.tsx": {
+            "scaleInDock": 0.0625,
+            "scaleInEditor": 0.11
         },
         "traps.tsj": {
             "dynamicWrapping": true,

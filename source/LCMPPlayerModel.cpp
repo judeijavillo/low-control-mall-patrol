@@ -15,6 +15,8 @@
 /** The restitution of this player */
 #define DEFAULT_RESTITUTION 0.4f
 
+#define TRAP_INDICATOR_KEY  "exclamation"
+
 using namespace cugl;
 
 //  MARK: - Constructors
@@ -68,6 +70,11 @@ bool PlayerModel::init(int playerNumber, const Vec2 pos, const Size size, float 
     _skinNodeLeft = scene2::PolygonNode::allocWithTexture(assets->get<Texture>(skinKey + "_left"));
     _skinNodeLeft->setScale(CHAR_SCALE);
     _skinNodeLeft->setAnchor(Vec2(0, 0.5));
+    _trapIndicator = scene2::PolygonNode::allocWithTexture(assets->get<Texture>(TRAP_INDICATOR_KEY));
+    _trapIndicator->setScale(0.3);
+    _trapIndicator->setAnchor(Vec2(0.5, 0.5));
+    _trapIndicator->setPositionX(_trapIndicator->getPositionX() - _trapIndicator->getWidth() * 0.75);
+    _trapIndicator->setPositionY(_trapIndicator->getPositionY() - _trapIndicator->getHeight() / 8);
         
     // Create animations
     for (int i = 0; i < _animFrames.size(); i++) {
@@ -375,4 +382,5 @@ void PlayerModel::setSpriteNodes(float width) {
     _skinNodeLeft->setPositionX(_skinNodeLeft->getPositionX() -_skinNodeLeft->getWidth()/8);
     _skinNodeLeft->setVisible(false);
     _node->addChild(_skinNodeLeft);
+    _node->addChild(_trapIndicator);
 }

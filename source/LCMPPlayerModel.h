@@ -47,6 +47,8 @@ protected:
     std::shared_ptr<cugl::scene2::PolygonNode> _skinNode;
     /** The child node for displaying the player's skin to the left */
     std::shared_ptr<cugl::scene2::PolygonNode> _skinNodeLeft;
+    /** The child node for displaying the trap indicator */
+    std::shared_ptr<cugl::scene2::PolygonNode> _trapIndicator;
     /** The child node for displaying the player's username */
     std::shared_ptr<cugl::scene2::Label> _username;
     /** The child nodes for displaying the player */
@@ -244,6 +246,11 @@ public:
      * Sets sprite nodes for animation
      */
     void setSpriteNodes(float width);
+
+    /**
+     * Sets sprite nodes for animation
+     */
+    std::shared_ptr<cugl::scene2::PolygonNode> getTrapIndicator() { return _trapIndicator; }
     
 };
 

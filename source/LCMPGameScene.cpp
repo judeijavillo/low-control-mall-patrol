@@ -26,7 +26,7 @@ using namespace std;
 //  MARK: - Constants
 
 /** Whether or not to show the debug node */
-#define DEBUG_ON        1
+#define DEBUG_ON        0
 
 /** Width of the game world in Box2d units */
 #define DEFAULT_WIDTH   32.0f
@@ -462,6 +462,7 @@ void GameScene::stateSettings(float timestep) {
         // Do tasks that reset does that start does not
         _world->clear();
         _input.clear();
+        _backgroundnode->removeAllChildren();
         _worldnode->removeAllChildren();
         _debugnode->removeAllChildren();
         _uinode->removeAllChildren();
@@ -527,16 +528,21 @@ void GameScene::updateThief(float timestep, Vec2 movement, bool dtap) {
     // Activate and network traps
     int trapID = _game->getThief()->trapActivationFlag;
 
-    if (trapID != 1) {
+    if (trapID != -1) {
         //insert visual for trap
+        _game->getThief()->getTrapIndicator()->setVisible(true);
     }
     else {
         //remove visual for trap
+        _game->getThief()->getTrapIndicator()->setVisible(false);
     }
 
     if (dtap && trapID != -1) {
         _game->activateTrap(trapID);
         _network->sendTrapActivation(trapID);
+        _game->getThief()->getTrapIndicator()->setVisible(false);
+        _game->getThief()->trapActivationPolygons = 0;
+        _game->getThief()->trapActivationFlag = -1;
     }
 
     //CULog("thief pos: (%f, %f)", _game->getThief()->getPosition().x, _game->getThief()->getPosition().y);

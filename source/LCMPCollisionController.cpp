@@ -93,6 +93,7 @@ void CollisionController::beginContact(b2Contact* contact) {
                 if ((thiefBody == body1 && triggerBody == body2) ||
                     (thiefBody == body2 && triggerBody == body1)) {
                     _game->getThief()->trapActivationFlag = trap->getTrapID();
+                    _game->getThief()->trapActivationPolygons = _game->getThief()->trapActivationPolygons + 1;
                 }
             }
         }
@@ -147,7 +148,11 @@ void CollisionController::endContact(b2Contact* contact) {
             if (trap->hasTrigger) {
                 if ((thiefBody == body1 && triggerBody == body2) ||
                     (thiefBody == body2 && triggerBody == body1)) {
-                    _game->getThief()->trapActivationFlag = -1;
+                    _game->getThief()->trapActivationPolygons = _game->getThief()->trapActivationPolygons - 1;
+                    if (_game->getThief()->trapActivationPolygons <= 0) {
+                        _game->getThief()->trapActivationFlag = -1;
+                        _game->getThief()->trapActivationPolygons = 0;
+                    }
                 }
             } 
         }
