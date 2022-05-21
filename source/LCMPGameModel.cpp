@@ -264,11 +264,11 @@ void GameModel::update(float timestep) {
         auto poly = entry->first->getPolygon();
         auto ob_pos = entry->first->getPosition();
         bool contains_player = poly.contains(_thief->getPosition() - ob_pos);
-        CULog("testing thief, contains_player %d", contains_player);
+//        CULog("testing thief, contains_player %d", contains_player);
         for(auto it = _cops.begin(); it != _cops.end(); it++){
-            CULog("testing cop");
+//            CULog("testing cop");
             contains_player |= poly.contains(it->second->getPosition() - ob_pos);
-            CULog("contains_player %d", contains_player);
+//            CULog("contains_player %d", contains_player);
         }
         if(contains_player){
             opacityDown.insert(entry->second);
