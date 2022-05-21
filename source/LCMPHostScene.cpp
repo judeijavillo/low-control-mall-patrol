@@ -70,6 +70,7 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     // Get the interactive UI elements that we need to access later
     _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_backdrop_ready"));
     _genderButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_backdrop_gender"));
+    _genderNode = std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("host_backdrop_gender_up"));
     _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("host_backdrop_back"));
     _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("host_backdrop_roomID"));
     
@@ -135,7 +136,10 @@ bool HostScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
 
     _genderButton->addListener([this](const std::string& name, bool down) {
         if (down) {
-            if (_network->isConnected()) _network->toggleGender();
+            if (_network->isConnected()) {
+                _network->toggleGender();
+                _genderNode->setTexture(_assets->get<Texture>(_network->getPlayer(0).male ? "thief_head_f" : "thief_head"));
+            }
         }
     });
     

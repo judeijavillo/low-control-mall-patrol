@@ -504,7 +504,6 @@ void GameScene::updateLocal(float timestep, Vec2 movement, bool dtap,
 void GameScene::updateThief(float timestep, Vec2 movement, bool dtap) {
     // Update and network thief movement
     _game->updateThief(movement);
-//    _skins[0]->setPosition(_game->getThief()->getPosition() + Vec2(0, _game->getThief()->getHeight()));
     _network->sendThiefMovement(_game, movement);
     
     // Activate and network traps
@@ -521,7 +520,6 @@ void GameScene::updateThief(float timestep, Vec2 movement, bool dtap) {
 void GameScene::updateCop(float timestep, int copID, Vec2 movement, bool swipe, Vec2 tackle, bool dtap) {
     // Get some reusable variables
     shared_ptr<CopModel> cop = _game->getCop(copID);
-    _skins[copID]->setPosition(cop->getPosition() + Vec2(0, cop->getHeight()));
     Vec2 thiefPosition = _game->getThief()->getPosition();
 
     int trapID = cop->trapDeactivationFlag;

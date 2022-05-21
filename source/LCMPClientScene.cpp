@@ -75,6 +75,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         // Get interactive UI elements
         _keypad = _assets->get<scene2::SceneNode>("join_backdrop_keypad");
         _genderButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_gender"));
+        _genderNode = std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("join_backdrop_gender_up"));
         _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_join"));
         _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join_backdrop_back"));
         _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join_backdrop_keypad_roomID"));
@@ -107,6 +108,7 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
         // Get interactive UI elements
         _keypad = _assets->get<scene2::SceneNode>("join43_backdrop_keypad");
         _genderButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_gender"));
+        _genderNode = std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("join43_backdrop_gender_up"));
         _startgame = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_join"));
         _backout = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("join43_backdrop_back"));
         _gameid = std::dynamic_pointer_cast<scene2::Label>(_assets->get<scene2::SceneNode>("join43_backdrop_roomID"));
@@ -163,8 +165,8 @@ bool ClientScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _backout->addListener([this](const std::string& name, bool down) {
         if (down) {
             _status = Status::ABORT;
-            _audio->stopSfx(CLICK_SFX);
-            _audio->playSound(_assets, CLICK_SFX, true, 0);
+//            _audio->stopSfx(CLICK_SFX);
+//            _audio->playSound(_assets, CLICK_SFX, true, 0);
         }
     });
     
@@ -403,6 +405,7 @@ void ClientScene::updateLobby(float timestep) {
         }
         _nodes[playerID]->setTexture(_assets->get<Texture>(key));
     }
+    _genderNode->setTexture(_assets->get<Texture>(_network->getPlayer(*(_network->getPlayerID())).male ? "cop_head_f" : "cop_head"));
     
     // Update the frame accordingly
     _prevTime += timestep;

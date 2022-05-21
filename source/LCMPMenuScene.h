@@ -41,8 +41,8 @@ public:
         HOST,
         /** User wants to join a game */
         JOIN,
-        /** User wants to find a game */
-        FIND,
+//        /** User wants to find a game */
+//        FIND,
         /** User wants to shop */
         SHOP,
         /** User wants to roll gacha */
@@ -69,8 +69,6 @@ protected:
     std::shared_ptr<cugl::scene2::Button> _hostbutton;
     /** The menu button for joining a game */
     std::shared_ptr<cugl::scene2::Button> _joinbutton;
-    /** The menu button for finding a game */
-    std::shared_ptr<cugl::scene2::Button> _findbutton;
     /** The button to open the settings menu */
     std::shared_ptr<cugl::scene2::Button> _settingsButton;
     /** The menu button for entering the shop */

@@ -82,6 +82,8 @@ protected:
     bool _occupied;
     /** The unique identifier for this player */
     int _playerNumber;
+    
+    string _skinKey;
 
     
 public:
