@@ -237,9 +237,6 @@ void CopModel::applyTackleSuccess(Vec2 thiefPosition) {
  * Updates nodes to show tackle animation
  */
 void CopModel::playTackle() {
-    // Determine which direction the cop is facing
-    int key = findDirection(_tackleDirection);
-    
     // Determine whether the cop is in the air or not
     bool inAir = _tackleTime < TACKLE_AIR_TIME;
     
@@ -248,6 +245,13 @@ void CopModel::playTackle() {
     
     // Show the tackle texture
     _character->setVisible(true);
+
+    // Determine which direction the cop is facing
+    int key = findDirection(_tackleDirection);
+    
+    if (! _male) {
+        key = _tackleDirection.x > 0 ? RIGHT_ANIM_KEY : LEFT_ANIM_KEY;
+    }
     
     // Show the appropriate direction
     switch (key) {

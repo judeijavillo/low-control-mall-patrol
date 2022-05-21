@@ -35,6 +35,7 @@ protected:
     bool _tackling;
     bool _caughtThief;
     bool _tackleSuccessful;
+    bool _male;
 
 public:
     bool didTackle;
