@@ -36,6 +36,8 @@ public:
     
     /** The different signals that the Network Controller can send */
     enum Signal {
+        /** A basic ping */
+        PING,
         /** State of the lobby */
         PLAYER,
         /** It's time to start the game */
@@ -57,6 +59,7 @@ public:
         bool male;
         int playerID;
         int playerNumber;
+        float lastPing;
         string username;
     };
     
@@ -202,7 +205,12 @@ public:
     /**
      * Checks the connection and updates the status accordingly (pre-game)
      */
-    void update();
+    void update(float timestep);
+    
+    /**
+     * Sends a ping to verify that the player is still active
+     */
+    void sendPing();
     
     /**
      * Sends the state of a given player
@@ -220,7 +228,7 @@ public:
     /**
      * Checks the connection, updates the status accordingly, and updates the game (during game)
      */
-    void update(std::shared_ptr<GameModel>& game);
+    void update(float timestep, std::shared_ptr<GameModel>& game);
     /**
      * Sends a byte vector to update thief movement
      */
@@ -239,7 +247,7 @@ public:
     /**
      * Sends a byte vector to indicate game over
      */
-    void sendGameOver();
+    void sendGameOver(bool thiefWin);
 
 //  MARK: - Server
     

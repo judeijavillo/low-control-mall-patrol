@@ -115,8 +115,6 @@ protected:
     bool _isHost;
     /** Whether we quit the game */
     bool _quit;
-    /** Whether the thief wins or loses */
-    bool _isThiefWin;
     
 public:
 //  MARK: - Constructors
@@ -165,7 +163,7 @@ public:
     
     bool isThief() { return _isThief; }
     
-    bool isThiefWin() { return _isThiefWin; }
+    bool isThiefWin() { return _game->getThiefWon(); }
     
     GameScene::State getState() { return _state; }
 

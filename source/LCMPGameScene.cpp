@@ -198,7 +198,6 @@ void GameScene::dispose() {
 void GameScene::start(bool host) {
     _gameTime = 0;
     _doneTime = 0;
-    _isThiefWin = false;
     _isHost = host;
     _audio->playSound(_assets, GAME_MUSIC, false, -1);
     _playerNumber = _network->getPlayerNumber();
@@ -282,7 +281,6 @@ void GameScene::setActive(bool value) {
 void GameScene::reset() {
     _gameTime = 0;
     _doneTime = 0;
-    _isThiefWin = false;
     _world->clear();
     _input.clear();
     
@@ -353,8 +351,8 @@ void GameScene::stateGame(float timestep) {
     // If time surpasses the game length, thief wins
     if (_gameTime > GAME_LENGTH) {
         _game->setGameOver(true);
-        if (_isHost) _network->sendGameOver();
-        _isThiefWin = true;
+        _game->setThiefWon(true);
+        if (_isHost) _network->sendGameOver(true);
         _state = DONE;
         updateUI(timestep, _isThief, movement, joystick, origin, position, _playerNumber);
         return;
@@ -394,11 +392,14 @@ void GameScene::stateGame(float timestep) {
     for (int i = 0; i < _game->numberOfCops(); i++) {
         if (_game->getCop(i)->getCaughtThief()) {
 //            _audio->playSound(_assets, THIEF_COLLISION_SFX, true, _gameTime);
-            if (_isHost) _game->setGameOver(true);
+            if (_isHost) {
+                _game->setGameOver(true);
+                _game->setThiefWon(false);
+            }
         }
     }
     if (_game->isGameOver()) {
-        if (_isHost) _network->sendGameOver();
+        if (_isHost) _network->sendGameOver(false);
         _state = DONE;
     }
 }
@@ -561,7 +562,7 @@ void GameScene::updateCop(float timestep, int copID, Vec2 movement, bool swipe, 
  * Updates based on data received over the network
  */
 void GameScene::updateNetwork(float timestep) {
-    _network->update(_game);
+    _network->update(timestep, _game);
     // TODO: Add stuff here for migrating host, connection status, etc.
 }
 
@@ -595,7 +596,7 @@ void GameScene::updateFloor(float timestep) {
  */
 void GameScene::updateUI(float timestep, bool isThief, Vec2 movement,
                          bool didPress, Vec2 origin, Vec2 position, int playerNumber) {
-    _ui.update(timestep, isThief, movement, didPress, origin, position, playerNumber, _gameTime, _isThiefWin);
+    _ui.update(timestep, isThief, movement, didPress, origin, position, playerNumber, _gameTime, _game->getThiefWon());
     _uinode->setPosition(_camera->getPosition() - Vec2(SCENE_WIDTH, SCENE_HEIGHT)/2 - _offset);
 }
 

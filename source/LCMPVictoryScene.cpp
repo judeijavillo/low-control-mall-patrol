@@ -113,7 +113,7 @@ void VictoryScene::updateMessage() {
 
 void VictoryScene::update(float timestep) {
     if (_network->isConnected() && _status != START && _status != ABORT) {
-        _network->update();
+        _network->update(timestep);
         switch (_network->getStatus()) {
             case NetworkController::Status::IDLE:
             case NetworkController::CONNECTING:
