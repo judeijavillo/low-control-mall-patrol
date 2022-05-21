@@ -1,5 +1,8 @@
 {
     "textures": {
+        "top_theatrepiece": {
+            "file": "textures/environment/Top_Theatrepiece.png"
+        },
         "wall_interior": {
             "file": "textures/environment/wallinterior.png"
         },

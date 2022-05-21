@@ -8,7 +8,7 @@
  "margin":0,
  "name":"Props",
  "spacing":0,
- "tilecount":69,
+ "tilecount":70,
  "tiledversion":"1.8.2",
  "tileheight":2805,
  "tiles":[
@@ -5069,8 +5069,91 @@
                  "type":"string",
                  "value":"wall_interior"
                 }]
+        }, 
+        {
+         "id":78,
+         "image":"..\/textures\/environment\/Top_Theatrepiece.png",
+         "imageheight":1662,
+         "imagewidth":2547,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":2,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":537.285780453914,
+                             "y":78.740157480315
+                            }, 
+                            {
+                             "x":2406.97674418605,
+                             "y":62.5774206404774
+                            }, 
+                            {
+                             "x":2860.36817217273,
+                             "y":492.906922886349
+                            }, 
+                            {
+                             "x":3511.62790697674,
+                             "y":476.744186046512
+                            }, 
+                            {
+                             "x":3523.25581395349,
+                             "y":-1418.60465116279
+                            }, 
+                            {
+                             "x":-34.8837209302325,
+                             "y":-1465.11627906977
+                            }, 
+                            {
+                             "x":-29.3092355216909,
+                             "y":-129.637814194937
+                            }, 
+                            {
+                             "x":535.773804921347,
+                             "y":-125.716123153359
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":-511.627906976744,
+                     "y":1162.79069767442
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"top_theatrepiece"
+                }]
         }],
- "tilewidth":2276,
+ "tilewidth":2547,
  "type":"tileset",
  "version":"1.8"
 }

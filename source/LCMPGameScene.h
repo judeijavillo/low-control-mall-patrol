@@ -67,6 +67,8 @@ protected:
     std::shared_ptr<GameModel> _game;
     
     // Views
+    /** Reference to the ceiling node of the scene graph */
+    std::shared_ptr<cugl::scene2::SceneNode> _ceilingnode;
     /** Reference to the floor node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _floornode;
     /** Reference to the background node of the scene graph */

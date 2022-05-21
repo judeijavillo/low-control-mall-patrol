@@ -25,6 +25,7 @@ void GameModel::dispose() {
  * initializes a Game Model
  */
 bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
+                     std::shared_ptr<cugl::scene2::SceneNode>& ceilnode,
                      std::shared_ptr<cugl::scene2::SceneNode>& floornode,
                      std::shared_ptr<cugl::scene2::SceneNode>& worldnode,
                      std::shared_ptr<cugl::scene2::SceneNode>& debugnode,
@@ -40,6 +41,7 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     
     _world = world;
     _floornode = floornode;
+    _ceilingnode = ceilnode;
     _worldnode = worldnode;
     _debugnode = debugnode;
     _gameover = false;
@@ -104,6 +106,11 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     std::shared_ptr<JsonValue> copsSpawn = layers->get(COPS_FIELD)->get(OBJECTS_FIELD);
     std::shared_ptr<JsonValue> thiefSpawn = layers->get(THIEF_FIELD)->get(OBJECTS_FIELD);
     std::shared_ptr<JsonValue> traps = layers->get(TRAPS_FIELD)->get(OBJECTS_FIELD);
+    std::shared_ptr<JsonValue> ceilingprops =
+            layers->get(CEILING_FIELD) != nullptr
+            ? layers->get(CEILING_FIELD)->get(OBJECTS_FIELD)
+            : nullptr;
+//    std::shared_ptr<JsonValue> ceilingprops = layers->get(CEILING_FIELD)->get(OBJECTS_FIELD);
     
     // Initialize backdrop
 
@@ -133,9 +140,12 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
         }
     }
     if(prop_firstGid > 0){
-//    for (int i = 0; i < props->size(); i++) initProp(props->get(i), prop_firstGid, propTileset, assets, scale);
         initProps(props, prop_firstGid, idToTileData, assets, scale);
     }
+    
+    ceilingObToNode = map<shared_ptr<physics2::PolygonObstacle>, shared_ptr<scene2::SceneNode>>();
+    if(ceilingprops != nullptr)
+        initCeilingProps(ceilingprops, prop_firstGid, idToTileData, assets, scale);
     
     timer = time(NULL);
     timeinfo = localtime (&timer);
@@ -149,28 +159,8 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
             for(int j = (boundingbox.getMinY()+ob->getY())/GRID_SIZE-1; j <= (boundingbox.getMaxY()+ob->getY())/GRID_SIZE+2; j++){
                 obstaclesInGrid[hash(i,j)].insert(ob);
             }
-//        ob->setEnabled(false);
     }
-//    shared_ptr<PlayerModel> player = _thief;
-//    auto gridcell = player->getPosition();
-//    for(int d1 = -1; d1 <= 1; d1++)
-//        for(int d2 = -1; d2 <= 1; d2++){
-//            CULog("enabling for hash %d", hash(gridcell+Vec2(d1,d2)));
-//            for(auto ob : obstaclesInGrid[hash(gridcell+Vec2(d1,d2))]){
-//                ob->setEnabled(true);
-//                CULog("enabled obstacle for thief");
-//            }
-//        }
-//    for(auto it = _cops.begin(); it != _cops.end(); it++){
-//        player = it->second;
-//        gridcell = player->getPosition();
-//        for(int d1 = -1; d1 <= 1; d1++)
-//            for(int d2 = -1; d2 <= 1; d2++)
-//                for(auto ob : obstaclesInGrid[hash(gridcell+Vec2(d1,d2))]){
-//                    ob->setEnabled(true);
-//                    CULog("enabled obstacle for cop");
-//                }
-//    }
+    
     
     // Initialize traps
 
@@ -260,7 +250,51 @@ void GameModel::update(float timestep) {
 //                CULog("enabling %d obs for hash %d", obstaclesInGrid[hash(gridcell)].size(), hash(gridcell));
                 for(auto ob : obstaclesInGrid[hash(gridcell)])
                     ob->setEnabled(true);
-
+    }
+    
+    //update ceiling prop opacity
+    set<shared_ptr<scene2::SceneNode>> opacityUp = set<shared_ptr<scene2::SceneNode>>();
+    set<shared_ptr<scene2::SceneNode>> opacityDown = set<shared_ptr<scene2::SceneNode>>();
+    for(auto entry = ceilingObToNode.begin(); entry != ceilingObToNode.end(); entry++){
+        auto player_pos = player->getPosition();
+        auto poly = entry->first->getPolygon();
+        auto ob_pos = entry->first->getPosition();
+//        CULog("playerpos - obpos = %f %f", (player_pos - ob_pos).x, (player_pos - ob_pos).y);
+        if(poly.contains(player_pos - ob_pos)){
+            opacityDown.insert(entry->second);
+            opacityUp.erase(entry->second);
+//            CULog("ceiling ob has collisions");
+        } else {
+//            CULog("ceiling ob does not have collisions");
+            if(opacityDown.count(entry->second) == 0){
+                opacityUp.insert(entry->second);
+//                CULog("and has its opacity increased");
+            }
+        }
+    }
+    for(auto node : opacityDown){
+        auto curr_color = node->getColor();
+        if(curr_color.a > 255.f * 0.05){
+            node->setColor(Color4(curr_color.r,
+                                  curr_color.g,
+                                  curr_color.b,
+                                  curr_color.a - 3));
+//            curr_color.add(Color4(0,0,0,-1));
+//            node->setColor(curr_color);
+//            CULog("decreasing opacity");
+        }
+    }
+    for(auto node : opacityUp){
+        auto curr_color = node->getColor();
+        if(curr_color.a < 255){
+            node->setColor(Color4(curr_color.r,
+                                  curr_color.g,
+                                  curr_color.b,
+                                  curr_color.a + 3));
+//            curr_color.add(Color4(0,0,0,1));
+//            node->setColor(curr_color);
+//            CULog("increasing opacity");
+        }
     }
 
     // update the traps
@@ -455,6 +489,50 @@ map<int,GameModel::TileData> GameModel::buildTileDataMap(const shared_ptr<JsonVa
     return idToTileData;
 }
 
+void GameModel::initCeilingProps(const shared_ptr<JsonValue>& cprops,
+                                 int props_firstgid,
+                                 map<int,GameModel::TileData> idToTileData,
+                                 const shared_ptr<AssetManager>& assets,
+                                 float scale){
+    for(int i = 0; i < cprops->size(); i++) {
+        auto prop = cprops->get(i);
+        float x = prop->getFloat(X_FIELD) / _tileSize;
+        float y = prop->getFloat(Y_FIELD) / _tileSize;
+        float width = prop->getFloat(WIDTH_FIELD) / _tileSize;
+        float height = prop->getFloat(HEIGHT_FIELD) / _tileSize;
+        y = _mapHeight - y;
+        
+        int gid = prop->getInt("gid");
+        gid &= CLEAR_FLAGS_FILTER;
+        int id = gid - props_firstgid;
+        
+        TileData data = idToTileData[id];
+        
+        auto texture = assets->get<Texture>(data.assetName);
+        //TODO: get this working
+        Vec2 scale_ = Vec2(width/texture->getWidth(), height/texture->getHeight());
+        
+        // add node to world
+        shared_ptr<scene2::PolygonNode> node;
+        if(data.animated){
+            node = scene2::SpriteNode::alloc(texture, data.anim_rows, data.anim_cols);
+        } else {
+            node = scene2::PolygonNode::allocWithTexture(texture);
+        }
+        node->setScale(scale_.x * scale, scale_.y * scale);
+        _ceilingnode->addChild(node);
+        node->setPosition((x + width / 2) * scale, (y + height / 2) * scale);
+        
+        // add hitboxes to world
+        auto size = data.hitboxes.size();
+        for(int j = 0; j < size; j++){
+            auto shape = data.hitboxes[j];
+            auto obstacle = scaleHitbox(shape, scale_, x, y, height);
+            obstacle->setSensor(true);
+            ceilingObToNode[obstacle] = node;
+        }
+    }
+}
 
 void GameModel::initProps(const shared_ptr<JsonValue>& props,
                           int props_firstgid,

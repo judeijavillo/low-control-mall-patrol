@@ -23,6 +23,7 @@
 #define OBJECTS_FIELD       "objects"
 #define ELLIPSE_FIELD       "ellipse"
 #define POLYGON_FIELD       "polygon"
+#define CEILING_FIELD         6
 #define PROPS_FIELD         5
 #define TRAPS_FIELD         1
 #define WALLS_FIELD         2

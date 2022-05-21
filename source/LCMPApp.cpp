@@ -350,7 +350,7 @@ void LCMPApp::updateLevelSelectScene(float timestep) {
         _levelselect.setActive(false);
         _game.setActive(true);
         _scene = State::GAME;
-        _network->sendStartGame(LEVEL_QUADRANTS_KEY);
+        _network->sendStartGame(LEVEL_THREE_KEY);
         _game.start(true);
         break;
     case LevelSelectScene::Choice::FOUR:
