@@ -31,7 +31,9 @@ public:
         /** Time to start the game */
         START,
         /** The game was abortted  */
-        ABORT
+        ABORT,
+        /** The host has requested a rematch */
+        REMATCH
     };
     
     /** The different signals that the Network Controller can send */
@@ -48,8 +50,10 @@ public:
         THIEF_MOVEMENT,
         /** What follows is which trap to activate */
         TRAP_ACTIVATION,
-        /** This indicates that the game is over (cops won) */
-        GAME_OVER
+        /** This indicates that the game is over */
+        GAME_OVER,
+        /** This indicates that the host wants a rematch */
+        PLAY_AGAIN
     };
 
 //  MARK: - Structs
@@ -175,6 +179,12 @@ public:
      */
     std::unordered_map<int, bool> getMales();
     
+    
+    /**
+     * Sets the status of the Network Controller
+     */
+     void setStatus(Status value) { _status = value; }
+    
     /**
      * Sets this player's username
      */
@@ -229,6 +239,7 @@ public:
      * Checks the connection, updates the status accordingly, and updates the game (during game)
      */
     void update(float timestep, std::shared_ptr<GameModel>& game);
+    
     /**
      * Sends a byte vector to update thief movement
      */
@@ -248,7 +259,12 @@ public:
      * Sends a byte vector to indicate game over
      */
     void sendGameOver(bool thiefWin);
-
+    
+    /**
+     * Sends a byte vector to indicate to rematch
+     */
+    void sendRematch();
+        
 //  MARK: - Server
     
     /**
