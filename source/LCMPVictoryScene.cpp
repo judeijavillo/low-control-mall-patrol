@@ -67,6 +67,7 @@ bool VictoryScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _replayButton->addListener([this](const std::string& name, bool down) {
         if (down) {
             _status = Status::START;
+            _network->sendRematch();
             _audio->stopSfx(CLICK_SFX);
             _audio->playSound(_assets, CLICK_SFX, true, 0);
         }
@@ -114,22 +115,7 @@ void VictoryScene::updateMessage() {
 void VictoryScene::update(float timestep) {
     if (_network->isConnected() && _status != START && _status != ABORT) {
         _network->update(timestep);
-        switch (_network->getStatus()) {
-            case NetworkController::Status::IDLE:
-            case NetworkController::CONNECTING:
-                _status = IDLE;
-                break;
-            case NetworkController::WAIT:
-                updateMessage();
-                _status = WAIT;
-                break;
-            case NetworkController::START:
-                _status = START;
-                break;
-            case NetworkController::ABORT:
-                _status = ABORT;
-                break;
-        }
+        updateMessage();
     }
 }
 
@@ -150,7 +136,8 @@ void VictoryScene::setActive(bool value, bool isThief, bool thiefWin) {
         Scene2::setActive(value);
         if (value) {
             _status = IDLE;
-            _replayButton->activate();
+            _replayButton->setVisible(isThief);
+            isThief ? _replayButton->activate() : _replayButton->deactivate();
             _leaveButton->activate();
         } else {
             _replayButton->deactivate();
@@ -161,14 +148,4 @@ void VictoryScene::setActive(bool value, bool isThief, bool thiefWin) {
         }
     }
     Scene2::setActive(value);
-}
-
-/**
- * Connects to the game server
- *
- * @return true if the connection was successful
- */
-bool VictoryScene::connect() {
-    _network->connect();
-    return true;
 }

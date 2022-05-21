@@ -98,7 +98,7 @@
                                 "anchor": [0.5, 0.5],
                                 "scale": 1,
                                 "font": "rubik",
-                                "text": "Please Change This Text To Something Else",
+                                "text": "",
                                 "halign": "center",
                                 "valign": "middle",
                                 "position": [600, 400]

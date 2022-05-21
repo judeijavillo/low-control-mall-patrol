@@ -171,6 +171,7 @@ void NetworkController::update(float timestep) {
                 break;
                 }
             case START_GAME:
+                {
                 _status = START;
                 int i = 2;
                 while (i < data.size()) {
@@ -185,6 +186,12 @@ void NetworkController::update(float timestep) {
                 }
                 _level = _deserializer.readString();
                 break;
+                }
+            case PLAY_AGAIN:
+                {
+                _status = REMATCH;
+                break;
+                }
             }
             _deserializer.reset();
         });
@@ -405,6 +412,18 @@ void NetworkController::sendGameOver(bool thiefWin) {
     
     _serializer.writeFloatVector(data);
     _serializer.writeBool(thiefWin);
+    _connection->send(_serializer.serialize());
+    _serializer.reset();
+}
+
+/**
+ * Sends a byte vector to indicate to rematch
+ */
+void NetworkController::sendRematch() {
+    if (_connection == nullptr) return;
+    vector<float> data;
+    data.push_back(PLAY_AGAIN);
+    _serializer.writeFloatVector(data);
     _connection->send(_serializer.serialize());
     _serializer.reset();
 }

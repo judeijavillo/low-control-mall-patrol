@@ -518,4 +518,12 @@ void LCMPApp::updateVictoryScene(float timestep) {
         case VictoryScene::Status::IDLE:
             break;
     }
+    
+    if (_network->getStatus() == NetworkController::Status::REMATCH) {
+        _victory.setActive(false, false, false);
+        _game.reset();
+        _game.setActive(true);
+        _scene = State::GAME;
+        _network->setStatus(NetworkController::Status::START);
+    }
 }
