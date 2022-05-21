@@ -210,7 +210,6 @@
     <ClInclude Include="..\..\source\LCMPCollisionController.h" />
     <ClInclude Include="..\..\source\LCMPConstants.h" />
     <ClInclude Include="..\..\source\LCMPCopModel.h" />
-    <ClInclude Include="..\..\source\LCMPCustomizeScene.h" />
     <ClInclude Include="..\..\source\LCMPFindScene.h" />
     <ClInclude Include="..\..\source\LCMPGachaScene.h" />
     <ClInclude Include="..\..\source\LCMPGameModel.h" />
@@ -236,7 +235,6 @@
     <ClCompile Include="..\..\source\LCMPClientScene.cpp" />
     <ClCompile Include="..\..\source\LCMPCollisionController.cpp" />
     <ClCompile Include="..\..\source\LCMPCopModel.cpp" />
-    <ClCompile Include="..\..\source\LCMPCustomizeScene.cpp" />
     <ClCompile Include="..\..\source\LCMPFindScene.cpp" />
     <ClCompile Include="..\..\source\LCMPGachaScene.cpp" />
     <ClCompile Include="..\..\source\LCMPGameModel.cpp" />
