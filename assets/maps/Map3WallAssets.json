@@ -74,6 +74,18 @@
         },
         "row-5-column-5": {
             "file":  "textures/environment/map3/row-5-column-5.png"
-        }
+        },
+		"theater-row-3-column-3": {
+			"file":  "textures/environment/map3/theater/row-3-column-3.png"
+		},
+		"theater-row-3-column-4": {
+			"file":  "textures/environment/map3/theater/row-3-column-4.png"
+		},
+		"theater-row-4-column-3": {
+			"file":  "textures/environment/map3/theater/row-4-column-3.png"
+		},
+		"theater-row-4-column-4": {
+			"file":  "textures/environment/map3/theater/row-4-column-4.png"
+		}	
     }
 }

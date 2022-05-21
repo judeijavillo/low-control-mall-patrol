@@ -6161,8 +6161,8 @@
          "x":0,
          "y":0
         }],
- "nextlayerid":14,
- "nextobjectid":1655,
+ "nextlayerid":15,
+ "nextobjectid":1659,
  "orientation":"orthogonal",
  "renderorder":"right-up",
  "tiledversion":"1.8.2",
@@ -6183,6 +6183,10 @@
         {
          "firstgid":29,
          "source":"PropsAndTraps.tsj"
+        }, 
+        {
+         "firstgid":107,
+         "source":"theater.tsx"
         }],
  "tilewidth":64,
  "type":"map",

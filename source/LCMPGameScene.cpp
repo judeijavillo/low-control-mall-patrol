@@ -490,10 +490,20 @@ void GameScene::updateLocal(float timestep, Vec2 movement, bool dtap,
         }
     }
     
+    // Update ceilings
+    shared_ptr<PlayerModel> player = _isThief
+        ? (shared_ptr<PlayerModel>) _game->getThief()
+        : (shared_ptr<PlayerModel>) _game->getCop(_playerNumber);
+    float ceiling_bound_x = 100.5;
+    float ceiling_bound_y = 81.5;
+    _game->updateCeiling(player->getPosition().x >= ceiling_bound_x || player->getPosition().y >= ceiling_bound_y);
+
+
+
     // Update own player
     if (_isThief) updateThief(timestep, movement, dtap);
     else updateCop(timestep, _playerNumber, movement, swipe, tackle, dtap);
-    
+
 }
 
 /**
@@ -518,6 +528,8 @@ void GameScene::updateThief(float timestep, Vec2 movement, bool dtap) {
         _game->activateTrap(trapID);
         _network->sendTrapActivation(trapID);
     }
+
+    CULog("thief pos: (%f, %f)", _game->getThief()->getPosition().x, _game->getThief()->getPosition().y);
 
 //    CULog("acc: (%f %f), damp: (%f, %f)", _game->getThief()->getAcceleration().x, _game->getThief()->getAcceleration().y, _game->getThief()->getDamping().x, _game->getThief()->getDamping().y);
 }

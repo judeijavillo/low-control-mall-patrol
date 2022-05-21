@@ -8,17 +8,17 @@
             "scale": 0.75,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 2496.6666666666665,
-                "y": 4914
+                "x": 4959.333333333333,
+                "y": 4992
             }
         },
         "Map1Overlay.tsx": {
-            "dynamicWrapping": false,
-            "scaleInDock": 1
+            "dynamicWrapping": true,
+            "scaleInDock": 0.03
         },
         "Map3overlay.tsx": {
             "dynamicWrapping": false,
-            "scaleInDock": 1
+            "scaleInDock": 0.03
         },
         "Props.tsj": {
             "dynamicWrapping": true,
@@ -27,15 +27,15 @@
         },
         "PropsAndTraps.tsj": {
             "dynamicWrapping": true,
-            "scaleInDock": 0.0625,
+            "scaleInDock": 0.03,
             "scaleInEditor": 0.11
         },
         "conveyorlevel.json": {
             "scale": 0.25,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 4958,
-                "y": 4992
+                "x": 5132,
+                "y": 5450
             }
         },
         "donut_room.json": {
@@ -88,10 +88,10 @@
         },
         "example5.json": {
             "scale": 0.25,
-            "selectedLayer": 1,
+            "selectedLayer": 2,
             "viewCenter": {
-                "x": 3578,
-                "y": 5502
+                "x": 5984,
+                "y": 5306
             }
         },
         "example6.json": {
@@ -102,9 +102,39 @@
                 "y": 3551.5151515151515
             }
         },
+        "map3.json": {
+            "scale": 1.5,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 6413.333333333333,
+                "y": 7239
+            }
+        },
+        "map3.json#MAP3": {
+            "scaleInDock": 1
+        },
+        "map3.json#MAP3 (1)": {
+            "scaleInDock": 1
+        },
         "mappics.tsx": {
             "dynamicWrapping": true,
-            "scaleInDock": 1
+            "scaleInDock": 0.03
+        },
+        "quadrants.json": {
+            "scale": 0.25,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 2814,
+                "y": 1438
+            }
+        },
+        "quadrants2.json": {
+            "scale": 0.125,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 3164,
+                "y": 3200
+            }
         },
         "traps.tsj": {
             "dynamicWrapping": true,
@@ -112,28 +142,33 @@
         }
     },
     "last.externalTilesetPath": "/Users/june/low-control-mall-patrol/assets/maps",
-    "last.imagePath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/textures/environment",
-    "last.objectTypesPath": "C:/Users/tzhan/OneDrive/Desktop/School/Senior/Semester two/CS4152/low-control-mall-patrol/assets/maps/propertytypes.json",
+    "last.imagePath": "C:/Users/bryce/Downloads",
+    "last.objectTypesPath": "C:/Users/bryce/source/repos/low-control-mall-patrol/assets/maps/trapTypeDef.xml",
     "map.lastUsedFormat": "json",
     "openFiles": [
         "example5.json",
         "conveyorlevel.json",
-        "PropsAndTraps.tsj"
+        "PropsAndTraps.tsj",
+        "C:/Users/bryce/Documents/5152/temp/example5.json",
+        "quadrants2.json"
     ],
     "project": "maps.tiled-project",
     "property.type": "bool",
     "recentFiles": [
+        "quadrants2.json",
+        "C:/Users/bryce/Documents/5152/temp/example5.json",
         "PropsAndTraps.tsj",
         "conveyorlevel.json",
         "example5.json",
+        "quadrants.json",
         "example3.json",
         "example2.json",
         "example1.json",
         "example4.json",
         "donut_room.json",
-        "donut_room.tmx",
-        "example6.json",
-        "Props.tsj"
+        "donut_room.tmx"
     ],
-    "tileset.lastUsedFilter": "JSON tileset files (*.tsj *.json)"
+    "tileset.lastUsedFilter": "JSON tileset files (*.tsj *.json)",
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.type": 1
 }

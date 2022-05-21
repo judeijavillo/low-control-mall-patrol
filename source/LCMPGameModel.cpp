@@ -219,6 +219,8 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
     timeinfo = localtime (&timer);
 //    CULog("done initializing traps %s", asctime(timeinfo));
     
+    initCeiling(backdropScale, 5, 5, assets, file);
+
     // Initialize borders
     initBorder(scale);
     
@@ -351,6 +353,41 @@ void GameModel::initBackdrop(float scale, int rows, int cols,
         }
     }
 }
+
+
+void GameModel::initCeiling(float scale, int rows, int cols,
+    const shared_ptr<AssetManager>& assets, string file) {
+
+    // Create textured node to store texture for each map chunk
+    std::shared_ptr<cugl::scene2::PolygonNode> chunkNode;
+
+    Vec2 origin = Vec2(0.0f, 0.0f);
+
+    if (file == LEVEL_ORIGINAL_KEY) {
+        // Cycle through all map chunks
+        for (int y = 1; y <= cols; y++) {
+            for (int x = 1; x <= rows; x++) {
+
+                // Retrieve map chunk from assets
+                string assetName = strtool::format("theater-row-%d-column-%d", y, x);
+                auto mapChunk = assets->get<Texture>(assetName);
+
+                if (mapChunk != nullptr) {
+                    // Create textured node for chunk
+                    chunkNode = scene2::PolygonNode::allocWithTexture(mapChunk);
+                    chunkNode->setAnchor(0.0f, 0.0f);
+                    chunkNode->setScale(scale);
+                    chunkNode->setColor(Color4(255, 255, 255, 255));
+                    chunkNode->setPositionX(origin.x + mapChunk->getWidth() * scale * (x - 1));
+                    chunkNode->setPositionY(origin.y + mapChunk->getHeight() * scale * (y - 1));
+                    _worldnode->addChild(chunkNode);
+                    _ceilings.push_back(chunkNode);
+                }
+            }
+        }
+    }
+}
+
 
 void GameModel::initThief(float scale,
                           const shared_ptr<JsonValue>& spawn,
@@ -1016,6 +1053,15 @@ void GameModel::updateTraps(float timestep) {
         _traps[i]->updateTrap(timestep);
     }
 }
+
+/**
+ *  Updates the ceiling on map2
+ */
+void GameModel::updateCeiling(bool isTransparent) {
+    for (std::shared_ptr<cugl::scene2::PolygonNode> x : _ceilings) {
+        isTransparent ? x->setColor(Color4(255, 255, 255, 40)) : x->setColor(Color4(255, 255, 255, 255));
+    }
+};
 
 /**
  * Initializes the border for the game

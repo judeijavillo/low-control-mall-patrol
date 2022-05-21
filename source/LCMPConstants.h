@@ -111,7 +111,7 @@ enum JsonConstants :int {
 /** The key for our loaded level */
 #define LEVEL_ONE_KEY       "example6"
 #define LEVEL_DONUT_KEY		"maps/donut_room.json"
-#define LEVEL_CONVEYOR_KEY        "maps/conveyorlevel.json"
+#define LEVEL_CONVEYOR_KEY        "maps/map3.json"
 #define LEVEL_ORIGINAL_KEY        "maps/example5.json"
 #define LEVEL_QUADRANTS_KEY        "maps/quadrants2.json"
 

@@ -25,10 +25,10 @@
             "file": "textures/ui/blank_menu.png"
         },
         "map1": {
-            "file": "textures/ui/map1.png"
+            "file": "textures/ui/quadrants_1.png"
         },
         "map2": {
-            "file": "textures/ui/map2.png"
+            "file": "textures/ui/map_original - Copy.png"
         },
         "map3": {
             "file": "textures/ui/map3.png"
@@ -120,16 +120,19 @@
                                     "data": {
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
-                                        "position": [135, 218],
-                                        "scale": 1.0
+                                        "scale": 0.12
                                     },
+									"layout" : {
+										"x_anchor" : "center",
+										"y_anchor" : "middle",
+										"x_offset" : 0,
+										"y_offset" : 0.25
+									},
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
                                                 "texture": "map1"
-
-
                                             }
                                         }
                                     }
@@ -139,16 +142,19 @@
                                     "data": {
                                         "upnode": "up",
                                         "anchor": [0.5, 0.5],
-                                        "position": [135, 95],
-                                        "scale": 1.0
+                                        "scale": 0.12
                                     },
+									"layout" : {
+										"x_anchor" : "center",
+										"y_anchor" : "middle",
+										"x_offset" : 0,
+										"y_offset" : -0.12
+									},
                                     "children": {
                                         "up": {
                                             "type": "Image",
                                             "data": {
                                                 "texture": "map2"
-
-
                                             }
                                         }
                                     }

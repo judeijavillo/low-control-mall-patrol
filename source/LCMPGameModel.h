@@ -41,6 +41,8 @@ protected:
     std::shared_ptr<cugl::physics2::ObstacleWorld> _world;
     // Map to associate the json strings with the json enum values
     std::map<std::string, JsonConstants> constantsMap;
+    /** The vector containing all the ceilings */
+    std::vector<std::shared_ptr<cugl::scene2::PolygonNode>> _ceilings;
     
     int hash(cugl::Vec2 v){
         return hash(int(v.x),int(v.y));
@@ -168,6 +170,11 @@ public:
     * deactivates a trap
     */
     void deactivateTrap(int trapID);
+
+    /**
+     *  Updates the ceiling on map2
+     */
+    void updateCeiling(bool isTransparent);
     
 private:
 //  MARK: - Helpers
@@ -180,7 +187,16 @@ private:
                       int cols,
                       const std::shared_ptr<cugl::AssetManager>& assets,
                       string file);
-    
+
+    /**
+     * Initializes the ceiling of the theater on map2
+     */
+    void initCeiling(float scale,
+        int rows,
+        int cols,
+        const std::shared_ptr<cugl::AssetManager>& assets,
+        string file);
+
     /**
      * Initializes a thief
      */

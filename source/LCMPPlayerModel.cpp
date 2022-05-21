@@ -150,6 +150,7 @@ void PlayerModel::applyForce(cugl::Vec2 force) {
                 setPosition(Vec2(std::get<1>(elem)->x, std::get<1>(elem)->y));
                 break;
             case TrapModel::TrapType::Moving_Platform:
+                //_realbody->ApplyForceToCenter(b2Vec2(std::get<1>(elem)->x * getAcceleration().x, std::get<1>(elem)->y * getAcceleration().y), true);
                 _realbody->SetLinearVelocity(b2Vec2(b2velocity.x + std::get<1>(elem)->x, b2velocity.y + std::get<1>(elem)->y));
                 //CULog("escalator!%d:%d", std::get<1>(elem)->x, std::get<1>(elem)->y);
                 break;

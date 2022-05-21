@@ -6,7 +6,7 @@
   <property name="ambientSound" type="string"/>
   <property name="collisionSound" type="string"/>
   <property name="copCollide" type="bool" default="false"/>
-  <property name="copEffect" type="string" default=""/>
+  <property name="copEffect" type="class" propertytype="Effect" default=""/>
   <property name="copLingerDuration" type="float" default="0"/>
   <property name="copLingerEffect" type="string" default=""/>
   <property name="deactivationSound" type="string"/>
@@ -19,7 +19,7 @@
   <property name="textureAsset" type="object" default="0"/>
   <property name="textureDeactivationTrigger" type="object" default="0"/>
   <property name="thiefCollide" type="bool" default="false"/>
-  <property name="thiefEffect" type="string" default=""/>
+  <property name="thiefEffect" type="class" propertytype="Effect" default=""/>
   <property name="thiefLingerDuration" type="float" default="0"/>
   <property name="thiefLingerEffect" type="string" default=""/>
   <property name="triggerArea" type="object" default="0"/>
