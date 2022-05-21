@@ -6473,9 +6473,32 @@
          "visible":true,
          "x":0,
          "y":0
+        }, 
+        {
+         "draworder":"topdown",
+         "id":16,
+         "name":"Ceiling",
+         "objects":[
+                {
+                 "gid":118,
+                 "height":1662,
+                 "id":1744,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":2547,
+                 "x":4416,
+                 "y":5264
+                }],
+         "opacity":0.25,
+         "type":"objectgroup",
+         "visible":true,
+         "x":0,
+         "y":0
         }],
- "nextlayerid":16,
- "nextobjectid":1743,
+ "nextlayerid":17,
+ "nextobjectid":1745,
  "orientation":"orthogonal",
  "renderorder":"right-up",
  "tiledversion":"1.8.2",
@@ -6498,7 +6521,7 @@
          "source":"PropsAndTraps.tsj"
         }, 
         {
-         "firstgid":118,
+         "firstgid":119,
          "source":"theater.tsx"
         }],
  "tilewidth":64,

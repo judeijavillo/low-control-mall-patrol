@@ -8,7 +8,7 @@
  "margin":0,
  "name":"Props",
  "spacing":0,
- "tilecount":81,
+ "tilecount":82,
  "tiledversion":"1.8.2",
  "tileheight":2805,
  "tiles":[
@@ -5056,7 +5056,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -5123,7 +5122,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -5190,7 +5188,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -5446,7 +5443,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -5513,7 +5509,6 @@
          "objectgroup":
             {
              "draworder":"index",
-             "id":2,
              "name":"",
              "objects":[
                     {
@@ -5571,8 +5566,83 @@
                  "type":"string",
                  "value":"bench_sideways_spine_R"
                 }]
+        }, 
+        {
+         "id":90,
+         "image":"..\/textures\/environment\/Top_Theatrepiece.png",
+         "imageheight":1662,
+         "imagewidth":2547,
+         "objectgroup":
+            {
+             "draworder":"index",
+             "id":2,
+             "name":"",
+             "objects":[
+                    {
+                     "height":0,
+                     "id":1,
+                     "name":"",
+                     "polygon":[
+                            {
+                             "x":0,
+                             "y":0
+                            }, 
+                            {
+                             "x":2002.53485424588,
+                             "y":-6.33713561470199
+                            }, 
+                            {
+                             "x":2585.55133079848,
+                             "y":602.027883396705
+                            }, 
+                            {
+                             "x":3453.73891001267,
+                             "y":602.027883396705
+                            }, 
+                            {
+                             "x":3453.73891001267,
+                             "y":-1508.23827629911
+                            }, 
+                            {
+                             "x":25.3485424588086,
+                             "y":-1508.23827629911
+                            }],
+                     "rotation":0,
+                     "type":"",
+                     "visible":true,
+                     "width":0,
+                     "x":-405.576679340938,
+                     "y":1058.30164765526
+                    }],
+             "opacity":1,
+             "type":"objectgroup",
+             "visible":true,
+             "x":0,
+             "y":0
+            },
+         "properties":[
+                {
+                 "name":"anim_cols",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"anim_rows",
+                 "type":"int",
+                 "value":0
+                }, 
+                {
+                 "name":"animated",
+                 "type":"bool",
+                 "value":false
+                }, 
+                {
+                 "name":"name",
+                 "type":"string",
+                 "value":"top_theatrepiece"
+                }]
         }],
- "tilewidth":2276,
+ "tilewidth":2547,
  "type":"tileset",
  "version":"1.8"
 }
