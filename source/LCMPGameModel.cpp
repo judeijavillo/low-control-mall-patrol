@@ -145,9 +145,9 @@ bool GameModel::init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
         initProps(props, prop_firstGid, idToTileData, assets, scale);
     }
     
-//    ceilingObToNode = map<shared_ptr<physics2::PolygonObstacle>, shared_ptr<scene2::SceneNode>>();
-//    if(ceilingprops != nullptr)
-//        initCeilingProps(ceilingprops, prop_firstGid, idToTileData, assets, scale);
+    ceilingObToNode = map<shared_ptr<physics2::PolygonObstacle>, shared_ptr<scene2::SceneNode>>();
+    if(ceilingprops != nullptr)
+        initCeilingProps(ceilingprops, prop_firstGid, idToTileData, assets, scale);
     
     timer = time(NULL);
     timeinfo = localtime (&timer);
@@ -259,20 +259,39 @@ void GameModel::update(float timestep) {
     //update ceiling prop opacity
     set<shared_ptr<scene2::SceneNode>> opacityUp = set<shared_ptr<scene2::SceneNode>>();
     set<shared_ptr<scene2::SceneNode>> opacityDown = set<shared_ptr<scene2::SceneNode>>();
+    
     for(auto entry = ceilingObToNode.begin(); entry != ceilingObToNode.end(); entry++){
-        auto player_pos = player->getPosition();
         auto poly = entry->first->getPolygon();
         auto ob_pos = entry->first->getPosition();
-//        CULog("playerpos - obpos = %f %f", (player_pos - ob_pos).x, (player_pos - ob_pos).y);
-        if(poly.contains(player_pos - ob_pos)){
+        bool contains_player = poly.contains(_thief->getPosition() - ob_pos);
+//        CULog("testing thief, contains_player %d", contains_player);
+        for(auto it = _cops.begin(); it != _cops.end(); it++){
+//            CULog("testing cop");
+            contains_player |= poly.contains(it->second->getPosition() - ob_pos);
+//            CULog("contains_player %d", contains_player);
+        }
+        if(contains_player){
             opacityDown.insert(entry->second);
             opacityUp.erase(entry->second);
-//            CULog("ceiling ob has collisions");
         } else {
-//            CULog("ceiling ob does not have collisions");
             if(opacityDown.count(entry->second) == 0){
                 opacityUp.insert(entry->second);
-//                CULog("and has its opacity increased");
+            }
+        }
+    }
+    for(auto it = _cops.begin(); it != _cops.end(); it++){
+        player = it->second;
+        for(auto entry = ceilingObToNode.begin(); entry != ceilingObToNode.end(); entry++){
+            auto player_pos = player->getPosition();
+            auto poly = entry->first->getPolygon();
+            auto ob_pos = entry->first->getPosition();
+            if(poly.contains(player_pos - ob_pos)){
+                opacityDown.insert(entry->second);
+                opacityUp.erase(entry->second);
+            } else {
+                if(opacityDown.count(entry->second) == 0){
+                    opacityUp.insert(entry->second);
+                }
             }
         }
     }
@@ -283,9 +302,6 @@ void GameModel::update(float timestep) {
                                   curr_color.g,
                                   curr_color.b,
                                   curr_color.a - 3));
-//            curr_color.add(Color4(0,0,0,-1));
-//            node->setColor(curr_color);
-//            CULog("decreasing opacity");
         }
     }
     for(auto node : opacityUp){
@@ -295,9 +311,6 @@ void GameModel::update(float timestep) {
                                   curr_color.g,
                                   curr_color.b,
                                   curr_color.a + 3));
-//            curr_color.add(Color4(0,0,0,1));
-//            node->setColor(curr_color);
-//            CULog("increasing opacity");
         }
     }
 
@@ -534,6 +547,7 @@ void GameModel::initCeilingProps(const shared_ptr<JsonValue>& cprops,
                                  const shared_ptr<AssetManager>& assets,
                                  float scale){
     for(int i = 0; i < cprops->size(); i++) {
+        CULog("adding ceiling prop");
         auto prop = cprops->get(i);
         float x = prop->getFloat(X_FIELD) / _tileSize;
         float y = prop->getFloat(Y_FIELD) / _tileSize;
