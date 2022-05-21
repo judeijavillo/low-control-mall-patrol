@@ -266,12 +266,12 @@ void LCMPApp::updateMenuScene(float timestep) {
         _network->setHost(false);
         _scene = State::CLIENT;
         break;
-    case MenuScene::Choice::FIND:
-        _menu.setActive(false);
-        _find.setActive(true);
-        _network->setHost(true);
-        _scene = State::FIND;
-        break;
+//    case MenuScene::Choice::FIND:
+//        _menu.setActive(false);
+//        _find.setActive(true);
+//        _network->setHost(true);
+//        _scene = State::FIND;
+//        break;
     case MenuScene::Choice::SHOP:
         _menu.setActive(false);
         _shop.setActive(true);

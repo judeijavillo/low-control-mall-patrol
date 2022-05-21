@@ -72,7 +72,6 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     if (sixteenNineAspectRatio) {
         _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_host"));
         _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_join"));
-        _findbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_find"));
         _title = std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("menu_backdrop_title"));
         _shopButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_shop"));
         _gachaButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu_backdrop_profile"));
@@ -84,7 +83,6 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
 
         _hostbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu43_backdrop_host"));
         _joinbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu43_backdrop_join"));
-        _findbutton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu43_backdrop_find"));
         _title = std::dynamic_pointer_cast<scene2::PolygonNode>(_assets->get<scene2::SceneNode>("menu43_backdrop_title"));
         _shopButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu43_backdrop_shop"));
         _gachaButton = std::dynamic_pointer_cast<scene2::Button>(_assets->get<scene2::SceneNode>("menu43_backdrop_profile"));
@@ -104,9 +102,6 @@ bool MenuScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
             _audio->stopSfx(CLICK_SFX);
             _audio->playSound(_assets, CLICK_SFX, true, 0);
         }
-    });
-    _findbutton->addListener([this](const std::string& name, bool down) {
-        if (down) _choice = FIND;
     });
     _shopButton->addListener([this](const std::string& name, bool down) {
         if (down) {
@@ -152,19 +147,16 @@ void MenuScene::setActive(bool value) {
             _choice = NONE;
             _hostbutton->activate();
             _joinbutton->activate();
-            _findbutton->activate();
             _shopButton->activate();
             _gachaButton->activate();
         } else {
             _hostbutton->deactivate();
             _joinbutton->deactivate();
-            _findbutton->deactivate();
             _shopButton->deactivate();
             _gachaButton->deactivate();
             // If any were pressed, reset them
             _hostbutton->setDown(false);
             _joinbutton->setDown(false);
-            _findbutton->setDown(false);
             _shopButton->setDown(false);
             _gachaButton->setDown(false);
         }

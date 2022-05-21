@@ -65,8 +65,9 @@ protected:
     std::shared_ptr<cugl::scene2::SceneNode> _keypad;
     /** The scene node containing the donut box front */
     std::shared_ptr<cugl::scene2::PolygonNode> _donutFront;
-    /** The menu button for changing a player's gender */
+    /** The menu button for changing gender */
     std::shared_ptr<cugl::scene2::Button> _genderButton;
+    std::shared_ptr<cugl::scene2::PolygonNode> _genderNode;
     /** The menu button for starting a game */
     std::shared_ptr<cugl::scene2::Button> _startgame;
     /** The back button for the menu scene */

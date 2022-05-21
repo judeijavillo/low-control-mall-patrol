@@ -64,18 +64,22 @@ bool PlayerModel::init(int playerNumber, const Vec2 pos, const Size size, float 
     _dropshadow->setColor(Color4(Vec4(0,0,0,0.25f)));
     _node->addChild(_dropshadow);
     
-    _skinNode = scene2::PolygonNode::allocWithTexture(assets->get<Texture>(skinKey));
-    _skinNode->setScale(CHAR_SCALE);
-    _skinNode->setAnchor(Vec2(0, 0.5));
-    _skinNodeLeft = scene2::PolygonNode::allocWithTexture(assets->get<Texture>(skinKey + "_left"));
-    _skinNodeLeft->setScale(CHAR_SCALE);
-    _skinNodeLeft->setAnchor(Vec2(0, 0.5));
     _trapIndicator = scene2::PolygonNode::allocWithTexture(assets->get<Texture>(TRAP_INDICATOR_KEY));
     _trapIndicator->setScale(0.3);
     _trapIndicator->setAnchor(Vec2(0.5, 0.5));
     _trapIndicator->setPositionX(_trapIndicator->getPositionX() - _trapIndicator->getWidth() * 0.75);
     _trapIndicator->setPositionY(_trapIndicator->getPositionY() - _trapIndicator->getHeight() / 8);
     _trapIndicator->setVisible(false);
+
+    _skinKey = skinKey;
+    if (_skinKey != "") {
+        _skinNode = scene2::PolygonNode::allocWithTexture(assets->get<Texture>(skinKey));
+        _skinNode->setScale(CHAR_SCALE);
+        _skinNode->setAnchor(Vec2(0, 0.5));
+        _skinNodeLeft = scene2::PolygonNode::allocWithTexture(assets->get<Texture>(skinKey + "_left"));
+        _skinNodeLeft->setScale(CHAR_SCALE);
+        _skinNodeLeft->setAnchor(Vec2(0, 0.5));
+    }
         
     // Create animations
     for (int i = 0; i < _animFrames.size(); i++) {
@@ -328,8 +332,10 @@ int PlayerModel::findDirection(Vec2 movement) {
     else _moveRight = false;
     
     // Set skin direction
-    _skinNode->setVisible(_moveRight);
-    _skinNodeLeft->setVisible(! _moveRight);
+    if (_skinKey != "") {
+        _skinNode->setVisible(_moveRight);
+        _skinNodeLeft->setVisible(! _moveRight);
+    }
     
     // Set animation direction
     if (abs(movement.x) >= abs(movement.y)) {
@@ -377,11 +383,16 @@ void PlayerModel::setSpriteNodes(float width) {
         _spriteNodes[i]->setVisible(false);
         _node->addChild(_spriteNodes[i]);
     }
+    
     _spriteNodes[STILL_RIGHT_ANIM_KEY]->setVisible(true);
-    _skinNode->setPositionX(_skinNode->getPositionX() -_skinNode->getWidth()/8);
-    _node->addChild(_skinNode);
-    _skinNodeLeft->setPositionX(_skinNodeLeft->getPositionX() -_skinNodeLeft->getWidth()/8);
-    _skinNodeLeft->setVisible(false);
-    _node->addChild(_skinNodeLeft);
+
     _node->addChild(_trapIndicator);
+    
+    if (_skinKey != "") {
+        _skinNode->setPositionX(_skinNode->getPositionX() -_skinNode->getWidth()/8);
+        _node->addChild(_skinNode);
+        _skinNodeLeft->setPositionX(_skinNodeLeft->getPositionX() -_skinNodeLeft->getWidth()/8);
+        _skinNodeLeft->setVisible(false);
+        _node->addChild(_skinNodeLeft);
+    }
 }

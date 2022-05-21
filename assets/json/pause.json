@@ -3,8 +3,8 @@
         "back_button": {
             "file": "textures/ui/back.png"
         },
-		"ui_thief_head":{
-			"file": "textures/ui/thief_male_beanie_head.png"
+		"thief_head":{
+			"file": "textures/ui/thief_head.png"
 		},
         "frame": {
             "file":  "textures/frame.png"
