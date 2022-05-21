@@ -36,6 +36,9 @@ using namespace cugl;
 bool LoadingScene::init(const std::shared_ptr<AssetManager>& assets,
                         std::shared_ptr<AudioController>& audio) {
     
+    _completed = false;
+    _progress = 0.0f;
+
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     

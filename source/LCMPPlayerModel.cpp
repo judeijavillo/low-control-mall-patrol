@@ -75,6 +75,7 @@ bool PlayerModel::init(int playerNumber, const Vec2 pos, const Size size, float 
     _trapIndicator->setAnchor(Vec2(0.5, 0.5));
     _trapIndicator->setPositionX(_trapIndicator->getPositionX() - _trapIndicator->getWidth() * 0.75);
     _trapIndicator->setPositionY(_trapIndicator->getPositionY() - _trapIndicator->getHeight() / 8);
+    _trapIndicator->setVisible(false);
         
     // Create animations
     for (int i = 0; i < _animFrames.size(); i++) {
