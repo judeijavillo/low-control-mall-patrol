@@ -80,7 +80,7 @@ bool CopModel::init(int copID, float scale,
     _spriteSheets.push_back(assets->get<Texture>(male ? COP_RUN_RIGHT : COP_RUN_RIGHT_F));
     _spriteSheets.push_back(assets->get<Texture>(male ? COP_RUN_BACK : COP_RUN_BACK_F));
     _spriteSheets.push_back(assets->get<Texture>(male ? COP_RUN_LEFT : COP_RUN_LEFT_F));
-    _spriteSheets.push_back(assets->get<Texture>(male ? COP_RUN_FRONT : COP_RUN_BACK_F));
+    _spriteSheets.push_back(assets->get<Texture>(male ? COP_RUN_FRONT : COP_RUN_FRONT_F));
     _spriteSheets.push_back(assets->get<Texture>(male ? COP_IDLE_RIGHT : COP_IDLE_RIGHT_F));
     _spriteSheets.push_back(assets->get<Texture>(male ? COP_IDLE_LEFT : COP_IDLE_LEFT_F));
         
