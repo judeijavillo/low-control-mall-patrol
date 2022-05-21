@@ -33,6 +33,9 @@ protected:
     std::shared_ptr<cugl::scene2::ActionManager> _actions;
     /** Reference to the background node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _floornode;
+    /** Reference to the ceiling node of the scene graph */
+    std::shared_ptr<cugl::scene2::SceneNode> _ceilingnode;
+    std::map<std::shared_ptr<cugl::physics2::PolygonObstacle>, std::shared_ptr<cugl::scene2::SceneNode>> ceilingObToNode;
     /** Reference to the physics node of the scene graph */
     std::shared_ptr<cugl::scene2::SceneNode> _worldnode;
     /** Reference to the debug node of the scene graph */
@@ -85,6 +88,7 @@ public:
      * initializes a Game Model
      */
     bool init(std::shared_ptr<cugl::physics2::ObstacleWorld>& world,
+              std::shared_ptr<cugl::scene2::SceneNode>& ceilnode,
               std::shared_ptr<cugl::scene2::SceneNode>& floornode,
               std::shared_ptr<cugl::scene2::SceneNode>& worldnode,
               std::shared_ptr<cugl::scene2::SceneNode>& debugnode,
@@ -245,6 +249,12 @@ private:
     };
     
     map<int,GameModel::TileData> buildTileDataMap(const shared_ptr<cugl::JsonValue>& propTileset, float scale);
+    
+    void initCeilingProps(const std::shared_ptr<cugl::JsonValue>& cprops,
+                          int props_firstgid,
+                          map<int,GameModel::TileData> idToTileData,
+                          const std::shared_ptr<cugl::AssetManager>& assets,
+                          float scale);
     
     /**
      Places all props into the world

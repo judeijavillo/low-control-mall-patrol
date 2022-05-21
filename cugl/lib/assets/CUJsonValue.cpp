@@ -862,7 +862,8 @@ bool JsonValue::has(const std::string& key) const {
  */
 std::shared_ptr<JsonValue> JsonValue::get(int index) {
     CUAssertLog(isArray() || isObject(), "Node is a value type");
-    CUAssertLog(0 <= index && index < _children.size(), "Index %d out of range", index);
+    if(index < 0 || index >= _children.size())
+        return nullptr;
     return _children[index];
 }
 
@@ -878,7 +879,8 @@ std::shared_ptr<JsonValue> JsonValue::get(int index) {
  */
 const std::shared_ptr<JsonValue> JsonValue::get(int index) const {
     CUAssertLog(isArray() || isObject(), "Node is a value type");
-    CUAssertLog(0 <= index && index < _children.size(), "Index %d out of range", index);
+    if(index < 0 || index >= _children.size())
+        return nullptr;
     return _children.at(index);
 }
 

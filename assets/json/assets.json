@@ -36,6 +36,9 @@
         "poster_4": {
             "file": "textures/environment/poster_donut.png"
         },
+        "top_theatrepiece": {
+            "file": "textures/environment/Top_Theatrepiece.png"
+        },
         "wall_interior": {
             "file": "textures/environment/wallinterior.png"
         },

@@ -26,7 +26,7 @@ using namespace std;
 //  MARK: - Constants
 
 /** Whether or not to show the debug node */
-#define DEBUG_ON        0
+#define DEBUG_ON        1
 
 /** Width of the game world in Box2d units */
 #define DEFAULT_WIDTH   32.0f
@@ -141,6 +141,11 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     _backgroundnode = scene2::SceneNode::alloc();
     _backgroundnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _backgroundnode->setPosition(_offset);
+    
+    // Create the ceiling node
+    _ceilingnode = scene2::SceneNode::alloc();
+    _ceilingnode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _ceilingnode->setPosition(_offset);
 
     // Create the world node
     _worldnode = scene2::SceneNode::alloc();
@@ -163,6 +168,7 @@ bool GameScene::init(const std::shared_ptr<cugl::AssetManager>& assets,
     addChild(_floornode);
     addChild(_backgroundnode);
     addChild(_worldnode);
+    addChild(_ceilingnode);
     addChild(_debugnode);
     addChild(_uinode);
     
@@ -205,7 +211,7 @@ void GameScene::start(bool host) {
 
     // Initialize the game
     _game = make_shared<GameModel>();
-    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _network->getMales(), _network->getNumPlayers());
+    _game->init(_world, _ceilingnode, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _network->getMales(), _network->getNumPlayers());
     
     // Set the player's names
     for (int i = 0; i < _game->numberOfCops() + 1; i++) {
@@ -291,7 +297,7 @@ void GameScene::reset() {
     
     // Make a new game
     _game = make_shared<GameModel>();
-    _game->init(_world, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _network->getMales(), _network->getNumPlayers());
+    _game->init(_world, _ceilingnode, _backgroundnode, _worldnode, _debugnode, _assets, _scale, _network->getLevel(), _actions, _network->getMales(), _network->getNumPlayers());
     
     // Set the player's names
     for (int i = 0; i < _game->numberOfCops() + 1; i++) {
